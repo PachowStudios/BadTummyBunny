@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public static class Extensions
 {
@@ -78,6 +79,15 @@ public static class Extensions
 	public static bool ContainsLayer(this LayerMask parent, GameObject obj)
 	{
 		return parent.ContainsLayer(obj.layer);
+	}
+	#endregion
+
+	#region Generic Collection
+	public static T GetRandom<T>(this IList<T> parent)
+	{
+		if (parent == null || parent.Count == 0) return default(T);
+
+		return parent[Random.Range(0, parent.Count)];
 	}
 	#endregion
 

@@ -97,7 +97,7 @@ public abstract class Enemy : MonoBehaviour
 
 	protected virtual void OnTriggerEnter2D(Collider2D other)
 	{
-		if (other.tag == "Killzone")
+		if (other.tag == Tags.Killzone)
 			Kill();
 	}
 

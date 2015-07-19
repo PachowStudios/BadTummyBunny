@@ -53,7 +53,7 @@ public class HealthDisplay : MonoBehaviour
 															  ref fartVelocity,
 															  barDamping);
 
-		coins.text = PlayerControl.Instance.Coins.ToString().PadLeft(coinsDigits, '0');
+		coins.text = PlayerScore.Instance.Coins.ToString().PadLeft(coinsDigits, '0');
 	}
 	#endregion
 }

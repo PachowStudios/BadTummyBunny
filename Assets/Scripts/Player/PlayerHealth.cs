@@ -1,12 +1,9 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
 public sealed class PlayerHealth : MonoBehaviour
 {
 	#region Fields
-	private static PlayerHealth instance;
-
 	public float maxHealth = 100f;
 	[Range(0f, 1f)]
 	public float carrotHealthRechargePercent = 0.1f;
@@ -43,8 +40,7 @@ public sealed class PlayerHealth : MonoBehaviour
 	#endregion
 
 	#region Public Properties
-	public static PlayerHealth Instance
-	{ get { return instance; } }
+	public static PlayerHealth Instance { get; private set; }
 
 	public float Health
 	{
@@ -75,7 +71,7 @@ public sealed class PlayerHealth : MonoBehaviour
 	#region MonoBehaviour
 	private void Awake()
 	{
-		instance = this;
+		Instance = this;
 
 		spriteRenderer = GetComponentInChildren<SpriteRenderer>();
 		audioSource = GetComponent<AudioSource>();
@@ -111,15 +107,15 @@ public sealed class PlayerHealth : MonoBehaviour
 
 	private void OnTriggerEnter2D(Collider2D other)
 	{
-		if (other.tag == "Enemy")
+		if (other.tag == Tags.Enemy)
 		{
 			TakeDamage(other.GetComponent<Enemy>());
 		}
-		else if (other.tag == "Killzone")
+		else if (other.tag == Tags.Killzone)
 		{
 			Respawn();
 		}
-		else if (other.tag == "Respawn")
+		else if (other.tag == Tags.Respawn)
 		{
 			SetRespawnPoint(other.GetComponent<RespawnPoint>());
 		}
@@ -160,7 +156,7 @@ public sealed class PlayerHealth : MonoBehaviour
 	{
 		Vector3 origin = fartColliderTransform.position;
 
-		foreach (Enemy enemy in GameObject.FindObjectsOfType<Enemy>())
+		foreach (Enemy enemy in FindObjectsOfType<Enemy>())
 		{
 			if (enemy.collider2D != null)
 			{
