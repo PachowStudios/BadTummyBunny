@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
+using System;
 
+[AddComponentMenu("Environment/Respawn Point")]
 public sealed class RespawnPoint : MonoBehaviour
 {
 	#region Fields
@@ -31,6 +33,7 @@ public sealed class RespawnPoint : MonoBehaviour
 
 		activated = true;
 		animator.SetBool("Activated", activated);
+		SoundManager.PlaySFX(SoundManager.LoadFromGroup(SfxGroups.RespawnPoints));
 	}
 
 	public void Deactivate()

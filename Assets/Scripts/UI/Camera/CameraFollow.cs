@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
-using System.Collections;
 
+[AddComponentMenu("UI/Camera/Camera Follow")]
 public sealed class CameraFollow : MonoBehaviour
 {
 	#region Fields

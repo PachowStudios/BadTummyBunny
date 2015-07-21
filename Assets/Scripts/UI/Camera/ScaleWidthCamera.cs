@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections;
 using DG.Tweening;
 
+[AddComponentMenu("UI/Camera/Scale Width Camera")]
 [ExecuteInEditMode]
 public sealed class ScaleWidthCamera : MonoBehaviour
 {

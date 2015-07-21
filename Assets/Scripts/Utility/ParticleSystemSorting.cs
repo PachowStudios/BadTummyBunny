@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[AddComponentMenu("Utility/Particle System Sorting")]
 [ExecuteInEditMode]
 public sealed class ParticleSystemSorting : MonoBehaviour
 {

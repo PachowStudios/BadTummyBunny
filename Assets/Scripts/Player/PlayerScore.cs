@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
+[AddComponentMenu("Player/Player Score")]
 public class PlayerScore : MonoBehaviour
 {
 	#region Fields
@@ -20,7 +21,7 @@ public class PlayerScore : MonoBehaviour
 	{
 		Instance = this;
 
-		audioSource = GetComponent<AudioSource>();
+		//audioSource = GetComponent<AudioSource>();
 	}
 
 	private void OnTriggerEnter2D(Collider2D other)
@@ -36,7 +37,7 @@ public class PlayerScore : MonoBehaviour
 
 		coin.Collect();
 		Coins++;
-		audioSource.PlayOneShot(coinSounds.GetRandom());
+		//audioSource.PlayOneShot(coinSounds.GetRandom());
 	}
 	#endregion
 }

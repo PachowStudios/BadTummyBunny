@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections.Generic;
 
+[AddComponentMenu("Player/Player Health")]
 public sealed class PlayerHealth : MonoBehaviour
 {
 	#region Fields
@@ -18,8 +20,6 @@ public sealed class PlayerHealth : MonoBehaviour
 	[SerializeField]
 	private Transform fartColliderTransform;
 
-	public List<AudioClip> flagSounds;
-
 	private float health;
 	private bool dead = false;
 
@@ -35,7 +35,6 @@ public sealed class PlayerHealth : MonoBehaviour
 	private RespawnPoint respawnPoint;
 
 	private SpriteRenderer spriteRenderer;
-	private AudioSource audioSource;
 	private PolygonCollider2D fartCollider;
 	#endregion
 
@@ -74,7 +73,6 @@ public sealed class PlayerHealth : MonoBehaviour
 		Instance = this;
 
 		spriteRenderer = GetComponentInChildren<SpriteRenderer>();
-		audioSource = GetComponent<AudioSource>();
 		fartCollider = fartColliderTransform.gameObject.AddComponent<PolygonCollider2D>();
 		fartCollider.isTrigger = true;
 		fartCollider.enabled = false;
@@ -209,16 +207,15 @@ public sealed class PlayerHealth : MonoBehaviour
 
 	private void SetRespawnPoint(RespawnPoint newRespawnPoint)
 	{
-		if (respawnPoint != null && respawnPoint == newRespawnPoint)
-			return;
-
 		if (respawnPoint != null)
+		{
+			if (respawnPoint == newRespawnPoint) return;
+
 			respawnPoint.Deactivate();
+		}
 
 		newRespawnPoint.Activate();
 		respawnPoint = newRespawnPoint;
-
-		PlayFlagSound();
 	}
 
 	private void SetRenderersEnabled(bool enabled = true, bool alternate = false)
@@ -256,12 +253,6 @@ public sealed class PlayerHealth : MonoBehaviour
 			if (!dead && !PlayerControl.Instance.Farting && knockback != default(Vector2))
 				StartCoroutine(PlayerControl.Instance.ApplyKnockback(knockback, knockbackDirection));
 		}
-	}
-
-	public void PlayFlagSound()
-	{
-		if (flagSounds.Count > 0)
-			audioSource.PlayOneShot(flagSounds[Random.Range(0, flagSounds.Count)]);
 	}
 	#endregion
 }
