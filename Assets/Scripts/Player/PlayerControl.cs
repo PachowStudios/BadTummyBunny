@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
 
 [AddComponentMenu("Player/Control")]
 public sealed class PlayerControl : MonoBehaviour
@@ -28,14 +27,6 @@ public sealed class PlayerControl : MonoBehaviour
 	public float shortFartSoundPercentage = 0.25f;
 	[Range(0f, 1f)]
 	public float mediumFartSoundPercentage = 0.65f;
-
-	public List<AudioClip> fartSoundsShort;
-	public List<AudioClip> fartSoundsMedium;
-	public List<AudioClip> fartSoundsLong;
-
-	public List<AudioClip> carrotSounds;
-
-	public AudioSource walkingAudioSource;
 
 	[SerializeField]
 	private Transform body;
@@ -65,7 +56,6 @@ public sealed class PlayerControl : MonoBehaviour
 
 	private CharacterController2D controller;
 	private Animator animator;
-	private AudioSource audioSource;
 	#endregion
 
 	#region Public Properties
@@ -119,7 +109,6 @@ public sealed class PlayerControl : MonoBehaviour
 
 		controller = GetComponent<CharacterController2D>();
 		animator = GetComponent<Animator>();
-		audioSource = GetComponent<AudioSource>();
 
 		fartAvailableTime = fartMaxAvailableTime;
 	}
@@ -141,24 +130,10 @@ public sealed class PlayerControl : MonoBehaviour
 		if (farted && initialFartTime - fartTime > 0.05f && CollisionLayers.ContainsLayer(other.gameObject))
 			StopFart(!IsGrounded);
 
-		if (other.tag == Tags.Carrot)
+		switch (other.tag)
 		{
-			other.GetComponent<Carrot>().Collect();
-			PlayerHealth.Instance.Health += (PlayerHealth.Instance.carrotHealthRechargePercent * PlayerHealth.Instance.maxHealth);
-			fartAvailableTime = Mathf.Min(fartAvailableTime + (fartMaxAvailableTime * carrotFartRechargePercent), fartMaxAvailableTime);
-			PlayCarrotSound();
-		}
-		else if (other.tag == Tags.Flagpole)
-		{
-			var flagpole = other.GetComponent<Flagpole>();
-
-			if (!flagpole.Activated)
-			{
-				//PlayerHealth.Instance.PlayFlagSound();
-				flagpole.Activate();
-				DisableInput();
-				StartCoroutine(GameMenu.Instance.ShowGameOver(1.2f));
-			}
+			case Tags.Carrot:   CollectCarrot(other.GetComponent<Carrot>()); break;
+			case Tags.Flagpole: ActivateLevelFlagpole(other.GetComponent<Flagpole>()); break;
 		}
 	}
 
@@ -206,10 +181,19 @@ public sealed class PlayerControl : MonoBehaviour
 
 	private void ApplyAnimation()
 	{
-		//walkingAudioSource.mute = horizontalMovement == 0f || fart || !IsGrounded;
 		animator.SetBool("Walking",  horizontalMovement != 0f && !fart);
 		animator.SetBool("Grounded", IsGrounded);
 		animator.SetBool("Falling", velocity.y < 0f);
+	}
+
+	private void PlayWalkingSound(int rightStep)
+	{
+		if (!fart && IsGrounded)
+		{
+			var stepGroup = rightStep == 1 ? SfxGroups.WalkingGrassRight : SfxGroups.WalkingGrassLeft;
+
+			SoundManager.PlayCappedSFX(SoundManager.LoadFromGroup(stepGroup), stepGroup);
+		}
 	}
 
 	private void GetMovement()
@@ -303,22 +287,14 @@ public sealed class PlayerControl : MonoBehaviour
 
 	private void PlayFartSound(float chargePercentage)
 	{
-		return;
-
+		/*
 		if (chargePercentage <= shortFartSoundPercentage && fartSoundsShort.Count > 0)
 			audioSource.PlayOneShot(fartSoundsShort[Random.Range(0, fartSoundsShort.Count)]);
 		else if (chargePercentage <= mediumFartSoundPercentage && fartSoundsMedium.Count > 0)
 			audioSource.PlayOneShot(fartSoundsMedium[Random.Range(0, fartSoundsMedium.Count)]);
 		else if (fartSoundsLong.Count > 0)
 			audioSource.PlayOneShot(fartSoundsLong[Random.Range(0, fartSoundsLong.Count)]);
-	}
-
-	private void PlayCarrotSound()
-	{
-		return;
-
-		if (carrotSounds.Count > 0)
-			audioSource.PlayOneShot(carrotSounds[Random.Range(0, carrotSounds.Count)]);
+			*/
 	}
 
 	private IEnumerator StartFartParticles()
@@ -326,6 +302,24 @@ public sealed class PlayerControl : MonoBehaviour
 		yield return new WaitForFixedUpdate();
 
 		fartParticles.Play();
+	}
+
+	private void CollectCarrot(Carrot carrot)
+	{
+		if (carrot == null) return;
+
+		carrot.Collect();
+		PlayerHealth.Instance.Health += (PlayerHealth.Instance.carrotHealthRechargePercent * PlayerHealth.Instance.maxHealth);
+		fartAvailableTime = Mathf.Min(fartAvailableTime + (fartMaxAvailableTime * carrotFartRechargePercent), fartMaxAvailableTime);
+	}
+
+	private void ActivateLevelFlagpole(Flagpole flagpole)
+	{
+		if (flagpole.Activated) return;
+
+		flagpole.Activate();
+		DisableInput();
+		StartCoroutine(GameMenu.Instance.ShowGameOver(1.2f));
 	}
 
 	private void ResetOrientation()

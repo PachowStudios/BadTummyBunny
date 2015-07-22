@@ -28,21 +28,26 @@ public sealed class RespawnPoint : MonoBehaviour
 	#region Public Methods
 	public void Activate()
 	{
-		if (activated)
-			return;
+		if (activated) return;
 
 		activated = true;
 		animator.SetBool("Activated", activated);
-		SoundManager.PlaySFX(SoundManager.LoadFromGroup(SfxGroups.RespawnPoints));
+		PlayActivateSound();
 	}
 
 	public void Deactivate()
 	{
-		if (!activated)
-			return;
+		if (!activated) return;
 
 		activated = false;
 		animator.SetBool("Activated", activated);
+	}
+	#endregion
+
+	#region Internal Helper Methods
+	private void PlayActivateSound()
+	{
+		SoundManager.PlaySFX(SoundManager.LoadFromGroup(SfxGroups.RespawnPoints));
 	}
 	#endregion
 }

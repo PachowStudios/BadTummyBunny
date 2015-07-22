@@ -23,11 +23,18 @@ public class Flagpole : MonoBehaviour
 	#region Public Methods
 	public void Activate()
 	{
-		if (activated)
-			return;
+		if (activated) return;
 
 		activated = true;
 		animator.SetTrigger("Activate");
+		PlayActivateSound();
+	}
+	#endregion
+
+	#region Internal Helper Methods
+	private void PlayActivateSound()
+	{
+		SoundManager.PlaySFX(SoundManager.LoadFromGroup(SfxGroups.RespawnPoints));
 	}
 	#endregion
 }

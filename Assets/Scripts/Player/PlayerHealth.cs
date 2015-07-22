@@ -105,17 +105,11 @@ public sealed class PlayerHealth : MonoBehaviour
 
 	private void OnTriggerEnter2D(Collider2D other)
 	{
-		if (other.tag == Tags.Enemy)
+		switch (other.tag)
 		{
-			TakeDamage(other.GetComponent<Enemy>());
-		}
-		else if (other.tag == Tags.Killzone)
-		{
-			Respawn();
-		}
-		else if (other.tag == Tags.Respawn)
-		{
-			SetRespawnPoint(other.GetComponent<RespawnPoint>());
+			case Tags.Enemy:    TakeDamage(other.GetComponent<Enemy>()); break;
+			case Tags.Killzone: Respawn(); break;
+			case Tags.Respawn:  SetRespawnPoint(other.GetComponent<RespawnPoint>()); break;
 		}
 	}
 
