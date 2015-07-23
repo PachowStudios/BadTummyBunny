@@ -15,6 +15,11 @@ public static class Extensions
 		return Mathf.Abs(parent);
 	}
 
+	public static int RoundToInt(this float parent)
+	{
+		return Mathf.RoundToInt(parent);
+	}
+
 	public static float RoundToTenth(this float parent)
 	{
 		return Mathf.RoundToInt(parent * 10f) / 10f;
@@ -84,6 +89,11 @@ public static class Extensions
 	public static bool ContainsLayer(this LayerMask parent, GameObject obj)
 	{
 		return parent.ContainsLayer(obj.layer);
+	}
+
+	public static bool ContainsLayer(this LayerMask parent, Collider2D collider)
+	{
+		return parent.ContainsLayer(collider.gameObject.layer);
 	}
 	#endregion
 

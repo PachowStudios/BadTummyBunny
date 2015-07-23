@@ -121,6 +121,11 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
         
         return Instance.PlaySFXAt(SoundManager.Load(clipName), volume, pitch, location, false, "", looping, delay, runOnEndFunction, duckingSetting, duckVolume, duckPitch);
     }
+
+	public static AudioSource PlayCappedSFXFromGroup(string groupAndCappedID)
+	{
+		return PlayCappedSFX(LoadFromGroup(groupAndCappedID), groupAndCappedID);
+	}
 	
 	/// <summary>
 	/// Plays the SFX IFF other SFX with the same cappedID are not over the cap limit. Will default the location to (0,0,0), pitch to SoundManager.Instance.pitchSFX, volume to SoundManager.Instance.volumeSFX

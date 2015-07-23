@@ -79,6 +79,9 @@ public sealed class PlayerControl : MonoBehaviour
 	public bool IsGrounded
 	{ get { return controller.isGrounded; } }
 
+	public bool WasGrounded
+	{ get { return controller.wasGroundedLastFrame; } }
+
 	public LayerMask CollisionLayers
 	{ get { return controller.platformMask; } }
 	#endregion
@@ -117,6 +120,8 @@ public sealed class PlayerControl : MonoBehaviour
 	{
 		GetInput();
 		ApplyAnimation();
+
+		if (IsGrounded && !WasGrounded) PlayLandingSound();
 	}
 
 	private void LateUpdate()
@@ -127,7 +132,7 @@ public sealed class PlayerControl : MonoBehaviour
 
 	private void OnTriggerEnter2D(Collider2D other)
 	{
-		if (farted && initialFartTime - fartTime > 0.05f && CollisionLayers.ContainsLayer(other.gameObject))
+		if (farted && initialFartTime - fartTime > 0.05f && CollisionLayers.ContainsLayer(other))
 			StopFart(!IsGrounded);
 
 		switch (other.tag)
@@ -184,16 +189,6 @@ public sealed class PlayerControl : MonoBehaviour
 		animator.SetBool("Walking",  horizontalMovement != 0f && !fart);
 		animator.SetBool("Grounded", IsGrounded);
 		animator.SetBool("Falling", velocity.y < 0f);
-	}
-
-	private void PlayWalkingSound(int rightStep)
-	{
-		if (!fart && IsGrounded)
-		{
-			var stepGroup = rightStep == 1 ? SfxGroups.WalkingGrassRight : SfxGroups.WalkingGrassLeft;
-
-			SoundManager.PlayCappedSFX(SoundManager.LoadFromGroup(stepGroup), stepGroup);
-		}
 	}
 
 	private void GetMovement()
@@ -285,18 +280,6 @@ public sealed class PlayerControl : MonoBehaviour
 		ResetOrientation();
 	}
 
-	private void PlayFartSound(float chargePercentage)
-	{
-		/*
-		if (chargePercentage <= shortFartSoundPercentage && fartSoundsShort.Count > 0)
-			audioSource.PlayOneShot(fartSoundsShort[Random.Range(0, fartSoundsShort.Count)]);
-		else if (chargePercentage <= mediumFartSoundPercentage && fartSoundsMedium.Count > 0)
-			audioSource.PlayOneShot(fartSoundsMedium[Random.Range(0, fartSoundsMedium.Count)]);
-		else if (fartSoundsLong.Count > 0)
-			audioSource.PlayOneShot(fartSoundsLong[Random.Range(0, fartSoundsLong.Count)]);
-			*/
-	}
-
 	private IEnumerator StartFartParticles()
 	{
 		yield return new WaitForFixedUpdate();
@@ -335,6 +318,31 @@ public sealed class PlayerControl : MonoBehaviour
 		horizontalMovement = 0f;
 		jump = false;
 		StopFart(true);
+	}
+	#endregion
+
+	#region Audio Methods
+	private void PlayWalkingSound(int rightStep)
+	{
+		if (!fart && IsGrounded)
+			SoundManager.PlayCappedSFXFromGroup(rightStep == 1 ? SfxGroups.WalkingGrassRight 
+				                                                 : SfxGroups.WalkingGrassLeft);
+	}
+
+	private void PlayLandingSound()
+	{
+		SoundManager.PlayCappedSFXFromGroup(SfxGroups.LandingGrass);
+	}
+
+	private void PlayFartSound(float chargePercentage)
+	{
+		string fartGroup;
+
+		if (chargePercentage <= shortFartSoundPercentage) fartGroup = SfxGroups.FartsShort;
+		else if (chargePercentage <= mediumFartSoundPercentage) fartGroup = SfxGroups.FartsMedium;
+		else fartGroup = SfxGroups.FartsLong;
+
+		SoundManager.PlayCappedSFXFromGroup(fartGroup);
 	}
 	#endregion
 

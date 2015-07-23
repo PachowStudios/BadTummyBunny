@@ -8,6 +8,7 @@
 	// Walking
 	public const string WalkingGrassLeft = "WalkingGrassLeft";
 	public const string WalkingGrassRight = "WalkingGrassRight";
+	public const string LandingGrass = "LandingGrass";
 
 	// Environment
 	public const string Carrots = "Carrots";
