@@ -19,9 +19,11 @@ public sealed class PlayerControl : MonoBehaviour
 	public float fartMinDischarge = 0.5f;
 	public Vector2 fartSpeedRange;
 
+	public float trajectoryPreviewTime = 1f;
+	public float trajectoryStartDistance = 1f;
+	public float trajectoryWidth = 0.3f;
 	[Range(8, 64)]
 	public int trajectorySegments = 16;
-	public float trajectoryPreviewTime = 1f;
 	public bool clearTrajectoryAfterFart = true;
 	public string trajectorySortingLayer;
 	public int trajectorySortingOrder;
@@ -103,7 +105,10 @@ public sealed class PlayerControl : MonoBehaviour
 	{ get { return body.localScale.x > 0f; } }
 
 	private Vector3 MouseDirection
-	{ get { return transform.position.LookAt2D(Camera.main.ScreenToWorldPoint(Input.mousePosition)) * Vector3.right; } }
+	{ get { return CenterPoint.LookAt2D(Camera.main.ScreenToWorldPoint(Input.mousePosition)) * Vector3.right; } }
+
+	private Vector3 CenterPoint
+	{ get { return collider2D.bounds.center; } }
 	#endregion
 
 	#region MonoBehaviour
@@ -124,9 +129,10 @@ public sealed class PlayerControl : MonoBehaviour
 		trajectoryLine = new VectorLine("Trajectory",
 																		new Vector3[trajectorySegments],
 																		null,
-																		5f,
+																		Extensions.UnitsToPixels(trajectoryWidth),
 																		LineType.Continuous,
 																		Joins.Fill);
+		trajectoryLine.textureScale = 1f;
 	}
 
 	private void Update()
@@ -159,6 +165,11 @@ public sealed class PlayerControl : MonoBehaviour
 	private void OnTriggerStay2D(Collider2D other)
 	{
 		OnTriggerEnter2D(other);
+	}
+
+	private void OnDestroy()
+	{
+		VectorLine.Destroy(ref trajectoryLine);
 	}
 	#endregion
 
@@ -301,18 +312,26 @@ public sealed class PlayerControl : MonoBehaviour
 		if (fartChargeTime <= 0f) return null;
 
 		var trajectoryPoints = new Vector3[trajectorySegments];
-		var trajectoryPosition = transform.position;
 		var trajectoryTimeStep = trajectoryPreviewTime / trajectorySegments;
-		var trajectoryGravity = gravity * trajectoryTimeStep;
-		var trajectoryVelocity = MouseDirection * CalculateFartSpeed(chargeTime);
+		var trajectoryDirection = MouseDirection;
+		var trajectoryFartSpeed = CalculateFartSpeed(chargeTime);
+		var trajectoryVelocity = trajectoryDirection * trajectoryFartSpeed;
+		var trajectoryGravity = gravity * trajectoryTimeStep * 0.5f;
+		var startingPosition = CenterPoint;
+		var bufferDelta = trajectoryDirection * trajectoryStartDistance;
 
-		trajectoryPoints[0] = trajectoryPosition;
+		bufferDelta.y += gravity * Mathf.Pow((trajectoryStartDistance / trajectoryFartSpeed), 2) * 0.5f;
 
-		for (int i = 1; i < trajectorySegments; i++)
+		for (int i = 0; i < trajectorySegments; i++)
 		{
-			trajectoryVelocity.y += trajectoryGravity;
-			trajectoryPosition += trajectoryVelocity * trajectoryTimeStep;
-			trajectoryPoints[i] = trajectoryPosition;
+			var trajectoryDelta = trajectoryVelocity;
+			trajectoryDelta.y += trajectoryGravity * i;
+			trajectoryDelta *= trajectoryTimeStep * i;
+
+			if (bufferDelta.sqrMagnitude > trajectoryDelta.sqrMagnitude)
+				trajectoryPoints[i] = startingPosition + bufferDelta;
+			else
+				trajectoryPoints[i] = startingPosition + trajectoryDelta;
 		}
 
 		return trajectoryPoints;

@@ -172,5 +172,11 @@ public static class Extensions
 						   Random.Range(min.y, max.y),
 						   Random.Range(min.z, max.z));
 	}
+
+	public static float UnitsToPixels(float units)
+	{
+		var worldPoint = Camera.main.ViewportToWorldPoint(Vector3.zero) + new Vector3(units, 0f);
+		return Camera.main.WorldToScreenPoint(worldPoint).x;
+	}
 	#endregion
 }
