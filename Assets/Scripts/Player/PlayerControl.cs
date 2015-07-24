@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Vectrosity;
 
 [AddComponentMenu("Player/Control")]
 public sealed class PlayerControl : MonoBehaviour
@@ -16,8 +17,14 @@ public sealed class PlayerControl : MonoBehaviour
 	public float carrotFartRechargePercent = 0.25f;
 	public float fartMaxChargeTime = 3f;
 	public float fartMinDischarge = 0.5f;
-	public Vector2 fartDistanceRange;
 	public Vector2 fartSpeedRange;
+
+	[Range(8, 64)]
+	public int trajectorySegments = 16;
+	public float trajectoryPreviewTime = 1f;
+	public bool clearTrajectoryAfterFart = true;
+	public string trajectorySortingLayer;
+	public int trajectorySortingOrder;
 
 	public float groundDamping = 10f;
 	public float airDamping = 5f;
@@ -48,14 +55,13 @@ public sealed class PlayerControl : MonoBehaviour
 	private float fartAvailableTime;
 	private float fartChargeTime = 0f;
 
-	private float fartDistance = 0f;
 	private float fartSpeed = 0f;
-	private float initialFartTime = 0f;
 	private float fartTime = 0f;
 	private Vector2 fartDirection = Vector2.zero;
 
 	private CharacterController2D controller;
 	private Animator animator;
+	private VectorLine trajectoryLine;
 	#endregion
 
 	#region Public Properties
@@ -97,12 +103,7 @@ public sealed class PlayerControl : MonoBehaviour
 	{ get { return body.localScale.x > 0f; } }
 
 	private Vector3 MouseDirection
-	{
-		get
-		{
-			return transform.position.LookAt2D(Camera.main.ScreenToWorldPoint(Input.mousePosition)) * Vector3.right;
-		}
-	}
+	{ get { return transform.position.LookAt2D(Camera.main.ScreenToWorldPoint(Input.mousePosition)) * Vector3.right; } }
 	#endregion
 
 	#region MonoBehaviour
@@ -114,11 +115,24 @@ public sealed class PlayerControl : MonoBehaviour
 		animator = GetComponent<Animator>();
 
 		fartAvailableTime = fartMaxAvailableTime;
+
+		VectorLine.SetCanvasCamera(Camera.main);
+		VectorLine.canvas.planeDistance = 9;
+		VectorLine.canvas.sortingLayerName = trajectorySortingLayer;
+		VectorLine.canvas.sortingOrder = trajectorySortingOrder;
+
+		trajectoryLine = new VectorLine("Trajectory",
+																		new Vector3[trajectorySegments],
+																		null,
+																		5f,
+																		LineType.Continuous,
+																		Joins.Fill);
 	}
 
 	private void Update()
 	{
 		GetInput();
+		DrawFartTrajectory();
 		ApplyAnimation();
 
 		if (IsGrounded && !WasGrounded) PlayLandingSound();
@@ -132,7 +146,7 @@ public sealed class PlayerControl : MonoBehaviour
 
 	private void OnTriggerEnter2D(Collider2D other)
 	{
-		if (farted && initialFartTime - fartTime > 0.05f && CollisionLayers.ContainsLayer(other))
+		if (farted && fartTime > 0.05f && CollisionLayers.ContainsLayer(other))
 			StopFart(!IsGrounded);
 
 		switch (other.tag)
@@ -184,6 +198,26 @@ public sealed class PlayerControl : MonoBehaviour
 		}
 	}
 
+	private void DrawFartTrajectory()
+	{
+		if (!fartCharging)
+		{
+			if (trajectoryLine.points3.Count != 0 && clearTrajectoryAfterFart) trajectoryLine.Resize(0);
+		}
+		else
+		{
+			var trajectoryPoints = CalculateFartTrajectory(fartChargeTime);
+
+			if (trajectoryPoints == null) return;
+
+			if (trajectoryLine.points3.Count == 0) trajectoryLine.Resize(trajectorySegments);
+
+			trajectoryLine.MakeSpline(trajectoryPoints);
+		}
+
+		trajectoryLine.Draw();
+	}
+
 	private void ApplyAnimation()
 	{
 		animator.SetBool("Walking",  horizontalMovement != 0f && !fart);
@@ -216,23 +250,21 @@ public sealed class PlayerControl : MonoBehaviour
 		if (fart)
 		{
 			velocity = fartDirection * fartSpeed;
-			fartTime -= Time.deltaTime;
-
-			if (fartTime <= 0f)
-				fart = false;
+			fart = false;
 		}
 
 		if (farted)
 		{
 			body.CorrectScaleForRotation(velocity.DirectionToRotation2D());
+			fartTime += Time.deltaTime;
 		}
 		else
 		{
 			float smoothedMovement = IsGrounded ? groundDamping : airDamping;
 
 			velocity.x = Mathf.Lerp(velocity.x,
-									horizontalMovement * walkSpeed,
-									smoothedMovement * Time.deltaTime);
+															horizontalMovement * walkSpeed,
+															smoothedMovement * Time.deltaTime);
 		}
 
 		velocity.y += gravity * Time.deltaTime;
@@ -257,12 +289,39 @@ public sealed class PlayerControl : MonoBehaviour
 		}
 	}
 
+	private float CalculateFartSpeed(float chargeTime)
+	{
+		return Extensions.ConvertRange(chargeTime, 
+			                             0f, fartMaxChargeTime, 
+																	 fartSpeedRange.x, fartSpeedRange.y);
+	}
+
+	private Vector3[] CalculateFartTrajectory(float chargeTime)
+	{
+		if (fartChargeTime <= 0f) return null;
+
+		var trajectoryPoints = new Vector3[trajectorySegments];
+		var trajectoryPosition = transform.position;
+		var trajectoryTimeStep = trajectoryPreviewTime / trajectorySegments;
+		var trajectoryGravity = gravity * trajectoryTimeStep;
+		var trajectoryVelocity = MouseDirection * CalculateFartSpeed(chargeTime);
+
+		trajectoryPoints[0] = trajectoryPosition;
+
+		for (int i = 1; i < trajectorySegments; i++)
+		{
+			trajectoryVelocity.y += trajectoryGravity;
+			trajectoryPosition += trajectoryVelocity * trajectoryTimeStep;
+			trajectoryPoints[i] = trajectoryPosition;
+		}
+
+		return trajectoryPoints;
+	}
+
 	private void Fart(float chargeTime)
 	{
-		fartDistance = Extensions.ConvertRange(chargeTime, 0f, fartMaxChargeTime, fartDistanceRange.x, fartDistanceRange.y);
-		fartSpeed = Extensions.ConvertRange(chargeTime, 0f, fartMaxChargeTime, fartSpeedRange.x, fartSpeedRange.y);
-		initialFartTime = fartDistance / fartSpeed;
-		fartTime = initialFartTime;
+		fartSpeed = CalculateFartSpeed(chargeTime);
+		fartTime = 0f;
 		fartDirection = MouseDirection;
 		StartCoroutine(StartFartParticles());
 		fart = farted = true;
