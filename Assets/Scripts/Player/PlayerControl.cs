@@ -25,6 +25,8 @@ public sealed class PlayerControl : MonoBehaviour
 	[Range(8, 64)]
 	public int trajectorySegments = 16;
 	public bool clearTrajectoryAfterFart = true;
+	public Material trajectoryMaterial;
+	public Gradient trajectoryGradient;
 	public string trajectorySortingLayer;
 	public int trajectorySortingOrder;
 
@@ -128,7 +130,7 @@ public sealed class PlayerControl : MonoBehaviour
 
 		trajectoryLine = new VectorLine("Trajectory",
 																		new Vector3[trajectorySegments],
-																		null,
+																		trajectoryMaterial,
 																		Extensions.UnitsToPixels(trajectoryWidth),
 																		LineType.Continuous,
 																		Joins.Fill);
@@ -223,6 +225,7 @@ public sealed class PlayerControl : MonoBehaviour
 
 			if (trajectoryLine.points3.Count == 0) trajectoryLine.Resize(trajectorySegments);
 
+			trajectoryLine.SetColor(trajectoryGradient.Evaluate(fartChargeTime / fartMaxChargeTime));
 			trajectoryLine.MakeSpline(trajectoryPoints);
 		}
 
@@ -335,6 +338,16 @@ public sealed class PlayerControl : MonoBehaviour
 		}
 
 		return trajectoryPoints;
+	}
+
+	private Color[] CalculateTrajectoryColors(Gradient gradient)
+	{
+		var colors = new Color[trajectorySegments - 1];
+
+		for (int i = 0; i < trajectorySegments - 1; i++)
+			colors[i] = gradient.Evaluate(i / (float)trajectorySegments);
+
+		return colors;
 	}
 
 	private void Fart(float chargeTime)
