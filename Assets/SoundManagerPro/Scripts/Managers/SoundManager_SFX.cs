@@ -1157,8 +1157,8 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 				Instance.volumeVariations.Remove(clipName);
 				Instance.pitchVariations.Remove(clipName);
 				Instance.RemoveClipFromGroup(clipName);
+				if (clip == null) continue;
 #if UNITY_EDITOR
-				if(clip == null) continue;
 				int index = Instance.storedSFXs.IndexOf(clip);
 				if(index == -1) continue;
 				Instance.storedSFXs.RemoveAt(index);
