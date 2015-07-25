@@ -335,6 +335,19 @@ public sealed class PlayerControl : MonoBehaviour
 				trajectoryPoints[i] = startingPosition + bufferDelta;
 			else
 				trajectoryPoints[i] = startingPosition + trajectoryDelta;
+
+			if (i > 0)
+			{
+				var linecast = Physics2D.Linecast(trajectoryPoints[i - 1], trajectoryPoints[i], CollisionLayers.value);
+
+				if (linecast.collider != null)
+				{
+					for (int j = i - 1; j < trajectorySegments; j++)
+						trajectoryPoints[j] = linecast.point;
+
+					break;
+				}
+			}
 		}
 
 		return trajectoryPoints;
