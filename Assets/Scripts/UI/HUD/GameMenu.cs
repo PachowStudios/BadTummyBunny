@@ -24,8 +24,8 @@ public class GameMenu : MonoBehaviour
 
 	private void Update()
 	{
-		if (Input.GetButtonDown("Quit"))
-			Application.Quit();
+		//if (Input.GetButtonDown("Quit"))
+		//	Application.Quit();
 	}
 	#endregion
 

@@ -24,7 +24,7 @@ TagManager:
   User Layer 10: Player
   User Layer 11: Enemies
   User Layer 12: Block Visibility
-  User Layer 13: 
+  User Layer 13: Touch UI
   User Layer 14: 
   User Layer 15: 
   User Layer 16: 
@@ -48,6 +48,10 @@ TagManager:
     userID: 0
     uniqueID: 0
     locked: 0
+  - name: Editor Info
+    userID: 6
+    uniqueID: 3868407187
+    locked: 0
   - name: Background
     userID: 1
     uniqueID: 1155055469
@@ -67,10 +71,6 @@ TagManager:
   - name: Foreground
     userID: 2
     uniqueID: 81158545
-    locked: 0
-  - name: Editor Info
-    userID: 6
-    uniqueID: 3868407187
     locked: 0
   - name: Effects
     userID: 4

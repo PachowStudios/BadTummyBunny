@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using InControl;
 using Vectrosity;
 
 [AddComponentMenu("Player/Control")]
@@ -63,6 +64,7 @@ public sealed class PlayerControl : MonoBehaviour
 	private float fartTime = 0f;
 	private Vector2 fartDirection = Vector2.zero;
 
+	private PlayerActions playerActions;
 	private CharacterController2D controller;
 	private Animator animator;
 	private VectorLine trajectoryLine;
@@ -106,8 +108,8 @@ public sealed class PlayerControl : MonoBehaviour
 	private bool FacingRight
 	{ get { return body.localScale.x > 0f; } }
 
-	private Vector3 MouseDirection
-	{ get { return CenterPoint.LookAt2D(Camera.main.ScreenToWorldPoint(Input.mousePosition)) * Vector3.right; } }
+	//private Vector3 FartAimDirection
+	//{ get { return CenterPoint.LookAt2D(Camera.main.ScreenToWorldPoint(Input.mousePosition)) * Vector3.right; } }
 
 	private Vector3 CenterPoint
 	{ get { return collider2D.bounds.center; } }
@@ -135,6 +137,11 @@ public sealed class PlayerControl : MonoBehaviour
 																		LineType.Continuous,
 																		Joins.Fill);
 		trajectoryLine.textureScale = 1f;
+	}
+
+	private void OnEnable()
+	{
+		playerActions = PlayerActions.CreateWithDefaultBindings();
 	}
 
 	private void Update()
@@ -169,6 +176,11 @@ public sealed class PlayerControl : MonoBehaviour
 		OnTriggerEnter2D(other);
 	}
 
+	private void OnDisable()
+	{
+		playerActions.Destroy();
+	}
+
 	private void OnDestroy()
 	{
 		VectorLine.Destroy(ref trajectoryLine);
@@ -178,36 +190,36 @@ public sealed class PlayerControl : MonoBehaviour
 	#region Internal Update Methods
 	private void GetInput()
 	{
-		if (enableInput)
+		if (!enableInput) return;
+
+		horizontalMovement = playerActions.Move.Value;
+		jump = playerActions.Jump.WasPressed && IsGrounded;
+
+		previousFartCharging = fartCharging;
+		fartCharging = playerActions.FartAim.IsPressed && canFart;
+
+		if (fartCharging && fartAvailableTime > 0f)
 		{
-			horizontalMovement = Input.GetAxis("Horizontal");
-			jump = jump || Input.GetButtonDown("Jump") && IsGrounded;
+			fartDirection = playerActions.FartAim.Value.normalized;
+			fartChargeTime = Mathf.Min(fartChargeTime + Time.deltaTime, fartMaxChargeTime);
 
-			previousFartCharging = fartCharging;
-			fartCharging = Input.GetButton("Fart") && canFart;
-
-			if (fartCharging && fartAvailableTime > 0f)
+			if (fartChargeTime < fartMaxChargeTime)
 			{
-				fartChargeTime = Mathf.Min(fartChargeTime + Time.deltaTime, fartMaxChargeTime);
+				fartAvailableTime = Mathf.Max(fartAvailableTime - Time.deltaTime, 0f);
 
-				if (fartChargeTime < fartMaxChargeTime)
-				{
-					fartAvailableTime = Mathf.Max(fartAvailableTime - Time.deltaTime, 0f);
-
-					if (!previousFartCharging)
-						fartAvailableTime = Mathf.Max(fartAvailableTime - fartMinDischarge, 0f);
-				}
+				if (!previousFartCharging)
+					fartAvailableTime = Mathf.Max(fartAvailableTime - fartMinDischarge, 0f);
 			}
-			else if (previousFartCharging)
-			{
-				Fart(fartChargeTime);
-				fartChargeTime = 0f;
-			}
-			else
-			{
-				fartChargeTime = 0f;
-				fartAvailableTime = Mathf.Min(fartAvailableTime + (Time.deltaTime * fartRechargeRate), fartMaxAvailableTime);
-			}
+		}
+		else if (previousFartCharging)
+		{
+			Fart(fartChargeTime);
+			fartChargeTime = 0f;
+		}
+		else
+		{
+			fartChargeTime = 0f;
+			fartAvailableTime = Mathf.Min(fartAvailableTime + (Time.deltaTime * fartRechargeRate), fartMaxAvailableTime);
 		}
 	}
 
@@ -243,20 +255,13 @@ public sealed class PlayerControl : MonoBehaviour
 	{
 		if (!farted)
 		{
-			if (Right && !FacingRight)
-				body.Flip();
-			else if (Left && FacingRight)
-				body.Flip();
+			if (Right && !FacingRight) body.Flip();
+			else if (Left && FacingRight) body.Flip();
 		}
 
-		if (!canFart && !Farting && IsGrounded)
-			canFart = true;
+		if (!canFart && !Farting && IsGrounded) canFart = true;
 
-		if (jump && IsGrounded)
-		{
-			Jump(jumpHeight);
-			jump = false;
-		}
+		if (jump) Jump(jumpHeight);
 	}
 
 	private void ApplyMovement()
@@ -316,7 +321,7 @@ public sealed class PlayerControl : MonoBehaviour
 
 		var trajectoryPoints = new Vector3[trajectorySegments];
 		var trajectoryTimeStep = trajectoryPreviewTime / trajectorySegments;
-		var trajectoryDirection = MouseDirection;
+		var trajectoryDirection = fartDirection.ToVector3();
 		var trajectoryFartSpeed = CalculateFartSpeed(chargeTime);
 		var trajectoryVelocity = trajectoryDirection * trajectoryFartSpeed;
 		var trajectoryGravity = gravity * trajectoryTimeStep * 0.5f;
@@ -367,7 +372,6 @@ public sealed class PlayerControl : MonoBehaviour
 	{
 		fartSpeed = CalculateFartSpeed(chargeTime);
 		fartTime = 0f;
-		fartDirection = MouseDirection;
 		StartCoroutine(StartFartParticles());
 		fart = farted = true;
 		canFart = false;
