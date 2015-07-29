@@ -133,6 +133,8 @@ public static class Extensions
 
 	public static float ConvertRange(float num, float oldMin, float oldMax, float newMin, float newMax)
 	{
+		num = Mathf.Clamp(num, oldMin, oldMax);
+
 		float oldRange = oldMax - oldMin;
 		float newRange = newMax - newMin;
 

@@ -100,7 +100,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 115942}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.38997078, y: -3.5, z: 0}
+  m_LocalPosition: {x: 6.88997078, y: -3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 442902}
@@ -140,7 +140,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 164084}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.38997078, y: -3.5, z: 0}
+  m_LocalPosition: {x: 3.88997126, y: -3.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 442902}
@@ -206,7 +206,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   anchor: 8
   offsetUnitType: 0
-  offset: {x: -15, y: 15}
+  offset: {x: -20, y: 20}
   areaUnitType: 0
   activeArea:
     serializedVersion: 2
@@ -215,7 +215,7 @@ MonoBehaviour:
     width: 50
     height: 27.5
   target: 2
-  lowerDeadZone: .200000003
+  lowerDeadZone: 0
   upperDeadZone: .899999976
   inputCurve:
     serializedVersion: 2
@@ -243,9 +243,9 @@ MonoBehaviour:
     busyColor: {r: 1, g: 1, b: 1, a: 1}
     shape: 0
     sizeUnitType: 0
-    size: {x: 15, y: 15}
+    size: {x: 30, y: 30}
     lockAspectRatio: 1
-    worldSize: {x: 1.49999988, y: 1.49999988}
+    worldSize: {x: 2.99999976, y: 2.99999976}
   knob:
     idleSprite: {fileID: 21300000, guid: 54a1d28b302b6484d8633cc09baf1238, type: 3}
     busySprite: {fileID: 21300000, guid: 54a1d28b302b6484d8633cc09baf1238, type: 3}
@@ -253,10 +253,10 @@ MonoBehaviour:
     busyColor: {r: 1, g: 1, b: 1, a: 1}
     shape: 0
     sizeUnitType: 0
-    size: {x: 7, y: 7}
+    size: {x: 10, y: 10}
     lockAspectRatio: 1
-    worldSize: {x: .699999928, y: .699999928}
-  knobRange: 7.5
+    worldSize: {x: .99999994, y: .99999994}
+  knobRange: 15
 --- !u!114 &11431674
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -316,7 +316,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   anchor: 8
   offsetUnitType: 0
-  offset: {x: -35, y: 15}
+  offset: {x: -50, y: 15}
   lockAspectRatio: 1
   target: 15
   allowSlideToggle: 0

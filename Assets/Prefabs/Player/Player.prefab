@@ -177,12 +177,14 @@ MonoBehaviour:
   gravity: -35
   walkSpeed: 5
   jumpHeight: 1.5
-  fartMaxAvailableTime: 7
-  fartRechargeRate: 1
+  groundDamping: 10
+  airDamping: 5
+  maxAvailableFart: 10
+  fartRechargePerSecond: .5
   carrotFartRechargePercent: .25
-  fartMaxChargeTime: 1.5
-  fartMinDischarge: 1
-  fartSpeedRange: {x: 15, y: 25}
+  fartDeadZone: .200000003
+  fartUsageRange: {x: .5, y: 1}
+  fartSpeedRange: {x: 12, y: 25}
   trajectoryPreviewTime: .5
   trajectoryStartDistance: 1
   trajectoryWidth: .25
@@ -195,7 +197,7 @@ MonoBehaviour:
       rgba: 938240
     key1:
       serializedVersion: 2
-      rgba: 4279128320
+      rgba: 1678659840
     key2:
       serializedVersion: 2
       rgba: 4286085375
@@ -223,20 +225,17 @@ MonoBehaviour:
     ctime6: 0
     ctime7: 0
     atime0: 0
-    atime1: 65535
-    atime2: 51079
+    atime1: 6554
+    atime2: 65535
     atime3: 0
     atime4: 0
     atime5: 0
     atime6: 0
     atime7: 0
     m_NumColorKeys: 2
-    m_NumAlphaKeys: 2
+    m_NumAlphaKeys: 3
   trajectorySortingLayer: UI
   trajectorySortingOrder: -1
-  groundDamping: 10
-  airDamping: 5
-  fartDamping: 10
   shortFartSoundPercentage: .25
   mediumFartSoundPercentage: .649999976
   body: {fileID: 400002}

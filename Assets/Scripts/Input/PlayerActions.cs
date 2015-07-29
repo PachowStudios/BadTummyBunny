@@ -5,13 +5,13 @@ public class PlayerActions : PlayerActionSet
 	private PlayerAction MoveLeft;
 	private PlayerAction MoveRight;
 
-	private PlayerAction FartAimLeft;
-	private PlayerAction FartAimRight;
-	private PlayerAction FartAimDown;
-	private PlayerAction FartAimUp;
+	private PlayerAction FartLeft;
+	private PlayerAction FartRight;
+	private PlayerAction FartDown;
+	private PlayerAction FartUp;
 
 	public PlayerOneAxisAction Move;
-	public PlayerTwoAxisAction FartAim;
+	public PlayerTwoAxisAction Fart;
 
 	public PlayerAction Jump;
 
@@ -20,13 +20,13 @@ public class PlayerActions : PlayerActionSet
 		MoveLeft = CreatePlayerAction("Move Left");
 		MoveRight = CreatePlayerAction("Move Right");
 
-		FartAimLeft = CreatePlayerAction("Fart Aim Left");
-		FartAimRight = CreatePlayerAction("Fart Aim Right");
-		FartAimDown = CreatePlayerAction("Fart Aim Down");
-		FartAimUp = CreatePlayerAction("Fart Aim Up");
+		FartLeft = CreatePlayerAction("Fart Aim Left");
+		FartRight = CreatePlayerAction("Fart Aim Right");
+		FartDown = CreatePlayerAction("Fart Aim Down");
+		FartUp = CreatePlayerAction("Fart Aim Up");
 
 		Move = CreateOneAxisPlayerAction(MoveLeft, MoveRight);
-		FartAim = CreateTwoAxisPlayerAction(FartAimLeft, FartAimRight, FartAimDown, FartAimUp);
+		Fart = CreateTwoAxisPlayerAction(FartLeft, FartRight, FartDown, FartUp);
 
 		Jump = CreatePlayerAction("Jump");
 	}
@@ -43,13 +43,13 @@ public class PlayerActions : PlayerActionSet
 		playerActions.MoveRight.AddDefaultBinding(InputControlType.LeftStickRight);
 		playerActions.MoveRight.AddDefaultBinding(InputControlType.DPadRight);
 
-		playerActions.FartAimLeft.AddDefaultBinding(InputControlType.RightStickLeft);
+		playerActions.FartLeft.AddDefaultBinding(InputControlType.RightStickLeft);
 
-		playerActions.FartAimRight.AddDefaultBinding(InputControlType.RightStickRight);
+		playerActions.FartRight.AddDefaultBinding(InputControlType.RightStickRight);
 
-		playerActions.FartAimDown.AddDefaultBinding(InputControlType.RightStickDown);
+		playerActions.FartDown.AddDefaultBinding(InputControlType.RightStickDown);
 
-		playerActions.FartAimUp.AddDefaultBinding(InputControlType.RightStickUp);
+		playerActions.FartUp.AddDefaultBinding(InputControlType.RightStickUp);
 
 		playerActions.Jump.AddDefaultBinding(Key.Space);
 		playerActions.Jump.AddDefaultBinding(InputControlType.Action1);
