@@ -11,20 +11,20 @@ MonoBehaviour:
   m_Script: {fileID: 575807087, guid: 533361e04fa896b4395cced4d33088c3, type: 3}
   m_Name: Coin
   m_EditorClassIdentifier: 
-  _internalFlags: 0
+  _internalFlags: 1
   disableImmediatePreview: 0
-  _previewAssetId: 
-  customPreviewImage: {fileID: 2800000, guid: a21057beb9d2a124b99625aaf262dcbc, type: 3}
+  _previewAssetId: z_55139e10-d982-4114-80b2-4628d93d1d83
+  customPreviewImage: {fileID: 0}
   customPreviewDesignTime: 1
   _static: 0
   _smooth: 0
   visibility: 1
   group: 0
-  overrideLayer: 0
-  layer: 0
+  overrideLayer: 1
+  layer: 14
   overrideTag: 1
   tag: Coin
-  _categoryId: 4
+  _categoryId: 7
   forceLegacySideways: 0
   overrideTransforms: 0
   scaleMode: 0
@@ -40,8 +40,10 @@ MonoBehaviour:
     _type: 0
     _rotation: 0
     _variations:
-    - {fileID: 100000, guid: 22b78ae199dd1e147881deef00bc504e, type: 2}
-    _variationWeights: 64000000
+    - {fileID: 100000, guid: 8d592416c4304b94faf7d6ccc2427dc3, type: 2}
+    - {fileID: 100000, guid: 13e02ca3df2adb24298a9186d5de4935, type: 2}
+    - {fileID: 100000, guid: e08fb4612371d8a44861a3fb19179ab8, type: 2}
+    _variationWeights: 640000006400000064000000
   _materialMappingFrom: []
   _materialMappingTo: []
   _coalesce: 0

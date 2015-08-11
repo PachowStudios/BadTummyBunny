@@ -25,7 +25,9 @@ MonoBehaviour:
     _label: Triggers
   - _id: 5
     _label: Enemies
-  _nextCategoryId: 6
+  - _id: 7
+    _label: Powerups
+  _nextCategoryId: 7
   _flagLabels:
   - 
   - 

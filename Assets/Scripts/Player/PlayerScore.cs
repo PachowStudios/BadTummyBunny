@@ -26,8 +26,8 @@ public class PlayerScore : MonoBehaviour
 	{
 		if (coin == null) return;
 
+		Coins += coin.Value;
 		coin.Collect();
-		Coins++;
 	}
 	#endregion
 }
