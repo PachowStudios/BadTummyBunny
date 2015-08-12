@@ -1,9 +1,12 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
 
 public class HealthDisplay : MonoBehaviour
 {
+	#region Constants
+	public const int HealthPerHeart = 2;
+	#endregion
+
 	#region Fields
 	private static HealthDisplay instance;
 

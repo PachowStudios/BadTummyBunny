@@ -10,7 +10,7 @@ public abstract class Enemy : MonoBehaviour
 	public float airDamping = 5f;
 
 	public float maxHealth = 25f;
-	public float damage = 5f;
+	public int damage = 1;
 	public Vector2 knockback = new Vector2(2f, 1f);
 	public bool immuneToKnockback = false;
 
@@ -227,12 +227,11 @@ public abstract class Enemy : MonoBehaviour
 		Destroy(gameObject);
 	}
 
-	public void TakeDamageFromPlayer()
+	public void TakeDamageFromPlayer(int damage)
 	{
 		if (Health <= 0f)
 			return;
 
-		float damage = PlayerHealth.Instance.Damage;
 		Vector2 knockback = PlayerHealth.Instance.Knockback;
 		Vector2 knockbackDirection = PlayerControl.Instance.Direction;
 

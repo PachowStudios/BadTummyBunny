@@ -309,12 +309,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 063fb456cba73ee4ca8524866448c59b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 100
-  carrotHealthRechargePercent: .100000001
-  falloutDamage: 5
-  invincibilityPeriod: 2
-  damage: 10
+  maxHealth: 6
+  carrotHealthRecharge: 1
+  falloutDamage: 1
+  damage: 2
   damageRate: 5
+  invincibilityPeriod: 2
   knockback: {x: 4, y: 1}
   fartRange: 10
   fartWidth: {x: 1, y: 5}

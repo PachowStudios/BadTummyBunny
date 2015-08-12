@@ -403,7 +403,7 @@ public sealed class PlayerControl : MonoBehaviour
 		if (carrot == null) return;
 
 		carrot.Collect();
-		PlayerHealth.Instance.Health += PlayerHealth.Instance.carrotHealthRechargePercent * PlayerHealth.Instance.maxHealth;
+		PlayerHealth.Instance.Health += PlayerHealth.Instance.carrotHealthRecharge;
 		availableFart = Mathf.Min(availableFart + (maxAvailableFart * carrotFartRechargePercent), maxAvailableFart);
 	}
 

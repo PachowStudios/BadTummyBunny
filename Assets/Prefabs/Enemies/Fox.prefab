@@ -173,8 +173,8 @@ MonoBehaviour:
   moveSpeed: 2
   groundDamping: 10
   airDamping: 15
-  maxHealth: 25
-  damage: 15
+  maxHealth: 2
+  damage: 1
   knockback: {x: 2, y: 1}
   immuneToKnockback: 0
   flashColor: {r: 1, g: .469999999, b: .469999999, a: 1}

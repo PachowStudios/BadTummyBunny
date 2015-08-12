@@ -4,13 +4,12 @@
 public sealed class PlayerHealth : MonoBehaviour
 {
 	#region Fields
-	public float maxHealth = 100f;
-	[Range(0f, 1f)]
-	public float carrotHealthRechargePercent = 0.1f;
-	public float falloutDamage = 25f;
-	public float invincibilityPeriod = 2f;
-	public float damage = 10f;
+	public int maxHealth = 6;
+	public int carrotHealthRecharge = 1;
+	public int falloutDamage = 1;
+	public int damage = 2;
 	public float damageRate = 3f;
+	public float invincibilityPeriod = 2f;
 	public Vector2 knockback = new Vector2(2f, 2f);
 
 	public float fartRange = 10f;
@@ -18,7 +17,7 @@ public sealed class PlayerHealth : MonoBehaviour
 	[SerializeField]
 	private Transform fartColliderTransform;
 
-	private float health;
+	private int health;
 	private bool dead = false;
 
 	private float damageTime;
@@ -39,27 +38,23 @@ public sealed class PlayerHealth : MonoBehaviour
 	#region Public Properties
 	public static PlayerHealth Instance { get; private set; }
 
-	public float Health
+	public int Health
 	{
 		get { return health; }
 		set
 		{
-			if (value < health)
-				lastHitTime = Time.time;
+			if (value < health) lastHitTime = Time.time;
 
-			health = Mathf.Clamp(value, 0f, maxHealth);
+			health = Mathf.Clamp(value, 0, maxHealth);
 			CheckDeath();
 		}
 	}
 
 	public float HealthPercent
-	{ get { return Mathf.Clamp(health / maxHealth, 0f, 1f); } }
+	{ get { return Mathf.Clamp((float)health / maxHealth, 0f, 1f); } }
 
 	public bool IsDead
 	{ get { return dead; } }
-
-	public float Damage
-	{ get { return damage; } }
 
 	public Vector2 Knockback
 	{ get { return knockback; } }
@@ -129,13 +124,13 @@ public sealed class PlayerHealth : MonoBehaviour
 
 			if (flashTimer > smoothFlashTime)
 			{
-				SetRenderersEnabled(alternate: true);
+				AlternateRenderersEnabled();
 				flashTimer = 0f;
 			}
 		}
 		else
 		{
-			SetRenderersEnabled();
+			SetRenderersEnabled(true);
 			smoothFlashTime = flashTime;
 		}
 	}
@@ -157,7 +152,7 @@ public sealed class PlayerHealth : MonoBehaviour
 					RaycastHit2D linecast = Physics2D.Linecast(origin, enemy.collider2D.bounds.center, PlayerControl.Instance.CollisionLayers);
 					
 					if (linecast.collider == null)
-						enemy.TakeDamageFromPlayer();
+						enemy.TakeDamageFromPlayer(damage);
 				}
 
 				fartCollider.enabled = false;
@@ -169,7 +164,7 @@ public sealed class PlayerHealth : MonoBehaviour
 	#region Internal Helper Methods
 	private void CheckDeath()
 	{
-		if (Health <= 0f && !dead)
+		if (Health <= 0 && !dead)
 		{
 			dead = true;
 
@@ -183,22 +178,21 @@ public sealed class PlayerHealth : MonoBehaviour
 
 	private void Respawn()
 	{
-		if (dead)
-			return;
+		if (dead) return;
 
 		Health -= falloutDamage;
 
 		if (!dead)
 		{
-			if (respawnPoint == null)
-				transform.position = Vector3.zero;
-			else
-				transform.position = respawnPoint.Location;
+			if (respawnPoint == null) transform.position = Vector3.zero;
+			else transform.position = respawnPoint.Location;
 		}
 	}
 
 	private void SetRespawnPoint(RespawnPoint newRespawnPoint)
 	{
+		if (newRespawnPoint == null) return;
+
 		if (respawnPoint != null)
 		{
 			if (respawnPoint == newRespawnPoint) return;
@@ -210,31 +204,32 @@ public sealed class PlayerHealth : MonoBehaviour
 		respawnPoint = newRespawnPoint;
 	}
 
-	private void SetRenderersEnabled(bool enabled = true, bool alternate = false)
+	private void SetRenderersEnabled(bool enabled)
 	{
-		if (alternate)
-			spriteRenderer.enabled = !spriteRenderer.enabled;
-		else
-			spriteRenderer.enabled = enabled;
+		spriteRenderer.enabled = enabled;
+	}
+
+	private void AlternateRenderersEnabled()
+	{
+		spriteRenderer.enabled = !spriteRenderer.enabled;
 	}
 
 	private void SetFartCollider()
 	{
 		fartCollider.SetPath(0, new Vector2[] { fartColliderTransform.TransformPointLocal(new Vector2(0.75f, fartWidth.x / 2f)),
-												fartColliderTransform.TransformPointLocal(new Vector2(0.75f, -(fartWidth.x / 2f))),
-												fartColliderTransform.TransformPointLocal(new Vector2(-fartRange, (-fartWidth.y / 2f))),
-												fartColliderTransform.TransformPointLocal(new Vector2(-fartRange, fartWidth.y / 2f)) });
+			                                      fartColliderTransform.TransformPointLocal(new Vector2(0.75f, -(fartWidth.x / 2f))),
+			                                      fartColliderTransform.TransformPointLocal(new Vector2(-fartRange, (-fartWidth.y / 2f))),
+			                                      fartColliderTransform.TransformPointLocal(new Vector2(-fartRange, fartWidth.y / 2f)) });
 	}
 	#endregion
 
 	#region Public Methods
-	public void TakeDamage(Enemy enemy, float damage = 0f, Vector2 knockback = default(Vector2))
+	public void TakeDamage(Enemy enemy, int damage = 0, Vector2 knockback = default(Vector2))
 	{
-		if (invincible || dead)
-			return;
+		if (invincible || dead) return;
 
 		float knockbackDirection = 1f;
-		damage = (damage == 0f) ? enemy.damage : damage;
+		damage = (damage == 0) ? enemy.damage : damage;
 		knockback = (knockback == default(Vector2)) ? enemy.knockback : knockback;
 		knockbackDirection = (transform.position.x - enemy.transform.position.x).Sign();
 
