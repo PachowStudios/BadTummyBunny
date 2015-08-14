@@ -146,7 +146,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Size: {x: .75, y: .6875}
+  m_Size: {x: .730000019, y: .667500019}
   m_Center: {x: 0, y: .40625}
 --- !u!95 &9500000
 Animator:
@@ -309,10 +309,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 063fb456cba73ee4ca8524866448c59b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 6
+  heartContainers: 3
   carrotHealthRecharge: 1
   falloutDamage: 1
-  damage: 2
+  damage: 4
   damageRate: 5
   invincibilityPeriod: 2
   knockback: {x: 4, y: 1}

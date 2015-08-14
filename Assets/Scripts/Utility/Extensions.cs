@@ -109,6 +109,18 @@ public static class Extensions
 
 		return parent[Random.Range(0, parent.Count)];
 	}
+
+	public static T Pop<T>(this IList<T> parent)
+	{
+		if (parent == null || parent.Count == 0) return default(T);
+
+		var lastIndex = parent.Count - 1;
+		var lastItem = parent[lastIndex];
+
+		parent.RemoveAt(lastIndex);
+
+		return lastItem;
+	}
 	#endregion
 
 	#region Utility

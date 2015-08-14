@@ -26,4 +26,8 @@ Material:
         first:
           name: PixelSnap
         second: 1
-    m_Colors: {}
+    m_Colors:
+      data:
+        first:
+          name: _Color
+        second: {r: 1, g: 1, b: 1, a: 1}

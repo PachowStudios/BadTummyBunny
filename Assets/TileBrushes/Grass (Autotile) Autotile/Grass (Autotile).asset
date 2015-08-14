@@ -13,22 +13,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _originalAtlasWidth: 128
   _originalAtlasHeight: 128
-  _rows: 8
-  _columns: 8
-  _tileIncrementX: 16
-  _tileIncrementY: 16
-  _tileIncrementU: .125
-  _tileIncrementV: .125
+  _rows: 7
+  _columns: 7
+  _tileIncrementX: 18
+  _tileIncrementY: 18
+  _tileIncrementU: .140625
+  _tileIncrementV: .140625
   _tileWidth: 16
   _tileHeight: 16
   _tileWidthUV: .125
   _tileHeightUV: .125
-  _borderSize: 0
-  _borderU: 0
-  _borderV: 0
-  _delta: .100000001
-  _deltaU: .000781250012
-  _deltaV: .000781250012
+  _borderSize: 1
+  _borderU: .0078125
+  _borderV: .0078125
+  _delta: 0
+  _deltaU: 0
+  _deltaV: 0
   procedural: 1
   _atlasMaterial: {fileID: 2100000, guid: 1553c655e0d929e4f8121e4fccc7da01, type: 2}
   _atlasTexture: {fileID: 2800000, guid: 490fe6c56e2db40498a1c785e9941f32, type: 3}
@@ -36,7 +36,7 @@ MonoBehaviour:
   _tileMeshes: []
   _autotileStyle: 0
   _hasInnerJoins: 1
-  _forceClampEdges: 0
+  _forceClampEdges: 1
   rawTexture: {fileID: 2800000, guid: 65739db4e69c8204a831048c14176b31, type: 3}
 --- !u!114 &11400002
 MonoBehaviour:

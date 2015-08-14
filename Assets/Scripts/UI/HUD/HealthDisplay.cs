@@ -3,10 +3,6 @@ using UnityEngine.UI;
 
 public class HealthDisplay : MonoBehaviour
 {
-	#region Constants
-	public const int HealthPerHeart = 2;
-	#endregion
-
 	#region Fields
 	private static HealthDisplay instance;
 

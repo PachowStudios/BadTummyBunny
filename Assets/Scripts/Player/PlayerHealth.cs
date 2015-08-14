@@ -3,11 +3,23 @@
 [AddComponentMenu("Player/Player Health")]
 public sealed class PlayerHealth : MonoBehaviour
 {
+	#region Events
+	public delegate void OnHealthChangedHandler(int newHealt);
+	public delegate void OnHeartContainersChangedHandler(int newHeartContainers);
+
+	public event OnHealthChangedHandler OnHealthChanged;
+	public event OnHeartContainersChangedHandler OnHeartContainersChanged;
+	#endregion
+
+	#region Constants
+	public const int HealthPerContainer = 4;
+	#endregion
+
 	#region Fields
-	public int maxHealth = 6;
+	public int heartContainers = 3;
 	public int carrotHealthRecharge = 1;
 	public int falloutDamage = 1;
-	public int damage = 2;
+	public int damage = 4;
 	public float damageRate = 3f;
 	public float invincibilityPeriod = 2f;
 	public Vector2 knockback = new Vector2(2f, 2f);
@@ -38,6 +50,28 @@ public sealed class PlayerHealth : MonoBehaviour
 	#region Public Properties
 	public static PlayerHealth Instance { get; private set; }
 
+	public int HeartContainers
+	{
+		get { return heartContainers; }
+		set
+		{
+			if (heartContainers == value) return;
+
+			if (heartContainers < value)
+				health = Mathf.Min(health + ((value - heartContainers) * HealthPerContainer), value * HealthPerContainer);
+			else if (heartContainers > value)
+				health = Mathf.Min(health, value * HealthPerContainer);
+
+			heartContainers = value;
+
+			if (OnHeartContainersChanged != null) OnHeartContainersChanged(heartContainers);
+			if (OnHealthChanged != null) OnHealthChanged(health);
+		}
+	}
+
+	public int MaxHealth
+	{ get { return HeartContainers * HealthPerContainer; } }
+
 	public int Health
 	{
 		get { return health; }
@@ -45,13 +79,16 @@ public sealed class PlayerHealth : MonoBehaviour
 		{
 			if (value < health) lastHitTime = Time.time;
 
-			health = Mathf.Clamp(value, 0, maxHealth);
+			health = Mathf.Clamp(value, 0, MaxHealth);
+
+			if (OnHealthChanged != null) OnHealthChanged(health);
+
 			CheckDeath();
 		}
 	}
 
 	public float HealthPercent
-	{ get { return Mathf.Clamp((float)health / maxHealth, 0f, 1f); } }
+	{ get { return Mathf.Clamp((float)health / MaxHealth, 0f, 1f); } }
 
 	public bool IsDead
 	{ get { return dead; } }
@@ -71,7 +108,7 @@ public sealed class PlayerHealth : MonoBehaviour
 		fartCollider.enabled = false;
 		SetFartCollider();
 
-		health = maxHealth;
+		health = MaxHealth;
 		damageTime = 1f / damageRate;
 		damageTimer = damageTime;
 		lastHitTime = Time.time - invincibilityPeriod;
@@ -104,11 +141,6 @@ public sealed class PlayerHealth : MonoBehaviour
 			case Tags.Killzone: Respawn(); break;
 			case Tags.Respawn:  SetRespawnPoint(other.GetComponent<RespawnPoint>()); break;
 		}
-	}
-
-	private void OnTriggerStay2D(Collider2D other)
-	{
-		OnTriggerEnter2D(other);
 	}
 	#endregion
 
