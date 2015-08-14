@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-[AddComponentMenu("UI/Health HUD")]
+[AddComponentMenu("UI/HUD/Health")]
 public class HealthHud : MonoBehaviour
 {
 	#region Inspector Fields
