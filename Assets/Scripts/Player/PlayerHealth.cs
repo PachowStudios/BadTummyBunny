@@ -1,14 +1,12 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
-[AddComponentMenu("Player/Player Health")]
+[AddComponentMenu("Player/Health")]
 public sealed class PlayerHealth : MonoBehaviour
 {
 	#region Events
-	public delegate void OnHealthChangedHandler(int newHealt);
-	public delegate void OnHeartContainersChangedHandler(int newHeartContainers);
-
-	public event OnHealthChangedHandler OnHealthChanged;
-	public event OnHeartContainersChangedHandler OnHeartContainersChanged;
+	public event Action<int> HealthChanged = delegate { };
+	public event Action<int> HeartContainersChanged = delegate { };
 	#endregion
 
 	#region Constants
@@ -63,9 +61,8 @@ public sealed class PlayerHealth : MonoBehaviour
 				health = Mathf.Min(health, value * HealthPerContainer);
 
 			heartContainers = value;
-
-			if (OnHeartContainersChanged != null) OnHeartContainersChanged(heartContainers);
-			if (OnHealthChanged != null) OnHealthChanged(health);
+			HeartContainersChanged(heartContainers);
+			HealthChanged(health);
 		}
 	}
 
@@ -80,8 +77,7 @@ public sealed class PlayerHealth : MonoBehaviour
 			if (value < health) lastHitTime = Time.time;
 
 			health = Mathf.Clamp(value, 0, MaxHealth);
-
-			if (OnHealthChanged != null) OnHealthChanged(health);
+			HealthChanged(health);
 
 			CheckDeath();
 		}
@@ -114,6 +110,20 @@ public sealed class PlayerHealth : MonoBehaviour
 		lastHitTime = Time.time - invincibilityPeriod;
 	}
 
+	private void Start()
+	{
+		PlayerTriggers.Instance.EnemyTriggered += TakeDamage;
+		PlayerTriggers.Instance.KillzoneTriggered += Respawn;
+		PlayerTriggers.Instance.RespawnPointTriggered += SetRespawnPoint;
+	}
+
+	private void OnDestroy()
+	{
+		PlayerTriggers.Instance.EnemyTriggered -= TakeDamage;
+		PlayerTriggers.Instance.KillzoneTriggered -= Respawn;
+		PlayerTriggers.Instance.RespawnPointTriggered -= SetRespawnPoint;
+	}
+
 	private void Update()
 	{
 		if (!dead)
@@ -130,16 +140,6 @@ public sealed class PlayerHealth : MonoBehaviour
 					damageTimer = 0f;
 				}
 			}
-		}
-	}
-
-	private void OnTriggerEnter2D(Collider2D other)
-	{
-		switch (other.tag)
-		{
-			case Tags.Enemy:    TakeDamage(other.GetComponent<Enemy>()); break;
-			case Tags.Killzone: Respawn(); break;
-			case Tags.Respawn:  SetRespawnPoint(other.GetComponent<RespawnPoint>()); break;
 		}
 	}
 	#endregion
@@ -256,14 +256,11 @@ public sealed class PlayerHealth : MonoBehaviour
 	#endregion
 
 	#region Public Methods
-	public void TakeDamage(Enemy enemy, int damage = 0, Vector2 knockback = default(Vector2))
+	public void TakeDamage(Enemy enemy, int damage, Vector2 knockback)
 	{
 		if (invincible || dead) return;
 
-		float knockbackDirection = 1f;
-		damage = (damage == 0) ? enemy.damage : damage;
-		knockback = (knockback == default(Vector2)) ? enemy.knockback : knockback;
-		knockbackDirection = (transform.position.x - enemy.transform.position.x).Sign();
+		float knockbackDirection = (transform.position.x - enemy.transform.position.x).Sign();
 
 		if (damage != 0f)
 		{
@@ -272,6 +269,11 @@ public sealed class PlayerHealth : MonoBehaviour
 			if (!dead && !PlayerControl.Instance.Farting && knockback != default(Vector2))
 				StartCoroutine(PlayerControl.Instance.ApplyKnockback(knockback, knockbackDirection));
 		}
+	}
+
+	public void TakeDamage(Enemy enemy)
+	{
+		TakeDamage(enemy, enemy.damage, enemy.knockback);
 	}
 	#endregion
 }

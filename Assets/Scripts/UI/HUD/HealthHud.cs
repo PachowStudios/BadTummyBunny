@@ -31,22 +31,22 @@ public class HealthHud : MonoBehaviour
 
 	private void Start()
 	{
-		PlayerHealth.Instance.OnHeartContainersChanged += UpdateHeartContainers;
-		PlayerHealth.Instance.OnHealthChanged += UpdateHealth;
+		PlayerHealth.Instance.HeartContainersChanged += OnHeartContainersChanged;
+		PlayerHealth.Instance.HealthChanged += OnHealthChanged;
 
-		UpdateHeartContainers(PlayerHealth.Instance.HeartContainers);
-		UpdateHealth(PlayerHealth.Instance.Health);
+		OnHeartContainersChanged(PlayerHealth.Instance.HeartContainers);
+		OnHealthChanged(PlayerHealth.Instance.Health);
 	}
 
-	private void OnDisable()
+	private void OnDestroy()
 	{
-		PlayerHealth.Instance.OnHeartContainersChanged -= UpdateHeartContainers;
-		PlayerHealth.Instance.OnHealthChanged -= UpdateHealth;
+		PlayerHealth.Instance.HeartContainersChanged -= OnHeartContainersChanged;
+		PlayerHealth.Instance.HealthChanged -= OnHealthChanged;
 	}
 	#endregion
 
 	#region Internal Helper Methods
-	private void UpdateHeartContainers(int newHeartContainers)
+	private void OnHeartContainersChanged(int newHeartContainers)
 	{
 		if (heartContainers.Count < newHeartContainers)
 		{
@@ -71,7 +71,7 @@ public class HealthHud : MonoBehaviour
 		}
 	}
 
-	private void UpdateHealth(int newHealth)
+	private void OnHealthChanged(int newHealth)
 	{
 		var fullContainers = newHealth / PlayerHealth.HealthPerContainer;
 		var partialHealth = newHealth % PlayerHealth.HealthPerContainer;

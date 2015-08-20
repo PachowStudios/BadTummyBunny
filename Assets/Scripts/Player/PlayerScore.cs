@@ -1,12 +1,11 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
-[AddComponentMenu("Player/Player Score")]
+[AddComponentMenu("Player/Score")]
 public class PlayerScore : MonoBehaviour
 {
 	#region Events
-	public delegate void OnCoinsChangedHandler(int newCoins);
-
-	public event OnCoinsChangedHandler OnCoinsChanged;
+	public event Action<int> CoinsChanged = delegate { };
 	#endregion
 
 	#region Internal Fields
@@ -22,8 +21,7 @@ public class PlayerScore : MonoBehaviour
 		set
 		{
 			coins = Mathf.Max(0, value);
-
-			if (OnCoinsChanged != null) OnCoinsChanged(coins);
+			CoinsChanged(coins);
 		}
 	}
 	#endregion
@@ -34,9 +32,14 @@ public class PlayerScore : MonoBehaviour
 		Instance = this;
 	}
 
-	private void OnTriggerEnter2D(Collider2D other)
+	private void Start()
 	{
-		if (other.tag == Tags.Coin) CollectCoin(other.GetComponent<Coin>());
+		PlayerTriggers.Instance.CoinTriggered += CollectCoin;
+	}
+
+	private void OnDestroy()
+	{
+		PlayerTriggers.Instance.CoinTriggered -= CollectCoin;
 	}
 	#endregion
 

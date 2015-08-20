@@ -23,17 +23,17 @@ public class CoinsHud : MonoBehaviour
 
 	private void Start()
 	{
-		PlayerScore.Instance.OnCoinsChanged += UpdateCoins;
+		PlayerScore.Instance.CoinsChanged += OnCoinsChanged;
 	}
 
-	private void OnDisable()
+	private void OnDestroy()
 	{
-		PlayerScore.Instance.OnCoinsChanged -= UpdateCoins;
+		PlayerScore.Instance.CoinsChanged -= OnCoinsChanged;
 	}
 	#endregion
 
 	#region Internal Helper Methods
-	private void UpdateCoins(int newCoins)
+	private void OnCoinsChanged(int newCoins)
 	{
 		coinsText.text = newCoins.ToString().PadLeft(coinsDigits, '0');
 	}

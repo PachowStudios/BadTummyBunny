@@ -1,7 +1,7 @@
 ﻿public static class Tags
 {
 	public const string Player = "Player";
-	public const string Respawn = "Respawn";
+	public const string RespawnPoint = "Respawn";
 	public const string Killzone = "Killzone";
 	public const string Enemy = "Enemy";
 	public const string ParticleSystem = "ParticleSystem";

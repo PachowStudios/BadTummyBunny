@@ -146,6 +146,25 @@ public sealed class PlayerControl : MonoBehaviour
 		playerActions = PlayerActions.CreateWithDefaultBindings();
 	}
 
+	private void Start()
+	{
+		PlayerTriggers.Instance.CarrotTriggered += CollectCarrot;
+		PlayerTriggers.Instance.FlagpoleTriggered += ActivateLevelFlagpole;
+	}
+
+	private void OnDisable()
+	{
+		playerActions.Destroy();
+	}
+
+	private void OnDestroy()
+	{
+		VectorLine.Destroy(ref trajectoryLine);
+
+		PlayerTriggers.Instance.CarrotTriggered -= CollectCarrot;
+		PlayerTriggers.Instance.FlagpoleTriggered -= ActivateLevelFlagpole;
+	}
+
 	private void Update()
 	{
 		GetInput();
@@ -165,27 +184,11 @@ public sealed class PlayerControl : MonoBehaviour
 	{
 		if (farting && fartingTime > 0.05f && CollisionLayers.ContainsLayer(other))
 			StopFart(!IsGrounded);
-
-		switch (other.tag)
-		{
-			case Tags.Carrot:   CollectCarrot(other.GetComponent<Carrot>()); break;
-			case Tags.Flagpole: ActivateLevelFlagpole(other.GetComponent<Flagpole>()); break;
-		}
 	}
 
 	private void OnTriggerStay2D(Collider2D other)
 	{
 		OnTriggerEnter2D(other);
-	}
-
-	private void OnDisable()
-	{
-		playerActions.Destroy();
-	}
-
-	private void OnDestroy()
-	{
-		VectorLine.Destroy(ref trajectoryLine);
 	}
 	#endregion
 
