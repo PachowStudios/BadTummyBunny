@@ -75,7 +75,7 @@ public sealed class PlayerControl : MonoBehaviour
 	#region Public Properties
 	public static PlayerControl Instance { get; private set; }
 
-	public bool Farting
+	public bool IsFarting
 	{ get { return farting; } }
 
 	public float AvailableFartPercent
@@ -438,7 +438,7 @@ public sealed class PlayerControl : MonoBehaviour
 	#region Internal Audio Methods
 	private void PlayWalkingSound(int rightStep)
 	{
-		if (!Farting && IsGrounded)
+		if (!IsFarting && IsGrounded)
 			SoundManager.PlayCappedSFXFromGroup(rightStep == 1 ? SfxGroups.WalkingGrassRight 
 				                                                 : SfxGroups.WalkingGrassLeft);
 	}

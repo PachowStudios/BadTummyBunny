@@ -60,6 +60,13 @@ public static class Extensions
 	}
 	#endregion
 
+	#region Component
+	public static T[] GetInterfaceComponents<T>(this Component parent) where T : class
+	{
+		return System.Array.ConvertAll(parent.GetComponents(typeof(T)), c => c as T);
+	}
+	#endregion
+
 	#region Transform
 	public static void Flip(this Transform parent)
 	{

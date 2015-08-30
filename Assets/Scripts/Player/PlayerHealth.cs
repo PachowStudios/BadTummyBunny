@@ -130,7 +130,7 @@ public sealed class PlayerHealth : MonoBehaviour
 		{
 			UpdateInvincibilityFlash();
 
-			if (PlayerControl.Instance.Farting)
+			if (PlayerControl.Instance.IsFarting)
 			{
 				damageTimer += Time.deltaTime;
 
@@ -266,7 +266,7 @@ public sealed class PlayerHealth : MonoBehaviour
 		{
 			Health -= damage;
 
-			if (!dead && !PlayerControl.Instance.Farting && knockback != default(Vector2))
+			if (!dead && !PlayerControl.Instance.IsFarting && knockback != default(Vector2))
 				StartCoroutine(PlayerControl.Instance.ApplyKnockback(knockback, knockbackDirection));
 		}
 	}
