@@ -700,9 +700,8 @@ MonoBehaviour:
   enablePlatformSnap: 1
   isPlatformSnapExclusiveWhenEnabled: 0
   platformSnapVerticalOffset: -3
-  isPlayerGrounded: 1
   cameraSmoothingType: 1
-  smoothDampTime: .0900000036
+  smoothDampTime: .100000001
   springDampingRatio: .5
   springAngularFrequency: 30
   lerpTowardsFactor: .00200000009

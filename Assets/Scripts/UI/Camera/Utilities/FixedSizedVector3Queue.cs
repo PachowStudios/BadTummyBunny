@@ -3,21 +3,21 @@ using UnityEngine;
 
 public class FixedSizedVector3Queue
 {
-	List<Vector3> _list;
-	int _limit;
+	private List<Vector3> list;
+	private int limit;
 
 	public FixedSizedVector3Queue(int limit)
 	{
-		_limit = limit;
-		_list = new List<Vector3>(limit);
+		this.limit = limit;
+		list = new List<Vector3>(limit);
 	}
 
 	public void Push(Vector3 item)
 	{
-		if (_list.Count == _limit)
-			_list.RemoveAt(0);
+		if (list.Count == limit)
+			list.RemoveAt(0);
 
-		_list.Add(item);
+		list.Add(item);
 	}
 
 	public Vector3 Average()
@@ -25,12 +25,12 @@ public class FixedSizedVector3Queue
 		var avg = Vector3.zero;
 
 		// early out for no items
-		if (_list.Count == 0)
+		if (list.Count == 0)
 			return avg;
 
-		for (var i = 0; i < _list.Count; i++)
-			avg += _list[i];
+		for (var i = 0; i < list.Count; i++)
+			avg += list[i];
 
-		return avg / _list.Count;
+		return avg / list.Count;
 	}
 }

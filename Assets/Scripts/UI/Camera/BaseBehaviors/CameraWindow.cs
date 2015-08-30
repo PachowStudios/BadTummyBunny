@@ -11,7 +11,9 @@ public class CameraWindow : MonoBehaviour, ICameraBaseBehavior
 	[BitMask]
 	public CameraAxis axis;
 
-	// this is only here so that we get the "Enabled" checkbox in the Inspector
+	public bool IsEnabled
+	{ get { return enabled; } }
+
 	[Conditional("UNITY_EDITOR")]
 	private void Update() { }
 
@@ -39,12 +41,6 @@ public class CameraWindow : MonoBehaviour, ICameraBaseBehavior
 		}
 
 		return desiredOffset;
-	}
-
-
-	public bool IsEnabled()
-	{
-		return enabled;
 	}
 
 	#if UNITY_EDITOR

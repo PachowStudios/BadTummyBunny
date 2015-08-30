@@ -12,6 +12,9 @@ public class PositionLocking : MonoBehaviour, ICameraBaseBehavior
 	[Tooltip("when projected focus is enabled the multiplier will increase the forward projection")]
 	public float projectedFocusMultiplier = 3f;
 
+	public bool IsEnabled
+	{ get { return enabled; } }
+
 	// this is only here so that we get the "Enabled" checkbox in the Inspector
 	[Conditional("UNITY_EDITOR")]
 	private void Update() {}
@@ -60,11 +63,6 @@ public class PositionLocking : MonoBehaviour, ICameraBaseBehavior
 		}
 			
 		return desiredOffset;
-	}
-
-	public bool IsEnabled()
-	{
-		return enabled;
 	}
 
 	#if UNITY_EDITOR

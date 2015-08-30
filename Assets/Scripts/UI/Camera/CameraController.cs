@@ -95,7 +95,7 @@ public class CameraController : MonoBehaviour
 		{
 			var cameraBehavior = baseCameraBehaviors[i];
 
-			if (cameraBehavior.IsEnabled())
+			if (cameraBehavior.IsEnabled)
 			{
 				// once we get the desired position we have to subtract the offset that we previously added
 				var desiredPos = cameraBehavior.GetDesiredPositionDelta(targetBounds, basePosition, targetAvgVelocity);
@@ -148,7 +148,7 @@ public class CameraController : MonoBehaviour
 			desiredPosition = cameraFinalizers[i].GetFinalCameraPosition(targetBounds, transform.position, desiredPosition);
 
 			// allow the finalizer with a 0 priority to skip smoothing if it wants to
-			if (i == 0 && cameraFinalizers[i].GetFinalizerPriority() == 0 && cameraFinalizers[i].ShouldSkipSmoothingThisFrame())
+			if (i == 0 && cameraFinalizers[i].GetFinalizerPriority == 0 && cameraFinalizers[i].ShouldSkipSmoothingThisFrame)
 				smoothing = CameraSmoothingType.None;
 		}
 
@@ -181,11 +181,11 @@ public class CameraController : MonoBehaviour
 		positionInFrontOfCamera.z = 1f;
 
 		foreach (var baseBehavior in this.GetInterfaceComponents<ICameraBaseBehavior>())
-			if (baseBehavior.IsEnabled())
+			if (baseBehavior.IsEnabled)
 				baseBehavior.onDrawGizmos(positionInFrontOfCamera);
 
 		foreach (var finalizer in this.GetInterfaceComponents<ICameraFinalizer>())
-			if (finalizer.IsEnabled())
+			if (finalizer.IsEnabled)
 				finalizer.onDrawGizmos(positionInFrontOfCamera);
 
 		if (enablePlatformSnap)
@@ -300,7 +300,7 @@ public class CameraController : MonoBehaviour
 
 		// sort the list if we need to
 		if (cameraFinalizers.Count > 1)
-			cameraFinalizers.Sort((first, second) => first.GetFinalizerPriority().CompareTo(second.GetFinalizerPriority()));
+			cameraFinalizers.Sort((first, second) => first.GetFinalizerPriority.CompareTo(second.GetFinalizerPriority));
 	}
 
 	public void RemoveCameraFinalizer(ICameraFinalizer cameraFinalizer)

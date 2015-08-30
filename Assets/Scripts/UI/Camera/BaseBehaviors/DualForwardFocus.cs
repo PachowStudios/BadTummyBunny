@@ -23,6 +23,9 @@ public class DualForwardFocus : MonoBehaviour, ICameraBaseBehavior
 	[Header("Velocity Based")]
 	public float velocityInfluenceMultiplier = 3f;
 
+	public bool IsEnabled
+	{ get { return enabled; } }
+
 	// this is only here so that we get the "Enabled" checkbox in the Inspector
 	[Conditional("UNITY_EDITOR")]
 	private void Update() { }
@@ -100,11 +103,6 @@ public class DualForwardFocus : MonoBehaviour, ICameraBaseBehavior
 		}
 
 		return desiredOffset;
-	}
-
-	public bool IsEnabled()
-	{
-		return enabled;
 	}
 
 	#if UNITY_EDITOR

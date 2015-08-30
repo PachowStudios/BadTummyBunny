@@ -13,6 +13,15 @@ public class MapExtentsFinalizer : MonoBehaviour, ICameraFinalizer
 	public float rightConstraint;
 	public float leftConstraint;
 
+	public bool IsEnabled
+	{ get { return enabled; } }
+
+	public int GetFinalizerPriority
+	{ get { return 0; } }
+
+	public bool ShouldSkipSmoothingThisFrame
+	{ get { return false; } }
+
 	// this is only here so that we get the "Enabled" checkbox in the Inspector
 	[Conditional("UNITY_EDITOR")]
 	private void Update() { }
@@ -42,21 +51,6 @@ public class MapExtentsFinalizer : MonoBehaviour, ICameraFinalizer
 			desiredCameraPosition.y = bottomConstraint + orthoSize;
 
 		return desiredCameraPosition;
-	}
-
-	public int GetFinalizerPriority()
-	{
-		return 0;
-	}
-
-	public bool ShouldSkipSmoothingThisFrame()
-	{
-		return false;
-	}
-
-	public bool IsEnabled()
-	{
-		return enabled;
 	}
 
 	#if UNITY_EDITOR
