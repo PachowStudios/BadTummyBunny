@@ -196,7 +196,7 @@ MonoBehaviour:
     delay: 0
   crossDuration: 5
   showDebug: 0
-  offTheBGM: 1
+  offTheBGM: 0
   isPaused: 0
   movingOnFromSong: 0
   ignoreLevelLoad: 0
@@ -335,7 +335,7 @@ MonoBehaviour:
   - WalkingGrassRight
   - WalkingGrassLeft
   - LandingGrass
-  offTheSFX: 1
+  offTheSFX: 0
   capAmount: 3
   sfxPrePoolAmounts: 03000000010000000100000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000001000000010000000100000001000000010000000100000001000000
   sfxBaseVolumes:

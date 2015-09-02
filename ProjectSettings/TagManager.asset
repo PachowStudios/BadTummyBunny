@@ -44,6 +44,10 @@ TagManager:
   User Layer 30: 
   User Layer 31: 
   m_SortingLayers:
+  - name: Editor Info
+    userID: 6
+    uniqueID: 3868407187
+    locked: 0
   - name: Default
     userID: 0
     uniqueID: 0
@@ -71,10 +75,6 @@ TagManager:
   - name: Effects
     userID: 4
     uniqueID: 2469458701
-    locked: 0
-  - name: Editor Info
-    userID: 6
-    uniqueID: 3868407187
     locked: 0
   - name: UI
     userID: 8

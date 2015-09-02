@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 
+[RequireComponent(typeof(CircleCollider2D))]
 public class CueFocusRing : MonoBehaviour, ICameraEffector
 {
 	public CircleCollider2D effectorTrigger;
@@ -18,7 +19,10 @@ public class CueFocusRing : MonoBehaviour, ICameraEffector
 	private Transform trackedTarget;
 
 	private Vector3 EffectorPosition
-	{ get { return effectorTrigger.transform.position; } }
+	{
+		get { return transform.TransformPoint(effectorTrigger.center); }
+		set { effectorTrigger.center = transform.InverseTransformPoint(value); }
+	}
 
 	private float OuterRingRadius
 	{ get { return effectorTrigger.radius; } }
@@ -61,7 +65,13 @@ public class CueFocusRing : MonoBehaviour, ICameraEffector
 	{
 		UnityEditor.Handles.color = Color.green;
 
-		if (enableInnerRing) UnityEditor.Handles.DrawWireDisc(EffectorPosition, Vector3.back, innerRingRadius);
+		if (effectorTrigger != null)
+		{
+			if (enableInnerRing)
+				UnityEditor.Handles.DrawWireDisc(EffectorPosition, Vector3.back, innerRingRadius);
+
+			UnityEditor.Handles.PositionHandle(EffectorPosition, Quaternion.identity);
+		}
 	}
 	#endif
 

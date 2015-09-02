@@ -29,7 +29,12 @@ public static class Extensions
 	#region Vector2
 	public static Vector3 ToVector3(this Vector2 parent)
 	{
-		return new Vector3(parent.x, parent.y);
+		return parent.ToVector3(0f);
+	}
+
+	public static Vector3 ToVector3(this Vector2 parent, float z)
+	{
+		return new Vector3(parent.x, parent.y, z);
 	}
 
 	public static float RandomRange(this Vector2 parent)

@@ -313,7 +313,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100002}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3, z: -10}
+  m_LocalPosition: {x: 0, y: 2, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 22400000}
@@ -352,7 +352,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 4.49904013
+  orthographic size: 5.00063324
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -699,7 +699,7 @@ MonoBehaviour:
   verticalOffset: 0
   enablePlatformSnap: 1
   isPlatformSnapExclusiveWhenEnabled: 0
-  platformSnapVerticalOffset: -3
+  platformSnapVerticalOffset: -2
   cameraSmoothingType: 1
   smoothDampTime: .100000001
   springDampingRatio: .5
@@ -783,8 +783,8 @@ MonoBehaviour:
   snapToTop: 1
   snapToRight: 1
   snapToLeft: 1
-  bottomConstraint: -1.5
-  topConstraint: 18
+  bottomConstraint: -4.5
+  topConstraint: 17.5
   rightConstraint: 212
   leftConstraint: -18
 --- !u!114 &11448258
@@ -858,7 +858,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   width: 3
-  height: 6.0999999
+  height: 4.0999999
   axis: 3
 --- !u!114 &11481830
 MonoBehaviour:
@@ -968,7 +968,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 16, y: 8.99808025}
+  m_SizeDelta: {x: 16, y: 10.0012665}
   m_Pivot: {x: .5, y: .5}
 --- !u!224 &22400002
 RectTransform:
