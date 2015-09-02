@@ -51,6 +51,7 @@ public static class EditorExtension
 	}
 }
 
+
 [CustomPropertyDrawer(typeof(BitMaskAttribute))]
 public class EnumBitMaskPropertyDrawer : PropertyDrawer
 {
