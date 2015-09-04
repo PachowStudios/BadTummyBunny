@@ -30,8 +30,7 @@ public class DualForwardFocus : MonoBehaviour, ICameraBaseBehavior
 	[Conditional("UNITY_EDITOR")]
 	private void Update() { }
 
-	#region ICameraBaseBehavior
-	public Vector3 GetDesiredPositionDelta(Bounds targetBounds, Vector3 basePosition, Vector3 targetAvgVelocity)
+	public Vector3 GetDesiredPositionDelta(Bounds targetBounds, Vector3 basePosition, Vector3 targetAverageVelocity)
 	{
 		var desiredOffset = Vector3.zero;
 
@@ -82,7 +81,7 @@ public class DualForwardFocus : MonoBehaviour, ICameraBaseBehavior
 		}
 		else // velocity or direction based
 		{
-			var averagedHorizontalVelocity = targetAvgVelocity.x;
+			var averagedHorizontalVelocity = targetAverageVelocity.x;
 
 			// direction switches are determined by velocity
 			if (averagedHorizontalVelocity > 0f)
@@ -129,5 +128,4 @@ public class DualForwardFocus : MonoBehaviour, ICameraBaseBehavior
 		}
 	}
 	#endif
-	#endregion
 }

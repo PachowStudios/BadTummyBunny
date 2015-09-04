@@ -40,8 +40,7 @@ public class PositionLocking : MonoBehaviour, ICameraBaseBehavior
 		return centerPos;
 	}
 
-	#region ICameraBaseBehavior
-	public Vector3 GetDesiredPositionDelta(Bounds targetBounds, Vector3 basePosition, Vector3 targetAvgVelocity)
+	public Vector3 GetDesiredPositionDelta(Bounds targetBounds, Vector3 basePosition, Vector3 targetAverageVelocity)
 	{
 		var centerPos = GetCenterBasedOnContraints(basePosition, targetBounds.center);
 		var desiredOffset = targetBounds.center - centerPos;
@@ -55,11 +54,11 @@ public class PositionLocking : MonoBehaviour, ICameraBaseBehavior
 			var hasBothAxis = hasHorizontal && hasVertical;
 
 			if (hasBothAxis)
-				desiredOffset += targetAvgVelocity * Time.deltaTime * projectedFocusMultiplier;
+				desiredOffset += targetAverageVelocity * Time.deltaTime * projectedFocusMultiplier;
 			else if (hasHorizontal)
-				desiredOffset.x += targetAvgVelocity.x * Time.deltaTime * projectedFocusMultiplier;
+				desiredOffset.x += targetAverageVelocity.x * Time.deltaTime * projectedFocusMultiplier;
 			else if (hasVertical)
-				desiredOffset.y += targetAvgVelocity.y * Time.deltaTime * projectedFocusMultiplier;
+				desiredOffset.y += targetAverageVelocity.y * Time.deltaTime * projectedFocusMultiplier;
 		}
 			
 		return desiredOffset;
@@ -83,5 +82,4 @@ public class PositionLocking : MonoBehaviour, ICameraBaseBehavior
 			Gizmos.DrawLine(basePosition + new Vector3(0f, -lineWidth, 1f), basePosition + new Vector3(0f, lineWidth, 1f));
 	}
 	#endif
-	#endregion
 }

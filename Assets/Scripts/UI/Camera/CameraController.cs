@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[AddComponentMenu("UI/Camera/Camera Controller")]
 [RequireComponent(typeof(Camera))]
 public class CameraController : MonoBehaviour
 {

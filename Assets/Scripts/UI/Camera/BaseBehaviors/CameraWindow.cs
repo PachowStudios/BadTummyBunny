@@ -17,7 +17,7 @@ public class CameraWindow : MonoBehaviour, ICameraBaseBehavior
 	[Conditional("UNITY_EDITOR")]
 	private void Update() { }
 
-	public Vector3 GetDesiredPositionDelta(Bounds targetBounds, Vector3 basePosition, Vector3 targetAvgVelocity)
+	public Vector3 GetDesiredPositionDelta(Bounds targetBounds, Vector3 basePosition, Vector3 targetAverageVelocity)
 	{
 		var desiredOffset = Vector3.zero;
 		var hasHorizontal = (axis & CameraAxis.Horizontal) == CameraAxis.Horizontal;
