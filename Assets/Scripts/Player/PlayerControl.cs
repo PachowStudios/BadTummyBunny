@@ -44,23 +44,23 @@ public sealed class PlayerControl : MonoBehaviour
 
 	[Header("Components")]
 	[SerializeField]
-	private Transform body;
+	private Transform body = null;
 	[SerializeField]
-	private ParticleSystem fartParticles;
+	private ParticleSystem fartParticles = null;
 	#endregion
 
 	#region Internal Fields
 	private Vector3 velocity = Vector3.zero;
 	private Vector3 lastGroundedPosition;
 	private float horizontalMovement = 0f;
-	private bool jump = false;
-	private bool fart = false;
-	private bool enableInput = true;
+	private bool willJump = false;
+	private bool willFart = false;
+	private bool isInputEnabled = true;
 
-	private bool farting = false;
-	private bool fartingEnabled = true;
+	private bool isFarting = false;
+	private bool isFartingEnabled = true;
 
-	private bool fartCharging = false;
+	private bool isFartCharging = false;
 	private float availableFart = 0f;
 	private float fartPower = 0f;
 	private Vector2 fartDirection = Vector2.zero;
@@ -76,7 +76,19 @@ public sealed class PlayerControl : MonoBehaviour
 	public static PlayerControl Instance { get; private set; }
 
 	public bool IsFarting
-	{ get { return farting; } }
+	{ get { return isFarting; } }
+
+	public bool IsFartCharging
+	{ get { return isFartCharging; } }
+
+	public bool WillFart
+	{ get { return willFart; } }
+
+	public Vector2 FartDirection
+	{ get { return fartDirection; } }
+
+	public float FartPower
+	{ get { return fartPower; } }
 
 	public float AvailableFartPercent
 	{ get { return Mathf.Clamp01(availableFart / maxAvailableFart); } }
@@ -101,20 +113,20 @@ public sealed class PlayerControl : MonoBehaviour
 	#endregion
 
 	#region Internal Properties
-	private bool Right
+	private bool IsMovingRight
 	{ get { return horizontalMovement > 0f; } }
 
-	private bool Left
+	private bool IsMovingLeft
 	{ get { return horizontalMovement < 0f; } }
 
-	private bool FacingRight
+	private bool IsFacingRight
 	{ get { return body.localScale.x > 0f; } }
 
 	private Vector3 CenterPoint
 	{ get { return collider2D.bounds.center; } }
 
 	private bool CanFart
-	{ get { return fartingEnabled && availableFart >= fartUsageRange.y; } }
+	{ get { return isFartingEnabled && availableFart >= fartUsageRange.y; } }
 	#endregion
 
 	#region MonoBehaviour
@@ -182,7 +194,7 @@ public sealed class PlayerControl : MonoBehaviour
 
 	private void OnTriggerEnter2D(Collider2D other)
 	{
-		if (farting && fartingTime > 0.05f && CollisionLayers.ContainsLayer(other))
+		if (isFarting && fartingTime > 0.05f && CollisionLayers.ContainsLayer(other))
 			StopFart(!IsGrounded);
 	}
 
@@ -195,20 +207,20 @@ public sealed class PlayerControl : MonoBehaviour
 	#region Internal Update Methods
 	private void GetInput()
 	{
-		if (!enableInput) return;
+		if (!isInputEnabled) return;
 
 		horizontalMovement = playerActions.Move.Value;
-		jump = playerActions.Jump.WasPressed && IsGrounded;
+		willJump = playerActions.Jump.WasPressed && IsGrounded;
 
-		fartCharging = playerActions.Fart.IsPressed && CanFart;
+		isFartCharging = playerActions.Fart.IsPressed && CanFart;
 
-		if (fartCharging)
+		if (isFartCharging)
 		{
 			var rawFartMagnitude = playerActions.Fart.Value.magnitude;
 
 			if (rawFartMagnitude <= fartDeadZone)
 			{
-				fartCharging = false;
+				isFartCharging = false;
 				fartDirection = Vector2.zero;
 				fartPower = 0f;
 			}
@@ -219,12 +231,12 @@ public sealed class PlayerControl : MonoBehaviour
 			}
 		}
 
-		if (!fartCharging) fart = playerActions.Fart.WasReleased && CanFart;
+		if (!isFartCharging) willFart = playerActions.Fart.WasReleased && CanFart;
 	}
 
 	private void DrawFartTrajectory()
 	{
-		if (fartCharging)
+		if (isFartCharging)
 		{
 			var trajectoryPoints = CalculateFartTrajectory(fartPower);
 
@@ -242,23 +254,23 @@ public sealed class PlayerControl : MonoBehaviour
 
 	private void ApplyAnimation()
 	{
-		animator.SetBool("Walking",  horizontalMovement != 0f && !farting);
+		animator.SetBool("Walking",  horizontalMovement != 0f && !isFarting);
 		animator.SetBool("Grounded", IsGrounded);
 		animator.SetBool("Falling", velocity.y < 0f);
 	}
 
 	private void GetMovement()
 	{
-		if (fart) Fart(fartDirection, fartPower);
+		if (willFart) Fart(fartDirection, fartPower);
 
-		if (!farting)
+		if (!isFarting)
 		{
-			if (Right && !FacingRight) body.Flip();
-			else if (Left && FacingRight) body.Flip();
+			if (IsMovingRight && !IsFacingRight) body.Flip();
+			else if (IsMovingLeft && IsFacingRight) body.Flip();
 
-			if (jump) Jump(jumpHeight);
+			if (willJump) Jump(jumpHeight);
 
-			if (!fartingEnabled && IsGrounded) fartingEnabled = true;
+			if (!isFartingEnabled && IsGrounded) isFartingEnabled = true;
 
 			availableFart = Mathf.Min(availableFart + (Time.deltaTime * fartRechargePerSecond), maxAvailableFart);
 		}
@@ -266,7 +278,7 @@ public sealed class PlayerControl : MonoBehaviour
 
 	private void ApplyMovement()
 	{
-		if (farting)
+		if (isFarting)
 		{
 			body.CorrectScaleForRotation(velocity.DirectionToRotation2D());
 			fartingTime += Time.deltaTime;
@@ -306,8 +318,8 @@ public sealed class PlayerControl : MonoBehaviour
 		if (fartDirection == Vector2.zero || fartPower <= 0) return;
 
 		fartingTime = 0f;
-		farting = true;
-		fartingEnabled = false;
+		isFarting = true;
+		isFartingEnabled = false;
 
 		availableFart = Mathf.Max(0f, availableFart - CalculateFartUsage(fartPower));
 		velocity = fartDirection * CalculateFartSpeed(fartPower);
@@ -318,7 +330,7 @@ public sealed class PlayerControl : MonoBehaviour
 
 	private void StopFart(bool killXVelocity = true)
 	{
-		farting = false;
+		isFarting = false;
 		fartParticles.Stop();
 		ResetOrientation();
 
@@ -430,7 +442,7 @@ public sealed class PlayerControl : MonoBehaviour
 	private void ResetInput()
 	{
 		horizontalMovement = 0f;
-		jump = false;
+		willJump = false;
 		StopFart(true);
 	}
 	#endregion
@@ -476,7 +488,7 @@ public sealed class PlayerControl : MonoBehaviour
 
 	public void DisableInput()
 	{
-		enableInput = false;
+		isInputEnabled = false;
 		ResetInput();
 	}
 	#endregion

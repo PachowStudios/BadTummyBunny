@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class ExplodeEffect : MonoBehaviour
 {
@@ -7,7 +6,7 @@ public class ExplodeEffect : MonoBehaviour
 	private static ExplodeEffect instance;
 
 	[SerializeField]
-	private SpriteExplosion explosionPrefab;
+	private SpriteExplosion explosionPrefab = null;
 	#endregion
 
 	#region Public Properties

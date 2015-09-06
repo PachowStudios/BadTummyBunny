@@ -1,12 +1,11 @@
 ﻿using UnityEngine;
-using System;
 
 [AddComponentMenu("Environment/Respawn Point")]
 public sealed class RespawnPoint : MonoBehaviour
 {
 	#region Fields
 	[SerializeField]
-	private Vector3 localRespawnPoint;
+	private Vector3 localRespawnPoint = default(Vector3);
 
 	private bool activated = false;
 

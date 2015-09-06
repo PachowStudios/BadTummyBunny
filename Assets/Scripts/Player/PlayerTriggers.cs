@@ -1,23 +1,22 @@
 ﻿using System;
+using System.Diagnostics;
 using UnityEngine;
 
 [AddComponentMenu("Player/Triggers")]
 public class PlayerTriggers : MonoBehaviour
 {
-	#region Events
 	public event Action<Coin> CoinTriggered = delegate { };
 	public event Action<Enemy> EnemyTriggered = delegate { };
 	public event Action KillzoneTriggered = delegate { };
 	public event Action<RespawnPoint> RespawnPointTriggered = delegate { };
 	public event Action<Carrot> CarrotTriggered = delegate { };
 	public event Action<Flagpole> FlagpoleTriggered = delegate { };
-	#endregion
 
-	#region Public Properties
 	public static PlayerTriggers Instance { get; private set; }
-	#endregion
 
-	#region MonoBehaviour
+	[Conditional("UNITY_EDITOR")]
+	protected void Update() { }
+
 	private void Awake()
 	{
 		Instance = this;
@@ -35,5 +34,4 @@ public class PlayerTriggers : MonoBehaviour
 			case Tags.Flagpole:     FlagpoleTriggered(other.GetComponent<Flagpole>()); break;
 		}
 	}
-	#endregion
 }

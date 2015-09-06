@@ -25,7 +25,7 @@ public sealed class PlayerHealth : MonoBehaviour
 	public float fartRange = 10f;
 	public Vector2 fartWidth = new Vector2(1f, 4f);
 	[SerializeField]
-	private Transform fartColliderTransform;
+	private Transform fartColliderTransform = null;
 
 	private int health;
 	private bool dead = false;

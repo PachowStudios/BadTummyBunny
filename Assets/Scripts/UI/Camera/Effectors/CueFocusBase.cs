@@ -6,6 +6,7 @@ public abstract class CueFocusBase : MonoBehaviour, ICameraEffector
 {
 	[SerializeField]
 	private Collider2D effectorTrigger;
+
 	[BitMask]
 	public CameraAxis axis;
 	public float effectorWeight = 0.5f;
