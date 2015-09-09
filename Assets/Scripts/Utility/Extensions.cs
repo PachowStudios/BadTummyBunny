@@ -24,6 +24,11 @@ public static class Extensions
 	{
 		return Mathf.RoundToInt(parent * 10f) / 10f;
 	}
+
+	public static float Clamp01(this float parent)
+	{
+		return Mathf.Clamp01(parent);
+	}
 	#endregion
 
 	#region Vector2

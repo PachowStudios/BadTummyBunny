@@ -4,21 +4,14 @@ using UnityEngine;
 [AddComponentMenu("Player/Health")]
 public sealed class PlayerHealth : MonoBehaviour
 {
-	#region Events
 	public event Action<int> HealthChanged = delegate { };
 	public event Action<int> HeartContainersChanged = delegate { };
-	#endregion
 
-	#region Constants
 	public const int HealthPerContainer = 4;
-	#endregion
 
-	#region Fields
 	public int heartContainers = 3;
 	public int carrotHealthRecharge = 1;
 	public int falloutDamage = 1;
-	public int damage = 4;
-	public float damageRate = 3f;
 	public float invincibilityPeriod = 2f;
 	public Vector2 knockback = new Vector2(2f, 2f);
 
@@ -43,9 +36,7 @@ public sealed class PlayerHealth : MonoBehaviour
 
 	private SpriteRenderer spriteRenderer;
 	private PolygonCollider2D fartCollider;
-	#endregion
 
-	#region Public Properties
 	public static PlayerHealth Instance { get; private set; }
 
 	public int HeartContainers
@@ -91,9 +82,7 @@ public sealed class PlayerHealth : MonoBehaviour
 
 	public Vector2 Knockback
 	{ get { return knockback; } }
-	#endregion
 
-	#region MonoBehaviour
 	private void Awake()
 	{
 		Instance = this;
@@ -105,8 +94,6 @@ public sealed class PlayerHealth : MonoBehaviour
 		SetFartCollider();
 
 		health = MaxHealth;
-		damageTime = 1f / damageRate;
-		damageTimer = damageTime;
 		lastHitTime = Time.time - invincibilityPeriod;
 	}
 
@@ -127,24 +114,9 @@ public sealed class PlayerHealth : MonoBehaviour
 	private void Update()
 	{
 		if (!dead)
-		{
 			UpdateInvincibilityFlash();
-
-			if (PlayerControl.Instance.IsFarting)
-			{
-				damageTimer += Time.deltaTime;
-
-				if (damageTimer >= damageTime)
-				{
-					DamageTargets();
-					damageTimer = 0f;
-				}
-			}
-		}
 	}
-	#endregion
 
-	#region Internal Update Methods
 	private void UpdateInvincibilityFlash()
 	{
 		invincible = Time.time <= lastHitTime + invincibilityPeriod;
@@ -167,33 +139,6 @@ public sealed class PlayerHealth : MonoBehaviour
 		}
 	}
 
-	// Ewwwwwww fuck it only 9 hours left
-	// I feel unclean for writing this
-	private void DamageTargets()
-	{
-		Vector3 origin = fartColliderTransform.position;
-
-		foreach (Enemy enemy in FindObjectsOfType<Enemy>())
-		{
-			if (enemy.collider2D != null)
-			{
-				fartCollider.enabled = true;
-
-				if (fartCollider.OverlapPoint(enemy.collider2D.bounds.center))
-				{
-					RaycastHit2D linecast = Physics2D.Linecast(origin, enemy.collider2D.bounds.center, PlayerControl.Instance.CollisionLayers);
-					
-					if (linecast.collider == null)
-						enemy.TakeDamageFromPlayer(damage);
-				}
-
-				fartCollider.enabled = false;
-			}
-		}
-	}
-	#endregion
-
-	#region Internal Helper Methods
 	private void CheckDeath()
 	{
 		if (Health <= 0 && !dead)
@@ -253,9 +198,7 @@ public sealed class PlayerHealth : MonoBehaviour
 			                                      fartColliderTransform.TransformPointLocal(new Vector2(-fartRange, (-fartWidth.y / 2f))),
 			                                      fartColliderTransform.TransformPointLocal(new Vector2(-fartRange, fartWidth.y / 2f)) });
 	}
-	#endregion
 
-	#region Public Methods
 	public void TakeDamage(Enemy enemy, int damage, Vector2 knockback)
 	{
 		if (invincible || dead) return;
@@ -275,5 +218,5 @@ public sealed class PlayerHealth : MonoBehaviour
 	{
 		TakeDamage(enemy, enemy.damage, enemy.knockback);
 	}
-	#endregion
+
 }

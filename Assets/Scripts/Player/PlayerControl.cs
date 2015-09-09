@@ -1,7 +1,5 @@
-﻿using UnityEngine;
-using System.Collections;
-using InControl;
-using Vectrosity;
+﻿using System.Collections;
+using UnityEngine;
 
 [AddComponentMenu("Player/Control")]
 public sealed class PlayerControl : MonoBehaviour
@@ -16,6 +14,8 @@ public sealed class PlayerControl : MonoBehaviour
 	public float airDamping = 5f;
 
 	[Header("Farting")]
+	public MonoBehaviour startingFart = null;
+	public Transform fartPoint = null;
 	public float maxAvailableFart = 10f;
 	public float fartRechargePerSecond = 1f;
 	[Range(0f, 1f)]
@@ -24,29 +24,9 @@ public sealed class PlayerControl : MonoBehaviour
 	public Vector2 fartUsageRange;
 	public Vector2 fartSpeedRange;
 
-	[Header("Trajectory")]
-	public float trajectoryPreviewTime = 1f;
-	public float trajectoryStartDistance = 1f;
-	public float trajectoryWidth = 0.3f;
-	[Range(8, 64)]
-	public int trajectorySegments = 16;
-	public bool clearTrajectoryAfterFart = true;
-	public Material trajectoryMaterial;
-	public Gradient trajectoryGradient;
-	public string trajectorySortingLayer;
-	public int trajectorySortingOrder;
-
-	[Header("Sound Effects")]
-	[Range(0f, 1f)]
-	public float shortFartSoundPercentage = 0.25f;
-	[Range(0f, 1f)]
-	public float mediumFartSoundPercentage = 0.65f;
-
 	[Header("Components")]
 	[SerializeField]
 	private Transform body = null;
-	[SerializeField]
-	private ParticleSystem fartParticles = null;
 	#endregion
 
 	#region Internal Fields
@@ -57,9 +37,9 @@ public sealed class PlayerControl : MonoBehaviour
 	private bool willFart = false;
 	private bool isInputEnabled = true;
 
+	private IFart currentFart = null;
 	private bool isFarting = false;
 	private bool isFartingEnabled = true;
-
 	private bool isFartCharging = false;
 	private float availableFart = 0f;
 	private float fartPower = 0f;
@@ -69,7 +49,6 @@ public sealed class PlayerControl : MonoBehaviour
 	private PlayerActions playerActions;
 	private CharacterController2D controller;
 	private Animator animator;
-	private VectorLine trajectoryLine;
 	#endregion
 
 	#region Public Properties
@@ -138,19 +117,6 @@ public sealed class PlayerControl : MonoBehaviour
 		animator = GetComponent<Animator>();
 
 		availableFart = maxAvailableFart;
-
-		VectorLine.SetCanvasCamera(Camera.main);
-		VectorLine.canvas.planeDistance = 9;
-		VectorLine.canvas.sortingLayerName = trajectorySortingLayer;
-		VectorLine.canvas.sortingOrder = trajectorySortingOrder;
-
-		trajectoryLine = new VectorLine("Trajectory",
-																		new Vector3[trajectorySegments],
-																		trajectoryMaterial,
-																		Extensions.UnitsToPixels(trajectoryWidth),
-																		LineType.Continuous,
-																		Joins.Fill);
-		trajectoryLine.textureScale = 1f;
 	}
 
 	private void OnEnable()
@@ -160,6 +126,8 @@ public sealed class PlayerControl : MonoBehaviour
 
 	private void Start()
 	{
+		SetFart(startingFart);
+
 		PlayerTriggers.Instance.CarrotTriggered += CollectCarrot;
 		PlayerTriggers.Instance.FlagpoleTriggered += ActivateLevelFlagpole;
 	}
@@ -171,8 +139,6 @@ public sealed class PlayerControl : MonoBehaviour
 
 	private void OnDestroy()
 	{
-		VectorLine.Destroy(ref trajectoryLine);
-
 		PlayerTriggers.Instance.CarrotTriggered -= CollectCarrot;
 		PlayerTriggers.Instance.FlagpoleTriggered -= ActivateLevelFlagpole;
 	}
@@ -188,7 +154,7 @@ public sealed class PlayerControl : MonoBehaviour
 	private void LateUpdate()
 	{
 		GetMovement();
-		DrawFartTrajectory();
+		UpdateFartTrajectory();
 		ApplyMovement();
 	}
 
@@ -234,22 +200,10 @@ public sealed class PlayerControl : MonoBehaviour
 		if (!isFartCharging) willFart = playerActions.Fart.WasReleased && CanFart;
 	}
 
-	private void DrawFartTrajectory()
+	private void UpdateFartTrajectory()
 	{
-		if (isFartCharging)
-		{
-			var trajectoryPoints = CalculateFartTrajectory(fartPower);
-
-			if (trajectoryPoints != null)
-			{
-				trajectoryLine.SetColor(trajectoryGradient.Evaluate(fartPower));
-				trajectoryLine.MakeSpline(trajectoryPoints);
-			}
-			else trajectoryLine.SetColor(Color.clear);
-		}
-		else if (clearTrajectoryAfterFart) trajectoryLine.SetColor(Color.clear);
-
-		trajectoryLine.Draw();
+		if (IsFartCharging) currentFart.DrawTrajectory(FartPower, FartDirection, gravity, CenterPoint);
+		else currentFart.ClearTrajectory();
 	}
 
 	private void ApplyAnimation()
@@ -315,23 +269,25 @@ public sealed class PlayerControl : MonoBehaviour
 
 	private void Fart(Vector2 fartDirection, float fartPower)
 	{
-		if (fartDirection == Vector2.zero || fartPower <= 0) return;
+		if (IsFarting || FartDirection == Vector2.zero || FartPower <= 0) return;
 
-		fartingTime = 0f;
 		isFarting = true;
 		isFartingEnabled = false;
 
+		fartingTime = 0f;
 		availableFart = Mathf.Max(0f, availableFart - CalculateFartUsage(fartPower));
-		velocity = fartDirection * CalculateFartSpeed(fartPower);
+		velocity = fartDirection * currentFart.CalculateSpeed(FartPower);
 
-		StartCoroutine(StartFartParticles());
-		PlayFartSound(Mathf.Clamp01(fartPower));
+		currentFart.StartFart(FartPower, FartDirection);
 	}
 
 	private void StopFart(bool killXVelocity = true)
 	{
+		if (!IsFarting) return;
+
 		isFarting = false;
-		fartParticles.Stop();
+
+		currentFart.StopFart();
 		ResetOrientation();
 
 		if (killXVelocity) velocity.x = 0f;
@@ -339,78 +295,11 @@ public sealed class PlayerControl : MonoBehaviour
 		velocity.y = 0f;
 	}
 
-	private IEnumerator StartFartParticles()
-	{
-		yield return new WaitForFixedUpdate();
-
-		fartParticles.Play();
-	}
-
 	private float CalculateFartUsage(float fartPower)
 	{
 		return Extensions.ConvertRange(fartPower,
 																	 0f, 1f,
 																	 fartUsageRange.x, fartUsageRange.y);
-	}
-
-	private float CalculateFartSpeed(float fartPower)
-	{
-		return Extensions.ConvertRange(fartPower, 
-			                             0f, 1f, 
-																	 fartSpeedRange.x, fartSpeedRange.y);
-	}
-
-	private Vector3[] CalculateFartTrajectory(float fartPower)
-	{
-		if (fartPower <= 0) return null;
-
-		var trajectoryPoints = new Vector3[trajectorySegments];
-		var trajectoryTimeStep = trajectoryPreviewTime / trajectorySegments;
-		var trajectoryDirection = fartDirection.ToVector3();
-		var trajectoryFartSpeed = CalculateFartSpeed(fartPower);
-		var trajectoryVelocity = trajectoryDirection * trajectoryFartSpeed;
-		var trajectoryGravity = gravity * trajectoryTimeStep * 0.5f;
-		var startingPosition = CenterPoint;
-		var bufferDelta = trajectoryDirection * trajectoryStartDistance;
-
-		bufferDelta.y += gravity * Mathf.Pow((trajectoryStartDistance / trajectoryFartSpeed), 2) * 0.5f;
-
-		for (int i = 0; i < trajectorySegments; i++)
-		{
-			var trajectoryDelta = trajectoryVelocity;
-			trajectoryDelta.y += trajectoryGravity * i;
-			trajectoryDelta *= trajectoryTimeStep * i;
-
-			if (bufferDelta.sqrMagnitude > trajectoryDelta.sqrMagnitude)
-				trajectoryPoints[i] = startingPosition + bufferDelta;
-			else
-				trajectoryPoints[i] = startingPosition + trajectoryDelta;
-
-			if (i > 0)
-			{
-				var linecast = Physics2D.Linecast(trajectoryPoints[i - 1], trajectoryPoints[i], CollisionLayers.value);
-
-				if (linecast.collider != null)
-				{
-					for (int j = i - 1; j < trajectorySegments; j++)
-						trajectoryPoints[j] = linecast.point;
-
-					break;
-				}
-			}
-		}
-
-		return trajectoryPoints;
-	}
-
-	private Color[] CalculateTrajectoryColors(Gradient gradient)
-	{
-		var colors = new Color[trajectorySegments - 1];
-
-		for (int i = 0; i < trajectorySegments - 1; i++)
-			colors[i] = gradient.Evaluate(i / (float)trajectorySegments);
-
-		return colors;
 	}
 
 	private void CollectCarrot(Carrot carrot)
@@ -459,20 +348,16 @@ public sealed class PlayerControl : MonoBehaviour
 	{
 		SoundManager.PlayCappedSFXFromGroup(SfxGroups.LandingGrass);
 	}
-
-	private void PlayFartSound(float chargePercentage)
-	{
-		string fartGroup;
-
-		if (chargePercentage <= shortFartSoundPercentage) fartGroup = SfxGroups.FartsShort;
-		else if (chargePercentage <= mediumFartSoundPercentage) fartGroup = SfxGroups.FartsMedium;
-		else fartGroup = SfxGroups.FartsLong;
-
-		SoundManager.PlayCappedSFXFromGroup(fartGroup);
-	}
 	#endregion
 
 	#region Public Methods
+	public void SetFart(MonoBehaviour newFart)
+	{
+		if (newFart == null) return;
+
+		currentFart = Instantiate(newFart as MonoBehaviour, fartPoint.position, fartPoint.rotation) as IFart;
+	}
+
 	public IEnumerator ApplyKnockback(Vector2 knockback, float knockbackDirection)
 	{
 		yield return new WaitForSeconds(0.1f);
