@@ -15,11 +15,6 @@ public sealed class PlayerHealth : MonoBehaviour
 	public float invincibilityPeriod = 2f;
 	public Vector2 knockback = new Vector2(2f, 2f);
 
-	public float fartRange = 10f;
-	public Vector2 fartWidth = new Vector2(1f, 4f);
-	[SerializeField]
-	private Transform fartColliderTransform = null;
-
 	private int health;
 	private bool dead = false;
 
@@ -88,10 +83,6 @@ public sealed class PlayerHealth : MonoBehaviour
 		Instance = this;
 
 		spriteRenderer = GetComponentInChildren<SpriteRenderer>();
-		fartCollider = fartColliderTransform.gameObject.AddComponent<PolygonCollider2D>();
-		fartCollider.isTrigger = true;
-		fartCollider.enabled = false;
-		SetFartCollider();
 
 		health = MaxHealth;
 		lastHitTime = Time.time - invincibilityPeriod;
@@ -189,14 +180,6 @@ public sealed class PlayerHealth : MonoBehaviour
 	private void AlternateRenderersEnabled()
 	{
 		spriteRenderer.enabled = !spriteRenderer.enabled;
-	}
-
-	private void SetFartCollider()
-	{
-		fartCollider.SetPath(0, new Vector2[] { fartColliderTransform.TransformPointLocal(new Vector2(0.75f, fartWidth.x / 2f)),
-			                                      fartColliderTransform.TransformPointLocal(new Vector2(0.75f, -(fartWidth.x / 2f))),
-			                                      fartColliderTransform.TransformPointLocal(new Vector2(-fartRange, (-fartWidth.y / 2f))),
-			                                      fartColliderTransform.TransformPointLocal(new Vector2(-fartRange, fartWidth.y / 2f)) });
 	}
 
 	public void TakeDamage(Enemy enemy, int damage, Vector2 knockback)

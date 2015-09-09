@@ -11,7 +11,7 @@ public class Wait : MonoBehaviour
 		get
 		{
 			if (instance == null)
-				instance = new Wait();
+				instance = CreateInstance();
 
 			return instance;
 		}
@@ -30,6 +30,11 @@ public class Wait : MonoBehaviour
 	public static void ForEndOfFrame(Action callback)
 	{
 		Instance.StartCoroutine(Instance.ForEndOfFrameCoroutine(callback));
+	}
+
+	private static Wait CreateInstance()
+	{
+		return new GameObject("Wait Utility").AddComponent<Wait>();
 	}
 
 	private IEnumerator ForSecondsCoroutine(float waitTime, Action callback)

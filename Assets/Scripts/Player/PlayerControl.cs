@@ -355,7 +355,18 @@ public sealed class PlayerControl : MonoBehaviour
 	{
 		if (newFart == null) return;
 
-		currentFart = Instantiate(newFart as MonoBehaviour, fartPoint.position, fartPoint.rotation) as IFart;
+		if (!(newFart is IFart))
+		{
+			Debug.LogError("Tried to set fart that is not of type IFart", newFart);
+			return;
+		}
+
+		var fartInstance = Instantiate(newFart, fartPoint.position, fartPoint.rotation) as MonoBehaviour;
+
+		fartInstance.name = newFart.name;
+		fartInstance.transform.parent = body;
+
+		currentFart = fartInstance as IFart;
 	}
 
 	public IEnumerator ApplyKnockback(Vector2 knockback, float knockbackDirection)

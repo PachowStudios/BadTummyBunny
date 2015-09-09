@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using Vectrosity;
 
@@ -19,7 +18,7 @@ public class BasicFart : MonoBehaviour, IFart
 	[SerializeField]
 	protected int damage = 4;
 	[SerializeField]
-	protected float damageDelay = 0.5f;
+	protected float damageDelay = 0.1f;
 
 	[Header("Trajectory")]
 	[SerializeField]
@@ -126,6 +125,8 @@ public class BasicFart : MonoBehaviour, IFart
 	protected virtual void DamageEnemies()
 	{
 		var origin = fartCollider.transform.position;
+
+		targetEnemies.RemoveWhere(e => e == null);
 
 		foreach (var enemy in targetEnemies)
 		{
