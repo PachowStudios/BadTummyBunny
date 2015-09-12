@@ -140,6 +140,24 @@ public static class Extensions
 	}
 	#endregion
 
+	#region Enum
+	public static T GetAttributeOfType<T>(this System.Enum parent) where T : System.Attribute
+	{
+		var type = parent.GetType();
+		var memInfo = type.GetMember(parent.ToString());
+		var attributes = memInfo[0].GetCustomAttributes(typeof(T), false);
+
+		return (attributes.Length > 0) ? (T)attributes[0] : null;
+	}
+
+	public static string GetDescription(this System.Enum parent)
+	{
+		var attribute = parent.GetAttributeOfType<System.ComponentModel.DescriptionAttribute>();
+
+		return attribute != null ? attribute.Description : string.Empty;
+	}
+	#endregion
+
 	#region Utility
 	public static int ClampWrap(int value, int min, int max)
 	{

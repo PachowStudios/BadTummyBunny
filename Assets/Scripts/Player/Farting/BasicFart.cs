@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Vectrosity;
 
@@ -6,19 +7,24 @@ using Vectrosity;
 [RequireComponent(typeof(Rigidbody2D), typeof(PolygonCollider2D))]
 public class BasicFart : MonoBehaviour, IFart
 {
-	private struct SfxPowerMapping
+	[Serializable]
+	protected struct SfxPowerMapping
 	{
-		public string sfxGroup;
+		public SfxGroups sfxGroup;
 		public float power;
 	}
 
 	[Header("Options")]
+	[SerializeField]
+	protected string fartName = "Basic Fart";
 	[SerializeField]
 	protected Vector2 speedRange = default(Vector2);
 	[SerializeField]
 	protected int damage = 4;
 	[SerializeField]
 	protected float damageDelay = 0.1f;
+	[SerializeField]
+	protected List<SfxPowerMapping> soundEffects = new List<SfxPowerMapping>();
 
 	[Header("Trajectory")]
 	[SerializeField]
@@ -45,13 +51,14 @@ public class BasicFart : MonoBehaviour, IFart
 	[SerializeField]
 	protected ParticleSystem particles = null;
 
-	[SerializeField]
-	private List<SfxPowerMapping> sfx = new List<SfxPowerMapping>();
-
 	private HashSet<Enemy> targetEnemies = new HashSet<Enemy>();
 	private VectorLine trajectoryLine = null;
 
-	public bool IsFarting { get; protected set; }
+	public string FartName
+	{ get { return fartName; } }
+
+	public bool IsFarting
+	{ get; protected set; }
 
 	protected virtual void Awake()
 	{
@@ -192,7 +199,7 @@ public class BasicFart : MonoBehaviour, IFart
 
 	protected void PlaySound(float powerPercentage)
 	{
-		foreach (var sfxMapping in sfx)
+		foreach (var sfxMapping in soundEffects)
 		{
 			if (sfxMapping.power <= powerPercentage)
 			{

@@ -2,6 +2,7 @@
 
 public interface IFart
 {
+	string FartName { get; }
 	bool IsFarting { get; }
 
 	void StartFart(float power, Vector2 direction);

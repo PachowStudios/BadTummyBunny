@@ -3,8 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using antilunchbox;
 
-public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
-	
+public partial class SoundManager : antilunchbox.Singleton<SoundManager>
+{
+
 	/// <summary>
 	/// Sets the SFX cap.
 	/// </summary>
@@ -15,7 +16,7 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 	{
 		Instance.capAmount = cap;
 	}
-    
+
 	/// <summary>
 	/// Plays the SFX on an owned & pooled object, will default the location to (0,0,0), pitch to SoundManager.Instance.pitchSFX, volume to SoundManager.Instance.volumeSFX
 	/// </summary>
@@ -52,23 +53,23 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 	/// <param name='duckPitch'>
 	/// Duck pitch.
 	/// </param>
-    public static AudioSource PlaySFX(AudioClip clip, bool looping=false, float delay=0f, float volume=float.MaxValue, float pitch=float.MaxValue, Vector3 location=default(Vector3), SongCallBack runOnEndFunction=null, SoundDuckingSetting duckingSetting=SoundDuckingSetting.DoNotDuck, float duckVolume=0f, float duckPitch=1f)
-    {
-        if (Instance.offTheSFX || Instance.isPaused)
-            return null;
-            
-        if (clip == null)
-            return null;
-		
-		if(volume == float.MaxValue)
+	public static AudioSource PlaySFX(AudioClip clip, bool looping = false, float delay = 0f, float volume = float.MaxValue, float pitch = float.MaxValue, Vector3 location = default(Vector3), SongCallBack runOnEndFunction = null, SoundDuckingSetting duckingSetting = SoundDuckingSetting.DoNotDuck, float duckVolume = 0f, float duckPitch = 1f)
+	{
+		if (Instance.offTheSFX || Instance.isPaused)
+			return null;
+
+		if (clip == null)
+			return null;
+
+		if (volume == float.MaxValue)
 			volume = Instance.volumeSFX;
-		
-		if(pitch == float.MaxValue)
+
+		if (pitch == float.MaxValue)
 			pitch = Instance.pitchSFX;
-        
-        return Instance.PlaySFXAt(clip, volume, pitch, location, false, "", looping, delay, runOnEndFunction, duckingSetting, duckVolume, duckPitch);
-    }
-	
+
+		return Instance.PlaySFXAt(clip, volume, pitch, location, false, "", looping, delay, runOnEndFunction, duckingSetting, duckVolume, duckPitch);
+	}
+
 	/// <summary>
 	/// Plays the SFX on an owned & pooled object by clipname reference on the SoundManager, will default the location to (0,0,0), pitch to SoundManager.Instance.pitchSFX, volume to SoundManager.Instance.volumeSFX
 	/// </summary>
@@ -105,28 +106,33 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 	/// <param name='duckPitch'>
 	/// Duck pitch.
 	/// </param>
-    public static AudioSource PlaySFX(string clipName, bool looping=false, float delay=0f, float volume=float.MaxValue, float pitch=float.MaxValue, Vector3 location=default(Vector3), SongCallBack runOnEndFunction=null, SoundDuckingSetting duckingSetting=SoundDuckingSetting.DoNotDuck, float duckVolume=0f, float duckPitch=1f)
-    {
-        if (Instance.offTheSFX || Instance.isPaused)
-            return null;
-            
+	public static AudioSource PlaySFX(string clipName, bool looping = false, float delay = 0f, float volume = float.MaxValue, float pitch = float.MaxValue, Vector3 location = default(Vector3), SongCallBack runOnEndFunction = null, SoundDuckingSetting duckingSetting = SoundDuckingSetting.DoNotDuck, float duckVolume = 0f, float duckPitch = 1f)
+	{
+		if (Instance.offTheSFX || Instance.isPaused)
+			return null;
+
 		if (!SoundManager.ClipNameIsValid(clipName))
-            return null;
-		
-		if(volume == float.MaxValue)
+			return null;
+
+		if (volume == float.MaxValue)
 			volume = Instance.volumeSFX;
-		
-		if(pitch == float.MaxValue)
+
+		if (pitch == float.MaxValue)
 			pitch = Instance.pitchSFX;
-        
-        return Instance.PlaySFXAt(SoundManager.Load(clipName), volume, pitch, location, false, "", looping, delay, runOnEndFunction, duckingSetting, duckVolume, duckPitch);
-    }
+
+		return Instance.PlaySFXAt(SoundManager.Load(clipName), volume, pitch, location, false, "", looping, delay, runOnEndFunction, duckingSetting, duckVolume, duckPitch);
+	}
+
+	public static AudioSource PlayCappedSFXFromGroup(System.Enum sfxGroup)
+	{
+		return PlayCappedSFXFromGroup(sfxGroup.GetDescription());
+	}
 
 	public static AudioSource PlayCappedSFXFromGroup(string groupAndCappedID)
 	{
 		return PlayCappedSFX(LoadFromGroup(groupAndCappedID), groupAndCappedID);
 	}
-	
+
 	/// <summary>
 	/// Plays the SFX IFF other SFX with the same cappedID are not over the cap limit. Will default the location to (0,0,0), pitch to SoundManager.Instance.pitchSFX, volume to SoundManager.Instance.volumeSFX
 	/// </summary>
@@ -148,30 +154,30 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 	/// <param name='location'>
 	/// Location.
 	/// </param>
-    public static AudioSource PlayCappedSFX(AudioClip clip, string cappedID, float volume=float.MaxValue, float pitch=float.MaxValue, Vector3 location=default(Vector3))
-    {
-        if (Instance.offTheSFX || Instance.isPaused)
-            return null;
-            
-        if (clip == null)
-            return null;
-		
-		if(string.IsNullOrEmpty(cappedID))
+	public static AudioSource PlayCappedSFX(AudioClip clip, string cappedID, float volume = float.MaxValue, float pitch = float.MaxValue, Vector3 location = default(Vector3))
+	{
+		if (Instance.offTheSFX || Instance.isPaused)
 			return null;
-		
-		if(volume == float.MaxValue)
+
+		if (clip == null)
+			return null;
+
+		if (string.IsNullOrEmpty(cappedID))
+			return null;
+
+		if (volume == float.MaxValue)
 			volume = Instance.volumeSFX;
-		
-		if(pitch == float.MaxValue)
+
+		if (pitch == float.MaxValue)
 			pitch = Instance.pitchSFX;
-        
-        // Play the clip if not at capacity
-		if(!Instance.IsAtCapacity(cappedID, clip.name))
-            return Instance.PlaySFXAt(clip, volume, pitch, location, true, cappedID);
+
+		// Play the clip if not at capacity
+		if (!Instance.IsAtCapacity(cappedID, clip.name))
+			return Instance.PlaySFXAt(clip, volume, pitch, location, true, cappedID);
 		else
 			return null;
-    }
-	
+	}
+
 	/// <summary>
 	/// Plays the SFX IFF other SFX with the same cappedID are not over the cap limit. Will default the location to (0,0,0), pitch to SoundManager.Instance.pitchSFX, volume to SoundManager.Instance.volumeSFX
 	/// </summary>
@@ -193,30 +199,30 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 	/// <param name='location'>
 	/// Location.
 	/// </param>
-    public static AudioSource PlayCappedSFX(string clipName, string cappedID, float volume=float.MaxValue, float pitch=float.MaxValue, Vector3 location=default(Vector3))
-    {
-        if (Instance.offTheSFX || Instance.isPaused)
-            return null;
-		
+	public static AudioSource PlayCappedSFX(string clipName, string cappedID, float volume = float.MaxValue, float pitch = float.MaxValue, Vector3 location = default(Vector3))
+	{
+		if (Instance.offTheSFX || Instance.isPaused)
+			return null;
+
 		if (!SoundManager.ClipNameIsValid(clipName))
-            return null;
-		
-		if(string.IsNullOrEmpty(cappedID))
 			return null;
-		
-		if(volume == float.MaxValue)
+
+		if (string.IsNullOrEmpty(cappedID))
+			return null;
+
+		if (volume == float.MaxValue)
 			volume = Instance.volumeSFX;
-		
-		if(pitch == float.MaxValue)
+
+		if (pitch == float.MaxValue)
 			pitch = Instance.pitchSFX;
-        
-        // Play the clip if not at capacity
-		if(!Instance.IsAtCapacity(cappedID, clipName))
-            return Instance.PlaySFXAt(SoundManager.Load(clipName), volume, pitch, location, true, cappedID);
+
+		// Play the clip if not at capacity
+		if (!Instance.IsAtCapacity(cappedID, clipName))
+			return Instance.PlaySFXAt(SoundManager.Load(clipName), volume, pitch, location, true, cappedID);
 		else
 			return null;
-    }
-	
+	}
+
 	/// <summary>
 	/// Plays the SFX IFF other SFX with the same cappedID are not over the cap limit. Will default the pitch to SoundManager.Instance.pitchSFX, volume to SoundManager.Instance.volumeSFX
 	/// </summary>
@@ -238,35 +244,35 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 	/// <param name='pitch'>
 	/// Pitch.
 	/// </param>
-	public static AudioSource PlayCappedSFX(AudioSource aS, AudioClip clip, string cappedID, float volume=float.MaxValue, float pitch=float.MaxValue)
-    {
-        if (Instance.offTheSFX || Instance.isPaused)
-            return null;
-            
-        if (clip == null || aS == null)
-            return null;
-		
-		if(string.IsNullOrEmpty(cappedID))
+	public static AudioSource PlayCappedSFX(AudioSource aS, AudioClip clip, string cappedID, float volume = float.MaxValue, float pitch = float.MaxValue)
+	{
+		if (Instance.offTheSFX || Instance.isPaused)
 			return null;
-		
-		if(volume == float.MaxValue)
+
+		if (clip == null || aS == null)
+			return null;
+
+		if (string.IsNullOrEmpty(cappedID))
+			return null;
+
+		if (volume == float.MaxValue)
 			volume = Instance.volumeSFX;
-		
-		if(pitch == float.MaxValue)
+
+		if (pitch == float.MaxValue)
 			pitch = Instance.pitchSFX;
-		
+
 		// Play the clip if not at capacity
-		if(!Instance.IsAtCapacity(cappedID, clip.name))
+		if (!Instance.IsAtCapacity(cappedID, clip.name))
 		{
 			// Keep reference of unownedsfx objects
 			Instance.CheckInsertionIntoUnownedSFXObjects(aS);
-			
-            return Instance.PlaySFXOn(aS, clip, volume, pitch, true, cappedID);
+
+			return Instance.PlaySFXOn(aS, clip, volume, pitch, true, cappedID);
 		}
 		else
 			return null;
-    }
-	
+	}
+
 	/// <summary>
 	/// Plays the SFX IFF other SFX with the same cappedID are not over the cap limit. Will default the pitch to SoundManager.Instance.pitchSFX, volume to SoundManager.Instance.volumeSFX
 	/// </summary>
@@ -288,35 +294,35 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 	/// <param name='pitch'>
 	/// Pitch.
 	/// </param>
-	public static AudioSource PlayCappedSFX(AudioSource aS, string clipName, string cappedID, float volume=float.MaxValue, float pitch=float.MaxValue)
-    {
-        if (Instance.offTheSFX || Instance.isPaused)
-            return null;
-            
-        if (!SoundManager.ClipNameIsValid(clipName) || aS == null)
-            return null;
-		
-		if(string.IsNullOrEmpty(cappedID))
+	public static AudioSource PlayCappedSFX(AudioSource aS, string clipName, string cappedID, float volume = float.MaxValue, float pitch = float.MaxValue)
+	{
+		if (Instance.offTheSFX || Instance.isPaused)
 			return null;
-		
-		if(volume == float.MaxValue)
+
+		if (!SoundManager.ClipNameIsValid(clipName) || aS == null)
+			return null;
+
+		if (string.IsNullOrEmpty(cappedID))
+			return null;
+
+		if (volume == float.MaxValue)
 			volume = Instance.volumeSFX;
-		
-		if(pitch == float.MaxValue)
+
+		if (pitch == float.MaxValue)
 			pitch = Instance.pitchSFX;
-		
+
 		// Play the clip if not at capacity
-		if(!Instance.IsAtCapacity(cappedID, clipName))
+		if (!Instance.IsAtCapacity(cappedID, clipName))
 		{
 			// Keep reference of unownedsfx objects
 			Instance.CheckInsertionIntoUnownedSFXObjects(aS);
-			
-            return Instance.PlaySFXOn(aS, SoundManager.Load(clipName), volume, pitch, true, cappedID);
+
+			return Instance.PlaySFXOn(aS, SoundManager.Load(clipName), volume, pitch, true, cappedID);
 		}
 		else
 			return null;
-    }
-	
+	}
+
 	/// <summary>
 	/// Plays the SFX another audiosource of your choice, will default the looping to false, pitch to SoundManager.Instance.pitchSFX, volume to SoundManager.Instance.volumeSFX
 	/// </summary>
@@ -353,26 +359,26 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 	/// <param name='duckPitch'>
 	/// Duck pitch.
 	/// </param>
-    public static AudioSource PlaySFX(AudioSource aS, AudioClip clip, bool looping=false, float delay=0f, float volume=float.MaxValue, float pitch=float.MaxValue, SongCallBack runOnEndFunction=null, SoundDuckingSetting duckingSetting=SoundDuckingSetting.DoNotDuck, float duckVolume=0f, float duckPitch=1f)
-    {
-        if (Instance.offTheSFX || Instance.isPaused)
-            return null;
-            
-        if ((clip == null) || (aS == null))
-            return null;
-		
-		if(volume == float.MaxValue)
+	public static AudioSource PlaySFX(AudioSource aS, AudioClip clip, bool looping = false, float delay = 0f, float volume = float.MaxValue, float pitch = float.MaxValue, SongCallBack runOnEndFunction = null, SoundDuckingSetting duckingSetting = SoundDuckingSetting.DoNotDuck, float duckVolume = 0f, float duckPitch = 1f)
+	{
+		if (Instance.offTheSFX || Instance.isPaused)
+			return null;
+
+		if ((clip == null) || (aS == null))
+			return null;
+
+		if (volume == float.MaxValue)
 			volume = Instance.volumeSFX;
-		
-		if(pitch == float.MaxValue)
+
+		if (pitch == float.MaxValue)
 			pitch = Instance.pitchSFX;
-		
+
 		// Keep reference of unownedsfx objects
 		Instance.CheckInsertionIntoUnownedSFXObjects(aS);
-        
+
 		return Instance.PlaySFXOn(aS, clip, volume, pitch, false, "", looping, delay, runOnEndFunction, duckingSetting, duckVolume, duckPitch);
-    }
-	
+	}
+
 	/// <summary>
 	/// Plays the SFX another audiosource of your choice, will default the looping to false, pitch to SoundManager.Instance.pitchSFX, volume to SoundManager.Instance.volumeSFX
 	/// </summary>
@@ -409,44 +415,44 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 	/// <param name='duckPitch'>
 	/// Duck pitch.
 	/// </param>
-    public static AudioSource PlaySFX(AudioSource aS, string clipName, bool looping=false, float delay=0f, float volume=float.MaxValue, float pitch=float.MaxValue, SongCallBack runOnEndFunction=null, SoundDuckingSetting duckingSetting=SoundDuckingSetting.DoNotDuck, float duckVolume=0f, float duckPitch=1f)
-    {
-        if (Instance.offTheSFX || Instance.isPaused)
-            return null;
-            
-        if ((!SoundManager.ClipNameIsValid(clipName)) || (aS == null))
-            return null;
-		
-		if(volume == float.MaxValue)
+	public static AudioSource PlaySFX(AudioSource aS, string clipName, bool looping = false, float delay = 0f, float volume = float.MaxValue, float pitch = float.MaxValue, SongCallBack runOnEndFunction = null, SoundDuckingSetting duckingSetting = SoundDuckingSetting.DoNotDuck, float duckVolume = 0f, float duckPitch = 1f)
+	{
+		if (Instance.offTheSFX || Instance.isPaused)
+			return null;
+
+		if ((!SoundManager.ClipNameIsValid(clipName)) || (aS == null))
+			return null;
+
+		if (volume == float.MaxValue)
 			volume = Instance.volumeSFX;
-		
-		if(pitch == float.MaxValue)
+
+		if (pitch == float.MaxValue)
 			pitch = Instance.pitchSFX;
-		
+
 		// Keep reference of unownedsfx objects
 		Instance.CheckInsertionIntoUnownedSFXObjects(aS);
-        
+
 		return Instance.PlaySFXOn(aS, SoundManager.Load(clipName), volume, pitch, false, "", looping, delay, runOnEndFunction, duckingSetting, duckVolume, duckPitch);
-    }
-	
+	}
+
 	/// <summary>
 	/// Stops the SFX on another audiosource
 	/// </summary>
 	/// <param name='aS'>
 	/// <a href="http://docs.unity3d.com/ScriptReference/AudioSource.html">AudioSource</a> to stop.
 	/// </param>
-    public static void StopSFXObject(AudioSource aS)
-    {
-        if (aS == null)
-            return;
-            
-        if (aS.isPlaying)
-            aS.Stop();
-		
-		if(Instance.delayedAudioSources.ContainsKey(aS))
+	public static void StopSFXObject(AudioSource aS)
+	{
+		if (aS == null)
+			return;
+
+		if (aS.isPlaying)
+			aS.Stop();
+
+		if (Instance.delayedAudioSources.ContainsKey(aS))
 			Instance.delayedAudioSources.Remove(aS);
-    }
-	
+	}
+
 	/// <summary>
 	/// Plays the SFX another gameObject of your choice, will default the looping to false, pitch to SoundManager.Instance.pitchSFX, volume to SoundManager.Instance.volumeSFX
 	/// </summary>
@@ -483,26 +489,26 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 	/// <param name='duckPitch'>
 	/// Duck pitch.
 	/// </param>
-    public static AudioSource PlaySFX(GameObject gO, AudioClip clip, bool looping=false, float delay=0f, float volume=float.MaxValue, float pitch=float.MaxValue, SongCallBack runOnEndFunction=null, SoundDuckingSetting duckingSetting=SoundDuckingSetting.DoNotDuck, float duckVolume=0f, float duckPitch=1f)
-    {
-        if (Instance.offTheSFX || Instance.isPaused)
-            return null;
-            
-        if ((clip == null) || (gO == null))
-            return null;
-        
-        if (gO.audio == null)
-            gO.AddComponent<AudioSource>();
-		
-		if(volume == float.MaxValue)
+	public static AudioSource PlaySFX(GameObject gO, AudioClip clip, bool looping = false, float delay = 0f, float volume = float.MaxValue, float pitch = float.MaxValue, SongCallBack runOnEndFunction = null, SoundDuckingSetting duckingSetting = SoundDuckingSetting.DoNotDuck, float duckVolume = 0f, float duckPitch = 1f)
+	{
+		if (Instance.offTheSFX || Instance.isPaused)
+			return null;
+
+		if ((clip == null) || (gO == null))
+			return null;
+
+		if (gO.audio == null)
+			gO.AddComponent<AudioSource>();
+
+		if (volume == float.MaxValue)
 			volume = Instance.volumeSFX;
-		
-		if(pitch == float.MaxValue)
+
+		if (pitch == float.MaxValue)
 			pitch = Instance.pitchSFX;
-		
+
 		return PlaySFX(gO.audio, clip, looping, delay, volume, pitch, runOnEndFunction, duckingSetting, duckVolume, duckPitch);
-    }
-	
+	}
+
 	/// <summary>
 	/// Plays the SFX another gameObject of your choice, will default the looping to false, pitch to SoundManager.Instance.pitchSFX, volume to SoundManager.Instance.volumeSFX
 	/// </summary>
@@ -539,40 +545,40 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 	/// <param name='duckPitch'>
 	/// Duck pitch.
 	/// </param>
-    public static AudioSource PlaySFX(GameObject gO, string clipName, bool looping=false, float delay=0f, float volume=float.MaxValue, float pitch=float.MaxValue, SongCallBack runOnEndFunction=null, SoundDuckingSetting duckingSetting=SoundDuckingSetting.DoNotDuck, float duckVolume=0f, float duckPitch=1f)
-    {
-        if (Instance.offTheSFX || Instance.isPaused)
-            return null;
-            
-        if ((!SoundManager.ClipNameIsValid(clipName)) || (gO == null))
-            return null;
-        
-        if (gO.audio == null)
-            gO.AddComponent<AudioSource>();
-		
-		if(volume == float.MaxValue)
+	public static AudioSource PlaySFX(GameObject gO, string clipName, bool looping = false, float delay = 0f, float volume = float.MaxValue, float pitch = float.MaxValue, SongCallBack runOnEndFunction = null, SoundDuckingSetting duckingSetting = SoundDuckingSetting.DoNotDuck, float duckVolume = 0f, float duckPitch = 1f)
+	{
+		if (Instance.offTheSFX || Instance.isPaused)
+			return null;
+
+		if ((!SoundManager.ClipNameIsValid(clipName)) || (gO == null))
+			return null;
+
+		if (gO.audio == null)
+			gO.AddComponent<AudioSource>();
+
+		if (volume == float.MaxValue)
 			volume = Instance.volumeSFX;
-		
-		if(pitch == float.MaxValue)
+
+		if (pitch == float.MaxValue)
 			pitch = Instance.pitchSFX;
-		
+
 		return PlaySFX(gO.audio, SoundManager.Load(clipName), looping, delay, volume, pitch, runOnEndFunction, duckingSetting, duckVolume, duckPitch);
-    }
-	
+	}
+
 	/// <summary>
 	/// Stops the SFX on another gameObject
 	/// </summary>
 	/// <param name='gO'>
 	/// GameObject to stop.
 	/// </param>
-    public static void StopSFXObject(GameObject gO)
-    {
-        if (gO == null)
-            return;
-        
-        StopSFXObject(gO.audio);
-    }
-	
+	public static void StopSFXObject(GameObject gO)
+	{
+		if (gO == null)
+			return;
+
+		StopSFXObject(gO.audio);
+	}
+
 	/// <summary>
 	/// Stops all SFX.
 	/// </summary>
@@ -580,7 +586,7 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 	{
 		Instance._StopSFX();
 	}
-	
+
 	/// <summary>
 	/// Plays the SFX in a loop on another audiosource of your choice.  This function is cattered more towards customizing a loop.
 	/// You can set the loop to end when the object dies or a maximum duration, whichever comes first.
@@ -619,25 +625,25 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 	/// <param name='duckPitch'>
 	/// Duck pitch.
 	/// </param>
-    public static AudioSource PlaySFXLoop(AudioSource aS, AudioClip clip, bool tillDestroy=true, float volume=float.MaxValue, float pitch=float.MaxValue, float maxDuration=0f, SongCallBack runOnEndFunction=null, SoundDuckingSetting duckingSetting=SoundDuckingSetting.DoNotDuck, float duckVolume=0f, float duckPitch=1f)
-    {
-        if (Instance.offTheSFX || Instance.isPaused)
-            return null;
-            
-        if ((clip == null) || (aS == null))
-            return null;
-		
-		if(volume == float.MaxValue)
+	public static AudioSource PlaySFXLoop(AudioSource aS, AudioClip clip, bool tillDestroy = true, float volume = float.MaxValue, float pitch = float.MaxValue, float maxDuration = 0f, SongCallBack runOnEndFunction = null, SoundDuckingSetting duckingSetting = SoundDuckingSetting.DoNotDuck, float duckVolume = 0f, float duckPitch = 1f)
+	{
+		if (Instance.offTheSFX || Instance.isPaused)
+			return null;
+
+		if ((clip == null) || (aS == null))
+			return null;
+
+		if (volume == float.MaxValue)
 			volume = Instance.volumeSFX;
-		
-		if(pitch == float.MaxValue)
+
+		if (pitch == float.MaxValue)
 			pitch = Instance.pitchSFX;
-		
+
 		Instance.CheckInsertionIntoUnownedSFXObjects(aS);
-		
+
 		return Instance.PlaySFXLoopOn(aS, clip, tillDestroy, volume, pitch, maxDuration, runOnEndFunction, duckingSetting, duckVolume, duckPitch);
-    }
-	
+	}
+
 	/// <summary>
 	/// Plays the SFX in a loop on another audiosource of your choice.  This function is cattered more towards customizing a loop.
 	/// You can set the loop to end when the object dies or a maximum duration, whichever comes first.
@@ -676,25 +682,25 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 	/// <param name='duckPitch'>
 	/// Duck pitch.
 	/// </param>
-    public static AudioSource PlaySFXLoop(AudioSource aS, string clipName, bool tillDestroy=true, float volume=float.MaxValue, float pitch=float.MaxValue, float maxDuration=0f, SongCallBack runOnEndFunction=null, SoundDuckingSetting duckingSetting=SoundDuckingSetting.DoNotDuck, float duckVolume=0f, float duckPitch=1f)
-    {
-        if (Instance.offTheSFX || Instance.isPaused)
-            return null;
-            
-        if ((!SoundManager.ClipNameIsValid(clipName)) || (aS == null))
-            return null;
-		
-		if(volume == float.MaxValue)
+	public static AudioSource PlaySFXLoop(AudioSource aS, string clipName, bool tillDestroy = true, float volume = float.MaxValue, float pitch = float.MaxValue, float maxDuration = 0f, SongCallBack runOnEndFunction = null, SoundDuckingSetting duckingSetting = SoundDuckingSetting.DoNotDuck, float duckVolume = 0f, float duckPitch = 1f)
+	{
+		if (Instance.offTheSFX || Instance.isPaused)
+			return null;
+
+		if ((!SoundManager.ClipNameIsValid(clipName)) || (aS == null))
+			return null;
+
+		if (volume == float.MaxValue)
 			volume = Instance.volumeSFX;
-		
-		if(pitch == float.MaxValue)
+
+		if (pitch == float.MaxValue)
 			pitch = Instance.pitchSFX;
-		
+
 		Instance.CheckInsertionIntoUnownedSFXObjects(aS);
-		
+
 		return Instance.PlaySFXLoopOn(aS, SoundManager.Load(clipName), tillDestroy, volume, pitch, maxDuration, runOnEndFunction, duckingSetting, duckVolume, duckPitch);
-    }
-	
+	}
+
 	/// <summary>
 	/// Plays the SFX in a loop on another gameObject of your choice.  This function is cattered more towards customizing a loop.
 	/// You can set the loop to end when the object dies or a maximum duration, whichever comes first.
@@ -733,28 +739,28 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 	/// <param name='duckPitch'>
 	/// Duck pitch.
 	/// </param>
-    public static AudioSource PlaySFXLoop(GameObject gO, AudioClip clip, bool tillDestroy=true, float volume=float.MaxValue, float pitch=float.MaxValue, float maxDuration=0f, SongCallBack runOnEndFunction=null, SoundDuckingSetting duckingSetting=SoundDuckingSetting.DoNotDuck, float duckVolume=0f, float duckPitch=1f)
-    {
-        if (Instance.offTheSFX || Instance.isPaused)
-            return null;
-            
-        if ((clip == null) || (gO == null))
-            return null;
-		
+	public static AudioSource PlaySFXLoop(GameObject gO, AudioClip clip, bool tillDestroy = true, float volume = float.MaxValue, float pitch = float.MaxValue, float maxDuration = 0f, SongCallBack runOnEndFunction = null, SoundDuckingSetting duckingSetting = SoundDuckingSetting.DoNotDuck, float duckVolume = 0f, float duckPitch = 1f)
+	{
+		if (Instance.offTheSFX || Instance.isPaused)
+			return null;
+
+		if ((clip == null) || (gO == null))
+			return null;
+
 		if (gO.audio == null)
-            gO.AddComponent<AudioSource>();
-		
-		if(volume == float.MaxValue)
+			gO.AddComponent<AudioSource>();
+
+		if (volume == float.MaxValue)
 			volume = Instance.volumeSFX;
-		
-		if(pitch == float.MaxValue)
+
+		if (pitch == float.MaxValue)
 			pitch = Instance.pitchSFX;
-		
+
 		Instance.CheckInsertionIntoUnownedSFXObjects(gO.audio);
-		
+
 		return Instance.PlaySFXLoopOn(gO.audio, clip, tillDestroy, volume, pitch, maxDuration, runOnEndFunction, duckingSetting, duckVolume, duckPitch);
-    }
-	
+	}
+
 	/// <summary>
 	/// Plays the SFX in a loop on another gameObject of your choice.  This function is cattered more towards customizing a loop.
 	/// You can set the loop to end when the object dies or a maximum duration, whichever comes first.
@@ -793,28 +799,28 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 	/// <param name='duckPitch'>
 	/// Duck pitch.
 	/// </param>
-    public static AudioSource PlaySFXLoop(GameObject gO, string clipName, bool tillDestroy=true, float volume=float.MaxValue, float pitch=float.MaxValue, float maxDuration=0f, SongCallBack runOnEndFunction=null, SoundDuckingSetting duckingSetting=SoundDuckingSetting.DoNotDuck, float duckVolume=0f, float duckPitch=1f)
-    {
-        if (Instance.offTheSFX || Instance.isPaused)
-            return null;
-            
-        if ((!SoundManager.ClipNameIsValid(clipName)) || (gO == null))
-            return null;
-		
+	public static AudioSource PlaySFXLoop(GameObject gO, string clipName, bool tillDestroy = true, float volume = float.MaxValue, float pitch = float.MaxValue, float maxDuration = 0f, SongCallBack runOnEndFunction = null, SoundDuckingSetting duckingSetting = SoundDuckingSetting.DoNotDuck, float duckVolume = 0f, float duckPitch = 1f)
+	{
+		if (Instance.offTheSFX || Instance.isPaused)
+			return null;
+
+		if ((!SoundManager.ClipNameIsValid(clipName)) || (gO == null))
+			return null;
+
 		if (gO.audio == null)
-            gO.AddComponent<AudioSource>();
-		
-		if(volume == float.MaxValue)
+			gO.AddComponent<AudioSource>();
+
+		if (volume == float.MaxValue)
 			volume = Instance.volumeSFX;
-		
-		if(pitch == float.MaxValue)
+
+		if (pitch == float.MaxValue)
 			pitch = Instance.pitchSFX;
-		
+
 		Instance.CheckInsertionIntoUnownedSFXObjects(gO.audio);
-		
+
 		return Instance.PlaySFXLoopOn(gO.audio, SoundManager.Load(clipName), tillDestroy, volume, pitch, maxDuration, runOnEndFunction, duckingSetting, duckVolume, duckPitch);
-    }
-	
+	}
+
 	/// <summary>
 	/// Sets mute on all the SFX to 'toggle' value. Returns the result.
 	/// </summary>
@@ -825,11 +831,11 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 	/// The mute to set.
 	/// </param>
 	public static bool MuteSFX(bool toggle)
-    {
-        Instance.mutedSFX = toggle;
+	{
+		Instance.mutedSFX = toggle;
 		return Instance.mutedSFX;
-    }
-	
+	}
+
 	/// <summary>
 	/// Toggles mute on SFX. Returns the result.
 	/// </summary>
@@ -837,10 +843,10 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 	/// If the SFX is NOW muted or not.
 	/// </returns>
 	public static bool MuteSFX()
-    {
-        return MuteSFX(!Instance.mutedSFX);
-    }
-	
+	{
+		return MuteSFX(!Instance.mutedSFX);
+	}
+
 	/// <summary>
 	/// Determines whether this instance is SFX muted.
 	/// </summary>
@@ -851,7 +857,7 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 	{
 		return Instance.mutedSFX;
 	}
-	
+
 	/// <summary>
 	/// Sets the maximum volume of SFX in the game relative to the global volume.
 	/// </summary>
@@ -861,15 +867,15 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 	public static void SetVolumeSFX(float setVolume)
 	{
 		setVolume = Mathf.Clamp01(setVolume);
-		
+
 		float currentPercentageOfVolume;
 		currentPercentageOfVolume = Instance.volumeSFX / Instance.maxSFXVolume;
-		
+
 		Instance.maxSFXVolume = setVolume * Instance.maxVolume;
-		
-		if(float.IsNaN(currentPercentageOfVolume) || float.IsInfinity(currentPercentageOfVolume))
+
+		if (float.IsNaN(currentPercentageOfVolume) || float.IsInfinity(currentPercentageOfVolume))
 			currentPercentageOfVolume = 1f;
-		
+
 		Instance.volumeSFX = Instance.maxSFXVolume * currentPercentageOfVolume;
 	}
 	/* COMING SOON
@@ -894,8 +900,8 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 	{
 		setVolume = Mathf.Clamp01(setVolume);
 		float newVolume = ignoreMaxSFXVolume ? setVolume : (setVolume * Instance.maxSFXVolume);
-		
-		foreach(AudioSource audioSource in audioSources)
+
+		foreach (AudioSource audioSource in audioSources)
 			audioSource.volume = newVolume;
 	}
 	/// <summary>
@@ -914,11 +920,11 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 	{
 		setVolume = Mathf.Clamp01(setVolume);
 		float newVolume = ignoreMaxSFXVolume ? setVolume : (setVolume * Instance.maxSFXVolume);
-		
-		foreach(GameObject sfxObject in sfxObjects)
+
+		foreach (GameObject sfxObject in sfxObjects)
 			sfxObject.audio.volume = newVolume;
 	}
-	
+
 	/// <summary>
 	/// Gets the SFX volume.
 	/// </summary>
@@ -929,7 +935,7 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 	{
 		return Instance.maxSFXVolume;
 	}
-	
+
 	/// <summary>
 	/// Sets the pitch of SFX in the game.
 	/// </summary>
@@ -957,7 +963,7 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 	/// </param>
 	public static void SetPitchSFX(float setPitch, params AudioSource[] audioSources)
 	{
-		foreach(AudioSource audioSource in audioSources)
+		foreach (AudioSource audioSource in audioSources)
 			audioSource.pitch = setPitch;
 	}
 	/// <summary>
@@ -971,10 +977,10 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 	/// </param>
 	public static void SetPitchSFX(float setPitch, params GameObject[] sfxObjects)
 	{
-		foreach(GameObject sfxObject in sfxObjects)
+		foreach (GameObject sfxObject in sfxObjects)
 			sfxObject.audio.pitch = setPitch;
 	}
-	
+
 	/// <summary>
 	/// Gets the SFX pitch.
 	/// </summary>
@@ -985,9 +991,9 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 	{
 		return Instance.pitchSFX;
 	}
-	
+
 	/////////////////////////////////////////////////////
-	
+
 	/// <summary>
 	/// Saves the SFX to the SoundManager prefab for easy access for frequently used SFX.  Will register the SFX to the group.
 	/// </summary>
@@ -999,17 +1005,17 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 	/// </param>
 	public static void SaveSFX(AudioClip clip, string grpName)
 	{
-		if(clip == null)
+		if (clip == null)
 			return;
-		
+
 		SFXGroup grp = Instance.GetGroupByGroupName(grpName);
-		if(grp == null)
-			Debug.LogWarning("The SFXGroup, "+grpName+", does not exist. Creating it as a new group");
-		
+		if (grp == null)
+			Debug.LogWarning("The SFXGroup, " + grpName + ", does not exist. Creating it as a new group");
+
 		SaveSFX(clip);
 		Instance.AddClipToGroup(clip.name, grpName);
 	}
-	
+
 	/// <summary>
 	/// Saves the SFX to the SoundManager prefab for easy access for frequently used SFX.  Will register the SFX to the group specified.
 	/// If the group doesn't exist, it will be added to SoundManager.
@@ -1022,26 +1028,26 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 	/// </param>
 	public static void SaveSFX(AudioClip clip, SFXGroup grp)
 	{
-		if(clip == null)
+		if (clip == null)
 			return;
-		
-		if(grp != null)
+
+		if (grp != null)
 		{
-			if(!Instance.groups.ContainsKey(grp.groupName))
+			if (!Instance.groups.ContainsKey(grp.groupName))
 			{
 				Instance.groups.Add(grp.groupName, grp);
 #if UNITY_EDITOR
 				Instance.sfxGroups.Add(grp);
 #endif
 			}
-			else if(Instance.groups[grp.groupName] != grp)
-				Debug.LogWarning("The SFXGroup, "+grp.groupName+", already exists. This new group will not be added.");
+			else if (Instance.groups[grp.groupName] != grp)
+				Debug.LogWarning("The SFXGroup, " + grp.groupName + ", already exists. This new group will not be added.");
 		}
-		
+
 		SaveSFX(clip);
 		Instance.AddClipToGroup(clip.name, grp.groupName);
 	}
-	
+
 	/// <summary>
 	/// Saves the SFX to the SoundManager prefab for easy access for frequently used SFX.
 	/// </summary>
@@ -1050,12 +1056,12 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 	/// </param>
 	public static void SaveSFX(params AudioClip[] clips)
 	{
-		foreach(AudioClip clip in clips)
+		foreach (AudioClip clip in clips)
 		{
-			if(clip == null)
+			if (clip == null)
 				continue;
-			
-			if(!Instance.allClips.ContainsKey(clip.name))
+
+			if (!Instance.allClips.ContainsKey(clip.name))
 			{
 				string clipName = clip.name;
 				Instance.allClips.Add(clipName, clip);
@@ -1074,7 +1080,7 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 			}
 		}
 	}
-	
+
 	/// <summary>
 	/// Deletes all SFX from the SoundManager.
 	/// </summary>
@@ -1088,7 +1094,7 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 		Instance.clipsInGroups.Clear();
 		Instance.clipToGroupKeys.Clear();
 		Instance.clipToGroupValues.Clear();
-		foreach(SFXGroup grp in Instance.sfxGroups)
+		foreach (SFXGroup grp in Instance.sfxGroups)
 			grp.clips.Clear();
 #if UNITY_EDITOR
 		Instance.storedSFXs.Clear();
@@ -1099,7 +1105,7 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 		Instance.showSFXDetails.Clear();
 #endif
 	}
-	
+
 	/// <summary>
 	/// Deletes certain SFX from the SoundManager.
 	/// </summary>
@@ -1108,12 +1114,12 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 	/// </param>
 	public static void DeleteSFX(params AudioClip[] clips)
 	{
-		foreach(AudioClip clip in clips)
+		foreach (AudioClip clip in clips)
 		{
-			if(clip == null)
+			if (clip == null)
 				continue;
-			
-			if(!Instance.allClips.ContainsKey(clip.name))
+
+			if (!Instance.allClips.ContainsKey(clip.name))
 			{
 				string clipName = clip.name;
 				Instance.allClips.Remove(clipName);
@@ -1124,7 +1130,7 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 				Instance.RemoveClipFromGroup(clipName);
 #if UNITY_EDITOR
 				int index = Instance.storedSFXs.IndexOf(clip);
-				if(index == -1) continue;
+				if (index == -1) continue;
 				Instance.storedSFXs.RemoveAt(index);
 				Instance.sfxPrePoolAmounts.RemoveAt(index);
 				Instance.sfxBaseVolumes.RemoveAt(index);
@@ -1143,12 +1149,12 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 	/// </param>
 	public static void DeleteSFX(params string[] clipNames)
 	{
-		foreach(string clipName in clipNames)
+		foreach (string clipName in clipNames)
 		{
-			if(string.IsNullOrEmpty(clipName))
+			if (string.IsNullOrEmpty(clipName))
 				continue;
-			
-			if(!Instance.allClips.ContainsKey(clipName))
+
+			if (!Instance.allClips.ContainsKey(clipName))
 			{
 				AudioClip clip = Instance.allClips[clipName];
 				Instance.allClips.Remove(clipName);
@@ -1160,7 +1166,7 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 				if (clip == null) continue;
 #if UNITY_EDITOR
 				int index = Instance.storedSFXs.IndexOf(clip);
-				if(index == -1) continue;
+				if (index == -1) continue;
 				Instance.storedSFXs.RemoveAt(index);
 				Instance.sfxPrePoolAmounts.RemoveAt(index);
 				Instance.sfxBaseVolumes.RemoveAt(index);
@@ -1171,7 +1177,7 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 			}
 		}
 	}
-	
+
 	/// <summary>
 	/// Applies the attributes available in the editor to SFX. Attributes like prepool amount, base volume, volume variation, and pitch variation.
 	/// </summary>
@@ -1192,23 +1198,23 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 	/// </param>
 	public static void ApplySFXAttributes(AudioClip clip, int prepool, float baseVolume, float volumeVariation, float pitchVariation)
 	{
-		if(clip == null || !Instance.allClips.ContainsKey(clip.name) || Instance.allClips[clip.name] != clip)
+		if (clip == null || !Instance.allClips.ContainsKey(clip.name) || Instance.allClips[clip.name] != clip)
 			return;
-		
+
 		string clipName = clip.name;
-		
+
 		int oldPrepool = Instance.prepools[clipName];
 		Instance.prepools[clipName] = prepool;
 		Instance.baseVolumes[clipName] = baseVolume;
 		Instance.volumeVariations[clipName] = volumeVariation;
 		Instance.pitchVariations[clipName] = pitchVariation;
-		
-		
+
+
 		SFXPoolInfo info = null;
-		if(Instance.ownedPools.ContainsKey(clip))
+		if (Instance.ownedPools.ContainsKey(clip))
 		{
 			info = Instance.ownedPools[clip];
-			if(info != null)
+			if (info != null)
 			{
 				info.prepoolAmount = prepool;
 				info.baseVolume = baseVolume;
@@ -1216,7 +1222,7 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 				info.pitchVariation = pitchVariation;
 			}
 		}
-		
+
 #if UNITY_EDITOR
 		int index = Instance.storedSFXs.IndexOf(clip);
 		Instance.sfxPrePoolAmounts[index] = prepool;
@@ -1224,9 +1230,9 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 		Instance.sfxVolumeVariations[index] = volumeVariation;
 		Instance.sfxPitchVariations[index] = pitchVariation;
 #endif
-		
-		if(oldPrepool < prepool)
-			Instance.PrePoolClip(clip, prepool-oldPrepool);
+
+		if (oldPrepool < prepool)
+			Instance.PrePoolClip(clip, prepool - oldPrepool);
 	}
 	/// <summary>
 	/// Applies the attributes available in the editor to SFX, referenced by clip name. Attributes like prepool amount, base volume, volume variation, and pitch variation.
@@ -1248,12 +1254,12 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 	/// </param>
 	public static void ApplySFXAttributes(string clipName, int prepool, float baseVolume, float volumeVariation, float pitchVariation)
 	{
-		if(string.IsNullOrEmpty(clipName) || !ClipNameIsValid(clipName))
+		if (string.IsNullOrEmpty(clipName) || !ClipNameIsValid(clipName))
 			return;
-		
+
 		ApplySFXAttributes(Instance.allClips[clipName], prepool, baseVolume, volumeVariation, pitchVariation);
 	}
-	
+
 	/// <summary>
 	/// Creates the SFX group and adds it to SoundManager.
 	/// </summary>
@@ -1268,7 +1274,7 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 	/// </param>
 	public static SFXGroup CreateSFXGroup(string grpName, int capAmount)
 	{
-		if(!Instance.groups.ContainsKey(grpName))
+		if (!Instance.groups.ContainsKey(grpName))
 		{
 			SFXGroup grp = new SFXGroup(grpName, capAmount);
 			Instance.groups.Add(grpName, grp);
@@ -1280,7 +1286,7 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 		Debug.LogWarning("This group already exists. Cannot add it.");
 		return null;
 	}
-	
+
 	/// <summary>
 	/// Creates the SFX group and adds it to SoundManager.
 	/// </summary>
@@ -1292,7 +1298,7 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 	/// </param>
 	public static SFXGroup CreateSFXGroup(string grpName)
 	{
-		if(!Instance.groups.ContainsKey(grpName))
+		if (!Instance.groups.ContainsKey(grpName))
 		{
 			SFXGroup grp = new SFXGroup(grpName);
 			Instance.groups.Add(grpName, grp);
@@ -1304,7 +1310,7 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 		Debug.LogWarning("This group already exists. Cannot add it.");
 		return null;
 	}
-	
+
 	/// <summary>
 	/// Moves a clip to the specified SFXGroup. If the group doesn't exist, it will make the group.
 	/// </summary>
@@ -1328,7 +1334,12 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 	{
 		Instance.RemoveClipFromGroup(clipName);
 	}
-	
+
+	public static AudioClip LoadFromGroup(System.Enum sfxGroup)
+	{
+		return LoadFromGroup(sfxGroup.GetDescription());
+	}
+
 	/// <summary>
 	/// Loads a random SFX from a specified SFXGroup.
 	/// </summary>
@@ -1341,28 +1352,28 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 	public static AudioClip LoadFromGroup(string grpName)
 	{
 		SFXGroup grp = Instance.GetGroupByGroupName(grpName);
-		if(grp == null)
+		if (grp == null)
 		{
-			Debug.LogError("There is no group by this name: "+grpName+".");
+			Debug.LogError("There is no group by this name: " + grpName + ".");
 			return null;
 		}
-		
+
 		AudioClip result = null;
-		
+
 		// check if clips is empty
-		if(grp.clips.Count == 0)
+		if (grp.clips.Count == 0)
 		{
 			Debug.LogWarning("There are no clips in this group: " + grpName);
 			return null;
 		}
-		
+
 		// Get random clip from list
 		result = grp.clips[Random.Range(0, grp.clips.Count)];
-		
+
 		// return result
 		return result;
 	}
-	
+
 	/// <summary>
 	/// Loads all SFX from a specified SFXGroup.
 	/// </summary>
@@ -1375,23 +1386,23 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 	public static AudioClip[] LoadAllFromGroup(string grpName)
 	{
 		SFXGroup grp = Instance.GetGroupByGroupName(grpName);
-		if(grp == null)
+		if (grp == null)
 		{
-			Debug.LogError("There is no group by this name, "+grpName+".");
+			Debug.LogError("There is no group by this name, " + grpName + ".");
 			return null;
 		}
-		
+
 		// check if group is empty
-		if(grp.clips.Count == 0)
+		if (grp.clips.Count == 0)
 		{
 			Debug.LogWarning("There are no clips in this group: " + grpName);
 			return null;
 		}
-		
+
 		// return all clips in array
 		return grp.clips.ToArray();
 	}
-	
+
 	/// <summary>
 	/// Load the specified clipname, at a custom path if you do not want to use resourcesPath.
 	/// If custompath fails or is empty/null, it will query the stored SFXs.  If that fails, it'll query the default
@@ -1409,30 +1420,30 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 	public static AudioClip Load(string clipname, string customPath)
 	{
 		AudioClip result = null;
-		
+
 		// Attempt to use custom path if provided
-		if(!string.IsNullOrEmpty(customPath))
-			if(customPath[customPath.Length-1] == '/')
-				result = (AudioClip)Resources.Load(customPath.Substring(0,customPath.Length) + "/" + clipname);
+		if (!string.IsNullOrEmpty(customPath))
+			if (customPath[customPath.Length - 1] == '/')
+				result = (AudioClip)Resources.Load(customPath.Substring(0, customPath.Length) + "/" + clipname);
 			else
 				result = (AudioClip)Resources.Load(customPath + "/" + clipname);
-				
-		if(result)
+
+		if (result)
 			return result;
-		
+
 		// If custom path fails, attempt to find it in our stored SFXs
-		if(Instance.allClips.ContainsKey(clipname))
+		if (Instance.allClips.ContainsKey(clipname))
 			result = Instance.allClips[clipname];
-		
-		if(result)
+
+		if (result)
 			return result;
-		
+
 		// If it is not in our stored SFX, attempt to find it in our default resources path
 		result = (AudioClip)Resources.Load(Instance.resourcesPath + "/" + clipname);
-		
+
 		return result;
 	}
-	
+
 	/// <summary>
 	/// Load the specified clipname from the stored SFXs.  If that fails, it'll query the default
 	/// resourcesPath.  If all else fails, it'll return null.
@@ -1447,7 +1458,7 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 	{
 		return Load(clipname, "");
 	}
-	
+
 	/// <summary>
 	/// Resets the SFX object to default values.
 	/// </summary>
@@ -1456,25 +1467,25 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 	/// </param>
 	public static void ResetSFXObject(GameObject sfxObj)
 	{
-		if(sfxObj.audio == null)
+		if (sfxObj.audio == null)
 			return;
-		
+
 		sfxObj.audio.mute = false;
 		sfxObj.audio.bypassEffects = false;
 		sfxObj.audio.playOnAwake = false;
 		sfxObj.audio.loop = false;
-		
+
 		sfxObj.audio.priority = 128;
 		sfxObj.audio.volume = 1f;
 		sfxObj.audio.pitch = 1f;
-		
+
 		sfxObj.audio.dopplerLevel = 1f;
 		sfxObj.audio.rolloffMode = AudioRolloffMode.Logarithmic;
 		sfxObj.audio.minDistance = 1f;
 		sfxObj.audio.panLevel = 1f;
 		sfxObj.audio.spread = 0f;
 		sfxObj.audio.maxDistance = 500f;
-		
+
 		sfxObj.audio.pan = 0f;
 	}
 	/// <summary>
@@ -1492,7 +1503,7 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 	/// <param name='runOnEndFunction'>
 	/// Run on end function.
 	/// </param>
-	public static void Crossfade(float duration, AudioSource fromSource, AudioSource toSource, SongCallBack runOnEndFunction=null)
+	public static void Crossfade(float duration, AudioSource fromSource, AudioSource toSource, SongCallBack runOnEndFunction = null)
 	{
 		Instance.StartCoroutine(Instance.XFade(duration, fromSource, toSource, runOnEndFunction));
 	}
@@ -1511,7 +1522,7 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 	/// <param name='runOnEndFunction'>
 	/// Run on end function.
 	/// </param>
-	public static void Crossfade(float duration, GameObject fromSFXObject, GameObject toSFXObject, SongCallBack runOnEndFunction=null)
+	public static void Crossfade(float duration, GameObject fromSFXObject, GameObject toSFXObject, SongCallBack runOnEndFunction = null)
 	{
 		Crossfade(duration, fromSFXObject.audio, toSFXObject.audio, runOnEndFunction);
 	}
@@ -1527,7 +1538,7 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 	/// <param name='runOnEndFunction'>
 	/// Run on end function.
 	/// </param>
-	public static void CrossIn(float duration, AudioSource source, SongCallBack runOnEndFunction=null)
+	public static void CrossIn(float duration, AudioSource source, SongCallBack runOnEndFunction = null)
 	{
 		Instance.StartCoroutine(Instance.XIn(duration, source, runOnEndFunction));
 	}
@@ -1543,7 +1554,7 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 	/// <param name='runOnEndFunction'>
 	/// Run on end function.
 	/// </param>
-	public static void CrossIn(float duration, GameObject sfxObject, SongCallBack runOnEndFunction=null)
+	public static void CrossIn(float duration, GameObject sfxObject, SongCallBack runOnEndFunction = null)
 	{
 		CrossIn(duration, sfxObject.audio, runOnEndFunction);
 	}
@@ -1559,7 +1570,7 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 	/// <param name='runOnEndFunction'>
 	/// Run on end function.
 	/// </param>
-	public static void CrossOut(float duration, AudioSource source, SongCallBack runOnEndFunction=null)
+	public static void CrossOut(float duration, AudioSource source, SongCallBack runOnEndFunction = null)
 	{
 		Instance.StartCoroutine(Instance.XOut(duration, source, runOnEndFunction));
 	}
@@ -1575,7 +1586,7 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 	/// <param name='runOnEndFunction'>
 	/// Run on end function.
 	/// </param>
-	public static void CrossOut(float duration, GameObject sfxObject, SongCallBack runOnEndFunction=null)
+	public static void CrossOut(float duration, GameObject sfxObject, SongCallBack runOnEndFunction = null)
 	{
 		CrossOut(duration, sfxObject.audio, runOnEndFunction);
 	}
