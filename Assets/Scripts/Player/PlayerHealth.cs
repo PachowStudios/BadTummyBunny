@@ -13,7 +13,6 @@ public sealed class PlayerHealth : MonoBehaviour
 	public int carrotHealthRecharge = 1;
 	public int falloutDamage = 1;
 	public float invincibilityPeriod = 2f;
-	public Vector2 knockback = new Vector2(2f, 2f);
 
 	private int health;
 	private bool dead = false;
@@ -52,8 +51,7 @@ public sealed class PlayerHealth : MonoBehaviour
 		}
 	}
 
-	public int MaxHealth
-	{ get { return HeartContainers * HealthPerContainer; } }
+	public int MaxHealth => HeartContainers * HealthPerContainer;
 
 	public int Health
 	{
@@ -69,14 +67,9 @@ public sealed class PlayerHealth : MonoBehaviour
 		}
 	}
 
-	public float HealthPercent
-	{ get { return Mathf.Clamp((float)health / MaxHealth, 0f, 1f); } }
+	public float HealthPercent => Mathf.Clamp((float)health / MaxHealth, 0f, 1f);
 
-	public bool IsDead
-	{ get { return dead; } }
-
-	public Vector2 Knockback
-	{ get { return knockback; } }
+	public bool IsDead => dead;
 
 	private void Awake()
 	{
@@ -193,13 +186,9 @@ public sealed class PlayerHealth : MonoBehaviour
 			Health -= damage;
 
 			if (!dead && !PlayerControl.Instance.IsFarting && knockback != default(Vector2))
-				StartCoroutine(PlayerControl.Instance.ApplyKnockback(knockback, knockbackDirection));
+				Wait.ForSeconds(0.1f, () => PlayerControl.Instance.ApplyKnockback(knockback, knockbackDirection));
 		}
 	}
 
-	public void TakeDamage(Enemy enemy)
-	{
-		TakeDamage(enemy, enemy.damage, enemy.knockback);
-	}
-
+	public void TakeDamage(Enemy enemy) => TakeDamage(enemy, enemy.damage, enemy.knockback);
 }

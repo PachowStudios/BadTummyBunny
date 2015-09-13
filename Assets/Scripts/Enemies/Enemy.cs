@@ -1,9 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public abstract class Enemy : MonoBehaviour
 {
-	#region Fields
 	public float gravity = -35f;
 	public float moveSpeed = 5f;
 	public float groundDamping = 10f;
@@ -33,9 +31,7 @@ public abstract class Enemy : MonoBehaviour
 	protected CharacterController2D controller;
 	protected Animator animator;
 	protected SpriteRenderer spriteRenderer;
-	#endregion
 
-	#region Public Properties
 	public float Health
 	{
 		get { return health; }
@@ -46,34 +42,22 @@ public abstract class Enemy : MonoBehaviour
 		}
 	}
 
-	public bool IsGrounded
-	{ get { return controller.isGrounded; } }
-	#endregion
+	public bool IsGrounded => controller.isGrounded;
 
-	#region Internal Properties
-	protected bool Right
-	{ get { return horizontalMovement > 0f; } }
+	protected bool Right => horizontalMovement > 0f;
 
-	protected bool Left
-	{ get { return horizontalMovement < 0f; } }
+	protected bool Left => horizontalMovement < 0f;
 
-	protected bool FacingRight
-	{ get { return transform.localScale.x > 0f; } }
+	protected bool FacingRight => transform.localScale.x > 0f;
 
-	protected LayerMask CollisionLayers
-	{ get { return controller.platformMask; } }
+	protected LayerMask CollisionLayers => controller.platformMask;
 
-	protected bool PlayerIsOnRight
-	{ get { return PlayerControl.Instance.transform.position.x > transform.position.x; } }
+	protected bool PlayerIsOnRight => PlayerControl.Instance.transform.position.x > transform.position.x;
 
-	protected float RelativePlayerLastGrounded
-	{ get { return (lastGroundedPosition.y - PlayerControl.Instance.LastGroundedPosition.y).RoundToTenth(); } }
+	protected float RelativePlayerLastGrounded => (lastGroundedPosition.y - PlayerControl.Instance.LastGroundedPosition.y).RoundToTenth();
 
-	protected float RelativePlayerHeight
-	{ get { return transform.position.y - PlayerControl.Instance.transform.position.y; } }
-	#endregion
+	protected float RelativePlayerHeight => transform.position.y - PlayerControl.Instance.transform.position.y;
 
-	#region MonoBehaviour
 	protected virtual void Awake()
 	{
 		controller = GetComponent<CharacterController2D>();
@@ -101,18 +85,12 @@ public abstract class Enemy : MonoBehaviour
 			Kill();
 	}
 
-	protected virtual void OnTriggerStay2D(Collider2D other)
-	{
-		OnTriggerEnter2D(other);
-	}
-	#endregion
+	protected virtual void OnTriggerStay2D(Collider2D other) => OnTriggerEnter2D(other);
 
-	#region Abstract Internal AI Methods
 	protected abstract void CalculateAI();
-	protected abstract void ApplyAnimation();
-	#endregion
 
-	#region Internal Update Methods
+	protected abstract void ApplyAnimation();
+
 	protected void GetMovement()
 	{
 		if (Right && !FacingRight)
@@ -138,16 +116,13 @@ public abstract class Enemy : MonoBehaviour
 			lastGroundedPosition = transform.position;
 		}
 	}
-	#endregion
 
-	#region Internal Helper Methods
 	protected virtual void Jump(float height)
 	{
-		if (height > 0f)
-		{
-			velocity.y = Mathf.Sqrt(2f * height * -gravity);
-			animator.SetTrigger("Jump");
-		}
+		if (height <= 0f) return;
+
+		velocity.y = Mathf.Sqrt(2f * height * -gravity);
+		animator.SetTrigger("Jump");
 	}
 
 	protected bool CheckAtWall(bool flip = false)
@@ -168,8 +143,7 @@ public abstract class Enemy : MonoBehaviour
 
 	protected bool CheckAtLedge(bool flip = false)
 	{
-		if (!IsGrounded)
-			return false;
+		if (!IsGrounded) return false;
 
 		Collider2D collision = Physics2D.OverlapPoint(ledgeCheck.position, CollisionLayers);
 		bool atLedge = collision == null;
@@ -207,35 +181,22 @@ public abstract class Enemy : MonoBehaviour
 	protected void CheckDeath()
 	{
 		if (Health <= 0f)
-		{
 			Kill();
-		}
 	}
 
-	protected IEnumerator ResetColor(float delay = 0f)
-	{
-		yield return new WaitForSeconds(delay);
+	protected void ResetColor() => spriteRenderer.color = Color.white;
 
-		spriteRenderer.color = Color.white;
-	}
-	#endregion
-
-	#region Public Methods
 	public void Kill()
 	{
 		ExplodeEffect.Instance.Explode(transform, velocity, spriteRenderer.sprite);
 		Destroy(gameObject);
 	}
 
-	public void TakeDamageFromPlayer(int damage)
+	public void TakeDamage(int damage, Vector2 knockback, Vector2 direction)
 	{
-		if (Health <= 0f)
-			return;
+		if (Health <= 0f) return;
 
-		Vector2 knockback = PlayerHealth.Instance.Knockback;
-		Vector2 knockbackDirection = PlayerControl.Instance.Direction;
-
-		knockbackDirection.Scale(new Vector2(-1f, 1f));
+		direction.Scale(new Vector2(-1f, 1f));
 
 		if (damage != 0f)
 		{
@@ -243,31 +204,29 @@ public abstract class Enemy : MonoBehaviour
 
 			if (Health > 0f)
 			{
-				ApplyKnockback(knockback, knockbackDirection);
+				ApplyKnockback(knockback, direction);
 				spriteRenderer.color = flashColor;
-				StartCoroutine(ResetColor(flashLength));
+				Wait.ForSeconds(flashLength, ResetColor);
 			}
 		}
 	}
 
-	public void ApplyKnockback(Vector2 knockback, Vector2 knockbackDirection)
+	public void ApplyKnockback(Vector2 knockback, Vector2 direction)
 	{
-		if (immuneToKnockback)
-			return;
+		if (immuneToKnockback) return;
 
 		knockback.x += Mathf.Sqrt(Mathf.Abs(Mathf.Pow(knockback.x, 2) * -gravity));
 
 		if (IsGrounded)
 			knockback.y += Mathf.Sqrt(Mathf.Abs(knockback.y * -gravity));
 
-		knockback.Scale(knockbackDirection);
+		knockback.Scale(direction);
 
 		if (knockback.x != 0f || knockback.y != 0f)
 		{
-			velocity += (Vector3)knockback;
+			velocity += knockback.ToVector3();
 			controller.move(velocity * Time.deltaTime);
 			velocity = controller.velocity;
 		}
 	}
-	#endregion
 }

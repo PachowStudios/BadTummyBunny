@@ -24,6 +24,8 @@ public class BasicFart : MonoBehaviour, IFart
 	[SerializeField]
 	protected float damageDelay = 0.1f;
 	[SerializeField]
+	protected Vector2 knockback = new Vector2(1f, 1f);
+	[SerializeField]
 	protected List<SfxPowerMapping> soundEffects = new List<SfxPowerMapping>();
 
 	[Header("Trajectory")]
@@ -49,26 +51,18 @@ public class BasicFart : MonoBehaviour, IFart
 	[SerializeField]
 	protected PolygonCollider2D fartCollider = null;
 	[SerializeField]
-	protected ParticleSystem particles = null;
+	protected List<ParticleSystem> particles = new List<ParticleSystem>();
 
 	private HashSet<Enemy> targetEnemies = new HashSet<Enemy>();
 	private VectorLine trajectoryLine = null;
 
-	public string FartName
-	{ get { return fartName; } }
+	public string FartName => fartName;
 
-	public bool IsFarting
-	{ get; protected set; }
+	public bool IsFarting { get; protected set; }
 
-	protected virtual void Awake()
-	{
-		InitializeTrajectoryLine();
-	}
+	protected virtual void Awake() => InitializeTrajectoryLine();
 
-	protected virtual void OnDestroy()
-	{
-		VectorLine.Destroy(ref trajectoryLine);
-	}
+	protected virtual void OnDestroy() => VectorLine.Destroy(ref trajectoryLine);
 
 	public virtual void StartFart(float power, Vector2 direction)
 	{
@@ -99,15 +93,10 @@ public class BasicFart : MonoBehaviour, IFart
 
 		IsFarting = false;
 
-		particles.Stop();
+		particles.ForEach(p => p.Stop());
 	}
 
-	public virtual float CalculateSpeed(float power)
-	{
-		return Extensions.ConvertRange(power,
-																	 0f, 1f,
-																	 speedRange.x, speedRange.y);
-	}
+	public virtual float CalculateSpeed(float power) => Extensions.ConvertRange(power, 0f, 1f, speedRange.x, speedRange.y);
 
 	public virtual void DrawTrajectory(float power, Vector3 direction, float gravity, Vector3 startPosition)
 	{
@@ -146,10 +135,12 @@ public class BasicFart : MonoBehaviour, IFart
 																					PlayerControl.Instance.CollisionLayers);
 
 				if (linecast.collider == null)
-					enemy.TakeDamageFromPlayer(damage);
+					DamageEnemy(enemy);
 			}
 		}
 	}
+
+	protected virtual void DamageEnemy(Enemy enemy) => enemy.TakeDamage(damage, knockback, PlayerControl.Instance.Direction);
 
 	protected virtual Vector3[] CalculateTrajectory(float power, Vector3 direction, float gravity, Vector3 startPosition)
 	{
@@ -209,10 +200,7 @@ public class BasicFart : MonoBehaviour, IFart
 		}
 	}
 
-	protected void StartParticles()
-	{
-		particles.Play();
-	}
+	protected void StartParticles() => particles.ForEach(p => p.Play());
 
 	protected void InitializeTrajectoryLine()
 	{

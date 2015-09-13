@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [AddComponentMenu("UI/Camera/Camera Controller")]
@@ -46,22 +47,8 @@ public class CameraController : MonoBehaviour
 
 	private static CameraController instance;
 
-	public static CameraController Instance
-	{
-		get
-		{
-			if (instance == null)
-			{
-				instance = FindObjectOfType(typeof(CameraController)) as CameraController;
+	public static CameraController Instance => instance ?? FindObjectOfType(typeof(CameraController)) as CameraController;
 
-				if (instance == null) throw new UnityException("CameraController does not appear to exist");
-			}
-
-			return instance;
-		}
-	}
-
-	#region MonoBehaviour
 	private void Awake()
 	{
 		instance = this;
@@ -100,6 +87,7 @@ public class CameraController : MonoBehaviour
 			{
 				// once we get the desired position we have to subtract the offset that we previously added
 				var desiredPos = cameraBehavior.GetDesiredPositionDelta(targetBounds, basePosition, targetAvgVelocity);
+
 				accumulatedDeltaOffset += desiredPos;
 			}
 		}
@@ -111,6 +99,7 @@ public class CameraController : MonoBehaviour
 				accumulatedDeltaOffset.y = 0f;
 
 			var desiredOffset = targetBounds.min.y - basePosition.y - platformSnapVerticalOffset;
+
 			accumulatedDeltaOffset += new Vector3(0f, desiredOffset);
 		}
 
@@ -201,40 +190,16 @@ public class CameraController : MonoBehaviour
 	}
 	#endif
 
-	private void OnApplicationQuit()
-	{
-		instance = null;
-	}
-	#endregion
+	private void OnApplicationQuit() => instance = null;
 
-	private Vector3 GetNormalizedCameraPosition()
-	{
-		//Camera.main.ViewportToWorldPoint()
-		#if UNITY_EDITOR
-		return GetComponent<Camera>().ViewportToWorldPoint(new Vector3(0.5f + horizontalOffset, 0.5f + verticalOffset, 0f));
-		#else
-		return camera.ViewportToWorldPoint( new Vector3( 0.5f + horizontalOffset, 0.5f + verticalOffset, 0f ) );
-		#endif
-	}
+	#if UNITY_EDITOR
+	private Vector3 GetNormalizedCameraPosition() => GetComponent<Camera>().ViewportToWorldPoint(new Vector3(0.5f + horizontalOffset, 0.5f + verticalOffset, 0f));
+	#else
+	private Vector3 GetNormalizedCameraPosition() => camera.ViewportToWorldPoint(new Vector3(0.5f + horizontalOffset, 0.5f + verticalOffset, 0f));
+	#endif
 
-	#region smoothing
-	private Vector3 LerpTowards(Vector3 from, Vector3 to, float remainingFactorPerSecond)
-	{
-		return Vector3.Lerp(from, to, 1f - Mathf.Pow(remainingFactorPerSecond, Time.deltaTime));
-	}
+	private Vector3 LerpTowards(Vector3 from, Vector3 to, float remainingFactorPerSecond) => Vector3.Lerp(from, to, 1f - Mathf.Pow(remainingFactorPerSecond, Time.deltaTime));
 
-	/// <summary>
-	/// uses the semi-implicit euler method. faster, but not always stable.
-	/// see http://allenchou.net/2015/04/game-math-more-on-numeric-springing/
-	/// </summary>
-	/// <returns>The spring.</returns>
-	/// <param name="currentValue">Current value.</param>
-	/// <param name="targetValue">Target value.</param>
-	/// <param name="velocity">Velocity by reference. Be sure to reset it to 0 if changing the targetValue between calls</param>
-	/// <param name="dampingRatio">lower values are less damped and higher values are more damped resulting in less springiness.
-	/// should be between 0.01f, 1f to avoid unstable systems.</param>
-	/// <param name="angularFrequency">An angular frequency of 2pi (radians per second) means the oscillation completes one
-	/// full period over one second, i.e. 1Hz. should be less than 35 or so to remain stable</param>
 	private Vector3 FastSpring(Vector3 currentValue, Vector3 targetValue)
 	{
 		cameraVelocity += -2.0f * Time.deltaTime * springDampingRatio * springAngularFrequency * cameraVelocity + Time.deltaTime * springAngularFrequency * springAngularFrequency * (targetValue - currentValue);
@@ -242,79 +207,24 @@ public class CameraController : MonoBehaviour
 
 		return currentValue;
 	}
-	#endregion
 
+	public void AddCameraBaseBehavior(ICameraBaseBehavior cameraBehavior) => baseCameraBehaviors.Add(cameraBehavior);
 
-	#region Camera Behavior and Effector management
-	public void AddCameraBaseBehavior(ICameraBaseBehavior cameraBehavior)
-	{
-		baseCameraBehaviors.Add(cameraBehavior);
-	}
+	public void RemoveCameraBaseBehavior<T>() where T : ICameraBaseBehavior => baseCameraBehaviors.RemoveAll(b => b.GetType() == typeof(T));
 
-	public void RemoveCameraBaseBehavior<T>() where T : ICameraBaseBehavior
-	{
-		var requestedType = typeof(T);
+	public T GetCameraBaseBehavior<T>() where T : ICameraBaseBehavior => (T)baseCameraBehaviors.FirstOrDefault(b => b.GetType() == typeof(T));
 
-		for (var i = baseCameraBehaviors.Count - 1; i >= 0; i--)
-		{
-			if (baseCameraBehaviors[i].GetType() == requestedType)
-			{
-				baseCameraBehaviors.RemoveAt(i);
-				return;
-			}
-		}
-	}
+	public void AddCameraEffector(ICameraEffector cameraEffector) => cameraEffectors.Add(cameraEffector);
 
-	public T GetCameraBaseBehavior<T>() where T : ICameraBaseBehavior
-	{
-		var requestedType = typeof(T);
-
-		for (var i = 0; i < baseCameraBehaviors.Count; i++)
-		{
-			if (baseCameraBehaviors[i].GetType() == requestedType)
-				return (T)baseCameraBehaviors[i];
-		}
-
-		return default(T);
-	}
-
-	public void AddCameraEffector(ICameraEffector cameraEffector)
-	{
-		cameraEffectors.Add(cameraEffector);
-	}
-
-	public void RemoveCameraEffector(ICameraEffector cameraEffector)
-	{
-		for (var i = cameraEffectors.Count - 1; i >= 0; i--)
-		{
-			if (cameraEffectors[i] == cameraEffector)
-			{
-				cameraEffectors.RemoveAt(i);
-				return;
-			}
-		}
-	}
+	public void RemoveCameraEffector(ICameraEffector cameraEffector) => cameraEffectors.RemoveAll(e => e == cameraEffector);
 
 	public void AddCameraFinalizer(ICameraFinalizer cameraFinalizer)
 	{
 		cameraFinalizers.Add(cameraFinalizer);
 
-		// sort the list if we need to
 		if (cameraFinalizers.Count > 1)
 			cameraFinalizers.Sort((first, second) => first.GetFinalizerPriority.CompareTo(second.GetFinalizerPriority));
 	}
 
-	public void RemoveCameraFinalizer(ICameraFinalizer cameraFinalizer)
-	{
-		for (var i = cameraFinalizers.Count - 1; i >= 0; i--)
-		{
-			if (cameraFinalizers[i] == cameraFinalizer)
-			{
-				cameraFinalizers.RemoveAt(i);
-				return;
-			}
-		}
-	}
-	#endregion
-
+	public void RemoveCameraFinalizer(ICameraFinalizer cameraFinalizer) => cameraFinalizers.RemoveAll(f => f == cameraFinalizer);
 }

@@ -1,10 +1,8 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 
 [AddComponentMenu("Player/Control")]
 public sealed class PlayerControl : MonoBehaviour
 {
-	#region Inspector Fields
 	[Header("Movement")]
 	public float gravity = -60f;
 	public float walkSpeed = 10f;
@@ -27,9 +25,7 @@ public sealed class PlayerControl : MonoBehaviour
 	[Header("Components")]
 	[SerializeField]
 	private Transform body = null;
-	#endregion
 
-	#region Internal Fields
 	private Vector3 velocity = Vector3.zero;
 	private Vector3 lastGroundedPosition;
 	private float horizontalMovement = 0f;
@@ -49,66 +45,43 @@ public sealed class PlayerControl : MonoBehaviour
 	private PlayerActions playerActions;
 	private CharacterController2D controller;
 	private Animator animator;
-	#endregion
 
-	#region Public Properties
 	public static PlayerControl Instance { get; private set; }
 
-	public bool IsFarting
-	{ get { return isFarting; } }
+	public bool IsFarting => isFarting;
 
-	public bool IsFartCharging
-	{ get { return isFartCharging; } }
+	public bool IsFartCharging => isFartCharging;
 
-	public bool WillFart
-	{ get { return willFart; } }
+	public bool WillFart => willFart;
 
-	public Vector2 FartDirection
-	{ get { return fartDirection; } }
+	public Vector2 FartDirection => fartDirection;
 
-	public float FartPower
-	{ get { return fartPower; } }
+	public float FartPower => fartPower;
 
-	public float AvailableFartPercent
-	{ get { return Mathf.Clamp01(availableFart / maxAvailableFart); } }
+	public float AvailableFartPercent => Mathf.Clamp01(availableFart / maxAvailableFart);
 
-	public Vector3 Velocity
-	{ get { return velocity; } }
+	public Vector3 Velocity => velocity;
 
-	public Vector3 LastGroundedPosition
-	{ get { return lastGroundedPosition; } }
+	public Vector3 LastGroundedPosition => lastGroundedPosition;
 
-	public Vector2 Direction
-	{ get { return velocity.normalized; } }
+	public Vector2 Direction => velocity.normalized;
 
-	public bool IsGrounded
-	{ get { return controller.isGrounded; } }
+	public bool IsGrounded => controller.isGrounded;
 
-	public bool WasGrounded
-	{ get { return controller.wasGroundedLastFrame; } }
+	public bool WasGrounded => controller.wasGroundedLastFrame;
 
-	public LayerMask CollisionLayers
-	{ get { return controller.platformMask; } }
-	#endregion
+	public LayerMask CollisionLayers => controller.platformMask;
 
-	#region Internal Properties
-	private bool IsMovingRight
-	{ get { return horizontalMovement > 0f; } }
+	private bool IsMovingRight => horizontalMovement > 0f;
 
-	private bool IsMovingLeft
-	{ get { return horizontalMovement < 0f; } }
+	private bool IsMovingLeft => horizontalMovement < 0f;
 
-	private bool IsFacingRight
-	{ get { return body.localScale.x > 0f; } }
+	private bool IsFacingRight => body.localScale.x > 0f;
 
-	private Vector3 CenterPoint
-	{ get { return collider2D.bounds.center; } }
+	private Vector3 CenterPoint => collider2D.bounds.center;
 
-	private bool CanFart
-	{ get { return isFartingEnabled && availableFart >= fartUsageRange.y; } }
-	#endregion
+	private bool CanFart => isFartingEnabled && availableFart >= fartUsageRange.y;
 
-	#region MonoBehaviour
 	private void Awake()
 	{
 		Instance = this;
@@ -126,7 +99,7 @@ public sealed class PlayerControl : MonoBehaviour
 
 	private void Start()
 	{
-		SetFart(startingFart);
+		SetFart(startingFart as IFart);
 
 		PlayerTriggers.Instance.CarrotTriggered += CollectCarrot;
 		PlayerTriggers.Instance.FlagpoleTriggered += ActivateLevelFlagpole;
@@ -168,9 +141,7 @@ public sealed class PlayerControl : MonoBehaviour
 	{
 		OnTriggerEnter2D(other);
 	}
-	#endregion
 
-	#region Internal Update Methods
 	private void GetInput()
 	{
 		if (!isInputEnabled) return;
@@ -256,9 +227,7 @@ public sealed class PlayerControl : MonoBehaviour
 			lastGroundedPosition = transform.position;
 		}
 	}
-	#endregion
 
-	#region Internal Helper Methods
 	private void Jump(float height)
 	{
 		if (height <= 0f) return;
@@ -295,12 +264,7 @@ public sealed class PlayerControl : MonoBehaviour
 		velocity.y = 0f;
 	}
 
-	private float CalculateFartUsage(float fartPower)
-	{
-		return Extensions.ConvertRange(fartPower,
-																	 0f, 1f,
-																	 fartUsageRange.x, fartUsageRange.y);
-	}
+	private float CalculateFartUsage(float fartPower) => Extensions.ConvertRange(fartPower, 0f, 1f, fartUsageRange.x, fartUsageRange.y);
 
 	private void CollectCarrot(Carrot carrot)
 	{
@@ -334,9 +298,7 @@ public sealed class PlayerControl : MonoBehaviour
 		willJump = false;
 		StopFart(true);
 	}
-	#endregion
 
-	#region Internal Audio Methods
 	private void PlayWalkingSound(int rightStep)
 	{
 		if (!IsFarting && IsGrounded)
@@ -348,31 +310,22 @@ public sealed class PlayerControl : MonoBehaviour
 	{
 		SoundManager.PlayCappedSFXFromGroup(SfxGroups.LandingGrass);
 	}
-	#endregion
 
-	#region Public Methods
-	public void SetFart(MonoBehaviour newFart)
+	public void SetFart(IFart newFart)
 	{
 		if (newFart == null) return;
 
-		if (!(newFart is IFart))
-		{
-			Debug.LogError("Tried to set fart that is not of type IFart", newFart);
-			return;
-		}
+		var fartInstance = Instantiate(newFart as MonoBehaviour, fartPoint.position, fartPoint.rotation) as MonoBehaviour;
 
-		var fartInstance = Instantiate(newFart, fartPoint.position, fartPoint.rotation) as MonoBehaviour;
-
-		fartInstance.name = newFart.name;
+		fartInstance.name = newFart.FartName;
 		fartInstance.transform.parent = body;
 
+		(currentFart as MonoBehaviour)?.DestroyGameObject();
 		currentFart = fartInstance as IFart;
 	}
 
-	public IEnumerator ApplyKnockback(Vector2 knockback, float knockbackDirection)
+	public void ApplyKnockback(Vector2 knockback, float knockbackDirection)
 	{
-		yield return new WaitForSeconds(0.1f);
-
 		velocity.x = Mathf.Sqrt(Mathf.Abs(Mathf.Pow(knockback.x, 2) * -gravity)) * knockbackDirection;
 
 		if (IsGrounded)
@@ -387,5 +340,4 @@ public sealed class PlayerControl : MonoBehaviour
 		isInputEnabled = false;
 		ResetInput();
 	}
-	#endregion
 }

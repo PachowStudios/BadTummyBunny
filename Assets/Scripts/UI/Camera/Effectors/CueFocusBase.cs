@@ -15,17 +15,13 @@ public abstract class CueFocusBase : MonoBehaviour, ICameraEffector
 
 	protected Transform trackedTarget;
 
-	protected Collider2D EffectorTrigger
-	{ get { return effectorTrigger; } }
+	protected Collider2D EffectorTrigger => effectorTrigger;
 
-	protected virtual Vector3 FocusPosition
-	{ get { return transform.position; } }
+	protected virtual Vector3 FocusPosition => transform.position;
 
-	protected bool AffectHorizontal
-	{ get { return (axis & CameraAxis.Horizontal) == CameraAxis.Horizontal; } }
+	protected bool AffectHorizontal => (axis & CameraAxis.Horizontal) == CameraAxis.Horizontal;
 
-	protected bool AffectVertical
-	{ get { return (axis & CameraAxis.Vertical) == CameraAxis.Vertical; } }
+	protected bool AffectVertical => (axis & CameraAxis.Vertical) == CameraAxis.Vertical;
 
 	[Conditional("UNITY_EDITOR")]
 	protected void Update() { }
@@ -68,12 +64,12 @@ public abstract class CueFocusBase : MonoBehaviour, ICameraEffector
 	protected virtual void Activate(Transform newTransform)
 	{
 		trackedTarget = newTransform;
-		CameraController.Instance.AddCameraEffector(this);
+		CameraController.Instance?.AddCameraEffector(this);
 	}
 
 	protected virtual void Deactivate()
 	{
 		trackedTarget = null;
-		CameraController.Instance.RemoveCameraEffector(this);
+		CameraController.Instance?.RemoveCameraEffector(this);
 	}
 }
