@@ -2,30 +2,16 @@
 
 public class Carrot : MonoBehaviour
 {
-	#region Fields
-	private SpriteRenderer spriteRenderer;
-	#endregion
+	private SpriteRenderer spriteRenderer = null;
 
-	#region MonoBehaviour
-	private void Awake()
-	{
-		spriteRenderer = GetComponent<SpriteRenderer>();
-	}
-	#endregion
+	protected SpriteRenderer SpriteRenderer => this.GetComponentIfNull(ref spriteRenderer);
 
-	#region Public Methods
-	public void Collect()
+	public virtual void Collect()
 	{
 		PlayCollectSound();
-		ExplodeEffect.Instance.Explode(transform, Vector3.zero, spriteRenderer.sprite);
+		ExplodeEffect.Instance.Explode(transform, Vector3.zero, SpriteRenderer.sprite);
 		Destroy(gameObject);
 	}
-	#endregion
 
-	#region Internal Helper Methods
-	private void PlayCollectSound()
-	{
-		SoundManager.PlaySFX(SoundManager.LoadFromGroup(SfxGroups.Carrots));
-	}
-	#endregion
+	protected virtual void PlayCollectSound() => SoundManager.PlaySFX(SoundManager.LoadFromGroup(SfxGroups.Carrots));
 }

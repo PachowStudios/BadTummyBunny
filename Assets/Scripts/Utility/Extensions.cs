@@ -20,6 +20,12 @@ public static class Extensions
 
 	public static Vector3 ToVector3(this Vector2 parent, float z) => new Vector3(parent.x, parent.y, z);
 
+	public static bool IsZero(this Vector2 parent) => parent.x == 0f && parent.y == 0f;
+
+	public static Vector2 Dot(this Vector2 parent, Vector2 other) => parent.Dot(other.x, other.y);
+
+	public static Vector2 Dot(this Vector2 parent, float x, float y) => new Vector2(parent.x * x, parent.y * y);
+
 	public static float RandomRange(this Vector2 parent) => Random.Range(parent.x, parent.y);
 	#endregion
 
@@ -65,7 +71,17 @@ public static class Extensions
 	#endregion
 
 	#region Component
-	public static T[] GetInterfaceComponents<T>(this Component parent) where T : class => System.Array.ConvertAll(parent.GetComponents(typeof(T)), c => c as T);
+	public static T GetComponentIfNull<T>(this Component parent, ref T target) where T : Component
+		=> target ?? (target = parent.GetComponent<T>());
+
+	public static T GetInterfaceIfNull<T>(this Component parent, ref T target) where T : class
+		=> target ?? (target = parent.GetInterface<T>());
+
+	public static T GetInterface<T>(this Component parent) where T : class 
+		=> parent.GetComponent(typeof(T)) as T;
+
+	public static T[] GetInterfaces<T>(this Component parent) where T : class 
+		=> System.Array.ConvertAll(parent.GetComponents(typeof(T)), c => c as T);
 	#endregion
 
 	#region MonoBehaviour

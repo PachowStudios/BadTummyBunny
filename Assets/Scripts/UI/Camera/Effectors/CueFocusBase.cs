@@ -29,7 +29,7 @@ public abstract class CueFocusBase : MonoBehaviour, ICameraEffector
 	protected virtual void OnTriggerEnter2D(Collider2D other)
 	{
 		if (trackedTarget == null && other.tag == Tags.Player)
-			if (!onlyTriggerWhenGrounded || PlayerControl.Instance.IsGrounded)
+			if (!onlyTriggerWhenGrounded || Player.Instance.Movement.IsGrounded)
 				Activate(other.transform);
 	}
 

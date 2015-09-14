@@ -2,39 +2,20 @@
 
 public class Flagpole : MonoBehaviour
 {
-	#region Fields
-	private bool activated = false;
+	private Animator animator = null;
 
-	private Animator animator;
-	#endregion
+	public virtual bool Activated { get; protected set; } = false;
 
-	#region Public Properties
-	public bool Activated
-	{ get { return activated; } }
-	#endregion
+	protected Animator Animator => this.GetComponentIfNull(ref animator);
 
-	#region MonoBehaviour
-	private void Awake()
+	public virtual void Activate()
 	{
-		animator = GetComponent<Animator>();
-	}
-	#endregion
+		if (Activated) return;
 
-	#region Public Methods
-	public void Activate()
-	{
-		if (activated) return;
-
-		activated = true;
-		animator.SetTrigger("Activate");
+		Activated = true;
+		Animator.SetTrigger("Activate");
 		PlayActivateSound();
 	}
-	#endregion
 
-	#region Internal Helper Methods
-	private void PlayActivateSound()
-	{
-		SoundManager.PlaySFX(SoundManager.LoadFromGroup(SfxGroups.RespawnPoints));
-	}
-	#endregion
+	protected virtual void PlayActivateSound() => SoundManager.PlaySFX(SoundManager.LoadFromGroup(SfxGroups.RespawnPoints));
 }

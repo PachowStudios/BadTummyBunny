@@ -1,52 +1,34 @@
 ﻿using UnityEngine;
 
 [AddComponentMenu("Environment/Respawn Point")]
-public sealed class RespawnPoint : MonoBehaviour
+public class RespawnPoint : MonoBehaviour
 {
-	#region Fields
 	[SerializeField]
-	private Vector3 localRespawnPoint = default(Vector3);
+	protected Vector3 localRespawnPoint = default(Vector3);
 
-	private bool activated = false;
+	private Animator animator = null;
 
-	private Animator animator;
-	#endregion
+	public bool Activated { get; private set; } = false;
+	public Vector3 Location => transform.TransformPoint(localRespawnPoint);
 
-	#region Public Properties
-	public Vector3 Location
-	{ get { return transform.TransformPoint(localRespawnPoint); } }
-	#endregion
+	protected Animator Animator => this.GetComponentIfNull(ref animator);
 
-	#region MonoBehaviour
-	private void Awake()
+	public virtual void Activate()
 	{
-		animator = GetComponent<Animator>();
-	}
-	#endregion
+		if (Activated) return;
 
-	#region Public Methods
-	public void Activate()
-	{
-		if (activated) return;
-
-		activated = true;
-		animator.SetBool("Activated", activated);
+		Activated = true;
+		Animator.SetBool("Activated", Activated);
 		PlayActivateSound();
 	}
 
-	public void Deactivate()
+	public virtual void Deactivate()
 	{
-		if (!activated) return;
+		if (!Activated) return;
 
-		activated = false;
-		animator.SetBool("Activated", activated);
+		Activated = false;
+		animator.SetBool("Activated", Activated);
 	}
-	#endregion
 
-	#region Internal Helper Methods
-	private void PlayActivateSound()
-	{
-		SoundManager.PlaySFX(SoundManager.LoadFromGroup(SfxGroups.RespawnPoints));
-	}
-	#endregion
+	protected virtual void PlayActivateSound() => SoundManager.PlaySFX(SoundManager.LoadFromGroup(SfxGroups.RespawnPoints));
 }

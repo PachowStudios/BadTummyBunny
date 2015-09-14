@@ -4,11 +4,7 @@
 [RequireComponent(typeof(PolygonCollider2D))]
 public class CueFocusPolygon : CueFocusBase
 {
-	protected new PolygonCollider2D EffectorTrigger
-	{ get { return base.EffectorTrigger as PolygonCollider2D; } }
+	protected new PolygonCollider2D EffectorTrigger => base.EffectorTrigger as PolygonCollider2D;
 
-	public override float GetEffectorWeight()
-	{
-		return effectorWeight;
-	}
+	public override float GetEffectorWeight() => effectorWeight;
 }

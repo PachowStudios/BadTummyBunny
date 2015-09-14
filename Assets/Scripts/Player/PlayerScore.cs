@@ -2,54 +2,48 @@
 using UnityEngine;
 
 [AddComponentMenu("Player/Score")]
-public class PlayerScore : MonoBehaviour
+public class PlayerScore : MonoBehaviour, IScoreKeeper
 {
-	#region Events
-	public event Action<int> CoinsChanged = delegate { };
-	#endregion
+	public event Action<int> CoinsChanged;
 
-	#region Internal Fields
-	private int coins;
-	#endregion
-
-	#region Public Properties
-	public static PlayerScore Instance { get; private set; }
+	private int coins = 0;
 
 	public int Coins
 	{
 		get { return coins; }
-		set
+		private set
 		{
-			coins = Mathf.Max(0, value);
-			CoinsChanged(coins);
+			coins = value;
+			CoinsChanged?.Invoke(coins);
 		}
 	}
-	#endregion
 
-	#region MonoBehaviour
-	private void Awake()
+	public void AddCoins(int coinsToAdd)
 	{
-		Instance = this;
+		if (coinsToAdd <= 0)
+			Debug.LogError($"{nameof(coinsToAdd)} cannot be 0 or less. Was {coinsToAdd}");
+
+		Coins += coinsToAdd;
 	}
 
-	private void Start()
+	public void RemoveCoins(int coinsToRemove)
 	{
-		PlayerTriggers.Instance.CoinTriggered += CollectCoin;
+		if (coinsToRemove >= 0)
+			Debug.LogError($"{nameof(coinsToRemove)} cannot be 0 or greater. Was {coinsToRemove}");
+
+		Coins -= coinsToRemove;
 	}
 
-	private void OnDestroy()
-	{
-		PlayerTriggers.Instance.CoinTriggered -= CollectCoin;
-	}
-	#endregion
+	private void Start() => Player.Instance.Triggers.CoinTriggered += CollectCoin;
 
-	#region Internal Helper Methods
+	private void OnDestroy() => Player.Instance.Triggers.CoinTriggered -= CollectCoin;
+
 	private void CollectCoin(Coin coin)
 	{
-		if (coin == null) return;
+		if (coin == null)
+			Debug.LogError($"{nameof(coin)} was null");
 
-		Coins += coin.Value;
+		AddCoins(coin.Value);
 		coin.Collect();
 	}
-	#endregion
 }

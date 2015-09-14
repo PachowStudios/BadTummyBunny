@@ -6,80 +6,78 @@ using UnityEngine.UI;
 [AddComponentMenu("UI/HUD/Health")]
 public class HealthHud : MonoBehaviour
 {
-	#region Inspector Fields
-	public Image heartPrefab;
-	public float spaceBetweenHearts = 0.125f;
+	[SerializeField]
+	protected Image heartPrefab;
+	[SerializeField]
+	protected float spaceBetweenHearts = 0.125f;
 	[Tooltip("Order is empty to full")]
-	public Sprite[] heartImages = new Sprite[PlayerHealth.HealthPerContainer + 1];
-	#endregion
+	[SerializeField]
+	protected Sprite[] heartImages = new Sprite[5];
 
-	#region Internal Fields
-	private List<Image> heartContainers;
-	#endregion
+	protected List<Image> healthContainers = null;
 
-	#region Public Properties
 	public static HealthHud Instance { get; private set; }
-	#endregion
 
-	#region MonoBehaviour
-	private void Awake()
+	protected int HealthPerContainer => Player.Instance.HealthContainers.HealthPerContainer;
+
+	protected virtual void Awake()
 	{
 		Instance = this;
 
-		heartContainers = transform.GetComponentsInChildren<Image>().OrderBy(h => h.rectTransform.anchoredPosition.x).ToList();
+		healthContainers = transform.GetComponentsInChildren<Image>()
+															 .OrderBy(h => h.rectTransform.anchoredPosition.x)
+															 .ToList();
 	}
 
-	private void Start()
+	protected virtual void Start()
 	{
-		PlayerHealth.Instance.HeartContainersChanged += OnHeartContainersChanged;
-		PlayerHealth.Instance.HealthChanged += OnHealthChanged;
+		Player.Instance.HealthContainers.HealthContainersChanged += OnHealthContainersChanged;
+		Player.Instance.Health.HealthChanged += OnHealthChanged;
 
-		OnHeartContainersChanged(PlayerHealth.Instance.HeartContainers);
-		OnHealthChanged(PlayerHealth.Instance.Health);
+		OnHealthContainersChanged(Player.Instance.HealthContainers.HealthContainers);
+		OnHealthChanged(Player.Instance.Health.Health);
 	}
 
-	private void OnDestroy()
+	protected virtual void OnDestroy()
 	{
-		PlayerHealth.Instance.HeartContainersChanged -= OnHeartContainersChanged;
-		PlayerHealth.Instance.HealthChanged -= OnHealthChanged;
+		Player.Instance.HealthContainers.HealthContainersChanged -= OnHealthContainersChanged;
+		Player.Instance.Health.HealthChanged -= OnHealthChanged;
 	}
-	#endregion
 
-	#region Internal Helper Methods
-	private void OnHeartContainersChanged(int newHeartContainers)
+	protected virtual void OnHealthContainersChanged(int newHealthContainers)
 	{
-		if (heartContainers.Count < newHeartContainers)
+		if (healthContainers.Count < newHealthContainers)
 		{
-			while (heartContainers.Count < newHeartContainers)
+			while (healthContainers.Count < newHealthContainers)
 			{
 				var newHeart = Instantiate(heartPrefab, Vector3.zero, Quaternion.identity) as Image;
 
 				newHeart.transform.SetParent(transform, false);
 				newHeart.sprite = heartImages[0];
 
-				if (heartContainers.Count > 0)
-					newHeart.rectTransform.anchoredPosition = new Vector2(heartContainers.Last().rectTransform.offsetMax.x + spaceBetweenHearts,
-																																heartContainers.Last().rectTransform.anchoredPosition.y);
+				if (healthContainers.Count > 0)
+					newHeart.rectTransform.anchoredPosition = new Vector2(healthContainers.Last().rectTransform.offsetMax.x + spaceBetweenHearts,
+																																healthContainers.Last().rectTransform.anchoredPosition.y);
 
-				heartContainers.Add(newHeart);
+				healthContainers.Add(newHeart);
 			}
 		}
-		else if (heartContainers.Count > newHeartContainers)
+		else if (healthContainers.Count > newHealthContainers)
 		{
-			while (heartContainers.Count > newHeartContainers)
-				Destroy(heartContainers.Pop().gameObject);
+			while (healthContainers.Count > newHealthContainers)
+				Destroy(healthContainers.Pop().gameObject);
 		}
 	}
 
-	private void OnHealthChanged(int newHealth)
+	protected virtual void OnHealthChanged(int newHealth)
 	{
-		var fullContainers = newHealth / PlayerHealth.HealthPerContainer;
-		var partialHealth = newHealth % PlayerHealth.HealthPerContainer;
+		var fullContainers = newHealth / HealthPerContainer;
+		var partialHealth = newHealth % HealthPerContainer;
 
-		foreach (var container in heartContainers)
+		foreach (var container in healthContainers)
 		{
 			if (fullContainers > 0)
-				container.sprite = heartImages[PlayerHealth.HealthPerContainer];
+				container.sprite = heartImages[HealthPerContainer];
 			else if (fullContainers == 0)
 				container.sprite = heartImages[partialHealth];
 			else
@@ -88,5 +86,4 @@ public class HealthHud : MonoBehaviour
 			fullContainers--;
 		}
 	}
-	#endregion
 }

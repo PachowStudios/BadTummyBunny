@@ -1,38 +1,41 @@
 ﻿using UnityEngine;
 
 [AddComponentMenu("UI/Camera/Effectors/Fart Aim Lean")]
-public class FartAimLean : MonoBehaviour, ICameraEffector
+public sealed class FartAimLean : MonoBehaviour, ICameraEffector
 {
-	public float effectorWeight = 5f;
-	public float leanDistance = 3f;
-	public float minimumPower = 0.2f;
-	public AnimationCurve effectorFalloff = AnimationCurve.Linear(0f, 0f, 1f, 1f);
+	[SerializeField]
+	private float effectorWeight = 5f;
+	[SerializeField]
+	private float leanDistance = 3f;
+	[SerializeField]
+	private float minimumPower = 0.2f;
+	[SerializeField]
+	private AnimationCurve effectorFalloff = AnimationCurve.Linear(0f, 0f, 1f, 1f);
 
-	private bool isEnabled = false;
+	public bool IsEnabled { get; private set; } = false;
 
-	private PlayerControl Player
-	{ get { return PlayerControl.Instance; } }
+	private IFartStatusProvider FartStatusProvider => Player.Instance.FartStatusProvider;
 
 	private void Update()
 	{
-		if (Player.IsFartCharging && !isEnabled)
+		if (Player.Instance.FartStatusProvider.IsFartCharging && !IsEnabled)
 			Activate();
-		else if (!Player.IsFartCharging && isEnabled)
+		else if (!FartStatusProvider.IsFartCharging && IsEnabled)
 			Deactivate();
 	}
 
 	public Vector3 GetDesiredPositionDelta(Bounds targetBounds, Vector3 basePosition, Vector3 targetAverageVelocity)
 	{
-		var targetPosition = Player.transform.position;
+		var targetPosition = Player.Instance.Movement.Position;
 
-		targetPosition += leanDistance * Player.FartDirection.ToVector3();
+		targetPosition += leanDistance * FartStatusProvider.FartDirection.ToVector3();
 
 		return targetPosition;
 	}
 
 	public float GetEffectorWeight()
 	{
-		var startingPower = Player.FartPower;
+		var startingPower = FartStatusProvider.FartPower;
 
 		if (startingPower < minimumPower)
 			return 0f;
@@ -44,13 +47,13 @@ public class FartAimLean : MonoBehaviour, ICameraEffector
 
 	private void Activate()
 	{
-		isEnabled = true;
+		IsEnabled = true;
 		CameraController.Instance.AddCameraEffector(this);
 	}
 
 	private void Deactivate()
 	{
-		isEnabled = false;
+		IsEnabled = false;
 		CameraController.Instance.RemoveCameraEffector(this);
 	}
 }

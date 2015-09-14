@@ -1,54 +1,53 @@
 ﻿using UnityEngine;
 
-public sealed class FollowAI : Enemy
+[AddComponentMenu("Enemy/AI/Follow AI")]
+public class FollowAI : BaseEnemyAI
 {
-	#region Fields
-	public Vector2 followSpeedRange = new Vector2(2.5f, 3.5f);
-	public float followRange = 5f;
-	public float followBuffer = 0.75f;
-	public float attackRange = 1f;
-	public float attackJumpHeight = 0.5f;
-	public float cooldownTime = 1f;
+	[Header("Follow AI")]
+	[SerializeField]
+	protected Vector2 followSpeedRange = new Vector2(2.5f, 3.5f);
+	[SerializeField]
+	protected float followRange = 5f;
+	[SerializeField]
+	protected float followBuffer = 0.75f;
+	[SerializeField]
+	protected float attackRange = 1f;
+	[SerializeField]
+	protected float attackJumpHeight = 0.5f;
+	[SerializeField]
+	protected float cooldownTime = 1f;
 
 	private float defaultMoveSpeed;
 	private float followSpeed;
-
-	private bool attacking = false;
+	private bool isAttacking = false;
 	private float cooldownTimer = 0f;
-	#endregion
 
-	#region MonoBehaviour
-	protected override void Awake()
+	protected virtual void Awake()
 	{
-		base.Awake();
-
 		defaultMoveSpeed = moveSpeed;
 		followSpeed = followSpeedRange.RandomRange();
 	}
-	#endregion
 
-	#region Internal AI Methods
-	protected override void CalculateAI()
+	protected override void UpdateAI()
 	{
 		Walk();
 		CheckAttack();
+		ApplyAnimation();
 	}
 
-	protected override void ApplyAnimation()
+	protected virtual void ApplyAnimation()
 	{
 		animator.SetBool("Walking", horizontalMovement != 0f);
 		animator.SetBool("Grounded", IsGrounded);
 		animator.SetBool("Falling", velocity.y < 0f);
 	}
-	#endregion
 
-	#region Internal Update Methods
 	private void Walk()
 	{
 		moveSpeed = defaultMoveSpeed;
 
-		if (attacking && velocity.y < 0f && IsGrounded)
-			attacking = false;
+		if (isAttacking && velocity.y < 0f && IsGrounded)
+			isAttacking = false;
 
 		if (horizontalMovement == 0f)
 			horizontalMovement = Extensions.RandomSign();
@@ -68,17 +67,13 @@ public sealed class FollowAI : Enemy
 			else
 			{
 				CheckAtWall(true);
-				CheckAtLedge(!attacking);
+				CheckAtLedge(!isAttacking);
 			}
 		}
-		else if (PlayerControl.Instance.IsGrounded)
-		{
-			CheckAtLedge(!attacking);
-		}
+		else if (Player.Instance.Movement.IsGrounded)
+			CheckAtLedge(!isAttacking);
 		else
-		{
 			horizontalMovement = 0f;
-		}
 	}
 
 	private void CheckAttack()
@@ -91,37 +86,11 @@ public sealed class FollowAI : Enemy
 			cooldownTimer = 0f;
 		}
 	}
-	#endregion
-
-	#region Internal Helper Methods
-	private void FollowPlayer(float range)
-	{
-		if (transform.position.x + range < PlayerControl.Instance.transform.position.x)
-		{
-			horizontalMovement = 1f;
-		}
-		else if (transform.position.x - range > PlayerControl.Instance.transform.position.x)
-		{
-			horizontalMovement = -1f;
-		}
-		else
-		{
-			horizontalMovement = 0f;
-			FacePlayer();
-		}
-	}
-
-	private void FacePlayer()
-	{
-		if ((PlayerIsOnRight && !FacingRight) || (!PlayerIsOnRight && FacingRight))
-			transform.Flip();
-	}
 
 	private void Attack()
 	{
-		attacking = true;
-		horizontalMovement = PlayerIsOnRight ? 1f : -1f;
+		isAttacking = true;
+		horizontalMovement = IsPlayerOnRight ? 1f : -1f;
 		Jump(attackJumpHeight);
 	}
-	#endregion
 }

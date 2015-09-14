@@ -2,30 +2,16 @@
 
 public class ExplodeEffect : MonoBehaviour
 {
-	#region Fields
-	private static ExplodeEffect instance;
-
 	[SerializeField]
 	private SpriteExplosion explosionPrefab = null;
-	#endregion
 
-	#region Public Properties
-	public static ExplodeEffect Instance
-	{ get { return instance; } }
-	#endregion
+	public static ExplodeEffect Instance { get; private set; }
 
-	#region MonoBehaviour
-	private void Awake()
-	{
-		instance = this;
-	}
-	#endregion
+	private void Awake() => Instance = this;
 
-	#region Public Methods
 	public void Explode(Transform target, Vector3 velocity, Sprite sprite, Material material = null)
 	{
-		if (!sprite)
-			return;
+		if (!sprite) return;
 
 		SpriteExplosion explosionInstance = Instantiate(explosionPrefab, target.position, target.rotation) as SpriteExplosion;
 		explosionInstance.transform.parent = transform;
@@ -33,5 +19,5 @@ public class ExplodeEffect : MonoBehaviour
 		explosionInstance.material = material;
 		explosionInstance.Explode(velocity, sprite);
 	}
-	#endregion
+
 }

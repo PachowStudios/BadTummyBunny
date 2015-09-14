@@ -12,6 +12,7 @@ GameObject:
   - 61: {fileID: 6100000}
   - 95: {fileID: 9500000}
   - 114: {fileID: 11400002}
+  - 114: {fileID: 11433846}
   - 114: {fileID: 11400000}
   - 114: {fileID: 11400006}
   - 114: {fileID: 11400008}
@@ -146,19 +147,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gravity: -35
-  walkSpeed: 5
+  moveSpeed: 5
+  canJump: 1
+  controller: {fileID: 11400002}
   jumpHeight: 1.5
   groundDamping: 10
   airDamping: 5
-  startingFart: {fileID: 11458134, guid: 198d66b0ac4749840888819b3691debd, type: 2}
-  fartPoint: {fileID: 440130}
+  startingFart: {fileID: 11458134, guid: 253ea252a81fd8c4097813e84f9ab066, type: 2}
   maxAvailableFart: 10
   fartRechargePerSecond: .5
   carrotFartRechargePercent: .25
   fartDeadZone: .200000003
   fartUsageRange: {x: .5, y: 1}
-  fartSpeedRange: {x: 12, y: 25}
   body: {fileID: 400002}
+  fartPoint: {fileID: 440130}
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -214,14 +216,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 063fb456cba73ee4ca8524866448c59b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  heartContainers: 3
+  healthContainers: 3
   carrotHealthRecharge: 1
   falloutDamage: 1
   invincibilityPeriod: 2
-  knockback: {x: 4, y: 1}
-  fartRange: 10
-  fartWidth: {x: 1, y: 5}
-  fartColliderTransform: {fileID: 0}
+  spriteRenderer: {fileID: 21200000}
 --- !u!114 &11400008
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -231,6 +230,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3e4ce379170d21849a7052e4c32e0564, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &11433846
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0829ce0269314ff448bbe6c0cadaf93a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &11492084

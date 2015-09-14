@@ -352,7 +352,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5.00063324
+  orthographic size: 4.49904013
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -702,7 +702,7 @@ MonoBehaviour:
   platformSnapVerticalOffset: -2
   cameraSmoothingType: 1
   smoothDampTime: .100000001
-  springDampingRatio: .5
+  springDampingRatio: .800000012
   springAngularFrequency: 30
   lerpTowardsFactor: .00200000009
 --- !u!114 &11445180
@@ -968,7 +968,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 16, y: 10.0012665}
+  m_SizeDelta: {x: 16, y: 8.99808025}
   m_Pivot: {x: .5, y: .5}
 --- !u!224 &22400002
 RectTransform:

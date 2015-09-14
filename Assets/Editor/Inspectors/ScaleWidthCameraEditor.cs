@@ -1,21 +1,15 @@
-﻿using UnityEngine;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEditor.AnimatedValues;
+using UnityEngine;
 
 [CustomEditor(typeof(ScaleWidthCamera))]
 public class ScaleWidthCameraEditor : Editor
 {
 	private AnimBool showWorldSpaceUI;
 
-	private ScaleWidthCamera Target
-	{
-		get { return (ScaleWidthCamera)target; }
-	}
+	private ScaleWidthCamera Target => (ScaleWidthCamera)target;
 
-	void OnEnable()
-	{
-		showWorldSpaceUI = new AnimBool(Target.useWorldSpaceUI);
-	}
+	private void OnEnable() => showWorldSpaceUI = new AnimBool(Target.useWorldSpaceUI);
 
 	public override void OnInspectorGUI()
 	{
@@ -36,9 +30,7 @@ public class ScaleWidthCameraEditor : Editor
 			Target.worldSpaceUI = (RectTransform)EditorGUILayout.ObjectField("World Space UI", Target.worldSpaceUI, typeof(RectTransform), true);
 
 			if (Target.worldSpaceUI == null)
-			{
 				EditorGUILayout.HelpBox("No world space UI selected!", MessageType.Error);
-			}
 
 			EditorGUI.indentLevel--;
 		}
@@ -46,9 +38,7 @@ public class ScaleWidthCameraEditor : Editor
 		EditorGUILayout.EndFadeGroup();
 
 		if (GUI.changed)
-		{
 			EditorUtility.SetDirty(Target);
-		}
 
 		serializedObject.ApplyModifiedProperties();
 		Repaint();

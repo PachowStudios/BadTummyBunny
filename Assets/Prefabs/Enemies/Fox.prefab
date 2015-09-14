@@ -8,11 +8,13 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 400000}
-  - 114: {fileID: 11400002}
-  - 114: {fileID: 11400000}
   - 50: {fileID: 5000000}
   - 61: {fileID: 6100000}
   - 95: {fileID: 9500000}
+  - 114: {fileID: 11400002}
+  - 114: {fileID: 11458442}
+  - 114: {fileID: 11400000}
+  - 114: {fileID: 11495134}
   m_Layer: 11
   m_Name: Fox
   m_TagString: Enemy
@@ -171,14 +173,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gravity: -35
   moveSpeed: 2
+  canJump: 1
+  controller: {fileID: 11400002}
   groundDamping: 10
   airDamping: 15
-  maxHealth: 4
-  damage: 2
+  animator: {fileID: 9500000}
   knockback: {x: 2, y: 1}
-  immuneToKnockback: 0
-  flashColor: {r: 1, g: .469999999, b: .469999999, a: 1}
-  flashLength: .25
   blockVisibilityLayers:
     serializedVersion: 2
     m_Bits: 4352
@@ -234,6 +234,34 @@ MonoBehaviour:
   totalHorizontalRays: 8
   totalVerticalRays: 4
   triggerHelperBoxColliderScale: .949999988
+--- !u!114 &11458442
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ac447548cbc4fb448774a80d1d1b34e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  contactDamage: 2
+  contactKnockback: {x: 2, y: 1}
+--- !u!114 &11495134
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f5931c4fa4d8cb47807f14bfad1d668, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 4
+  flashColor: {r: 1, g: .469999999, b: .469999999, a: 1}
+  flashLength: .25
+  spriteRenderer: {fileID: 21200000}
 --- !u!212 &21200000
 SpriteRenderer:
   m_ObjectHideFlags: 1

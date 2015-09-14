@@ -55,10 +55,10 @@ public class CameraController : MonoBehaviour
 		_transform = GetComponent<Transform>();
 		camera = GetComponent<Camera>();
 
-		foreach (var baseBehavior in this.GetInterfaceComponents<ICameraBaseBehavior>())
+		foreach (var baseBehavior in this.GetInterfaces<ICameraBaseBehavior>())
 			AddCameraBaseBehavior(baseBehavior);
 
-		foreach (var finalizer in this.GetInterfaceComponents<ICameraFinalizer>())
+		foreach (var finalizer in this.GetInterfaces<ICameraFinalizer>())
 			AddCameraFinalizer(finalizer);
 	}
 
@@ -92,7 +92,7 @@ public class CameraController : MonoBehaviour
 			}
 		}
 
-		if (enablePlatformSnap && PlayerControl.Instance.IsGrounded)
+		if (enablePlatformSnap && Player.Instance.Movement.IsGrounded)
 		{
 			// when exclusive, no base behaviors can mess with y
 			if (isPlatformSnapExclusiveWhenEnabled)
@@ -170,11 +170,11 @@ public class CameraController : MonoBehaviour
 
 		positionInFrontOfCamera.z = 1f;
 
-		foreach (var baseBehavior in this.GetInterfaceComponents<ICameraBaseBehavior>())
+		foreach (var baseBehavior in this.GetInterfaces<ICameraBaseBehavior>())
 			if (baseBehavior.IsEnabled)
 				baseBehavior.onDrawGizmos(positionInFrontOfCamera);
 
-		foreach (var finalizer in this.GetInterfaceComponents<ICameraFinalizer>())
+		foreach (var finalizer in this.GetInterfaces<ICameraFinalizer>())
 			if (finalizer.IsEnabled)
 				finalizer.onDrawGizmos(positionInFrontOfCamera);
 

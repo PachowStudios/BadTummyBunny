@@ -1,21 +1,19 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 [AddComponentMenu("Utility/Particle System Sorting")]
 [ExecuteInEditMode]
 public sealed class ParticleSystemSorting : MonoBehaviour
 {
-	#region Fields
-	public ParticleSystem partSystem;
-	public string sortingLayer;
-	public int sortingOrder;
-	#endregion
+	[SerializeField]
+	private ParticleSystem partSystem = null;
+	[SerializeField]
+	private string sortingLayer = "";
+	[SerializeField]
+	private int sortingOrder = 0;
 
-	#region MonoBehaviour
 	private void OnEnable()
 	{
 		partSystem.renderer.sortingLayerName = sortingLayer;
 		partSystem.renderer.sortingOrder = sortingOrder;
 	}
-	#endregion
 }

@@ -16,7 +16,7 @@ public class BasicFart : MonoBehaviour, IFart
 
 	[Header("Options")]
 	[SerializeField]
-	protected string fartName = "Basic Fart";
+	private string fartName = "Basic Fart";
 	[SerializeField]
 	protected Vector2 speedRange = default(Vector2);
 	[SerializeField]
@@ -132,7 +132,7 @@ public class BasicFart : MonoBehaviour, IFart
 			{
 				var linecast = Physics2D.Linecast(origin, 
 																					enemyCollider.bounds.center, 
-																					PlayerControl.Instance.CollisionLayers);
+																					Player.Instance.Movement.CollisionLayers);
 
 				if (linecast.collider == null)
 					DamageEnemy(enemy);
@@ -140,7 +140,7 @@ public class BasicFart : MonoBehaviour, IFart
 		}
 	}
 
-	protected virtual void DamageEnemy(Enemy enemy) => enemy.TakeDamage(damage, knockback, PlayerControl.Instance.Direction);
+	protected virtual void DamageEnemy(Enemy enemy) => enemy.Health.Damage(damage, knockback, Player.Instance.Movement.Direction.Dot(-1f, 1f));
 
 	protected virtual Vector3[] CalculateTrajectory(float power, Vector3 direction, float gravity, Vector3 startPosition)
 	{
@@ -173,7 +173,7 @@ public class BasicFart : MonoBehaviour, IFart
 			{
 				var linecast = Physics2D.Linecast(points[i - 1], 
 																					points[i], 
-																					PlayerControl.Instance.CollisionLayers);
+																					Player.Instance.Movement.CollisionLayers);
 
 				if (linecast.collider != null)
 				{

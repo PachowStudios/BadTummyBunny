@@ -2,79 +2,85 @@
 using UnityEngine;
 
 [AddComponentMenu("Player/Health")]
-public sealed class PlayerHealth : MonoBehaviour
+public sealed class PlayerHealth : BaseHasHealth, IHasHealthContainers
 {
-	public event Action<int> HealthChanged = delegate { };
-	public event Action<int> HeartContainersChanged = delegate { };
+	public event Action<int> HealthContainersChanged;
 
-	public const int HealthPerContainer = 4;
+	[Header("Health")]
+	[SerializeField]
+	private int healthContainers = 3;
+	[SerializeField]
+	private int carrotHealthRecharge = 1;
+	[SerializeField]
+	private int falloutDamage = 1;
+	[SerializeField]
+	private float invincibilityPeriod = 2f;
 
-	public int heartContainers = 3;
-	public int carrotHealthRecharge = 1;
-	public int falloutDamage = 1;
-	public float invincibilityPeriod = 2f;
-
-	private int health;
-	private bool dead = false;
-
-	private float damageTime;
-	private float damageTimer;
+	[Header("Components")]
+	[SerializeField]
+	private SpriteRenderer spriteRenderer = null;
 
 	private bool invincible = false;
-	private float lastHitTime;
+	private float lastHitTime = 0f;
 	private float flashTimer = 0f;
 	private float flashTime = 0.25f;
 	private float smoothFlashTime;
 
-	private RespawnPoint respawnPoint;
+	private RespawnPoint respawnPoint = null;
 
-	private SpriteRenderer spriteRenderer;
-	private PolygonCollider2D fartCollider;
-
-	public static PlayerHealth Instance { get; private set; }
-
-	public int HeartContainers
+	public int HealthContainers
 	{
-		get { return heartContainers; }
+		get { return healthContainers; }
 		set
 		{
-			if (heartContainers == value) return;
+			if (healthContainers == value) return;
 
-			if (heartContainers < value)
-				health = Mathf.Min(health + ((value - heartContainers) * HealthPerContainer), value * HealthPerContainer);
-			else if (heartContainers > value)
+			if (healthContainers < value)
+				health = Mathf.Min(health + ((value - healthContainers) * HealthPerContainer), value * HealthPerContainer);
+			else if (healthContainers > value)
 				health = Mathf.Min(health, value * HealthPerContainer);
 
-			heartContainers = value;
-			HeartContainersChanged(heartContainers);
-			HealthChanged(health);
+			healthContainers = value;
+			HealthContainersChanged?.Invoke(healthContainers);
+			RaiseHealthChanged(health);
 		}
 	}
 
-	public int MaxHealth => HeartContainers * HealthPerContainer;
-
-	public int Health
+	public override int Health
 	{
 		get { return health; }
-		set
+		protected set
 		{
 			if (value < health) lastHitTime = Time.time;
 
 			health = Mathf.Clamp(value, 0, MaxHealth);
-			HealthChanged(health);
-
+			RaiseHealthChanged(health);
 			CheckDeath();
 		}
 	}
 
-	public float HealthPercent => Mathf.Clamp((float)health / MaxHealth, 0f, 1f);
+	public int HealthPerContainer => 4;
+	public override int MaxHealth => HealthContainers * HealthPerContainer;
 
-	public bool IsDead => dead;
+	public override void Damage(int damage, Vector2 knockback, Vector2 knockbackDirection)
+	{
+		if (invincible || IsDead || damage <= 0f) return;
+
+		Health -= damage;
+
+		if (!IsDead)
+			Wait.ForSeconds(0.1f, () => Player.Instance.Movement.ApplyKnockback(knockback, knockbackDirection));
+	}
+
+	public void Damage(Enemy enemy) => Damage(enemy.ContactDamage, enemy.ContactKnockback, enemy.Movement.Direction);
+
+	public override void Kill()
+	{
+
+	}
 
 	private void Awake()
 	{
-		Instance = this;
-
 		spriteRenderer = GetComponentInChildren<SpriteRenderer>();
 
 		health = MaxHealth;
@@ -83,21 +89,23 @@ public sealed class PlayerHealth : MonoBehaviour
 
 	private void Start()
 	{
-		PlayerTriggers.Instance.EnemyTriggered += TakeDamage;
-		PlayerTriggers.Instance.KillzoneTriggered += Respawn;
-		PlayerTriggers.Instance.RespawnPointTriggered += SetRespawnPoint;
+		Player.Instance.Triggers.CarrotTriggered += HealFromCarrot;
+		Player.Instance.Triggers.EnemyTriggered += Damage;
+		Player.Instance.Triggers.KillzoneTriggered += Respawn;
+		Player.Instance.Triggers.RespawnPointTriggered += SetRespawnPoint;
 	}
 
 	private void OnDestroy()
 	{
-		PlayerTriggers.Instance.EnemyTriggered -= TakeDamage;
-		PlayerTriggers.Instance.KillzoneTriggered -= Respawn;
-		PlayerTriggers.Instance.RespawnPointTriggered -= SetRespawnPoint;
+		Player.Instance.Triggers.CarrotTriggered -= HealFromCarrot;
+		Player.Instance.Triggers.EnemyTriggered -= Damage;
+		Player.Instance.Triggers.KillzoneTriggered -= Respawn;
+		Player.Instance.Triggers.RespawnPointTriggered -= SetRespawnPoint;
 	}
 
 	private void Update()
 	{
-		if (!dead)
+		if (!IsDead)
 			UpdateInvincibilityFlash();
 	}
 
@@ -123,31 +131,34 @@ public sealed class PlayerHealth : MonoBehaviour
 		}
 	}
 
+	private void HealFromCarrot(Carrot carrot)
+	{
+		Heal(carrotHealthRecharge);
+	}
+
 	private void CheckDeath()
 	{
-		if (Health <= 0 && !dead)
+		if (Health <= 0 && !IsDead)
 		{
-			dead = true;
+			IsDead = true;
 
-			StartCoroutine(GameMenu.Instance.ShowGameOver(0f));
+			GameMenu.Instance.ShowGameOver();
 			SetRenderersEnabled(false);
 			collider2D.enabled = false;
-			ExplodeEffect.Instance.Explode(transform, PlayerControl.Instance.Velocity, spriteRenderer.sprite);
-			PlayerControl.Instance.DisableInput();
+			ExplodeEffect.Instance.Explode(transform, Player.Instance.Movement.Velocity, spriteRenderer.sprite);
+			//TODO: Come back to this later!
+			//Player.Instance.Movement.DisableInput();
 		}
 	}
 
 	private void Respawn()
 	{
-		if (dead) return;
+		if (IsDead) return;
 
 		Health -= falloutDamage;
 
-		if (!dead)
-		{
-			if (respawnPoint == null) transform.position = Vector3.zero;
-			else transform.position = respawnPoint.Location;
-		}
+		if (!IsDead)
+			transform.position = respawnPoint?.Location ?? Vector3.zero;
 	}
 
 	private void SetRespawnPoint(RespawnPoint newRespawnPoint)
@@ -165,30 +176,7 @@ public sealed class PlayerHealth : MonoBehaviour
 		respawnPoint = newRespawnPoint;
 	}
 
-	private void SetRenderersEnabled(bool enabled)
-	{
-		spriteRenderer.enabled = enabled;
-	}
+	private void SetRenderersEnabled(bool enabled) => spriteRenderer.enabled = enabled;
 
-	private void AlternateRenderersEnabled()
-	{
-		spriteRenderer.enabled = !spriteRenderer.enabled;
-	}
-
-	public void TakeDamage(Enemy enemy, int damage, Vector2 knockback)
-	{
-		if (invincible || dead) return;
-
-		float knockbackDirection = (transform.position.x - enemy.transform.position.x).Sign();
-
-		if (damage != 0f)
-		{
-			Health -= damage;
-
-			if (!dead && !PlayerControl.Instance.IsFarting && knockback != default(Vector2))
-				Wait.ForSeconds(0.1f, () => PlayerControl.Instance.ApplyKnockback(knockback, knockbackDirection));
-		}
-	}
-
-	public void TakeDamage(Enemy enemy) => TakeDamage(enemy, enemy.damage, enemy.knockback);
+	private void AlternateRenderersEnabled() => spriteRenderer.enabled = !spriteRenderer.enabled;
 }

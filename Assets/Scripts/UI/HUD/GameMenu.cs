@@ -1,39 +1,20 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class GameMenu : MonoBehaviour
 {
-	#region Fields
-	private static GameMenu instance;
-
 	private CanvasGroup canvasGroup;
-	#endregion
 
-	#region Public Properties
-	public static GameMenu Instance
-	{ get { return instance; } }
-	#endregion
+	public static GameMenu Instance { get; private set; }
 
-	#region MonoBehaviour
 	private void Awake()
 	{
-		instance = this;
+		Instance = this;
 
 		canvasGroup = GetComponent<CanvasGroup>();
 	}
 
-	private void Update()
+	public void ShowGameOver()
 	{
-		//if (Input.GetButtonDown("Quit"))
-		//	Application.Quit();
-	}
-	#endregion
-
-	#region Public Methods
-	public IEnumerator ShowGameOver(float delay)
-	{
-		yield return new WaitForSeconds(delay);
-
 		canvasGroup.alpha = 1f;
 		canvasGroup.interactable = true;
 		canvasGroup.blocksRaycasts = true;
@@ -55,9 +36,5 @@ public class GameMenu : MonoBehaviour
 		}
 	}
 
-	public void Quit()
-	{
-		Application.Quit();
-	}
-	#endregion
+	public void Quit() => Application.Quit();
 }

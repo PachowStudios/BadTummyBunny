@@ -2,49 +2,28 @@
 
 public class Coin : MonoBehaviour
 {
-	#region Enums
 	public enum CoinValue
 	{
 		Copper = 1,
 		Silver = 10,
 		Gold   = 50
 	};
-	#endregion
 
-	#region Inspector Fields
 	[SerializeField]
-	private CoinValue value = CoinValue.Copper;
-	#endregion
+	protected CoinValue value = CoinValue.Copper;
 
-	#region Internal Fields
-	private SpriteRenderer spriteRenderer;
-	#endregion
+	private SpriteRenderer spriteRenderer = null;
 
-	#region Public Properties
-	public int Value
-	{ get { return (int)value; } }
-	#endregion
+	public virtual int Value => (int)value;
 
-	#region MonoBehaviour
-	private void Awake()
-	{
-		spriteRenderer = GetComponent<SpriteRenderer>();
-	}
-	#endregion
+	protected SpriteRenderer SpriteRenderer => this.GetComponentIfNull(ref spriteRenderer);
 
-	#region Public Methods
-	public void Collect()
+	public virtual void Collect()
 	{
 		PlayCollectSound();
-		ExplodeEffect.Instance.Explode(transform, Vector3.zero, spriteRenderer.sprite);
+		ExplodeEffect.Instance.Explode(transform, Vector3.zero, SpriteRenderer.sprite);
 		Destroy(gameObject);
 	}
-	#endregion
 
-	#region Internal Helper Methods
-	private void PlayCollectSound()
-	{
-		SoundManager.PlaySFX(SoundManager.LoadFromGroup(SfxGroups.Coins));
-	}
-	#endregion
+	protected virtual void PlayCollectSound() => SoundManager.PlaySFX(SoundManager.LoadFromGroup(SfxGroups.Coins));
 }

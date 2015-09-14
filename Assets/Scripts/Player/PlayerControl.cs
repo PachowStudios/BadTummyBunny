@@ -1,33 +1,37 @@
 ﻿using UnityEngine;
 
 [AddComponentMenu("Player/Control")]
-public sealed class PlayerControl : MonoBehaviour
+public sealed class PlayerControl : BaseMovable, IFartStatusProvider
 {
 	[Header("Movement")]
-	public float gravity = -60f;
-	public float walkSpeed = 10f;
-	public float jumpHeight = 5f;
-
-	public float groundDamping = 10f;
-	public float airDamping = 5f;
+	[SerializeField]
+	private float jumpHeight = 5f;
+	[SerializeField]
+	private float groundDamping = 10f;
+	[SerializeField]
+	private float airDamping = 5f;
 
 	[Header("Farting")]
-	public MonoBehaviour startingFart = null;
-	public Transform fartPoint = null;
-	public float maxAvailableFart = 10f;
-	public float fartRechargePerSecond = 1f;
+	[SerializeField]
+	private MonoBehaviour startingFart = null;
+	[SerializeField]
+	private float maxAvailableFart = 10f;
+	[SerializeField]
+	private float fartRechargePerSecond = 1f;
+	[SerializeField]
 	[Range(0f, 1f)]
-	public float carrotFartRechargePercent = 0.25f;
-	public float fartDeadZone = 0.2f;
-	public Vector2 fartUsageRange;
-	public Vector2 fartSpeedRange;
+	private float carrotFartRechargePercent = 0.25f;
+	[SerializeField]
+	private float fartDeadZone = 0.2f;
+	[SerializeField]
+	private Vector2 fartUsageRange = default(Vector2);
 
 	[Header("Components")]
 	[SerializeField]
 	private Transform body = null;
+	[SerializeField]
+	private Transform fartPoint = null;
 
-	private Vector3 velocity = Vector3.zero;
-	private Vector3 lastGroundedPosition;
 	private float horizontalMovement = 0f;
 	private bool willJump = false;
 	private bool willFart = false;
@@ -43,50 +47,60 @@ public sealed class PlayerControl : MonoBehaviour
 	private float fartingTime = 0f;
 
 	private PlayerActions playerActions;
-	private CharacterController2D controller;
 	private Animator animator;
 
-	public static PlayerControl Instance { get; private set; }
-
 	public bool IsFarting => isFarting;
-
 	public bool IsFartCharging => isFartCharging;
-
 	public bool WillFart => willFart;
-
 	public Vector2 FartDirection => fartDirection;
-
 	public float FartPower => fartPower;
-
 	public float AvailableFartPercent => Mathf.Clamp01(availableFart / maxAvailableFart);
 
-	public Vector3 Velocity => velocity;
-
-	public Vector3 LastGroundedPosition => lastGroundedPosition;
-
-	public Vector2 Direction => velocity.normalized;
-
-	public bool IsGrounded => controller.isGrounded;
-
-	public bool WasGrounded => controller.wasGroundedLastFrame;
-
-	public LayerMask CollisionLayers => controller.platformMask;
-
 	private bool IsMovingRight => horizontalMovement > 0f;
-
 	private bool IsMovingLeft => horizontalMovement < 0f;
-
 	private bool IsFacingRight => body.localScale.x > 0f;
-
 	private Vector3 CenterPoint => collider2D.bounds.center;
-
 	private bool CanFart => isFartingEnabled && availableFart >= fartUsageRange.y;
+
+	public override void Move(Vector3 velocity)
+	{
+		controller.move(velocity * Time.deltaTime);
+		velocity = controller.velocity;
+	}
+
+	public override void ApplyKnockback(Vector2 knockback, Vector2 direction)
+	{
+		if (!IsFarting)
+			base.ApplyKnockback(knockback, direction);
+	}
+
+	public override void Jump(float height)
+	{
+		base.Jump(height);
+		animator.SetTrigger("Jump");
+	}
+
+	public void SetFart(IFart newFart)
+	{
+		if (newFart == null) return;
+
+		var fartInstance = Instantiate(newFart as MonoBehaviour, fartPoint.position, fartPoint.rotation) as MonoBehaviour;
+
+		fartInstance.name = newFart.FartName;
+		fartInstance.transform.parent = body;
+
+		(currentFart as MonoBehaviour)?.DestroyGameObject();
+		currentFart = fartInstance as IFart;
+	}
+
+	public void DisableInput()
+	{
+		isInputEnabled = false;
+		ResetInput();
+	}
 
 	private void Awake()
 	{
-		Instance = this;
-
-		controller = GetComponent<CharacterController2D>();
 		animator = GetComponent<Animator>();
 
 		availableFart = maxAvailableFart;
@@ -101,8 +115,8 @@ public sealed class PlayerControl : MonoBehaviour
 	{
 		SetFart(startingFart as IFart);
 
-		PlayerTriggers.Instance.CarrotTriggered += CollectCarrot;
-		PlayerTriggers.Instance.FlagpoleTriggered += ActivateLevelFlagpole;
+		Player.Instance.Triggers.CarrotTriggered += CollectCarrot;
+		Player.Instance.Triggers.FlagpoleTriggered += ActivateLevelFlagpole;
 	}
 
 	private void OnDisable()
@@ -112,8 +126,8 @@ public sealed class PlayerControl : MonoBehaviour
 
 	private void OnDestroy()
 	{
-		PlayerTriggers.Instance.CarrotTriggered -= CollectCarrot;
-		PlayerTriggers.Instance.FlagpoleTriggered -= ActivateLevelFlagpole;
+		Player.Instance.Triggers.CarrotTriggered -= CollectCarrot;
+		Player.Instance.Triggers.FlagpoleTriggered -= ActivateLevelFlagpole;
 	}
 
 	private void Update()
@@ -213,7 +227,7 @@ public sealed class PlayerControl : MonoBehaviour
 			float smoothedMovement = IsGrounded ? groundDamping : airDamping;
 
 			velocity.x = Mathf.Lerp(velocity.x,
-															horizontalMovement * walkSpeed,
+															horizontalMovement * moveSpeed,
 															smoothedMovement * Time.deltaTime);
 		}
 
@@ -224,16 +238,8 @@ public sealed class PlayerControl : MonoBehaviour
 		if (IsGrounded)
 		{
 			velocity.y = 0f;
-			lastGroundedPosition = transform.position;
+			LastGroundedPosition = transform.position;
 		}
-	}
-
-	private void Jump(float height)
-	{
-		if (height <= 0f) return;
-
-		velocity.y = Mathf.Sqrt(2f * height * -gravity);
-		animator.SetTrigger("Jump");
 	}
 
 	private void Fart(Vector2 fartDirection, float fartPower)
@@ -271,7 +277,6 @@ public sealed class PlayerControl : MonoBehaviour
 		if (carrot == null) return;
 
 		carrot.Collect();
-		PlayerHealth.Instance.Health += PlayerHealth.Instance.carrotHealthRecharge;
 		availableFart = Mathf.Min(availableFart + (maxAvailableFart * carrotFartRechargePercent), maxAvailableFart);
 	}
 
@@ -281,7 +286,7 @@ public sealed class PlayerControl : MonoBehaviour
 
 		flagpole.Activate();
 		DisableInput();
-		StartCoroutine(GameMenu.Instance.ShowGameOver(1.2f));
+		Wait.ForSeconds(1.2f, GameMenu.Instance.ShowGameOver);
 	}
 
 	private void ResetOrientation()
@@ -309,35 +314,5 @@ public sealed class PlayerControl : MonoBehaviour
 	private void PlayLandingSound()
 	{
 		SoundManager.PlayCappedSFXFromGroup(SfxGroups.LandingGrass);
-	}
-
-	public void SetFart(IFart newFart)
-	{
-		if (newFart == null) return;
-
-		var fartInstance = Instantiate(newFart as MonoBehaviour, fartPoint.position, fartPoint.rotation) as MonoBehaviour;
-
-		fartInstance.name = newFart.FartName;
-		fartInstance.transform.parent = body;
-
-		(currentFart as MonoBehaviour)?.DestroyGameObject();
-		currentFart = fartInstance as IFart;
-	}
-
-	public void ApplyKnockback(Vector2 knockback, float knockbackDirection)
-	{
-		velocity.x = Mathf.Sqrt(Mathf.Abs(Mathf.Pow(knockback.x, 2) * -gravity)) * knockbackDirection;
-
-		if (IsGrounded)
-			velocity.y = Mathf.Sqrt(knockback.y * -gravity);
-
-		controller.move(velocity * Time.deltaTime);
-		velocity = controller.velocity;
-	}
-
-	public void DisableInput()
-	{
-		isInputEnabled = false;
-		ResetInput();
 	}
 }

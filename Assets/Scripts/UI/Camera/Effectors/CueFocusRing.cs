@@ -2,18 +2,22 @@
 
 [AddComponentMenu("UI/Camera/Effectors/Cue Focus Ring")]
 [RequireComponent(typeof(CircleCollider2D))]
-public class CueFocusRing : CueFocusBase
+public sealed class CueFocusRing : CueFocusBase
 {
 	[Tooltip("when true, an additional inner ring can be used to have it's own specific weight indpendent of the outer ring")]
-	public bool enableInnerRing = false;
-	public float innerRingRadius = 2f;
-	public float innerEffectorWeight = 5f;
-	public bool enableEffectorFalloff = true;
+	[SerializeField]
+	private bool enableInnerRing = false;
+	[SerializeField]
+	private float innerRingRadius = 2f;
+	[SerializeField]
+	private float innerEffectorWeight = 5f;
+	[SerializeField]
+	private bool enableEffectorFalloff = true;
 	[Tooltip("The curve should go from 0 to 1 being the normalized distance from center to radius. It's value will be multiplied by the effectorWeight to get the final weight used.")]
-	public AnimationCurve effectorFalloff = AnimationCurve.Linear(0f, 0f, 1f, 1f);
+	[SerializeField]
+	private AnimationCurve effectorFalloff = AnimationCurve.Linear(0f, 0f, 1f, 1f);
 
-	protected new CircleCollider2D EffectorTrigger
-	{ get { return base.EffectorTrigger as CircleCollider2D; } }
+	private new CircleCollider2D EffectorTrigger => base.EffectorTrigger as CircleCollider2D;
 
 	private Vector3 EffectorPosition
 	{
@@ -21,8 +25,7 @@ public class CueFocusRing : CueFocusBase
 		set { EffectorTrigger.center = transform.InverseTransformPoint(value); }
 	}
 
-	private float OuterRingRadius
-	{ get { return EffectorTrigger.radius; } }
+	private float OuterRingRadius => EffectorTrigger.radius;
 
 	#if UNITY_EDITOR
 	private void OnDrawGizmosSelected()
