@@ -14,7 +14,7 @@ public sealed class FartAimLean : MonoBehaviour, ICameraEffector
 
 	public bool IsEnabled { get; private set; } = false;
 
-	private IFartStatusProvider FartStatusProvider => Player.Instance.FartStatusProvider;
+	private IFartInfoProvider FartStatusProvider => Player.Instance.FartStatusProvider;
 
 	private void Update()
 	{

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 [AddComponentMenu("Player/Control")]
-public sealed class PlayerControl : BaseMovable, IFartStatusProvider
+public sealed class PlayerControl : BaseMovable, IFartInfoProvider
 {
 	[Header("Movement")]
 	[SerializeField]

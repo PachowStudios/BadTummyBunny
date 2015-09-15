@@ -3,7 +3,7 @@
 [AddComponentMenu("Player/Player")]
 [RequireComponent(typeof(IMovable), typeof(IHasHealth), typeof(IScoreKeeper))]
 [RequireComponent(typeof(PlayerTriggers))]
-public sealed class Player : BaseStatusEffectableCharacter
+public sealed class Player : StatusEffectableCharacter
 {
 	private PlayerControl movement = null;
 	private PlayerHealth health = null;
@@ -17,7 +17,7 @@ public sealed class Player : BaseStatusEffectableCharacter
 	public IScoreKeeper Score => this.GetComponentIfNull(ref score);
 	public PlayerTriggers Triggers => this.GetComponentIfNull(ref triggers);
 
-	public IFartStatusProvider FartStatusProvider => (IFartStatusProvider)Movement;
+	public IFartInfoProvider FartStatusProvider => (IFartInfoProvider)Movement;
 	public IHasHealthContainers HealthContainers => (IHasHealthContainers)Health;
 
 	private void Awake() => Instance = this;

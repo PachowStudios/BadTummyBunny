@@ -10,9 +10,9 @@ public abstract class BaseStatusEffect : MonoBehaviour, IStatusEffect
 
 	public string StatusEffectName => statusEffectName;
 
-	public IStatusEffectableCharacter AffectedCharacter { get; private set; }
+	public ICharacter AffectedCharacter { get; private set; }
 
-	public virtual void Activate(IStatusEffectableCharacter affectedObject) => AffectedCharacter = affectedObject;
+	public virtual void Activate(ICharacter affectedCharacter) => AffectedCharacter = affectedCharacter;
 
 	public abstract void UpdateEffect();
 

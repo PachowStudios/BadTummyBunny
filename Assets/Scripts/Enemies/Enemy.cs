@@ -2,7 +2,7 @@
 
 [AddComponentMenu("Enemy/Enemy")]
 [RequireComponent(typeof(IMovable), typeof(IHasHealth))]
-public class Enemy : BaseStatusEffectableCharacter, IEnemy
+public class Enemy : StatusEffectableCharacter, IEnemy
 {
 	[Header("Contact Damage")]
 	[SerializeField]
