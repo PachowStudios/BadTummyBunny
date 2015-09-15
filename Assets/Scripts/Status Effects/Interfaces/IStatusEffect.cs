@@ -5,9 +5,8 @@ public interface IStatusEffect
 	event Action<IStatusEffect> Deactivated;
 
 	string StatusEffectName { get; }
-	IStatusEffectable AffectedObject { get; }
+	IStatusEffectableCharacter AffectedCharacter { get; }
 
-	void Activate(IStatusEffectable affectedObject);
-	void Deactivate();
+	void Activate(IStatusEffectableCharacter affectedCharacter);
 	void UpdateEffect();
 }

@@ -26,9 +26,6 @@ public partial class SoundManagerEditor : Editor {
 	private Texture2D footer;
 	private Texture2D icon;
 	
-	private bool listeningForGuiChanges;
-    private bool guiChanged;
-	
 	private Color softGreen = new Color(.67f,.89f,.67f,1f);
 	private Color hardGreen = Color.green;
 	private Color inactiveColor = new Color(.65f,.65f,.65f);
@@ -160,11 +157,11 @@ public partial class SoundManagerEditor : Editor {
 		{
 			GUILayout.BeginHorizontal();
 			{
-	    		GUILayout.FlexibleSpace();
+					GUILayout.FlexibleSpace();
 				{
-	    			GUILayout.Label(titleBar);
+						GUILayout.Label(titleBar);
 				}
-	    		GUILayout.FlexibleSpace();
+					GUILayout.FlexibleSpace();
 			}
 			GUILayout.EndHorizontal();
 		}
@@ -321,11 +318,11 @@ public partial class SoundManagerEditor : Editor {
 		{
 			GUILayout.BeginHorizontal();
 			{
-	    		GUILayout.FlexibleSpace();
+					GUILayout.FlexibleSpace();
 				{
-	    			GUILayout.Label(footer, GUI.skin.label);
+						GUILayout.Label(footer, GUI.skin.label);
 				}
-	    		GUILayout.FlexibleSpace();
+					GUILayout.FlexibleSpace();
 			}
 			GUILayout.EndHorizontal();
 		}
@@ -1253,26 +1250,26 @@ public partial class SoundManagerEditor : Editor {
 	}
 	
 	private void CheckUndo()
-    {
+		{
 		#if UNITY_3_5 || UNITY_4_0 || UNITY_4_0_1 || UNITY_4_1 || UNITY_4_2
-        Event e = Event.current;
+				Event e = Event.current;
  
-        if ( e.type == EventType.MouseDown && e.button == 0 || e.type == EventType.KeyUp && ( e.keyCode == KeyCode.Tab ) ) {
-            Undo.SetSnapshotTarget( new Object[]{target, this}, "Modify Delay" );
-            Undo.CreateSnapshot();
-            Undo.ClearSnapshotTarget();
-            listeningForGuiChanges = true;
-            guiChanged = false;
-        }
+				if ( e.type == EventType.MouseDown && e.button == 0 || e.type == EventType.KeyUp && ( e.keyCode == KeyCode.Tab ) ) {
+						Undo.SetSnapshotTarget( new Object[]{target, this}, "Modify Delay" );
+						Undo.CreateSnapshot();
+						Undo.ClearSnapshotTarget();
+						listeningForGuiChanges = true;
+						guiChanged = false;
+				}
  
-        if ( listeningForGuiChanges && guiChanged ) {
-            Undo.SetSnapshotTarget( new Object[]{target, this}, "Modify Delay" );
-            Undo.RegisterSnapshot();
-            Undo.ClearSnapshotTarget();
-            listeningForGuiChanges = false;
-        }
+				if ( listeningForGuiChanges && guiChanged ) {
+						Undo.SetSnapshotTarget( new Object[]{target, this}, "Modify Delay" );
+						Undo.RegisterSnapshot();
+						Undo.ClearSnapshotTarget();
+						listeningForGuiChanges = false;
+				}
 		#endif
-    }
+		}
 	#endregion
 					
 	#region Informational

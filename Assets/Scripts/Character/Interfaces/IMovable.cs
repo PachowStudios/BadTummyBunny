@@ -10,10 +10,8 @@ public interface IMovable
 	Vector2 Direction { get; }
 	bool IsGrounded { get; }
 	bool WasGrounded { get; }
-	bool CanJump { get; }
 	LayerMask CollisionLayers { get; }
 
 	void Move(Vector3 velocity);
 	void ApplyKnockback(Vector2 knockback, Vector2 direction);
-	void Jump(float height);
 }

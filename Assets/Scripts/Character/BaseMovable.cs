@@ -7,8 +7,6 @@ public abstract class BaseMovable : MonoBehaviour, IMovable
 	protected float gravity = -35f;
 	[SerializeField]
 	protected float moveSpeed = 5f;
-	[SerializeField]
-	protected bool canJump = true;
 
 	[Header("Base Components")]
 	[SerializeField]
@@ -24,7 +22,6 @@ public abstract class BaseMovable : MonoBehaviour, IMovable
 	public virtual Vector2 Direction => velocity.normalized;
 	public virtual bool IsGrounded => controller.isGrounded;
 	public virtual bool WasGrounded => controller.wasGroundedLastFrame;
-	public virtual bool CanJump => canJump;
 	public virtual LayerMask CollisionLayers => controller.platformMask;
 
 	public abstract void Move(Vector3 velocity);
@@ -48,9 +45,9 @@ public abstract class BaseMovable : MonoBehaviour, IMovable
 		}
 	}
 
-	public virtual void Jump(float height)
+	protected virtual void Jump(float height)
 	{
-		if (!CanJump || height <= 0f) return;
+		if (height <= 0f) return;
 
 		velocity.y = Mathf.Sqrt(2f * height * -gravity);
 	}

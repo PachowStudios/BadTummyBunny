@@ -74,12 +74,6 @@ public sealed class PlayerControl : BaseMovable, IFartStatusProvider
 			base.ApplyKnockback(knockback, direction);
 	}
 
-	public override void Jump(float height)
-	{
-		base.Jump(height);
-		animator.SetTrigger("Jump");
-	}
-
 	public void SetFart(IFart newFart)
 	{
 		if (newFart == null) return;
@@ -240,6 +234,12 @@ public sealed class PlayerControl : BaseMovable, IFartStatusProvider
 			velocity.y = 0f;
 			LastGroundedPosition = transform.position;
 		}
+	}
+
+	protected override void Jump(float height)
+	{
+		base.Jump(height);
+		animator.SetTrigger("Jump");
 	}
 
 	private void Fart(Vector2 fartDirection, float fartPower)

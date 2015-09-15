@@ -2,13 +2,14 @@
 using System.Collections.ObjectModel;
 using UnityEngine;
 
-public abstract class StatusEffectableCharacter : BaseCharacter, IStatusEffectable
+public abstract class BaseStatusEffectableCharacter : MonoBehaviour, IStatusEffectableCharacter
 {
+	public abstract IMovable Movement { get; }
+	public abstract IHasHealth Health { get; }
+
 	protected List<IStatusEffect> statusEffects = new List<IStatusEffect>();
 
 	public ReadOnlyCollection<IStatusEffect> StatusEffects => statusEffects.AsReadOnly();
-
-	public ICharacter Character => this;
 
 	public void AddStatusEffect(IStatusEffect newStatusEffect)
 	{

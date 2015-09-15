@@ -2,7 +2,7 @@
 
 [AddComponentMenu("Enemy/Enemy")]
 [RequireComponent(typeof(IMovable), typeof(IHasHealth))]
-public class Enemy : StatusEffectableCharacter
+public class Enemy : BaseStatusEffectableCharacter, IEnemy
 {
 	[Header("Contact Damage")]
 	[SerializeField]
@@ -13,9 +13,9 @@ public class Enemy : StatusEffectableCharacter
 	private EnemyMovement movement = null;
 	private EnemyHealth health = null;
 
-	public int ContactDamage => contactDamage;
-	public Vector2 ContactKnockback => contactKnockback;
-
 	public override IMovable Movement => this.GetComponentIfNull(ref movement);
 	public override IHasHealth Health => this.GetComponentIfNull(ref health);
+
+	public int ContactDamage => contactDamage;
+	public Vector2 ContactKnockback => contactKnockback;
 }

@@ -36,7 +36,6 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 	public Dictionary<AudioSource, SongCallBack> runOnEndFunctions = new Dictionary<AudioSource, SongCallBack>();
 	
 	private AudioSource duckSource;
-	private SongCallBack duckFunction;
 	private bool isDucking = false;
 	private int duckNumber = 0;
 	private float preDuckVolume = 1f;

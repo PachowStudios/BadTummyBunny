@@ -42,7 +42,6 @@ namespace InControl
 		[SerializeField, HideInInspector]
 		Vector2 worldSize;
 
-		Transform spriteParentTransform;
 		GameObject spriteGameObject;
 		SpriteRenderer spriteRenderer;
 		bool state;

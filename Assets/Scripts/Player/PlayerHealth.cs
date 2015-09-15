@@ -72,8 +72,6 @@ public sealed class PlayerHealth : BaseHasHealth, IHasHealthContainers
 			Wait.ForSeconds(0.1f, () => Player.Instance.Movement.ApplyKnockback(knockback, knockbackDirection));
 	}
 
-	public void Damage(Enemy enemy) => Damage(enemy.ContactDamage, enemy.ContactKnockback, enemy.Movement.Direction);
-
 	public override void Kill()
 	{
 
@@ -179,4 +177,6 @@ public sealed class PlayerHealth : BaseHasHealth, IHasHealthContainers
 	private void SetRenderersEnabled(bool enabled) => spriteRenderer.enabled = enabled;
 
 	private void AlternateRenderersEnabled() => spriteRenderer.enabled = !spriteRenderer.enabled;
+
+	private void Damage(IEnemy enemy) => Damage(enemy.ContactDamage, enemy.ContactKnockback, enemy.Movement.Direction);
 }

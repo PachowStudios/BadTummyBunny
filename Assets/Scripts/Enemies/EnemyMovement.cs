@@ -27,12 +27,6 @@ public abstract class EnemyMovement : BaseMovable
 		velocity = controller.velocity;
 	}
 
-	public override void Jump(float height)
-	{
-		base.Jump(height);
-		animator.SetTrigger("Jump");
-	}
-
 	protected virtual void LateUpdate()
 	{
 		GetMovement();
@@ -63,5 +57,11 @@ public abstract class EnemyMovement : BaseMovable
 			velocity.y = 0f;
 			LastGroundedPosition = Position;
 		}
+	}
+
+	protected override void Jump(float height)
+	{
+		base.Jump(height);
+		animator.SetTrigger("Jump");
 	}
 }
