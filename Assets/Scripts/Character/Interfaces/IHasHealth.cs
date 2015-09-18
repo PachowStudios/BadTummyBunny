@@ -10,6 +10,7 @@ public interface IHasHealth
 	bool IsDead { get; }
 
 	void Heal(int amountToHeal);
+	void Damage(int damage);
 	void Damage(int damage, Vector2 knockback, Vector2 knockbackDirection);
 	void Kill();
 }

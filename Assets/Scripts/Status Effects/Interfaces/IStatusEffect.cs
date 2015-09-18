@@ -6,7 +6,8 @@ public interface IStatusEffect
 
 	string StatusEffectName { get; }
 	ICharacter AffectedCharacter { get; }
+	bool IsActive { get; }
+	bool IsDisposed { get; }
 
 	void Activate(ICharacter affectedCharacter);
-	void UpdateEffect();
 }

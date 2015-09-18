@@ -16,7 +16,9 @@ public abstract class BaseMovable : MonoBehaviour, IMovable
 
 	public virtual float Gravity => gravity;
 	public virtual float MoveSpeed => moveSpeed;
+	public virtual Transform Transform => transform;
 	public virtual Vector3 Position => transform.position;
+	public virtual Vector3 CenterPoint => collider2D.bounds.center;
 	public virtual Vector3 LastGroundedPosition { get; protected set; }
 	public virtual Vector3 Velocity => velocity;
 	public virtual Vector2 Direction => velocity.normalized;

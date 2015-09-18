@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using UnityEngine;
 
 public abstract class StatusEffectableCharacter : MonoBehaviour, ICharacter, IStatusEffectable
@@ -13,9 +14,10 @@ public abstract class StatusEffectableCharacter : MonoBehaviour, ICharacter, ISt
 
 	public void AddStatusEffect(IStatusEffect newStatusEffect)
 	{
-		if (newStatusEffect == null) return;
+		if (newStatusEffect == null || statusEffects.Any(e => e.StatusEffectName == newStatusEffect.StatusEffectName))
+			return;
 
-		var instance = Instantiate(newStatusEffect as MonoBehaviour, transform.position, Quaternion.identity) as MonoBehaviour;
+		var instance = Instantiate(newStatusEffect as MonoBehaviour, Movement.CenterPoint, Quaternion.identity) as MonoBehaviour;
 
 		instance.name = newStatusEffect.StatusEffectName;
 		instance.transform.parent = transform;

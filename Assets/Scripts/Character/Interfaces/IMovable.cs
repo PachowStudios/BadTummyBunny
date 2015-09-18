@@ -4,7 +4,9 @@ public interface IMovable
 {
 	float Gravity { get; }
 	float MoveSpeed { get; }
+	Transform Transform { get; }
 	Vector3 Position { get; }
+	Vector3 CenterPoint { get; }
 	Vector3 LastGroundedPosition { get; }
 	Vector3 Velocity { get; }
 	Vector2 Direction { get; }

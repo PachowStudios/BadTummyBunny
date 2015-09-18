@@ -70,6 +70,15 @@ public static class Extensions
 	}
 	#endregion
 
+	#region ParticleSystem
+	public static void DetachAndDestroy(this ParticleSystem parent)
+	{
+		parent.transform.parent = null;
+		parent.enableEmission = false;
+		parent.gameObject.Destroy(parent.startLifetime);
+	}
+	#endregion
+
 	#region Component
 	public static T GetComponentIfNull<T>(this Component parent, ref T target) where T : Component
 		=> target ?? (target = parent.GetComponent<T>());
@@ -90,6 +99,8 @@ public static class Extensions
 
 	#region GameObject
 	public static void Destroy(this GameObject parent) => Object.Destroy(parent);
+
+	public static void Destroy(this GameObject parent, float delay) => Object.Destroy(parent, delay);
 
 	public static void HideInHierarchy(this GameObject parent)
 	{

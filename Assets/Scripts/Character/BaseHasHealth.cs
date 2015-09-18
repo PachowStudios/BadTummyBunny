@@ -19,6 +19,8 @@ public abstract class BaseHasHealth : MonoBehaviour, IHasHealth
 		Health += amountToHeal;
 	}
 
+	public virtual void Damage(int damage) => Damage(damage, Vector2.zero, Vector2.zero);
+
 	public abstract void Damage(int damage, Vector2 knockback, Vector2 knockbackDirection);
 	public abstract void Kill();
 

@@ -59,7 +59,6 @@ public sealed class PlayerControl : BaseMovable, IFartInfoProvider
 	private bool IsMovingRight => horizontalMovement > 0f;
 	private bool IsMovingLeft => horizontalMovement < 0f;
 	private bool IsFacingRight => body.localScale.x > 0f;
-	private Vector3 CenterPoint => collider2D.bounds.center;
 	private bool CanFart => isFartingEnabled && availableFart >= fartUsageRange.y;
 
 	public override void Move(Vector3 velocity)
@@ -129,11 +128,14 @@ public sealed class PlayerControl : BaseMovable, IFartInfoProvider
 		GetInput();
 		ApplyAnimation();
 
-		if (IsGrounded && !WasGrounded) PlayLandingSound();
+		if (IsGrounded && !WasGrounded)
+			PlayLandingSound();
 	}
 
 	private void LateUpdate()
 	{
+		if (!isInputEnabled) return;
+
 		GetMovement();
 		UpdateFartTrajectory();
 		ApplyMovement();
@@ -176,7 +178,8 @@ public sealed class PlayerControl : BaseMovable, IFartInfoProvider
 			}
 		}
 
-		if (!isFartCharging) willFart = playerActions.Fart.WasReleased && CanFart;
+		if (!isFartCharging)
+			willFart = playerActions.Fart.WasReleased && CanFart;
 	}
 
 	private void UpdateFartTrajectory()
@@ -301,7 +304,9 @@ public sealed class PlayerControl : BaseMovable, IFartInfoProvider
 	{
 		horizontalMovement = 0f;
 		willJump = false;
+		isFartCharging = false;
 		StopFart(true);
+		UpdateFartTrajectory();
 	}
 
 	private void PlayWalkingSound(int rightStep)

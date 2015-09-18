@@ -148,7 +148,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gravity: -35
   moveSpeed: 5
-  canJump: 1
   controller: {fileID: 11400002}
   jumpHeight: 1.5
   groundDamping: 10
@@ -255,7 +254,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   effectorWeight: 5
-  leanDistance: 4
+  leanDistance: 3
   minimumPower: 0
   effectorFalloff:
     serializedVersion: 2

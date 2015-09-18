@@ -11,10 +11,39 @@ public abstract class BaseStatusEffect : MonoBehaviour, IStatusEffect
 	public string StatusEffectName => statusEffectName;
 
 	public ICharacter AffectedCharacter { get; private set; }
+	public bool IsActive { get; private set; }
+	public bool IsDisposed { get; private set; }
 
-	public virtual void Activate(ICharacter affectedCharacter) => AffectedCharacter = affectedCharacter;
+	public void Update()
+	{
+		if (IsActive)
+			UpdateEffect();
+	}
 
-	public abstract void UpdateEffect();
+	public void Activate(ICharacter affectedCharacter)
+	{
+		if (IsActive || IsDisposed)
+			return;
 
-	protected virtual void Deactivate() => Deactivated?.Invoke(this);
+		IsActive = true;
+		AffectedCharacter = affectedCharacter;
+		OnActivate();
+	}
+
+	protected void Deactivate()
+	{
+		if (!IsActive || IsDisposed)
+			return;
+
+		IsActive = false;
+		IsDisposed = true;
+		OnDeactivate();
+		Deactivated?.Invoke(this);
+	}
+
+	protected virtual void UpdateEffect() { }
+	protected virtual void OnActivate() { }
+	protected virtual void OnDeactivate() { }
+
+	private void OnDisable() => Deactivate();
 }

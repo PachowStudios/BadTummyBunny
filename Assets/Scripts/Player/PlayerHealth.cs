@@ -136,17 +136,16 @@ public sealed class PlayerHealth : BaseHasHealth, IHasHealthContainers
 
 	private void CheckDeath()
 	{
-		if (Health <= 0 && !IsDead)
-		{
-			IsDead = true;
+		if (health > 0 || IsDead)
+			return;
 
-			GameMenu.Instance.ShowGameOver();
-			SetRenderersEnabled(false);
-			collider2D.enabled = false;
-			ExplodeEffect.Instance.Explode(transform, Player.Instance.Movement.Velocity, spriteRenderer.sprite);
-			//TODO: Come back to this later!
-			//Player.Instance.Movement.DisableInput();
-		}
+		IsDead = true;
+
+		GameMenu.Instance.ShowGameOver();
+		SetRenderersEnabled(false);
+		collider2D.enabled = false;
+		ExplodeEffect.Instance.Explode(transform, Player.Instance.Movement.Velocity, spriteRenderer.sprite);
+		(Player.Instance.Movement as PlayerControl).DisableInput();
 	}
 
 	private void Respawn()
