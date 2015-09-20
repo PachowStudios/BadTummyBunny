@@ -12,20 +12,13 @@ public abstract class EnemyMovement : BaseMovable
 	[SerializeField]
 	protected Animator animator = null;
 
-	protected float horizontalMovement = 0f;
-
 	private ICharacter thisEnemy = null;
 
-	protected ICharacter ThisEnemy => this.GetInterfaceIfNull(ref thisEnemy);
-	protected bool IsMovingRight => horizontalMovement > 0f;
-	protected bool IsMovingLeft => horizontalMovement < 0f;
-	protected bool IsFacingRight => transform.localScale.x > 0f;
+	public int HorizontalMovement { get; set; } = 0;
 
-	public override void Move(Vector3 velocity)
-	{
-		controller.move(velocity * Time.deltaTime);
-		velocity = controller.velocity;
-	}
+	protected ICharacter ThisEnemy => this.GetInterfaceIfNull(ref thisEnemy);
+	protected bool IsMovingRight => HorizontalMovement > 0;
+	protected bool IsMovingLeft => HorizontalMovement < 0;
 
 	protected virtual void LateUpdate()
 	{
@@ -35,10 +28,9 @@ public abstract class EnemyMovement : BaseMovable
 
 	protected virtual void GetMovement()
 	{
-		if (IsMovingRight && !IsFacingRight)
-			transform.Flip();
-		else if (IsMovingLeft && IsFacingRight)
-			transform.Flip();
+		if ((IsMovingRight && !IsFacingRight) ||
+				(IsMovingLeft && IsFacingRight))
+			Flip();
 	}
 
 	protected virtual void ApplyMovement()
@@ -46,7 +38,7 @@ public abstract class EnemyMovement : BaseMovable
 		var smoothedMovement = IsGrounded ? groundDamping : airDamping;
 
 		velocity.x = Mathf.Lerp(velocity.x,
-														horizontalMovement * MoveSpeed,
+														HorizontalMovement * (MoveSpeedOverride ?? MoveSpeed),
 														smoothedMovement * Time.deltaTime);
 		velocity.y += gravity * Time.deltaTime;
 		controller.move(velocity * Time.deltaTime);
@@ -59,9 +51,13 @@ public abstract class EnemyMovement : BaseMovable
 		}
 	}
 
-	protected override void Jump(float height)
+	public override bool Jump(float height)
 	{
-		base.Jump(height);
+		if (!base.Jump(height))
+			return false;
+
 		animator.SetTrigger("Jump");
+
+		return true;
 	}
 }

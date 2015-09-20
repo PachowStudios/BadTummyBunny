@@ -49,6 +49,8 @@ public sealed class PlayerControl : BaseMovable, IFartInfoProvider
 	private PlayerActions playerActions;
 	private Animator animator;
 
+	public override Vector2 FacingDirection => new Vector2(body.localScale.x, 0f);
+
 	public bool IsFarting => isFarting;
 	public bool IsFartCharging => isFartCharging;
 	public bool WillFart => willFart;
@@ -58,13 +60,18 @@ public sealed class PlayerControl : BaseMovable, IFartInfoProvider
 
 	private bool IsMovingRight => horizontalMovement > 0f;
 	private bool IsMovingLeft => horizontalMovement < 0f;
-	private bool IsFacingRight => body.localScale.x > 0f;
 	private bool CanFart => isFartingEnabled && availableFart >= fartUsageRange.y;
 
-	public override void Move(Vector3 velocity)
+	public override void Flip() => body.Flip();
+
+	public override bool Jump(float height)
 	{
-		controller.move(velocity * Time.deltaTime);
-		velocity = controller.velocity;
+		if (!base.Jump(height))
+			return false;
+
+		animator.SetTrigger("Jump");
+
+		return true;
 	}
 
 	public override void ApplyKnockback(Vector2 knockback, Vector2 direction)
@@ -201,8 +208,9 @@ public sealed class PlayerControl : BaseMovable, IFartInfoProvider
 
 		if (!isFarting)
 		{
-			if (IsMovingRight && !IsFacingRight) body.Flip();
-			else if (IsMovingLeft && IsFacingRight) body.Flip();
+			if (IsMovingRight && !IsFacingRight ||
+					(IsMovingLeft && IsFacingRight))
+				Flip();
 
 			if (willJump) Jump(jumpHeight);
 
@@ -237,12 +245,6 @@ public sealed class PlayerControl : BaseMovable, IFartInfoProvider
 			velocity.y = 0f;
 			LastGroundedPosition = transform.position;
 		}
-	}
-
-	protected override void Jump(float height)
-	{
-		base.Jump(height);
-		animator.SetTrigger("Jump");
 	}
 
 	private void Fart(Vector2 fartDirection, float fartPower)

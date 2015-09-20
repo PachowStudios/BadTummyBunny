@@ -12,6 +12,8 @@ public static class Extensions
 
 	public static float RoundToTenth(this float parent) => Mathf.RoundToInt(parent * 10f) / 10f;
 
+	public static float RoundToHalf(this float parent) => Mathf.RoundToInt(parent * 2f) / 2f;
+
 	public static float Clamp01(this float parent) => Mathf.Clamp01(parent);
 	#endregion
 

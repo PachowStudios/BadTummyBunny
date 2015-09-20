@@ -21,12 +21,33 @@ public abstract class BaseMovable : MonoBehaviour, IMovable
 	public virtual Vector3 CenterPoint => collider2D.bounds.center;
 	public virtual Vector3 LastGroundedPosition { get; protected set; }
 	public virtual Vector3 Velocity => velocity;
-	public virtual Vector2 Direction => velocity.normalized;
+	public virtual Vector2 MovementDirection => velocity.normalized;
+	public virtual Vector2 FacingDirection => new Vector2(transform.localScale.x, 0f);
+	public virtual bool IsFacingRight => FacingDirection.x > 0f;
+	public virtual bool IsFalling => Velocity.y < 0f;
 	public virtual bool IsGrounded => controller.isGrounded;
 	public virtual bool WasGrounded => controller.wasGroundedLastFrame;
 	public virtual LayerMask CollisionLayers => controller.platformMask;
 
-	public abstract void Move(Vector3 velocity);
+	public virtual float? MoveSpeedOverride { get; set; } = null;
+
+	public virtual void Move(Vector3 velocity)
+	{
+		controller.move(velocity * Time.deltaTime);
+		velocity = controller.velocity;
+	}
+
+	public virtual void Flip() => transform.Flip();
+
+	public virtual bool Jump(float height)
+	{
+		if (height <= 0f || !IsGrounded)
+			return false;
+
+		velocity.y = Mathf.Sqrt(2f * height * -gravity);
+
+		return true;
+	}
 
 	public virtual void ApplyKnockback(Vector2 knockback, Vector2 direction)
 	{
@@ -45,12 +66,5 @@ public abstract class BaseMovable : MonoBehaviour, IMovable
 			controller.move(velocity * Time.deltaTime);
 			velocity = controller.velocity;
 		}
-	}
-
-	protected virtual void Jump(float height)
-	{
-		if (height <= 0f) return;
-
-		velocity.y = Mathf.Sqrt(2f * height * -gravity);
 	}
 }

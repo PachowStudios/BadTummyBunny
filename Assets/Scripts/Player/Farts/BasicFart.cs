@@ -140,7 +140,7 @@ public class BasicFart : MonoBehaviour, IFart
 		}
 	}
 
-	protected virtual void DamageEnemy(ICharacter enemy) => enemy.Health.Damage(damage, knockback, Player.Instance.Movement.Direction.Dot(-1f, 1f));
+	protected virtual void DamageEnemy(ICharacter enemy) => enemy.Health.Damage(damage, knockback, Player.Instance.Movement.MovementDirection.Dot(-1f, 1f));
 
 	protected virtual Vector3[] CalculateTrajectory(float power, Vector3 direction, float gravity, Vector3 startPosition)
 	{

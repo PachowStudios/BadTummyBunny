@@ -177,5 +177,5 @@ public sealed class PlayerHealth : BaseHasHealth, IHasHealthContainers
 
 	private void AlternateRenderersEnabled() => spriteRenderer.enabled = !spriteRenderer.enabled;
 
-	private void Damage(IEnemy enemy) => Damage(enemy.ContactDamage, enemy.ContactKnockback, enemy.Movement.Direction);
+	private void Damage(IEnemy enemy) => Damage(enemy.ContactDamage, enemy.ContactKnockback, enemy.Movement.MovementDirection);
 }
