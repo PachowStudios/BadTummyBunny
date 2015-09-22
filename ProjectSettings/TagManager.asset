@@ -5,11 +5,13 @@ TagManager:
   tags:
   - Killzone
   - Enemy
-  - 
+  - ObjectActivator
   - ParticleSystem
   - Carrot
   - Flagpole
   - Coin
+  - 
+  - CameraActivator
   - 
   Builtin Layer 0: Default
   Builtin Layer 1: TransparentFX

@@ -45,7 +45,7 @@ namespace AI.Patrol
 														.AddState<SightLostState>()
 														.AddState<AttackState>();
 
-		protected virtual void Update()
+		protected override void InternalUpdate()
 		{
 			StateMachine.Update(Time.deltaTime);
 			ApplyAnimation();
