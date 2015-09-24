@@ -53,50 +53,68 @@ public class BasicFart : MonoBehaviour, IFart
 	[SerializeField]
 	protected List<ParticleSystem> particles = new List<ParticleSystem>();
 
-	private HashSet<Enemy> targetEnemies = new HashSet<Enemy>();
+	private HashSet<ICharacter> pendingTargets = new HashSet<ICharacter>();
+	private HashSet<ICharacter> damagedEnemies = new HashSet<ICharacter>();
 	private VectorLine trajectoryLine = null;
 
 	public string FartName => fartName;
 
 	public bool IsFarting { get; protected set; }
 
-	protected virtual void Awake() => InitializeTrajectoryLine();
+	protected virtual void Awake() 
+		=> InitializeTrajectoryLine();
 
-	protected virtual void OnDestroy() => VectorLine.Destroy(ref trajectoryLine);
+	protected virtual void OnDestroy() 
+		=> VectorLine.Destroy(ref trajectoryLine);
 
 	public virtual void StartFart(float power, Vector2 direction)
 	{
-		if (IsFarting) return;
+		if (IsFarting)
+			return;
 
 		IsFarting = true;
 
 		PlaySound(power.Clamp01());
 		Wait.ForFixedUpdate(StartParticles);
-		Wait.ForSeconds(damageDelay, DamageEnemies);
 	}
 
 	protected virtual void OnTriggerEnter2D(Collider2D other)
 	{
-		if (other.tag == Tags.Enemy)
-			targetEnemies.Add(other.GetComponent<Enemy>());
-	}
+		if (!IsFarting)
+			return;
 
-	protected virtual void OnTriggerExit2D(Collider2D other)
-	{
 		if (other.tag == Tags.Enemy)
-			targetEnemies.Remove(other.GetComponent<Enemy>());
+		{
+			var enemy = other.GetInterface<ICharacter>();
+
+			if (pendingTargets.Contains(enemy) ||
+					damagedEnemies.Contains(enemy))
+				return;
+
+			pendingTargets.Add(enemy);
+			Wait.ForSeconds(damageDelay,
+				() =>
+				{
+					pendingTargets.Remove(enemy);
+					TryDamageEnemy(enemy);
+				});
+		}
 	}
 
 	public virtual void StopFart()
 	{
-		if (!IsFarting) return;
+		if (!IsFarting)
+			return;
 
 		IsFarting = false;
 
+		pendingTargets.Clear();
+		damagedEnemies.Clear();
 		particles.ForEach(p => p.Stop());
 	}
 
-	public virtual float CalculateSpeed(float power) => Extensions.ConvertRange(power, 0f, 1f, speedRange.x, speedRange.y);
+	public virtual float CalculateSpeed(float power) 
+		=> Extensions.ConvertRange(power, 0f, 1f, speedRange.x, speedRange.y);
 
 	public virtual void DrawTrajectory(float power, Vector3 direction, float gravity, Vector3 startPosition)
 	{
@@ -118,29 +136,23 @@ public class BasicFart : MonoBehaviour, IFart
 		trajectoryLine.Draw();
 	}
 
-	protected virtual void DamageEnemies()
+	protected virtual void TryDamageEnemy(ICharacter enemy)
 	{
+		if (damagedEnemies.Contains(enemy))
+			return;
+
 		var origin = fartCollider.transform.position;
 
-		targetEnemies.RemoveWhere(e => e == null);
-
-		foreach (var enemy in targetEnemies)
+		if (fartCollider.OverlapPoint(enemy.Movement.CenterPoint) && 
+				Physics2D.Linecast(origin, enemy.Movement.CenterPoint, Player.Instance.Movement.CollisionLayers).collider == null)
 		{
-			var enemyCollider = enemy.collider2D;
-
-			if (enemyCollider != null && fartCollider.OverlapPoint(enemyCollider.bounds.center))
-			{
-				var linecast = Physics2D.Linecast(origin, 
-																					enemyCollider.bounds.center, 
-																					Player.Instance.Movement.CollisionLayers);
-
-				if (linecast.collider == null)
-					DamageEnemy(enemy);
-			}
+			damagedEnemies.Add(enemy);
+			DamageEnemy(enemy);
 		}
 	}
 
-	protected virtual void DamageEnemy(ICharacter enemy) => enemy.Health.Damage(damage, knockback, Player.Instance.Movement.MovementDirection.Dot(-1f, 1f));
+	protected virtual void DamageEnemy(ICharacter enemy) 
+		=> enemy.Health.Damage(damage, knockback, Player.Instance.Movement.MovementDirection.Dot(-1f, 1f));
 
 	protected virtual Vector3[] CalculateTrajectory(float power, Vector3 direction, float gravity, Vector3 startPosition)
 	{
@@ -200,7 +212,8 @@ public class BasicFart : MonoBehaviour, IFart
 		}
 	}
 
-	protected void StartParticles() => particles.ForEach(p => p.Play());
+	protected void StartParticles() 
+		=> particles.ForEach(p => p.Play());
 
 	protected void InitializeTrajectoryLine()
 	{

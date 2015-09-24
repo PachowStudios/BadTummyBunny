@@ -141,7 +141,8 @@ public sealed class PlayerControl : BaseMovable, IFartInfoProvider
 
 	private void LateUpdate()
 	{
-		if (!isInputEnabled) return;
+		if (Player.Instance.Health.IsDead)
+			return;
 
 		GetMovement();
 		UpdateFartTrajectory();
@@ -161,7 +162,8 @@ public sealed class PlayerControl : BaseMovable, IFartInfoProvider
 
 	private void GetInput()
 	{
-		if (!isInputEnabled) return;
+		if (!isInputEnabled)
+			return;
 
 		horizontalMovement = playerActions.Move.Value;
 		willJump = playerActions.Jump.WasPressed && IsGrounded;

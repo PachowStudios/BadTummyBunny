@@ -20,7 +20,6 @@ public sealed class PlayerHealth : BaseHasHealth, IHasHealthContainers
 	[SerializeField]
 	private SpriteRenderer spriteRenderer = null;
 
-	private bool invincible = false;
 	private float lastHitTime = 0f;
 	private float flashTimer = 0f;
 	private float flashTime = 0.25f;
@@ -51,7 +50,8 @@ public sealed class PlayerHealth : BaseHasHealth, IHasHealthContainers
 		get { return health; }
 		protected set
 		{
-			if (value < health) lastHitTime = Time.time;
+			if (value < health)
+				lastHitTime = Time.time;
 
 			health = Mathf.Clamp(value, 0, MaxHealth);
 			RaiseHealthChanged(health);
@@ -62,9 +62,12 @@ public sealed class PlayerHealth : BaseHasHealth, IHasHealthContainers
 	public int HealthPerContainer => 4;
 	public override int MaxHealth => HealthContainers * HealthPerContainer;
 
+	private bool IsInvincible => Time.time <= lastHitTime + invincibilityPeriod;
+
 	public override void Damage(int damage, Vector2 knockback, Vector2 knockbackDirection)
 	{
-		if (invincible || IsDead || damage <= 0f) return;
+		if (IsInvincible || IsDead || damage <= 0f)
+			return;
 
 		Health -= damage;
 
@@ -79,8 +82,6 @@ public sealed class PlayerHealth : BaseHasHealth, IHasHealthContainers
 
 	private void Awake()
 	{
-		spriteRenderer = GetComponentInChildren<SpriteRenderer>();
-
 		health = MaxHealth;
 		lastHitTime = Time.time - invincibilityPeriod;
 	}
@@ -109,9 +110,7 @@ public sealed class PlayerHealth : BaseHasHealth, IHasHealthContainers
 
 	private void UpdateInvincibilityFlash()
 	{
-		invincible = Time.time <= lastHitTime + invincibilityPeriod;
-
-		if (invincible)
+		if (IsInvincible)
 		{
 			flashTimer += Time.deltaTime;
 			smoothFlashTime = Mathf.Lerp(smoothFlashTime, 0.05f, 0.025f);
@@ -173,9 +172,12 @@ public sealed class PlayerHealth : BaseHasHealth, IHasHealthContainers
 		respawnPoint = newRespawnPoint;
 	}
 
-	private void SetRenderersEnabled(bool enabled) => spriteRenderer.enabled = enabled;
+	private void SetRenderersEnabled(bool enabled) 
+		=> spriteRenderer.enabled = enabled;
 
-	private void AlternateRenderersEnabled() => spriteRenderer.enabled = !spriteRenderer.enabled;
+	private void AlternateRenderersEnabled() 
+		=> spriteRenderer.enabled = !spriteRenderer.enabled;
 
-	private void Damage(IEnemy enemy) => Damage(enemy.ContactDamage, enemy.ContactKnockback, enemy.Movement.MovementDirection);
+	private void Damage(IEnemy enemy) 
+		=> Damage(enemy.ContactDamage, enemy.ContactKnockback, enemy.Movement.MovementDirection);
 }

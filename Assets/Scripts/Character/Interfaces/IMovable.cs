@@ -5,6 +5,7 @@ public interface IMovable
 	float Gravity { get; }
 	float MoveSpeed { get; }
 	Transform Transform { get; }
+	Collider2D Collider { get; }
 	Vector3 Position { get; }
 	Vector3 CenterPoint { get; }
 	Vector3 LastGroundedPosition { get; }
