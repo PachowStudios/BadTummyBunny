@@ -13,8 +13,6 @@ namespace AI.Patrol
 		[SerializeField]
 		protected float followRange = 5f;
 		[SerializeField]
-		protected float followBuffer = 0.75f;
-		[SerializeField]
 		protected float attackRange = 1f;
 		[SerializeField]
 		protected float attackJumpHeight = 0.5f;

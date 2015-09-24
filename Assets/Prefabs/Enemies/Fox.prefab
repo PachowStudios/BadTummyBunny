@@ -172,11 +172,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gravity: -35
-  moveSpeed: 2
-  canJump: 1
+  moveSpeed: 1.5
   controller: {fileID: 11400002}
   groundDamping: 10
   airDamping: 15
+  deactivatedOutsideCamera: 1
   animator: {fileID: 9500000}
   knockback: {x: 2, y: 1}
   blockVisibilityLayers:
@@ -185,11 +185,13 @@ MonoBehaviour:
   frontCheck: {fileID: 400006}
   ledgeCheck: {fileID: 400004}
   followSpeedRange: {x: 2.5, y: 3.5}
+  visibilityAngle: 45
   followRange: 5
   followBuffer: .5
   attackRange: .850000024
   attackJumpHeight: 1
   cooldownTime: 1
+  sightLostWaitTimeRange: {x: 1, y: 2.5}
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1
