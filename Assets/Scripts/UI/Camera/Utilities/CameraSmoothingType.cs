@@ -1,7 +1,7 @@
 ﻿public enum CameraSmoothingType
 {
-	None,
-	SmoothDamp,
-	Spring,
-	Lerp
+  None,
+  SmoothDamp,
+  Spring,
+  Lerp
 }

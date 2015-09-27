@@ -5,20 +5,20 @@
 [RequireComponent(typeof(PlayerTriggers))]
 public sealed class Player : StatusEffectableCharacter
 {
-	private PlayerControl movement = null;
-	private PlayerHealth health = null;
-	private PlayerScore score = null;
-	private PlayerTriggers triggers = null;
+  private PlayerControl movement;
+  private PlayerHealth health;
+  private PlayerScore score;
+  private PlayerTriggers triggers;
 
-	public static Player Instance { get; private set; }
+  public static Player Instance { get; private set; }
 
-	public override IMovable Movement => this.GetComponentIfNull(ref movement);
-	public override IHasHealth Health => this.GetComponentIfNull(ref health);
-	public IScoreKeeper Score => this.GetComponentIfNull(ref score);
-	public PlayerTriggers Triggers => this.GetComponentIfNull(ref triggers);
+  public override IMovable Movement => this.GetComponentIfNull(ref this.movement);
+  public override IHasHealth Health => this.GetComponentIfNull(ref this.health);
+  public IScoreKeeper Score => this.GetComponentIfNull(ref this.score);
+  public PlayerTriggers Triggers => this.GetComponentIfNull(ref this.triggers);
 
-	public IFartInfoProvider FartStatusProvider => (IFartInfoProvider)Movement;
-	public IHasHealthContainers HealthContainers => (IHasHealthContainers)Health;
+  public IFartInfoProvider FartStatusProvider => (IFartInfoProvider)Movement;
+  public IHasHealthContainers HealthContainers => (IHasHealthContainers)Health;
 
-	private void Awake() => Instance = this;
+  private void Awake() => Instance = this;
 }

@@ -1,4 +1,4 @@
 ﻿public interface ICameraEffector : ICameraPositionAssertion
 {
-	float GetEffectorWeight();
+  float GetEffectorWeight();
 }

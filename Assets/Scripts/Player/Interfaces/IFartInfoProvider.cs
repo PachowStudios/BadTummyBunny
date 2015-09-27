@@ -2,7 +2,7 @@
 
 public interface IFartInfoProvider
 {
-	bool IsFartCharging { get; }
-	float FartPower { get; }
-	Vector2 FartDirection { get; }
+  bool IsFartCharging { get; }
+  float FartPower { get; }
+  Vector2 FartDirection { get; }
 }

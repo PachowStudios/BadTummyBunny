@@ -4,23 +4,24 @@ using UnityEngine.UI;
 [AddComponentMenu("UI/HUD/Coins")]
 public class CoinsHud : MonoBehaviour
 {
-	[SerializeField]
-	protected Text coinsText;
-	[SerializeField]
-	protected int coinsDigits = 3;
+  [SerializeField] protected Text coinsText;
+  [SerializeField] protected int coinsDigits = 3;
 
-	public static CoinsHud Instance { get; private set; }
+  public static CoinsHud Instance { get; private set; }
 
-	protected virtual void Awake()
-	{
-		Instance = this;
+  protected virtual void Awake()
+  {
+    Instance = this;
 
-		coinsText.text = new string('0', coinsDigits);
-	}
+    this.coinsText.text = new string('0', this.coinsDigits);
+  }
 
-	protected virtual void Start() => Player.Instance.Score.CoinsChanged += OnCoinsChanged;
+  protected virtual void Start()
+    => Player.Instance.Score.CoinsChanged += OnCoinsChanged;
 
-	protected virtual void OnDestroy() => Player.Instance.Score.CoinsChanged -= OnCoinsChanged;
+  protected virtual void OnDestroy()
+    => Player.Instance.Score.CoinsChanged -= OnCoinsChanged;
 
-	protected virtual void OnCoinsChanged(int newCoins) => coinsText.text = newCoins.ToString().PadLeft(coinsDigits, '0');
+  protected virtual void OnCoinsChanged(int newCoins)
+    => this.coinsText.text = newCoins.ToString().PadLeft(this.coinsDigits, '0');
 }

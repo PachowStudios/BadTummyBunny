@@ -171,15 +171,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a532b1d0a649fba43b6f32da545c87f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  usePhysicsForMovement: 0
-  _skinWidth: .0199999996
+  skinWidth: .0199999996
   platformMask:
     serializedVersion: 2
     m_Bits: 256
   oneWayPlatformMask:
     serializedVersion: 2
     m_Bits: 0
-  slopeLimit: 30
   jumpingThreshold: .0700000003
   slopeSpeedMultiplier:
     serializedVersion: 2
@@ -201,9 +199,9 @@ MonoBehaviour:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
+  slopeLimit: 30
   totalHorizontalRays: 8
   totalVerticalRays: 4
-  triggerHelperBoxColliderScale: .949999988
 --- !u!114 &11400006
 MonoBehaviour:
   m_ObjectHideFlags: 1

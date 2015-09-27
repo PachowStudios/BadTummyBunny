@@ -2,8 +2,8 @@
 
 public interface IStatusEffectable
 {
-	ReadOnlyCollection<IStatusEffect> StatusEffects { get; }
+  ReadOnlyCollection<IStatusEffect> StatusEffects { get; }
 
-	void AddStatusEffect(IStatusEffect statusEffect);
-	void RemoveStatusEffect(IStatusEffect statusEffect);
+  void AddStatusEffect(IStatusEffect statusEffect);
+  void RemoveStatusEffect(IStatusEffect statusEffect);
 }

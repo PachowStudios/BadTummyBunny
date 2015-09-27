@@ -1,7 +1,7 @@
 ﻿public interface IActivatable
 {
-	bool IsActivated { get; }
+  bool IsActivated { get; }
 
-	void Activate();
-	void Deactivate();
+  void Activate();
+  void Deactivate();
 }

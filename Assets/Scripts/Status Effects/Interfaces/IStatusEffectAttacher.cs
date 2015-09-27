@@ -1,4 +1,4 @@
 ﻿public interface IStatusEffectAttacher
 {
-	void AttachStatusEffect(IStatusEffectable statusEffectableObject);
+  void AttachStatusEffect(IStatusEffectable statusEffectableObject);
 }

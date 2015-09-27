@@ -2,74 +2,73 @@
 
 public class PlayerActions : PlayerActionSet
 {
-	private PlayerAction MoveLeft;
-	private PlayerAction MoveRight;
+  private readonly PlayerAction moveLeft;
+  private readonly PlayerAction moveRight;
 
-	private PlayerAction FartLeft;
-	private PlayerAction FartRight;
-	private PlayerAction FartDown;
-	private PlayerAction FartUp;
+  private readonly PlayerAction fartLeft;
+  private readonly PlayerAction fartRight;
+  private readonly PlayerAction fartDown;
+  private readonly PlayerAction fartUp;
 
-	public PlayerOneAxisAction Move;
-	public PlayerTwoAxisAction Fart;
+  public PlayerOneAxisAction Move { get; }
+  public PlayerTwoAxisAction Fart { get; }
 
-	public PlayerAction Jump;
+  public PlayerAction Jump { get; }
 
-	public PlayerActions()
-	{
-		MoveLeft = CreatePlayerAction("Move Left");
-		MoveRight = CreatePlayerAction("Move Right");
+  public PlayerActions()
+  {
+    this.moveLeft = CreatePlayerAction("Move Left");
+    this.moveRight = CreatePlayerAction("Move Right");
 
-		FartLeft = CreatePlayerAction("Fart Aim Left");
-		FartRight = CreatePlayerAction("Fart Aim Right");
-		FartDown = CreatePlayerAction("Fart Aim Down");
-		FartUp = CreatePlayerAction("Fart Aim Up");
+    this.fartLeft = CreatePlayerAction("Fart Aim Left");
+    this.fartRight = CreatePlayerAction("Fart Aim Right");
+    this.fartDown = CreatePlayerAction("Fart Aim Down");
+    this.fartUp = CreatePlayerAction("Fart Aim Up");
 
-		Move = CreateOneAxisPlayerAction(MoveLeft, MoveRight);
-		Fart = CreateTwoAxisPlayerAction(FartLeft, FartRight, FartDown, FartUp);
+    Move = CreateOneAxisPlayerAction(this.moveLeft, this.moveRight);
+    Fart = CreateTwoAxisPlayerAction(this.fartLeft, this.fartRight, this.fartDown, this.fartUp);
 
-		Jump = CreatePlayerAction("Jump");
-	}
+    Jump = CreatePlayerAction("Jump");
+  }
 
-	public static PlayerActions CreateWithDefaultBindings()
-	{
-		var playerActions = new PlayerActions();
+  public static PlayerActions CreateWithDefaultBindings()
+  {
+    var playerActions = new PlayerActions();
 
-		playerActions.MoveLeft.AddDefaultBinding(Key.A);
-		playerActions.MoveLeft.AddDefaultBinding(InputControlType.LeftStickLeft);
-		playerActions.MoveLeft.AddDefaultBinding(InputControlType.DPadLeft);
+    playerActions.moveLeft.AddDefaultBinding(Key.A);
+    playerActions.moveLeft.AddDefaultBinding(InputControlType.LeftStickLeft);
+    playerActions.moveLeft.AddDefaultBinding(InputControlType.DPadLeft);
 
-		playerActions.MoveRight.AddDefaultBinding(Key.D);
-		playerActions.MoveRight.AddDefaultBinding(InputControlType.LeftStickRight);
-		playerActions.MoveRight.AddDefaultBinding(InputControlType.DPadRight);
+    playerActions.moveRight.AddDefaultBinding(Key.D);
+    playerActions.moveRight.AddDefaultBinding(InputControlType.LeftStickRight);
+    playerActions.moveRight.AddDefaultBinding(InputControlType.DPadRight);
 
-		playerActions.FartLeft.AddDefaultBinding(InputControlType.RightStickLeft);
+    playerActions.fartLeft.AddDefaultBinding(InputControlType.RightStickLeft);
 
-		playerActions.FartRight.AddDefaultBinding(InputControlType.RightStickRight);
+    playerActions.fartRight.AddDefaultBinding(InputControlType.RightStickRight);
 
-		playerActions.FartDown.AddDefaultBinding(InputControlType.RightStickDown);
+    playerActions.fartDown.AddDefaultBinding(InputControlType.RightStickDown);
 
-		playerActions.FartUp.AddDefaultBinding(InputControlType.RightStickUp);
+    playerActions.fartUp.AddDefaultBinding(InputControlType.RightStickUp);
 
-		playerActions.Jump.AddDefaultBinding(Key.Space);
-		playerActions.Jump.AddDefaultBinding(InputControlType.Action1);
+    playerActions.Jump.AddDefaultBinding(Key.Space);
+    playerActions.Jump.AddDefaultBinding(InputControlType.Action1);
 
-		playerActions.ListenOptions.IncludeUnknownControllers = false;
-		playerActions.ListenOptions.MaxAllowedBindings = 3;
+    playerActions.ListenOptions.IncludeUnknownControllers = false;
+    playerActions.ListenOptions.MaxAllowedBindings = 3;
 
-		playerActions.ListenOptions.OnBindingFound = OnBindingFound;
+    playerActions.ListenOptions.OnBindingFound = OnBindingFound;
 
-		return playerActions;
-	}
+    return playerActions;
+  }
 
-	private static bool OnBindingFound(PlayerAction action, BindingSource binding)
-	{
-		if (binding == new KeyBindingSource(Key.Escape))
-		{
-			action.StopListeningForBinding();
-			return false;
-		}
+  private static bool OnBindingFound(PlayerAction action, BindingSource binding)
+  {
+    if (binding != new KeyBindingSource(Key.Escape))
+      return true;
 
-		return true;
-	}
+    action.StopListeningForBinding();
+
+    return false;
+  }
 }

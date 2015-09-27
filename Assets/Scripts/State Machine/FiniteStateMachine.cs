@@ -2,62 +2,62 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public sealed class FiniteStateMachine<T> : IFiniteStateMachine<T> where T : class
+public sealed class FiniteStateMachine<T> : IFiniteStateMachine<T>
+  where T : class
 {
-	public event Action StateChanged;
+  public event Action StateChanged;
 
-	public IFiniteState<T> CurrentState { get; private set; }
-	public IFiniteState<T> PreviousState { get; private set; }
-	public float ElapsedTimeInState { get; private set; }
+  public IFiniteState<T> CurrentState { get; private set; }
+  public IFiniteState<T> PreviousState { get; private set; }
+  public float ElapsedTimeInState { get; private set; }
 
-	private Dictionary<Type, IFiniteState<T>> states = new Dictionary<Type, IFiniteState<T>>();
-	private T context = null;
+  private Dictionary<Type, IFiniteState<T>> states = new Dictionary<Type, IFiniteState<T>>();
+  private T context;
 
-	public FiniteStateMachine(T context)
-	{
-		this.context = context;
-	}
+  public FiniteStateMachine(T context)
+  {
+    this.context = context;
+  }
 
-	public IFiniteStateMachine<T> AddState<TState>() where TState : IFiniteState<T>, new()
-	{
-		states[typeof(TState)] = new TState().Initialize(this, context);
+  public IFiniteStateMachine<T> AddState<TState>() where TState : IFiniteState<T>, new()
+  {
+    this.states[typeof(TState)] = new TState().Initialize(this, this.context);
 
-		if (CurrentState == null)
-		{
-			CurrentState = states[typeof(TState)];
-			CurrentState.Begin();
-		}
+    if (CurrentState == null)
+    {
+      CurrentState = this.states[typeof(TState)];
+      CurrentState.Begin();
+    }
 
-		return this;
-	}
+    return this;
+  }
 
-	public TState GoToState<TState>() where TState : IFiniteState<T>
-	{
-		if (CurrentState.GetType() == typeof(TState))
-			return (TState)CurrentState;
+  public TState GoToState<TState>() where TState : IFiniteState<T>
+  {
+    if (CurrentState.GetType() == typeof(TState))
+      return (TState)CurrentState;
 
-		CurrentState?.End();
+    CurrentState?.End();
 
-		if (Application.isEditor)
-			if (!states.ContainsKey(typeof(TState)))
-				throw new InvalidOperationException($"{GetType()} : state {typeof(TState)} doesn't exist!");
+    if (Application.isEditor)
+      Assert.IsTrue(this.states.ContainsKey(typeof(TState)), $"{GetType()} : state {typeof(TState)} doesn't exist!");
 
-		PreviousState = CurrentState;
-		CurrentState = states[typeof(TState)];
-		CurrentState.Begin();
-		ElapsedTimeInState = 0f;
-		StateChanged?.Invoke();
+    PreviousState = CurrentState;
+    CurrentState = this.states[typeof(TState)];
+    CurrentState.Begin();
+    ElapsedTimeInState = 0f;
+    StateChanged?.Invoke();
 
-		return (TState)CurrentState;
-	}
+    return (TState)CurrentState;
+  }
 
-	public bool CameFromState<TState>() where TState : IFiniteState<T>
-		=> PreviousState.GetType() == typeof(TState);
+  public bool CameFromState<TState>() where TState : IFiniteState<T>
+    => PreviousState.GetType() == typeof(TState);
 
-	public void Update(float deltaTime)
-	{
-		ElapsedTimeInState += deltaTime;
-		CurrentState.Reason();
-		CurrentState.Update(deltaTime);
-	}
+  public void Update(float deltaTime)
+  {
+    ElapsedTimeInState += deltaTime;
+    CurrentState.Reason();
+    CurrentState.Update(deltaTime);
+  }
 }

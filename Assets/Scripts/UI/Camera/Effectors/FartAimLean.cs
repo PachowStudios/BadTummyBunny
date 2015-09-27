@@ -3,57 +3,53 @@
 [AddComponentMenu("UI/Camera/Effectors/Fart Aim Lean")]
 public sealed class FartAimLean : MonoBehaviour, ICameraEffector
 {
-	[SerializeField]
-	private float effectorWeight = 5f;
-	[SerializeField]
-	private float leanDistance = 3f;
-	[SerializeField]
-	private float minimumPower = 0.2f;
-	[SerializeField]
-	private AnimationCurve effectorFalloff = AnimationCurve.Linear(0f, 0f, 1f, 1f);
+  [SerializeField] private float effectorWeight = 5f;
+  [SerializeField] private float leanDistance = 3f;
+  [SerializeField] private float minimumPower = 0.2f;
+  [SerializeField] private AnimationCurve effectorFalloff = AnimationCurve.Linear(0f, 0f, 1f, 1f);
 
-	public bool IsEnabled { get; private set; } = false;
+  public bool IsEnabled { get; private set; }
 
-	private IFartInfoProvider FartStatusProvider => Player.Instance.FartStatusProvider;
+  private static IFartInfoProvider FartStatusProvider => Player.Instance.FartStatusProvider;
 
-	private void Update()
-	{
-		if (Player.Instance.FartStatusProvider.IsFartCharging && !IsEnabled)
-			Activate();
-		else if (!FartStatusProvider.IsFartCharging && IsEnabled)
-			Deactivate();
-	}
+  private void Update()
+  {
+    if (Player.Instance.FartStatusProvider.IsFartCharging && !IsEnabled)
+      Activate();
+    else if (!FartStatusProvider.IsFartCharging && IsEnabled)
+      Deactivate();
+  }
 
-	public Vector3 GetDesiredPositionDelta(Bounds targetBounds, Vector3 basePosition, Vector3 targetAverageVelocity)
-	{
-		var targetPosition = Player.Instance.Movement.Position;
+  public Vector3 GetDesiredPositionDelta(Bounds targetBounds, Vector3 basePosition, Vector3 targetAverageVelocity)
+  {
+    var targetPosition = Player.Instance.Movement.Position;
 
-		targetPosition += leanDistance * FartStatusProvider.FartDirection.ToVector3();
+    targetPosition += this.leanDistance * FartStatusProvider.FartDirection.ToVector3();
 
-		return targetPosition;
-	}
+    return targetPosition;
+  }
 
-	public float GetEffectorWeight()
-	{
-		var startingPower = FartStatusProvider.FartPower;
+  public float GetEffectorWeight()
+  {
+    var startingPower = FartStatusProvider.FartPower;
 
-		if (startingPower < minimumPower)
-			return 0f;
+    if (startingPower < this.minimumPower)
+      return 0f;
 
-		var adjustedPower = Extensions.ConvertRange(startingPower, 0f, 1f, minimumPower, 1f);
+    var adjustedPower = Extensions.ConvertRange(startingPower, 0f, 1f, this.minimumPower, 1f);
 
-		return effectorWeight * effectorFalloff.Evaluate(adjustedPower);
-	}
+    return this.effectorWeight * this.effectorFalloff.Evaluate(adjustedPower);
+  }
 
-	private void Activate()
-	{
-		IsEnabled = true;
-		CameraController.Instance.AddCameraEffector(this);
-	}
+  private void Activate()
+  {
+    IsEnabled = true;
+    CameraController.Instance.AddCameraEffector(this);
+  }
 
-	private void Deactivate()
-	{
-		IsEnabled = false;
-		CameraController.Instance.RemoveCameraEffector(this);
-	}
+  private void Deactivate()
+  {
+    IsEnabled = false;
+    CameraController.Instance.RemoveCameraEffector(this);
+  }
 }

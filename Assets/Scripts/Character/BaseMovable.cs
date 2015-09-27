@@ -2,70 +2,68 @@
 
 public abstract class BaseMovable : MonoBehaviour, IMovable
 {
-	[Header("Base Movement")]
-	[SerializeField]
-	protected float gravity = -35f;
-	[SerializeField]
-	protected float moveSpeed = 5f;
+  [Header("Base Movement")]
+  [SerializeField] protected float gravity = -35f;
+  [SerializeField] protected float moveSpeed = 5f;
 
-	[Header("Base Components")]
-	[SerializeField]
-	protected CharacterController2D controller;
+  [Header("Base Components")]
+  [SerializeField] protected CharacterController2D controller;
 
-	protected Vector3 velocity = default(Vector3);
+  protected Vector3 velocity = default(Vector3);
 
-	public virtual float Gravity => gravity;
-	public virtual float MoveSpeed => moveSpeed;
-	public virtual Transform Transform => transform;
-	public virtual Collider2D Collider => collider2D;
-	public virtual Vector3 Position => transform.position;
-	public virtual Vector3 CenterPoint => collider2D.bounds.center;
-	public virtual Vector3 LastGroundedPosition { get; protected set; }
-	public virtual Vector3 Velocity => velocity;
-	public virtual Vector2 MovementDirection => velocity.normalized;
-	public virtual Vector2 FacingDirection => new Vector2(transform.localScale.x, 0f);
-	public virtual bool IsFacingRight => FacingDirection.x > 0f;
-	public virtual bool IsFalling => Velocity.y < 0f;
-	public virtual bool IsGrounded => controller.isGrounded;
-	public virtual bool WasGrounded => controller.wasGroundedLastFrame;
-	public virtual LayerMask CollisionLayers => controller.platformMask;
+  public virtual float Gravity => this.gravity;
+  public virtual float MoveSpeed => this.moveSpeed;
+  public virtual Transform Transform => transform;
+  public virtual Collider2D Collider => collider2D;
+  public virtual Vector3 Position => transform.position;
+  public virtual Vector3 CenterPoint => collider2D.bounds.center;
+  public virtual Vector3 LastGroundedPosition { get; protected set; }
+  public virtual Vector3 Velocity => this.velocity;
+  public virtual Vector2 MovementDirection => this.velocity.normalized;
+  public virtual Vector2 FacingDirection => new Vector2(transform.localScale.x, 0f);
+  public virtual bool IsFacingRight => FacingDirection.x > 0f;
+  public virtual bool IsFalling => Velocity.y < 0f;
+  public virtual bool IsGrounded => this.controller.IsGrounded;
+  public virtual bool WasGrounded => this.controller.WasGroundedLastFrame;
+  public virtual LayerMask CollisionLayers => this.controller.PlatformMask;
 
-	public virtual float? MoveSpeedOverride { get; set; } = null;
+  public virtual float? MoveSpeedOverride { get; set; } = null;
 
-	public virtual void Move(Vector3 velocity)
-	{
-		controller.move(velocity * Time.deltaTime);
-		velocity = controller.velocity;
-	}
+  public virtual void Move(Vector3 moveVelocity)
+  {
+    this.controller.Move(moveVelocity * Time.deltaTime);
+    this.velocity = this.controller.Velocity;
+  }
 
-	public virtual void Flip() => transform.Flip();
+  public virtual void Flip() => transform.Flip();
 
-	public virtual bool Jump(float height)
-	{
-		if (height <= 0f || !IsGrounded)
-			return false;
+  public virtual bool Jump(float height)
+  {
+    if (height <= 0f || !IsGrounded)
+      return false;
 
-		velocity.y = Mathf.Sqrt(2f * height * -gravity);
+    this.velocity.y = Mathf.Sqrt(2f * height * -this.gravity);
 
-		return true;
-	}
+    return true;
+  }
 
-	public virtual void ApplyKnockback(Vector2 knockback, Vector2 direction)
-	{
-		if (knockback.IsZero()) return;
+  public virtual void ApplyKnockback(Vector2 knockback, Vector2 direction)
+  {
+    if (knockback.IsZero())
+      return;
 
-		knockback.x += Mathf.Sqrt(Mathf.Abs(Mathf.Pow(knockback.x, 2) * -Gravity));
+    knockback.x += Mathf.Sqrt(Mathf.Abs(Mathf.Pow(knockback.x, 2) * -Gravity));
 
-		if (IsGrounded)
-			velocity.y = Mathf.Sqrt(Mathf.Abs(knockback.y * -Gravity));
+    if (IsGrounded)
+      this.velocity.y = Mathf.Sqrt(Mathf.Abs(knockback.y * -Gravity));
 
-		knockback.Scale(direction);
+    knockback.Scale(direction);
 
-		if (knockback.IsZero())
-		{
-			velocity += knockback.ToVector3();
-			controller.move(velocity * Time.deltaTime);
-			velocity = controller.velocity;
-		}
-	}
+    if (knockback.IsZero())
+      return;
+
+    this.velocity += knockback.ToVector3();
+    this.controller.Move(this.velocity * Time.deltaTime);
+    this.velocity = this.controller.Velocity;
+  }
 }

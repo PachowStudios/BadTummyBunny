@@ -2,20 +2,22 @@
 
 public class Flagpole : MonoBehaviour
 {
-	private Animator animator = null;
+  private Animator animator;
 
-	public virtual bool Activated { get; protected set; } = false;
+  public virtual bool Activated { get; protected set; }
 
-	protected Animator Animator => this.GetComponentIfNull(ref animator);
+  protected Animator Animator => this.GetComponentIfNull(ref this.animator);
 
-	public virtual void Activate()
-	{
-		if (Activated) return;
+  public virtual void Activate()
+  {
+    if (Activated)
+      return;
 
-		Activated = true;
-		Animator.SetTrigger("Activate");
-		PlayActivateSound();
-	}
+    Activated = true;
+    Animator.SetTrigger("Activate");
+    PlayActivateSound();
+  }
 
-	protected virtual void PlayActivateSound() => SoundManager.PlaySFX(SoundManager.LoadFromGroup(SfxGroups.RespawnPoints));
+  protected virtual void PlayActivateSound() 
+    => SoundManager.PlaySFX(SoundManager.LoadFromGroup(SfxGroups.RespawnPoints));
 }

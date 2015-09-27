@@ -8,7 +8,7 @@ public class StatusEffectFart : BasicFart, IStatusEffectAttacher
 	protected MonoBehaviour statusEffect = null;
 
 	public void AttachStatusEffect(IStatusEffectable statusEffectableObject) 
-		=> statusEffectableObject.AddStatusEffect(statusEffect as IStatusEffect);
+		=> statusEffectableObject.AddStatusEffect((IStatusEffect)this.statusEffect);
 
 	protected override void DamageEnemy(ICharacter enemy)
 	{

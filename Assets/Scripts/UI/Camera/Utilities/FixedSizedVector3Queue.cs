@@ -1,36 +1,33 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class FixedSizedVector3Queue
 {
-	private List<Vector3> list;
-	private int limit;
+  private List<Vector3> list;
+  private int limit;
 
-	public FixedSizedVector3Queue(int limit)
-	{
-		this.limit = limit;
-		list = new List<Vector3>(limit);
-	}
+  public FixedSizedVector3Queue(int limit)
+  {
+    this.limit = limit;
+    this.list = new List<Vector3>(limit);
+  }
 
-	public void Push(Vector3 item)
-	{
-		if (list.Count == limit)
-			list.RemoveAt(0);
+  public void Push(Vector3 item)
+  {
+    if (this.list.Count == this.limit)
+      this.list.RemoveAt(0);
 
-		list.Add(item);
-	}
+    this.list.Add(item);
+  }
 
-	public Vector3 Average()
-	{
-		var avg = Vector3.zero;
+  public Vector3 Average()
+  {
+    if (this.list.Count == 0)
+      return Vector3.zero;
 
-		// early out for no items
-		if (list.Count == 0)
-			return avg;
+    var avg = this.list.Aggregate(Vector3.zero, (current, t) => current + t);
 
-		for (var i = 0; i < list.Count; i++)
-			avg += list[i];
-
-		return avg / list.Count;
-	}
+    return avg / this.list.Count;
+  }
 }

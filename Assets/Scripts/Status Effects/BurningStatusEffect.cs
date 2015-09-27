@@ -3,45 +3,41 @@
 [AddComponentMenu("Status Effects/Burning")]
 public class BurningStatusEffect : BaseStatusEffect
 {
-	[Header("Options")]
-	[SerializeField]
-	protected int damage = 1;
-	[SerializeField]
-	protected float timePerDamage = 0.5f;
-	[SerializeField]
-	protected float minDuration = 2f;
-	[SerializeField]
-	protected float maxDuration = 4f;
+  [Header("Options")]
+  [SerializeField] protected int damage = 1;
+  [SerializeField] protected float timePerDamage = 0.5f;
+  [SerializeField] protected float minDuration = 2f;
+  [SerializeField] protected float maxDuration = 4f;
 
-	[Header("Components")]
-	[SerializeField]
-	protected ParticleSystem particles = null;
+  [Header("Components")]
+  [SerializeField] protected ParticleSystem particles = null;
 
-	private float damageTimer = 0f;
-	private float durationTimer = 0f;
-	private float duration = 0f;
+  private float damageTimer;
+  private float durationTimer;
+  private float duration;
 
-	protected override void UpdateEffect()
-	{
-		damageTimer += Time.deltaTime;
+  protected override void UpdateEffect()
+  {
+    this.damageTimer += Time.deltaTime;
 
-		if (damageTimer >= timePerDamage)
-		{
-			AffectedCharacter?.Health.Damage(damage);
-			damageTimer = 0f;
-		}
+    if (this.damageTimer >= this.timePerDamage)
+    {
+      AffectedCharacter?.Health.Damage(this.damage);
+      this.damageTimer = 0f;
+    }
 
-		durationTimer += Time.deltaTime;
+    this.durationTimer += Time.deltaTime;
 
-		if (durationTimer >= duration)
-			Deactivate();
-	}
+    if (this.durationTimer >= this.duration)
+      Deactivate();
+  }
 
-	protected override void OnActivate()
-	{
-		duration = Random.Range(minDuration, maxDuration);
-		particles.Play();
-	}
+  protected override void OnActivate()
+  {
+    this.duration = Random.Range(this.minDuration, this.maxDuration);
+    this.particles.Play();
+  }
 
-	protected override void OnDeactivate() => particles?.DetachAndDestroy();
+  protected override void OnDeactivate() 
+    => this.particles?.DetachAndDestroy();
 }

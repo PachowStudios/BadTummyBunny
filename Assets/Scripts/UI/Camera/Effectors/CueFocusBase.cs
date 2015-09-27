@@ -4,72 +4,65 @@ using UnityEngine;
 [RequireComponent(typeof(Collider2D))]
 public abstract class CueFocusBase : MonoBehaviour, ICameraEffector
 {
-	[SerializeField]
-	private Collider2D effectorTrigger;
+  [SerializeField] private Collider2D effectorTrigger = null;
 
-	[BitMask]
-	public CameraAxis axis;
-	public float effectorWeight = 0.5f;
-	[Tooltip("when true, an additional inner ring can be used to have it's own specific weight indpendent of the outer ring")]
-	public bool onlyTriggerWhenGrounded = false;
+  [SerializeField, BitMask] protected CameraAxis axis;
+  [SerializeField] protected float effectorWeight = 0.5f;
+  [Tooltip("when true, an additional inner ring can be used to have it's own specific weight indpendent of the outer ring")]
+  [SerializeField] protected bool onlyTriggerWhenGrounded = false;
 
-	protected Transform trackedTarget;
+  protected Transform trackedTarget;
 
-	protected Collider2D EffectorTrigger => effectorTrigger;
+  protected Collider2D EffectorTrigger => this.effectorTrigger;
+  protected virtual Vector3 FocusPosition => transform.position;
+  protected bool AffectHorizontal => (this.axis & CameraAxis.Horizontal) == CameraAxis.Horizontal;
+  protected bool AffectVertical => (this.axis & CameraAxis.Vertical) == CameraAxis.Vertical;
 
-	protected virtual Vector3 FocusPosition => transform.position;
+  [Conditional("UNITY_EDITOR")]
+  protected void Update() { }
 
-	protected bool AffectHorizontal => (axis & CameraAxis.Horizontal) == CameraAxis.Horizontal;
+  protected virtual void OnTriggerEnter2D(Collider2D other)
+  {
+    if (this.trackedTarget == null && other.tag == Tags.Player &&
+        (!this.onlyTriggerWhenGrounded || Player.Instance.Movement.IsGrounded))
+      Activate(other.transform);
+  }
 
-	protected bool AffectVertical => (axis & CameraAxis.Vertical) == CameraAxis.Vertical;
+  protected virtual void OnTriggerStay2D(Collider2D other)
+    => OnTriggerEnter2D(other);
 
-	[Conditional("UNITY_EDITOR")]
-	protected void Update() { }
+  protected virtual void OnTriggerExit2D(Collider2D other)
+  {
+    if (this.trackedTarget != null && other.tag == Tags.Player)
+      Deactivate();
+  }
 
-	protected virtual void OnTriggerEnter2D(Collider2D other)
-	{
-		if (trackedTarget == null && other.tag == Tags.Player)
-			if (!onlyTriggerWhenGrounded || Player.Instance.Movement.IsGrounded)
-				Activate(other.transform);
-	}
+  protected virtual void OnDisable()
+    => Deactivate();
 
-	protected virtual void OnTriggerStay2D(Collider2D other)
-	{
-		OnTriggerEnter2D(other);
-	}
+  public virtual Vector3 GetDesiredPositionDelta(Bounds targetBounds, Vector3 basePosition, Vector3 targetAverageVelocity)
+  {
+    var targetPosition = basePosition;
 
-	protected virtual void OnTriggerExit2D(Collider2D other)
-	{
-		if (trackedTarget != null && other.tag == Tags.Player)
-			Deactivate();
-	}
+    if (AffectHorizontal)
+      targetPosition.x = FocusPosition.x;
+    if (AffectVertical)
+      targetPosition.y = FocusPosition.y;
 
-	protected virtual void OnDisable()
-	{
-		Deactivate();
-	}
+    return targetPosition;
+  }
 
-	public virtual Vector3 GetDesiredPositionDelta(Bounds targetBounds, Vector3 basePosition, Vector3 targetAverageVelocity)
-	{
-		var targetPosition = basePosition;
+  public abstract float GetEffectorWeight();
 
-		if (AffectHorizontal) targetPosition.x = FocusPosition.x;
-		if (AffectVertical) targetPosition.y = FocusPosition.y;
+  protected virtual void Activate(Transform newTransform)
+  {
+    this.trackedTarget = newTransform;
+    CameraController.Instance?.AddCameraEffector(this);
+  }
 
-		return targetPosition;
-	}
-
-	public abstract float GetEffectorWeight();
-
-	protected virtual void Activate(Transform newTransform)
-	{
-		trackedTarget = newTransform;
-		CameraController.Instance?.AddCameraEffector(this);
-	}
-
-	protected virtual void Deactivate()
-	{
-		trackedTarget = null;
-		CameraController.Instance?.RemoveCameraEffector(this);
-	}
+  protected virtual void Deactivate()
+  {
+    this.trackedTarget = null;
+    CameraController.Instance?.RemoveCameraEffector(this);
+  }
 }

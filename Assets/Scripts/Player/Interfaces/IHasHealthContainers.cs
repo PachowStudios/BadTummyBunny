@@ -2,8 +2,8 @@
 
 public interface IHasHealthContainers
 {
-	event Action<int> HealthContainersChanged;
+  event Action<int> HealthContainersChanged;
 
-	int HealthContainers { get; }
-	int HealthPerContainer { get; }
+  int HealthContainers { get; }
+  int HealthPerContainer { get; }
 }

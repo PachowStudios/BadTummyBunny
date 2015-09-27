@@ -2,10 +2,10 @@
 
 public interface IScoreKeeper
 {
-	event Action<int> CoinsChanged;
+  event Action<int> CoinsChanged;
 
-	int Coins { get; }
+  int Coins { get; }
 
-	void AddCoins(int coins);
-	void RemoveCoins(int coins);
+  void AddCoins(int coins);
+  void RemoveCoins(int coins);
 }
