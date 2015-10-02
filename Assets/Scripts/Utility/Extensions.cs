@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using UnityEngine;
 using Component = UnityEngine.Component;
 using Object = UnityEngine.Object;
@@ -158,6 +160,15 @@ public static class Extensions
 
     return lastItem;
   }
+
+  public static void ForEach<T>(this IEnumerable<T> parent, Action<T> action)
+  {
+    foreach (var item in parent)
+      action(item);
+  }
+
+  public static bool IsEmpty<T>(this IEnumerable<T> parent) 
+    => !parent.Any();
   #endregion
 
   #region Enum
