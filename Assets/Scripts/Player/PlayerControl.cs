@@ -43,7 +43,7 @@ public sealed class PlayerControl : BaseMovable, IFartInfoProvider
 
   private bool IsMovingRight => this.horizontalMovement > 0f;
   private bool IsMovingLeft => this.horizontalMovement < 0f;
-  private bool CanFart => this.isFartingEnabled && this.availableFart >= this.fartUsageRange.y;
+  private bool CanFart => this.isFartingEnabled && (this.availableFart >= this.fartUsageRange.y);
 
   private Animator Animator => this.GetComponentIfNull(ref this.animator);
 

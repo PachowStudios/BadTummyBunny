@@ -34,7 +34,9 @@ public class GameMenu : MonoBehaviour
     if (Application.isLoadingLevel)
       return;
 
-    levelName = (levelName == "Retry") ? Application.loadedLevelName : levelName;
+    if (levelName == "Retry")
+      levelName = Application.loadedLevelName;
+
     Application.LoadLevel(levelName);
   }
 

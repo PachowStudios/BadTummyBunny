@@ -20,5 +20,6 @@ public sealed class Player : StatusEffectableCharacter
   public IFartInfoProvider FartStatusProvider => (IFartInfoProvider)Movement;
   public IHasHealthContainers HealthContainers => (IHasHealthContainers)Health;
 
-  private void Awake() => Instance = this;
+  private void Awake()
+    => Instance = this;
 }

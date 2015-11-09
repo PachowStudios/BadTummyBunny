@@ -2,29 +2,49 @@
 using System.Linq;
 using UnityEngine;
 
+[AddComponentMenu("World Map/Map")]
 public class WorldMap : MonoBehaviour
 {
-  [SerializeField] private WorldMapLevel selectedLevel = null;
+  [SerializeField] private WorldMapLevel selectedLevel;
+  [SerializeField] private WorldMapPlayer player = null;
 
-  private HashSet<WorldMapLevel> levels = new HashSet<WorldMapLevel>();
+  private HashSet<WorldMapLevel> levels;
+
+  public IEnumerable<WorldMapLevel> Levels => this.levels;
 
   public WorldMapLevel SelectedLevel => this.selectedLevel;
-  public IEnumerable<WorldMapLevel> Levels => this.levels;
 
   private void Awake()
   {
+    Assert.IsNotNull(this.selectedLevel, nameof(this.selectedLevel));
+    Assert.IsNotNull(this.player, nameof(this.player));
+
     this.levels = new HashSet<WorldMapLevel>(GetComponentsInChildren<WorldMapLevel>());
-
-    if (this.selectedLevel == null)
-      Debug.LogWarning("There is no default selected level!");
-
-    this.selectedLevel?.Select();
+    this.selectedLevel.Select();
   }
 
-  public bool CanNavigateToLevel(WorldMapLevel startLevel, WorldMapLevel endLevel)
-    => !NavigateToLevel(startLevel, endLevel).IsEmpty();
+  public void SelectLevel(WorldMapLevel level)
+  {
+    if (level.IsSelected)
+      return;
 
-  public Stack<WorldMapLevel> NavigateToLevel(WorldMapLevel startLevel, WorldMapLevel endLevel)
+    this.selectedLevel?.OnDeselected();
+    this.selectedLevel = level;
+    this.selectedLevel.OnSelected();
+  }
+
+  public void NavigateToLevel(WorldMapLevel targetLevel)
+  {
+    IList<WorldMapLevel> path;
+
+    if (TryGetPathToLevel(SelectedLevel, targetLevel, out path))
+      this.player.NavigatePath(path);
+  }
+
+  public bool TryGetPathToLevel(WorldMapLevel startLevel, WorldMapLevel endLevel, out IList<WorldMapLevel> path)
+    => (path = GetPathToLevel(startLevel, endLevel)).Any();
+
+  public IList<WorldMapLevel> GetPathToLevel(WorldMapLevel startLevel, WorldMapLevel endLevel)
   {
     var path = new Stack<WorldMapLevel>();
     var nodes = new List<WorldMapLevel>(Levels);
@@ -36,7 +56,7 @@ public class WorldMap : MonoBehaviour
 
     distances[startLevel] = 0f;
 
-    while (!nodes.IsEmpty())
+    while (nodes.Any())
     {
       nodes.Sort((x, y) => distances[x].CompareTo(distances[y]));
 
@@ -52,16 +72,17 @@ public class WorldMap : MonoBehaviour
           smallestNode = previousNodes[smallestNode];
         }
 
-        return path;
+        return path.ToList();
       }
 
-      // ReSharper disable once CompareOfFloatsByEqualityOperator
-      if (distances[smallestNode] == float.MaxValue)
+      if (distances[smallestNode] >= float.MaxValue)
         break;
 
       foreach (var connection in smallestNode.EnabledConnections)
       {
-        var distance = distances[smallestNode] + connection.Distance;
+        var distance =
+          distances[smallestNode]
+          + smallestNode.Position.DistanceTo(connection.ConnectedLevel.Position);
         var connectedLevel = connection.ConnectedLevel;
 
         if (distance >= distances[connectedLevel])
@@ -72,6 +93,6 @@ public class WorldMap : MonoBehaviour
       }
     }
 
-    return path;
+    return path.ToList();
   } 
 }

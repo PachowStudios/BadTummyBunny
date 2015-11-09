@@ -149,7 +149,7 @@ public class BasicFart : MonoBehaviour, IFart
     var bufferDelta = direction * this.trajectoryStartDistance;
 
     gravity *= timeStep * 0.5f;
-    bufferDelta.y += gravity * Mathf.Pow((this.trajectoryStartDistance / speed), 2) * 0.5f;
+    bufferDelta.y += gravity * Mathf.Pow(this.trajectoryStartDistance / speed, 2) * 0.5f;
 
     var bufferSqrMagnitude = bufferDelta.sqrMagnitude;
 
@@ -168,17 +168,19 @@ public class BasicFart : MonoBehaviour, IFart
       if (i <= 0)
         continue;
 
-      var linecast = Physics2D.Linecast(points[i - 1],
-                                        points[i],
-                                        Player.Instance.Movement.CollisionLayers);
+      var linecast =
+        Physics2D.Linecast(
+          points[i - 1],
+          points[i],
+          Player.Instance.Movement.CollisionLayers);
 
-      if (linecast.collider != null)
-      {
-        for (var j = i - 1; j < this.trajectorySegments; j++)
-          points[j] = linecast.point;
+      if (linecast.collider == null)
+        continue;
 
-        break;
-      }
+      for (var j = i - 1; j < this.trajectorySegments; j++)
+        points[j] = linecast.point;
+
+      break;
     }
 
     return points;

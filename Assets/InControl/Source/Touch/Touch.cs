@@ -17,6 +17,8 @@ namespace InControl
 		public float deltaTime;
 		public ulong updateTick;
 
+	  public Vector2 WorldPosition
+	    => Camera.main.ScreenToWorldPoint(this.position);
 
 		internal Touch( int fingerId )
 		{

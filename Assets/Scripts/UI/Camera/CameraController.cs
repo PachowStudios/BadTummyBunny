@@ -176,7 +176,7 @@ public class CameraController : MonoBehaviour
   }
   #endif
 
-  private void OnApplicationQuit() 
+  private void OnApplicationQuit()
     => instance = null;
   
   private Vector3 GetNormalizedCameraPosition() 

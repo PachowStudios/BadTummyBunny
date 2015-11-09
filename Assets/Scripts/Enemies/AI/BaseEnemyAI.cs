@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 
-// ReSharper disable once InconsistentNaming
 public abstract class BaseEnemyAI : EnemyMovement
 {
   [Header("Attacking")]

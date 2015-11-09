@@ -27,7 +27,7 @@ public abstract class BaseMovable : MonoBehaviour, IMovable
   public virtual bool WasGrounded => this.controller.WasGroundedLastFrame;
   public virtual LayerMask CollisionLayers => this.controller.PlatformMask;
 
-  public virtual float? MoveSpeedOverride { get; set; } = null;
+  public virtual float? MoveSpeedOverride { get; set; }
 
   public virtual void Move(Vector3 moveVelocity)
   {
