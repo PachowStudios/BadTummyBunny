@@ -19,7 +19,7 @@ namespace Rotorz.Tile.Editor.Internal {
 		}
 
 		// Force assembly reload upon changing language even if unchanged!
-		// 635588541859862162
+		// 635797886186078164
 
 		private static readonly string LanguageCultureName = "en-US";
 		private static readonly string LanguageVer = "2.4.0";
@@ -60,6 +60,11 @@ namespace Rotorz.Tile.Editor.Internal {
 		[MenuItem("CONTEXT/_RTS_TOOLS_/Rescan Brushes", false, 200)]
 		private static void ToolMenu_RescanBrushes() {
 			UnityIntegrationUtility.ToolMenu_RescanBrushes();
+		}
+
+		[MenuItem("CONTEXT/_RTS_TOOLS_/Clear Preview Cache", false, 200)]
+		private static void ToolMenu_ClearPreviewCache() {
+			UnityIntegrationUtility.ToolMenu_ClearPreviewCache();
 		}
 
 		[MenuItem("CONTEXT/_RTS_TOOLS_/Editor Windows/Designer", false, 5000)]

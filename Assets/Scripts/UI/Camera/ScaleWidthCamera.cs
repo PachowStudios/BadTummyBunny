@@ -5,32 +5,39 @@ using UnityEngine;
 [ExecuteInEditMode]
 public sealed class ScaleWidthCamera : MonoBehaviour
 {
-  public int defaultFOV = 500;
-  public bool useWorldSpaceUI = false;
-  public RectTransform worldSpaceUI = null;
+  [SerializeField] public int defaultFOV = 500;
+  [SerializeField] public bool useWorldSpaceUI;
+  [SerializeField] public RectTransform worldSpaceUI;
 
-  public int currentFOV;
+  public int CurrentFOV { get; set; }
+
+  private new Camera camera;
 
   public static ScaleWidthCamera Instance { get; private set; }
+
+  private Camera Camera => this.GetComponentIfNull(ref this.camera);
 
   private void OnEnable()
   {
     Instance = this;
 
-    this.currentFOV = this.defaultFOV;
+    CurrentFOV = this.defaultFOV;
   }
 
   private void OnPreRender()
   {
-    camera.orthographicSize = this.currentFOV / 32f / camera.aspect;
+    Camera.orthographicSize = CurrentFOV / 32f / Camera.aspect;
 
     if (this.useWorldSpaceUI && this.worldSpaceUI != null)
-      this.worldSpaceUI.sizeDelta = new Vector2(this.currentFOV / 16f, this.currentFOV / 16f / camera.aspect);
+      this.worldSpaceUI.sizeDelta =
+        new Vector2(
+          CurrentFOV / 16f,
+          CurrentFOV / 16f / Camera.aspect);
   }
 
   public void AnimateFOV(int newFOV, float time)
   {
-    DOTween.To(() => this.currentFOV, x => this.currentFOV = x, newFOV, time)
-           .SetEase(Ease.OutQuint);
+    DOTween.To(() => CurrentFOV, x => CurrentFOV = x, newFOV, time)
+      .SetEase(Ease.OutQuint);
   }
 }

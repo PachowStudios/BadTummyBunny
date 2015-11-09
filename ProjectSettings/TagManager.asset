@@ -2,6 +2,7 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!78 &1
 TagManager:
+  serializedVersion: 2
   tags:
   - Killzone
   - Enemy
@@ -10,75 +11,65 @@ TagManager:
   - Carrot
   - Flagpole
   - Coin
-  - 
   - CameraActivator
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
   - 
-  Builtin Layer 0: Default
-  Builtin Layer 1: TransparentFX
-  Builtin Layer 2: Ignore Raycast
-  Builtin Layer 3: 
-  Builtin Layer 4: Water
-  Builtin Layer 5: UI
-  Builtin Layer 6: 
-  Builtin Layer 7: 
-  User Layer 8: Ground
-  User Layer 9: Particle Collider
-  User Layer 10: Player
-  User Layer 11: Enemies
-  User Layer 12: Block Visibility
-  User Layer 13: Touch UI
-  User Layer 14: Powerups
-  User Layer 15: Killzone
-  User Layer 16: 
-  User Layer 17: 
-  User Layer 18: 
-  User Layer 19: 
-  User Layer 20: 
-  User Layer 21: 
-  User Layer 22: 
-  User Layer 23: 
-  User Layer 24: 
-  User Layer 25: 
-  User Layer 26: 
-  User Layer 27: 
-  User Layer 28: 
-  User Layer 29: 
-  User Layer 30: 
-  User Layer 31: 
+  - Water
+  - UI
+  - 
+  - 
+  - Ground
+  - Particle Collider
+  - Player
+  - Enemies
+  - Block Visibility
+  - Touch UI
+  - Powerups
+  - Killzone
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
   m_SortingLayers:
-  - name: Editor Info
-    userID: 6
-    uniqueID: 3868407187
-    locked: 0
   - name: Default
-    userID: 0
     uniqueID: 0
     locked: 0
   - name: Background
-    userID: 1
     uniqueID: 1155055469
     locked: 0
   - name: Behind Player
-    userID: 5
     uniqueID: 4048179209
     locked: 0
   - name: Enemies
-    userID: 7
     uniqueID: 715971739
     locked: 0
   - name: Player
-    userID: 3
     uniqueID: 3265783733
     locked: 0
   - name: Foreground
-    userID: 2
     uniqueID: 81158545
     locked: 0
   - name: Effects
-    userID: 4
     uniqueID: 2469458701
     locked: 0
+  - name: Editor Info
+    uniqueID: 3868407187
+    locked: 0
   - name: UI
-    userID: 8
     uniqueID: 2967839049
     locked: 0

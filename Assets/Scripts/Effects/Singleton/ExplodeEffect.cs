@@ -6,7 +6,8 @@ public class ExplodeEffect : MonoBehaviour
 
   public static ExplodeEffect Instance { get; private set; }
 
-  private void Awake() => Instance = this;
+  private void Awake()
+    => Instance = this;
 
   public void Explode(Transform target, Vector3 velocity, Sprite sprite, Material material = null)
   {
@@ -16,7 +17,7 @@ public class ExplodeEffect : MonoBehaviour
     var explosionInstance = (SpriteExplosion)Instantiate(this.explosionPrefab, target.position, target.rotation);
     explosionInstance.transform.parent = transform;
     explosionInstance.transform.localScale = target.localScale;
-    explosionInstance.Material = material;
-    explosionInstance.Explode(velocity, sprite);
+
+    explosionInstance.Explode(velocity, sprite, material);
   }
 }

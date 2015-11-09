@@ -11,12 +11,14 @@ public abstract class BaseMovable : MonoBehaviour, IMovable
 
   protected Vector3 velocity = default(Vector3);
 
+  private new Collider2D collider;
+
+  public virtual float? MoveSpeedOverride { get; set; }
+
   public virtual float Gravity => this.gravity;
   public virtual float MoveSpeed => this.moveSpeed;
-  public virtual Transform Transform => transform;
-  public virtual Collider2D Collider => collider2D;
   public virtual Vector3 Position => transform.position;
-  public virtual Vector3 CenterPoint => collider2D.bounds.center;
+  public virtual Vector3 CenterPoint => Collider.bounds.center;
   public virtual Vector3 LastGroundedPosition { get; protected set; }
   public virtual Vector3 Velocity => this.velocity;
   public virtual Vector2 MovementDirection => this.velocity.normalized;
@@ -27,7 +29,7 @@ public abstract class BaseMovable : MonoBehaviour, IMovable
   public virtual bool WasGrounded => this.controller.WasGroundedLastFrame;
   public virtual LayerMask CollisionLayers => this.controller.PlatformMask;
 
-  public virtual float? MoveSpeedOverride { get; set; }
+  public virtual Collider2D Collider => this.GetComponentIfNull(ref this.collider);
 
   public virtual void Move(Vector3 moveVelocity)
   {
@@ -66,4 +68,6 @@ public abstract class BaseMovable : MonoBehaviour, IMovable
     this.controller.Move(this.velocity * Time.deltaTime);
     this.velocity = this.controller.Velocity;
   }
+
+  public virtual void Disable() { }
 }

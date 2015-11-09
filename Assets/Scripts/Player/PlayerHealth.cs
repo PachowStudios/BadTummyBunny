@@ -59,6 +59,7 @@ public sealed class PlayerHealth : BaseHasHealth, IHasHealthContainers
   public override int MaxHealth => HealthContainers * HealthPerContainer;
 
   private bool IsInvincible => Time.time <= this.lastHitTime + this.invincibilityPeriod;
+  private IMovable Movement => Player.Instance.Movement;
 
   public override void Damage(int damage, Vector2 knockback, Vector2 knockbackDirection)
   {
@@ -135,9 +136,8 @@ public sealed class PlayerHealth : BaseHasHealth, IHasHealthContainers
 
     GameMenu.Instance.ShowGameOver();
     SetRenderersEnabled(false);
-    collider2D.enabled = false;
-    ExplodeEffect.Instance.Explode(transform, Player.Instance.Movement.Velocity, this.spriteRenderer.sprite);
-    ((PlayerControl)Player.Instance.Movement).DisableInput();
+    ExplodeEffect.Instance.Explode(transform, Movement.Velocity, this.spriteRenderer.sprite);
+    Movement.Disable();
   }
 
   private void Respawn()

@@ -26,6 +26,9 @@ public partial class SoundManagerEditor : Editor {
 	private Texture2D footer;
 	private Texture2D icon;
 	
+	private bool listeningForGuiChanges;
+    private bool guiChanged;
+	
 	private Color softGreen = new Color(.67f,.89f,.67f,1f);
 	private Color hardGreen = Color.green;
 	private Color inactiveColor = new Color(.65f,.65f,.65f);
@@ -33,6 +36,9 @@ public partial class SoundManagerEditor : Editor {
 	private string defaultName = "-enter name-";
 	private bool repaintNextFrame = false;
 	private bool indent4_3_up = false;
+
+	private string[] options = new string[] {"2D", "3D", "CUSTOM"};
+	private int optionsIndex = 0;
 	#endregion
 	
 	private void OnEnable()
@@ -49,11 +55,11 @@ public partial class SoundManagerEditor : Editor {
 		InitSFX();
 		
 		if(!titleBar)
-			titleBar = Resources.LoadAssetAtPath ("Assets/Gizmos/TitleBar.png", typeof(Texture2D)) as Texture2D;
+			titleBar = AssetDatabase.LoadAssetAtPath ("Assets/Gizmos/TitleBar.png", typeof(Texture2D)) as Texture2D;
 		if(!footer)
-			footer = Resources.LoadAssetAtPath ("Assets/Gizmos/AntiLunchBox Logo.png", typeof(Texture2D)) as Texture2D;
+			footer = AssetDatabase.LoadAssetAtPath ("Assets/Gizmos/AntiLunchBox Logo.png", typeof(Texture2D)) as Texture2D;
 		if(!icon)
-			icon = Resources.LoadAssetAtPath ("Assets/Gizmos/SoundManager Icon.png", typeof(Texture2D)) as Texture2D;
+			icon = AssetDatabase.LoadAssetAtPath ("Assets/Gizmos/SoundManager Icon.png", typeof(Texture2D)) as Texture2D;
 	}
 	
 	private void OnDisable()
@@ -123,6 +129,14 @@ public partial class SoundManagerEditor : Editor {
 			while(script.soundConnections[i].soundsToPlay.Count > script.soundConnections[i].baseVolumes.Count)
 				script.soundConnections[i].baseVolumes.Add(1f);
 		}
+
+		float defaultSFXSpatialBlend = script.defaultSFXSpatialBlend;
+		if(defaultSFXSpatialBlend == 0f)
+			optionsIndex = 0;
+		else if(defaultSFXSpatialBlend == 1f)
+			optionsIndex = 1;
+		else
+			optionsIndex = 2;
 	}
 	
 	private GUIStyle CreateFoldoutGUI()
@@ -157,11 +171,11 @@ public partial class SoundManagerEditor : Editor {
 		{
 			GUILayout.BeginHorizontal();
 			{
-					GUILayout.FlexibleSpace();
+	    		GUILayout.FlexibleSpace();
 				{
-						GUILayout.Label(titleBar);
+	    			GUILayout.Label(titleBar);
 				}
-					GUILayout.FlexibleSpace();
+	    		GUILayout.FlexibleSpace();
 			}
 			GUILayout.EndHorizontal();
 		}
@@ -318,11 +332,11 @@ public partial class SoundManagerEditor : Editor {
 		{
 			GUILayout.BeginHorizontal();
 			{
-					GUILayout.FlexibleSpace();
+	    		GUILayout.FlexibleSpace();
 				{
-						GUILayout.Label(footer, GUI.skin.label);
+	    			GUILayout.Label(footer, GUI.skin.label);
 				}
-					GUILayout.FlexibleSpace();
+	    		GUILayout.FlexibleSpace();
 			}
 			GUILayout.EndHorizontal();
 		}
@@ -979,6 +993,21 @@ public partial class SoundManagerEditor : Editor {
 				script.offTheSFX = offTheSFX;
 				EditorUtility.SetDirty(script);
 			}
+
+			float defaultSFXSpatialBlend = script.defaultSFXSpatialBlend;
+			optionsIndex = EditorGUILayout.Popup("Default SFX Setting:", optionsIndex, options, GUILayout.ExpandWidth(false));
+			if(optionsIndex == 0)
+				defaultSFXSpatialBlend = 0f;
+			else if(optionsIndex == 1)
+				defaultSFXSpatialBlend = 1f;
+			else
+				defaultSFXSpatialBlend = EditorGUILayout.Slider("Custom Spatial Blend:", defaultSFXSpatialBlend,0f,1f);
+			if(defaultSFXSpatialBlend != script.defaultSFXSpatialBlend)
+			{
+				SoundManagerEditorTools.RegisterObjectChange("Change Default SFX Spatial Blend", script);
+				script.defaultSFXSpatialBlend = defaultSFXSpatialBlend;
+				EditorUtility.SetDirty(script);
+			}
 		
 			int capAmount = script.capAmount;
 			capAmount = EditorGUILayout.IntField(new GUIContent("SFX Cap Amount:", "Sets the automatic cap amount whenever playing capped sound effects. Capped sound effects won't play more than this amount at a time. Useful for sound effects that can get played many times at once."), capAmount, GUILayout.Width(3f*Screen.width/4f));
@@ -1250,26 +1279,26 @@ public partial class SoundManagerEditor : Editor {
 	}
 	
 	private void CheckUndo()
-		{
+    {
 		#if UNITY_3_5 || UNITY_4_0 || UNITY_4_0_1 || UNITY_4_1 || UNITY_4_2
-				Event e = Event.current;
+        Event e = Event.current;
  
-				if ( e.type == EventType.MouseDown && e.button == 0 || e.type == EventType.KeyUp && ( e.keyCode == KeyCode.Tab ) ) {
-						Undo.SetSnapshotTarget( new Object[]{target, this}, "Modify Delay" );
-						Undo.CreateSnapshot();
-						Undo.ClearSnapshotTarget();
-						listeningForGuiChanges = true;
-						guiChanged = false;
-				}
+        if ( e.type == EventType.MouseDown && e.button == 0 || e.type == EventType.KeyUp && ( e.keyCode == KeyCode.Tab ) ) {
+            Undo.SetSnapshotTarget( new Object[]{target, this}, "Modify Delay" );
+            Undo.CreateSnapshot();
+            Undo.ClearSnapshotTarget();
+            listeningForGuiChanges = true;
+            guiChanged = false;
+        }
  
-				if ( listeningForGuiChanges && guiChanged ) {
-						Undo.SetSnapshotTarget( new Object[]{target, this}, "Modify Delay" );
-						Undo.RegisterSnapshot();
-						Undo.ClearSnapshotTarget();
-						listeningForGuiChanges = false;
-				}
+        if ( listeningForGuiChanges && guiChanged ) {
+            Undo.SetSnapshotTarget( new Object[]{target, this}, "Modify Delay" );
+            Undo.RegisterSnapshot();
+            Undo.ClearSnapshotTarget();
+            listeningForGuiChanges = false;
+        }
 		#endif
-		}
+    }
 	#endregion
 					
 	#region Informational

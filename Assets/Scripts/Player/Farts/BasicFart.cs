@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using UnityEngine;
 using Vectrosity;
 
@@ -11,8 +12,8 @@ public class BasicFart : MonoBehaviour, IFart
   [Serializable]
   protected struct SfxPowerMapping
   {
-    public SfxGroups sfxGroup;
-    public float power;
+    [UsedImplicitly] public SfxGroups sfxGroup;
+    [UsedImplicitly] public float power;
   }
 
   [Header("Options")]
@@ -29,12 +30,12 @@ public class BasicFart : MonoBehaviour, IFart
   [SerializeField] protected float trajectoryWidth = 0.3f;
   [SerializeField, Range(8, 64)]  protected int trajectorySegments = 16;
   [SerializeField] protected Gradient trajectoryGradient = default(Gradient);
-  [SerializeField] protected Material trajectoryMaterial = null;
+  [SerializeField] protected Material trajectoryMaterial;
   [SerializeField] protected string trajectorySortingLayer = "UI";
   [SerializeField] protected int trajectorySortingOrder = -1;
 
   [Header("Components")]
-  [SerializeField] protected PolygonCollider2D fartCollider = null;
+  [SerializeField] protected PolygonCollider2D fartCollider;
   [SerializeField] protected List<ParticleSystem> particles = new List<ParticleSystem>();
 
   private HashSet<ICharacter> pendingTargets = new HashSet<ICharacter>();
@@ -68,20 +69,7 @@ public class BasicFart : MonoBehaviour, IFart
       return;
 
     if (other.tag == Tags.Enemy)
-    {
-      var enemy = other.GetInterface<ICharacter>();
-
-      if (this.pendingTargets.Contains(enemy) || this.damagedEnemies.Contains(enemy))
-        return;
-
-      this.pendingTargets.Add(enemy);
-      Wait.ForSeconds(this.damageDelay,
-                      () =>
-                      {
-                        this.pendingTargets.Remove(enemy);
-                        TryDamageEnemy(enemy);
-                      });
-    }
+      OnEnemyTriggered(other.GetInterface<ICharacter>());
   }
 
   public virtual void StopFart()
@@ -117,6 +105,20 @@ public class BasicFart : MonoBehaviour, IFart
   {
     this.trajectoryLine.SetColor(Color.clear);
     this.trajectoryLine.Draw();
+  }
+
+  protected virtual void OnEnemyTriggered(ICharacter enemy)
+  {
+    if (this.pendingTargets.Contains(enemy) || this.damagedEnemies.Contains(enemy))
+      return;
+
+    this.pendingTargets.Add(enemy);
+    Wait.ForSeconds(
+      this.damageDelay,
+      () => {
+        this.pendingTargets.Remove(enemy);
+        TryDamageEnemy(enemy);
+      });
   }
 
   protected virtual void TryDamageEnemy(ICharacter enemy)
@@ -205,13 +207,16 @@ public class BasicFart : MonoBehaviour, IFart
     VectorLine.canvas.sortingLayerName = this.trajectorySortingLayer;
     VectorLine.canvas.sortingOrder = this.trajectorySortingOrder;
 
-    this.trajectoryLine = new VectorLine("Trajectory",
-                                         new Vector3[this.trajectorySegments], this.trajectoryMaterial,
-                                         Extensions.UnitsToPixels(this.trajectoryWidth),
-                                         LineType.Continuous,
-                                         Joins.Fill)
-                          {
-                            textureScale = 1f
-                          };
+    this.trajectoryLine =
+      new VectorLine(
+        "Trajectory",
+        new List<Vector3>(this.trajectorySegments),
+        Extensions.UnitsToPixels(this.trajectoryWidth),
+        LineType.Continuous,
+        Joins.Fill)
+      {
+        material = this.trajectoryMaterial,
+        textureScale = 1f
+      };
   }
 }

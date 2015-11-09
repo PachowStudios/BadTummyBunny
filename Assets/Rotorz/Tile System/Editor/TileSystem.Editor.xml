@@ -70,38 +70,9 @@
             Gets the brush.
             </summary>
     </member>
-    <member name="M:Rotorz.Tile.Editor.BrushAssetRecord.ClearPreview(System.Boolean)">
-      <summary>
-            Clear in-memory preview image.
-            </summary>
-      <param name="destroyCache">
-            A value of <c>true</c> indicates that preview cache should be destroyed and
-            regenerated. A value of <c>false</c> indicates that preview should be unloaded
-            from memory. Preview will be reloaded upon next request.
-            </param>
-    </member>
     <member name="P:Rotorz.Tile.Editor.BrushAssetRecord.DisplayName">
       <summary>
             Gets display name of brush.
-            </summary>
-    </member>
-    <member name="M:Rotorz.Tile.Editor.BrushAssetRecord.GetPreviewAssetPath(System.Boolean)">
-      <summary>
-            Gets path of associated preview asset.
-            </summary>
-      <param name="generate">
-            Specify <c>true</c> to automatically generate preview asset identifier and
-            path when one is not already associated; otherwise specify <c>false</c> to
-            simply return <c>null</c> when none is associated.
-            </param>
-      <returns>
-            The preview asset path relative to project directory; or a value of
-            <c>null</c> when no preview asset is associated with brush.
-            </returns>
-    </member>
-    <member name="P:Rotorz.Tile.Editor.BrushAssetRecord.HasPreviewCacheAsset">
-      <summary>
-            Gets a value indicating whether brush has an associated preview cache asset.
             </summary>
     </member>
     <member name="P:Rotorz.Tile.Editor.BrushAssetRecord.IsFavorite">
@@ -127,11 +98,6 @@
     <member name="P:Rotorz.Tile.Editor.BrushAssetRecord.MainAsset">
       <summary>
             Gets the main asset object.
-            </summary>
-    </member>
-    <member name="P:Rotorz.Tile.Editor.BrushAssetRecord.Preview">
-      <summary>
-            Gets in-memory brush preview cache.
             </summary>
     </member>
     <member name="T:Rotorz.Tile.Editor.BrushCategorySelected">
@@ -271,12 +237,11 @@
             A value of <c>true</c> when specified asset name is valid; otherwise <c>false</c>.
             </returns>
     </member>
-    <member name="M:Rotorz.Tile.Editor.BrushCreator.ValidateUniqueAssetName(System.String,System.String)">
+    <member name="M:Rotorz.Tile.Editor.BrushCreator.ValidateUniqueAssetName(System.String)">
       <summary>
             Checks that specified asset name is both valid and unique.
             </summary>
       <param name="name">Name of asset.</param>
-      <param name="postfix">Postfix for asset (i.e. "brush" or "atlas").</param>
       <returns>
             A value of <c>true</c> when specified asset name is valid; otherwise <c>false</c>.
             </returns>
@@ -291,24 +256,9 @@
             Brush database provides easy access to brush and tileset records in editor scripts.
             </summary>
     </member>
-    <member name="P:Rotorz.Tile.Editor.BrushDatabase.AvailableCategoryLabels">
-      <summary>
-            Gets labels of available categories.
-            </summary>
-    </member>
-    <member name="P:Rotorz.Tile.Editor.BrushDatabase.AvailableCategoryNumbers">
-      <summary>
-            Gets numbers of available categories.
-            </summary>
-    </member>
     <member name="P:Rotorz.Tile.Editor.BrushDatabase.BrushRecords">
       <summary>
             Gets a read-only list of brush records that are sorted by display name.
-            </summary>
-    </member>
-    <member name="P:Rotorz.Tile.Editor.BrushDatabase.CustomCategoryLabels">
-      <summary>
-            Gets or sets brush category labels.
             </summary>
     </member>
     <member name="M:Rotorz.Tile.Editor.BrushDatabase.FindRecord(Rotorz.Tile.Brush)">
@@ -327,16 +277,6 @@
       <param name="tileset">The tileset.</param>
       <returns>
             The tileset record.
-            </returns>
-    </member>
-    <member name="M:Rotorz.Tile.Editor.BrushDatabase.GetCategoryLabel(System.Int32)">
-      <summary>
-            Get label for the specified category number.
-            </summary>
-      <param name="categoryNumber">Number of category.</param>
-      <returns>
-            Label text for specified category number when known; otherwise, returns a
-            value of "(Unknown Category)".
             </returns>
     </member>
     <member name="M:Rotorz.Tile.Editor.BrushDatabase.GetTilesetBrushes(Rotorz.Tile.Tileset)">
@@ -388,11 +328,10 @@
             If unable to rename tileset.
             </exception>
     </member>
-    <member name="M:Rotorz.Tile.Editor.BrushDatabase.Rescan(Rotorz.Tile.Editor.RefreshPreviews)">
+    <member name="M:Rotorz.Tile.Editor.BrushDatabase.Rescan">
       <summary>
             Rescan brush assets.
             </summary>
-      <param name="refreshPreviews">Indicates how brush previews should be refreshed.</param>
     </member>
     <member name="P:Rotorz.Tile.Editor.BrushDatabase.TilesetRecords">
       <summary>
@@ -422,23 +361,20 @@
             Gets <see cref="T:System.Type" /> of described brush.
             </summary>
     </member>
-    <member name="M:Rotorz.Tile.Editor.BrushDescriptor.CanHavePreviewCache(Rotorz.Tile.Editor.BrushAssetRecord)">
+    <member name="M:Rotorz.Tile.Editor.BrushDescriptor.CanHavePreviewCache(Rotorz.Tile.Brush)">
       <summary>
             Gets a value indicating whether the specified brush supports preview cache.
-            This should be tested before attempting to invoke <see cref="M:Rotorz.Tile.Editor.BrushDescriptor.GetPreviewCache(Rotorz.Tile.Editor.BrushAssetRecord,System.Boolean@)" />
-            or <see cref="M:Rotorz.Tile.Editor.BrushDescriptor.DestroyPreviewCache(Rotorz.Tile.Editor.BrushAssetRecord)" />.
             </summary>
-      <param name="record">The brush record.</param>
+      <param name="brush">The brush.</param>
       <returns>
             A value of <c>true</c> if possible; otherwise <c>false</c>.
             </returns>
     </member>
-    <member name="M:Rotorz.Tile.Editor.BrushDescriptor.CreateDesigner(Rotorz.Tile.Brush,Rotorz.Tile.Editor.IAssetPreviewManager)">
+    <member name="M:Rotorz.Tile.Editor.BrushDescriptor.CreateDesigner(Rotorz.Tile.Brush)">
       <summary>
             Create designer for editing a brush of the described kind of brush.
             </summary>
       <param name="brush">Brush instance to edit.</param>
-      <param name="assetPreviewManager">Asset preview manager.</param>
       <returns>
             The <see cref="T:Rotorz.Tile.Editor.BrushDesignerView" />.
             </returns>
@@ -456,12 +392,6 @@
       <summary>
             Gets editor <see cref="T:System.Type" /> for described type of brush.
             </summary>
-    </member>
-    <member name="M:Rotorz.Tile.Editor.BrushDescriptor.DestroyPreviewCache(Rotorz.Tile.Editor.BrushAssetRecord)">
-      <summary>
-            Destroy preview cache that is associated with brush.
-            </summary>
-      <param name="record">The brush record.</param>
     </member>
     <member name="P:Rotorz.Tile.Editor.BrushDescriptor.DisplayName">
       <summary>
@@ -486,29 +416,6 @@
             </summary>
       <param name="name">Name for new brush.</param>
       <param name="record">Record for brush that is to be duplicated.</param>
-    </member>
-    <member name="M:Rotorz.Tile.Editor.BrushDescriptor.GetPreviewAsset(Rotorz.Tile.Editor.BrushAssetRecord)">
-      <summary>
-            Get preview texture asset which is associated with brush record. Attempts to
-            automatically generate preview asset if missing.
-            </summary>
-      <param name="record">Record of brush.</param>
-      <returns>
-            The static <c>Texture2D</c> instance; or a value of <c>null</c> upon failure.
-            </returns>
-    </member>
-    <member name="M:Rotorz.Tile.Editor.BrushDescriptor.GetPreviewCache(Rotorz.Tile.Editor.BrushAssetRecord,System.Boolean@)">
-      <summary>
-            Gets preview image from cache.
-            </summary>
-      <param name="record">The brush record.</param>
-      <param name="disposePreview">
-            Adjust to indicate whether the returned preview image should be destroyed when
-            it is no longer needed.
-            </param>
-      <returns>
-            The preview image or <c>null</c> when none was available.
-            </returns>
     </member>
     <member name="P:Rotorz.Tile.Editor.BrushDescriptor.SupportsAliases">
       <summary>
@@ -659,6 +566,7 @@
     </member>
     <member name="M:Rotorz.Tile.Editor.BrushEditor.OnHeaderGUI"></member>
     <member name="M:Rotorz.Tile.Editor.BrushEditor.OnInspectorGUI"></member>
+    <member name="M:Rotorz.Tile.Editor.BrushEditor.RenderStaticPreview(System.String,UnityEngine.Object[],System.Int32,System.Int32)"></member>
     <member name="T:Rotorz.Tile.Editor.BrushEventHandler">
       <summary>
             Represents the method that will handle brush events.
@@ -889,6 +797,16 @@
             Zero-based index of brush record; otherwise a value of <c>-1</c> if not found.
             </returns>
     </member>
+    <member name="P:Rotorz.Tile.Editor.BrushListModel.MaximumZoomTileSize">
+      <summary>
+            Gets the maximum value of the <see cref="P:Rotorz.Tile.Editor.BrushListModel.ZoomTileSize" /> property.
+            </summary>
+    </member>
+    <member name="P:Rotorz.Tile.Editor.BrushListModel.MinimumZoomTileSize">
+      <summary>
+            Gets the minimum value of the <see cref="P:Rotorz.Tile.Editor.BrushListModel.ZoomTileSize" /> property.
+            </summary>
+    </member>
     <member name="P:Rotorz.Tile.Editor.BrushListModel.Presentation">
       <summary>
             Gets or sets presentation of list view.
@@ -1013,12 +931,13 @@
     </member>
     <member name="F:Rotorz.Tile.Editor.BrushListZoomMode.Automatic">
       <summary>
-            Automatically adjust zoom to make use of available space.
+            Use tile size when a tileset is active, otherwise adjust zoom to make use of
+            the available space.
             </summary>
     </member>
-    <member name="F:Rotorz.Tile.Editor.BrushListZoomMode.TilesetSize">
+    <member name="F:Rotorz.Tile.Editor.BrushListZoomMode.BestFit">
       <summary>
-            Use tile size of active tileset, resorts to automatic when no tileset is active.
+            Adjust zoom to make use of the available space.
             </summary>
     </member>
     <member name="F:Rotorz.Tile.Editor.BrushListZoomMode.Custom">
@@ -1119,9 +1038,9 @@
     </member>
     <member name="M:Rotorz.Tile.Editor.BrushUtility.GetBrushAssetPath">
       <summary>
-            Gets base path of tile brush assets.
+            Gets base path for the folder where new brush and tileset assets are created.
+            Folder is automatically created if it does not already exist.
             </summary>
-      <returns>Always returns the path <c>"Assets/TileBrushes/"</c>.</returns>
     </member>
     <member name="M:Rotorz.Tile.Editor.BrushUtility.GetDescriptor``1">
       <summary>
@@ -1140,12 +1059,6 @@
       <returns>
             The brush descriptor; or <c>null</c> when if not registered.
             </returns>
-    </member>
-    <member name="M:Rotorz.Tile.Editor.BrushUtility.GetMasterBrushAssetPath">
-      <summary>
-            Gets base path of master tile brush assets.
-            </summary>
-      <returns>Always returns the path <c>"Assets/TileBrushes/Master/"</c>.</returns>
     </member>
     <member name="M:Rotorz.Tile.Editor.BrushUtility.RefreshPreview(Rotorz.Tile.Brush)">
       <summary>
@@ -1184,9 +1097,7 @@
       <summary>
             Build event delegate.
             </summary>
-      <param name="context">
-            Object that describes context of build process.
-            </param>
+      <param name="context">Object that describes context of build process.</param>
     </member>
     <member name="T:Rotorz.Tile.Editor.BuildUtility">
       <summary>
@@ -1315,9 +1226,9 @@
             Create tile system window.
             </summary>
     </member>
-    <member name="F:Rotorz.Tile.Editor.CreateTileSystemWindow.current">
+    <member name="M:Rotorz.Tile.Editor.CreateTileSystemWindow.DoDestroy">
       <summary>
-            The current preset.
+            Replacement for <c>OnDestroy</c> which can be overridden as needed.
             </summary>
     </member>
     <member name="M:Rotorz.Tile.Editor.CreateTileSystemWindow.DoEnable">
@@ -1330,11 +1241,6 @@
             Replacement for <c>OnGUI</c> which can be overridden as needed.
             </summary>
     </member>
-    <member name="E:Rotorz.Tile.Editor.CreateTileSystemWindow.OnCreateTileSystem">
-      <summary>
-            Occurs when tile system is created.
-            </summary>
-    </member>
     <member name="M:Rotorz.Tile.Editor.CreateTileSystemWindow.ShowWindow">
       <summary>
             Display create tile system window.
@@ -1342,6 +1248,11 @@
       <returns>
             The window.
             </returns>
+    </member>
+    <member name="E:Rotorz.Tile.Editor.CreateTileSystemWindow.TileSystemCreated">
+      <summary>
+            Occurs when a tile system is created using this window.
+            </summary>
     </member>
     <member name="T:Rotorz.Tile.Editor.CursorInfo">
       <summary>
@@ -1463,8 +1374,27 @@
             tile game objects in editor.
             </summary>
     </member>
-    <member name="M:Rotorz.Tile.Editor.DefaultEditorObjectFactory.DestroyObject(UnityEngine.GameObject,Rotorz.Tile.IObjectFactoryContext)"></member>
-    <member name="M:Rotorz.Tile.Editor.DefaultEditorObjectFactory.InstantiatePrefab(UnityEngine.GameObject,Rotorz.Tile.IObjectFactoryContext)"></member>
+    <member name="M:Rotorz.Tile.Editor.DefaultEditorObjectFactory.DestroyObject(UnityEngine.GameObject,Rotorz.Tile.IObjectFactoryContext)">
+      <summary>
+            Destroy object instance.
+            </summary>
+      <param name="go">The unwanted object.</param>
+      <param name="context">An object describing the context of the game object
+            that is being destroyed. The context object is always specified, though
+            contained members may be <c>null</c>.</param>
+    </member>
+    <member name="M:Rotorz.Tile.Editor.DefaultEditorObjectFactory.InstantiatePrefab(UnityEngine.GameObject,Rotorz.Tile.IObjectFactoryContext)">
+      <summary>
+            Create object instance from prefab.
+            </summary>
+      <param name="prefab">The prefab.</param>
+      <param name="context">An object describing the context of the prefab that is
+            being instantiated. The context object is always specified, though contained
+            members may be <c>null</c>.</param>
+      <returns>
+            Object instance or <c>null</c> if object could not be created.
+            </returns>
+    </member>
     <member name="T:Rotorz.Tile.Editor.DefineOrientationDelegate">
       <summary>
             Define orientation delegate.
@@ -1570,11 +1500,6 @@
             Add items to designer menu.
             </summary>
       <param name="menu">The menu.</param>
-    </member>
-    <member name="P:Rotorz.Tile.Editor.DesignerView.AssetPreviewManager">
-      <summary>
-            Gets asset preview manager.
-            </summary>
     </member>
     <member name="M:Rotorz.Tile.Editor.DesignerView.BeginChangeCheck">
       <summary>
@@ -1887,6 +1812,11 @@
             </summary>
       <param name="store">Setting store.</param>
     </member>
+    <member name="P:Rotorz.Tile.Editor.FillTool.SupportsPaintAroundExistingTiles">
+      <summary>
+            Gets a value indicating whether this tool supports the "Paint Around Existing Tiles" feature.
+            </summary>
+    </member>
     <member name="T:Rotorz.Tile.Editor.HistoryManager">
       <summary>
             History manager can be used to implement navigation history or even to implement
@@ -1988,33 +1918,6 @@
       <summary>
             Gets selected object.
             </summary>
-    </member>
-    <member name="T:Rotorz.Tile.Editor.IAssetPreviewManager">
-      <summary>
-            Interface for an asset preview manager..
-            </summary>
-    </member>
-    <member name="M:Rotorz.Tile.Editor.IAssetPreviewManager.ClearPreviewCache(UnityEngine.Object)">
-      <summary>
-            Clear preview cache associated with asset.
-            </summary>
-      <param name="asset">The asset.</param>
-    </member>
-    <member name="M:Rotorz.Tile.Editor.IAssetPreviewManager.DrawPreview(UnityEngine.Rect,UnityEngine.Object)">
-      <summary>
-            Draw preview to GUI.
-            </summary>
-      <param name="output">Position and size of preview output.</param>
-      <param name="asset">The asset.</param>
-    </member>
-    <member name="M:Rotorz.Tile.Editor.IAssetPreviewManager.GetPreview(UnityEngine.Object)">
-      <summary>
-            Gets preview for an asset.
-            </summary>
-      <param name="asset">The asset.</param>
-      <returns>
-            The asset preview; or <c>null</c> if preview is not available.
-            </returns>
     </member>
     <member name="T:Rotorz.Tile.Editor.IBuildContext">
       <summary>
@@ -2481,6 +2384,11 @@
             Randomize shift of variation for next tile.
             </summary>
     </member>
+    <member name="P:Rotorz.Tile.Editor.PaintToolBase.SupportsPaintAroundExistingTiles">
+      <summary>
+            Gets a value indicating whether this tool supports the "Paint Around Existing Tiles" feature.
+            </summary>
+    </member>
     <member name="P:Rotorz.Tile.Editor.PaintToolBase.TemporarilyDisableVariationShifting">
       <summary>
             Gets or sets whether variation shifting interface should be temporarily
@@ -2713,215 +2621,6 @@
             </summary>
       <param name="prefab">Reference to prefab object.</param>
     </member>
-    <member name="T:Rotorz.Tile.Editor.Preset">
-      <summary>
-            Describes a tile system creation preset.
-            </summary>
-    </member>
-    <member name="M:Rotorz.Tile.Editor.Preset.#ctor">
-      <summary>
-            Initialize preset with defaults.
-            </summary>
-    </member>
-    <member name="M:Rotorz.Tile.Editor.Preset.#ctor(Rotorz.Tile.Editor.Preset)">
-      <summary>
-            Initialize preset and copies values from the specified preset.
-            </summary>
-      <param name="copyFrom">Existing preset to copy from.</param>
-    </member>
-    <member name="P:Rotorz.Tile.Editor.Preset.AddProceduralNormals">
-      <summary>
-            Gets or sets whether normals should be added to procedural meshes.
-            </summary>
-    </member>
-    <member name="P:Rotorz.Tile.Editor.Preset.ApplyRuntimeStripping">
-      <summary>
-            Gets or sets whether to apply basic level of stripping at runtime.
-            </summary>
-    </member>
-    <member name="P:Rotorz.Tile.Editor.Preset.ChunkHeight">
-      <summary>
-            Gets or sets height of a chunk (in tiles).
-            </summary>
-    </member>
-    <member name="P:Rotorz.Tile.Editor.Preset.ChunkWidth">
-      <summary>
-            Gets or sets width of a chunk (in tiles).
-            </summary>
-    </member>
-    <member name="P:Rotorz.Tile.Editor.Preset.Columns">
-      <summary>
-            Gets or sets number of columns in tile system.
-            </summary>
-    </member>
-    <member name="P:Rotorz.Tile.Editor.Preset.CombineChunkHeight">
-      <summary>
-            Gets or sets the height of a tile chunk to combine (in tiles).
-            </summary>
-    </member>
-    <member name="P:Rotorz.Tile.Editor.Preset.CombineChunkWidth">
-      <summary>
-            Gets or sets the width of a tile chunk to combine (in tiles).
-            </summary>
-    </member>
-    <member name="P:Rotorz.Tile.Editor.Preset.CombineIntoSubmeshes">
-      <summary>
-            Gets or sets whether tile meshes should be combined into submeshes when
-            they contain multiple materials. Disable to create individual mesh objects
-            on a per-material basis.
-            </summary>
-    </member>
-    <member name="P:Rotorz.Tile.Editor.Preset.CombineMethod">
-      <summary>
-            Gets or sets the method of combining to perform upon build.
-            </summary>
-    </member>
-    <member name="P:Rotorz.Tile.Editor.Preset.Direction">
-      <summary>
-            Gets or sets initial direction of the tile system.
-            </summary>
-    </member>
-    <member name="P:Rotorz.Tile.Editor.Preset.GenerateSecondUVs">
-      <summary>
-            Gets or sets whether second set of UVs should be generated.
-            </summary>
-    </member>
-    <member name="P:Rotorz.Tile.Editor.Preset.GenerateSecondUVsParams">
-      <summary>
-            Gets or sets advanced paramaters used when generating secondary UVs.
-            </summary>
-    </member>
-    <member name="P:Rotorz.Tile.Editor.Preset.HintEraseEmptyChunks">
-      <summary>
-            Gets or sets hint of whether empty chunks should be erased at runtime.
-            </summary>
-    </member>
-    <member name="P:Rotorz.Tile.Editor.Preset.MarkProceduralDynamic">
-      <summary>
-            Gets or sets whether procedural meshes should be marked as dynamic.
-            </summary>
-    </member>
-    <member name="P:Rotorz.Tile.Editor.Preset.Name">
-      <summary>
-            Gets or sets name of this preset.
-            </summary>
-    </member>
-    <member name="P:Rotorz.Tile.Editor.Preset.PregenerateProcedural">
-      <summary>
-            Gets or sets whether tiles that are procedurally generated should be
-            pre-generated when building tile system.
-            </summary>
-    </member>
-    <member name="P:Rotorz.Tile.Editor.Preset.ReduceColliders">
-      <summary>
-            Gets options which are considered when reducing colliders.
-            </summary>
-    </member>
-    <member name="P:Rotorz.Tile.Editor.Preset.Rows">
-      <summary>
-            Gets or sets number of rows in tile system.
-            </summary>
-    </member>
-    <member name="M:Rotorz.Tile.Editor.Preset.SetDefaults2D">
-      <summary>
-            Set to factory default preset for two-dimensional tile systems.
-            </summary>
-    </member>
-    <member name="M:Rotorz.Tile.Editor.Preset.SetDefaults3D">
-      <summary>
-            Set to factory default preset for three-dimensional tile systems.
-            </summary>
-    </member>
-    <member name="M:Rotorz.Tile.Editor.Preset.SetFrom(Rotorz.Tile.Editor.Preset)">
-      <summary>
-            Set properties of this preset from another preset.
-            </summary>
-      <param name="preset">Preset.</param>
-    </member>
-    <member name="P:Rotorz.Tile.Editor.Preset.StaticVertexSnapping">
-      <summary>
-            Gets or sets whether vertex snapping should be applied during build process.
-            </summary>
-    </member>
-    <member name="P:Rotorz.Tile.Editor.Preset.StrippingOptions">
-      <summary>
-            Gets or sets options for custom stripping.
-            </summary>
-    </member>
-    <member name="P:Rotorz.Tile.Editor.Preset.StrippingPreset">
-      <summary>
-            Gets or sets the stripping preset.
-            </summary>
-    </member>
-    <member name="P:Rotorz.Tile.Editor.Preset.SystemName">
-      <summary>
-            Gets or sets default name for new tile system.
-            </summary>
-    </member>
-    <member name="P:Rotorz.Tile.Editor.Preset.TileDepth">
-      <summary>
-            Gets or sets depth of a tile.
-            </summary>
-    </member>
-    <member name="P:Rotorz.Tile.Editor.Preset.TileHeight">
-      <summary>
-            Gets or sets height of a tile.
-            </summary>
-    </member>
-    <member name="P:Rotorz.Tile.Editor.Preset.TilesFacing">
-      <summary>
-            Gets or sets direction that painted tiles will face.
-            </summary>
-    </member>
-    <member name="P:Rotorz.Tile.Editor.Preset.TileWidth">
-      <summary>
-            Gets or sets width of a tile.
-            </summary>
-    </member>
-    <member name="P:Rotorz.Tile.Editor.Preset.UpdateProceduralAtStart">
-      <summary>
-            Gets or sets whether procedural meshes should be updated when tile system
-            becomes active.
-            </summary>
-    </member>
-    <member name="P:Rotorz.Tile.Editor.Preset.VertexSnapThreshold">
-      <summary>
-            Gets or sets vertex snap threshold for vertex snapping and smoothing.
-            </summary>
-    </member>
-    <member name="T:Rotorz.Tile.Editor.PresetManager">
-      <summary>
-            Tile system creation preset manager.
-            </summary>
-    </member>
-    <member name="P:Rotorz.Tile.Editor.PresetManager.Instance">
-      <summary>
-            Gets preset manager.
-            </summary>
-    </member>
-    <member name="M:Rotorz.Tile.Editor.PresetManager.Load">
-      <summary>
-            Load presets from configuration file.
-            </summary>
-    </member>
-    <member name="P:Rotorz.Tile.Editor.PresetManager.PresetNames">
-      <summary>
-            Gets the preset names.
-            </summary>
-      <returns>
-            The preset names.
-            </returns>
-    </member>
-    <member name="F:Rotorz.Tile.Editor.PresetManager.presets">
-      <summary>
-            The presets.
-            </summary>
-    </member>
-    <member name="M:Rotorz.Tile.Editor.PresetManager.Save">
-      <summary>
-            Save presets to configuration file.
-            </summary>
-    </member>
     <member name="T:Rotorz.Tile.Editor.ProgressDelegate">
       <summary>
             Progress delegate.
@@ -2934,6 +2633,148 @@
             A value of <c>true</c> if processing should be cancelled; otherwise, a
             value of <c>false</c>.
             </returns>
+    </member>
+    <member name="T:Rotorz.Tile.Editor.ProjectSettings">
+      <summary>
+            Project wide settings for Rotorz Tile System.
+            </summary>
+    </member>
+    <member name="M:Rotorz.Tile.Editor.ProjectSettings.#ctor">
+      <summary>
+            Initializes a new instance of the <see cref="T:Rotorz.Tile.Editor.ProjectSettings" /> class.
+            </summary>
+    </member>
+    <member name="M:Rotorz.Tile.Editor.ProjectSettings.AddCategory(System.String)">
+      <summary>
+            Adds a new brush category.
+            </summary>
+      <param name="label">Label for category.</param>
+      <returns>
+            The unique category identifier.
+            </returns>
+      <exception cref="T:System.ArgumentNullException">
+            If <paramref name="label" /> is <c>null</c>.
+            </exception>
+      <exception cref="T:System.ArgumentException">
+            If <paramref name="label" /> is an empty string.
+            </exception>
+    </member>
+    <member name="P:Rotorz.Tile.Editor.ProjectSettings.BrushesFolderRelativePath">
+      <summary>
+            Gets or sets path of the folder where new brushes and tilesets are created
+            relative to the 'Assets' folder. This must be a sub-folder somewhere inside
+            'Assets'.
+            </summary>
+      <exception cref="T:System.ArgumentNullException">
+            If <paramref name="value" /> is <c>null</c>.
+            </exception>
+      <exception cref="T:System.ArgumentException">
+            If <paramref name="value" /> is an invalid path.
+            </exception>
+    </member>
+    <member name="P:Rotorz.Tile.Editor.ProjectSettings.CategoryIds">
+      <summary>
+            Gets the collection of brush category ids.
+            </summary>
+    </member>
+    <member name="P:Rotorz.Tile.Editor.ProjectSettings.CategoryLabels">
+      <summary>
+            Gets the collection of brush category labels.
+            </summary>
+    </member>
+    <member name="P:Rotorz.Tile.Editor.ProjectSettings.CategoryRevisionCounter">
+      <summary>
+            The value of this counter increments when category changes are detected.
+            </summary>
+    </member>
+    <member name="M:Rotorz.Tile.Editor.ProjectSettings.CollapseAllSections">
+      <summary>
+            Collapses all expandable sections in project settings inspector.
+            </summary>
+    </member>
+    <member name="M:Rotorz.Tile.Editor.ProjectSettings.DeleteCategory(System.Int32)">
+      <summary>
+            Deletes an unwanted brush category.
+            </summary>
+      <param name="id">Identifies the category.</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+            If <paramref name="id" /> is zero or a negative value.
+            </exception>
+    </member>
+    <member name="P:Rotorz.Tile.Editor.ProjectSettings.ExpandBrushCategoriesSection">
+      <summary>
+            Gets or sets a value indicating whether the "Brush Categories" section of the
+            project settings inspector is expanded.
+            </summary>
+    </member>
+    <member name="P:Rotorz.Tile.Editor.ProjectSettings.ExpandTilesetCreatorSection">
+      <summary>
+            Gets or sets a value indicating whether the "Tileset Creator" section of the
+            project settings inspector is expanded.
+            </summary>
+    </member>
+    <member name="P:Rotorz.Tile.Editor.ProjectSettings.FlagLabels">
+      <summary>
+            Gets or sets the collection of labels for the 16 general purpose brush flags.
+            </summary>
+      <exception cref="T:System.ArgumentNullException">
+            If <paramref name="value" /> is <c>null</c>.
+            </exception>
+      <exception cref="T:System.ArgumentException">
+            If <paramref name="value" /> does not contain 16 strings.
+            </exception>
+    </member>
+    <member name="M:Rotorz.Tile.Editor.ProjectSettings.GetCategoryLabel(System.Int32)">
+      <summary>
+            Gets label of a specific category.
+            </summary>
+      <param name="id">Identifies the category.</param>
+      <returns>
+            The category label.
+            </returns>
+    </member>
+    <member name="P:Rotorz.Tile.Editor.ProjectSettings.Instance">
+      <summary>
+            Gets the <see cref="T:Rotorz.Tile.Editor.ProjectSettings" /> instance.
+            </summary>
+    </member>
+    <member name="P:Rotorz.Tile.Editor.ProjectSettings.OpaqueTilesetMaterialTemplate">
+      <summary>
+            Gets or sets the material that will be used as a template when new opaque
+            tileset materials are created. A value of <c>null</c> specifies that the
+            default is to be assumed.
+            </summary>
+    </member>
+    <member name="M:Rotorz.Tile.Editor.ProjectSettings.SetCategoryLabel(System.Int32,System.String)">
+      <summary>
+            Sets label of a specific category.
+            </summary>
+      <param name="id">Identifies the category.</param>
+      <param name="label">The new category label.</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+            If <paramref name="id" /> is zero or a negative value.
+            </exception>
+      <exception cref="T:System.ArgumentNullException">
+            If <paramref name="label" /> is <c>null</c>.
+            </exception>
+      <exception cref="T:System.ArgumentException">
+            If <paramref name="label" /> is an empty string.
+            </exception>
+    </member>
+    <member name="M:Rotorz.Tile.Editor.ProjectSettings.SortCategoriesByLabel(System.Boolean)">
+      <summary>
+            Sorts brush categories by label either ascending or descending.
+            </summary>
+      <param name="ascending">A value of <c>true</c> indicates that categories
+            should be sorted in ascending order; otherwise, categories will be sorted
+            in descending order.</param>
+    </member>
+    <member name="P:Rotorz.Tile.Editor.ProjectSettings.TransparentTilesetMaterialTemplate">
+      <summary>
+            Gets or sets the material that will be used as a template when new transparent
+            tileset materials are created. A value of <c>null</c> specifies that the
+            default is to be assumed.
+            </summary>
     </member>
     <member name="T:Rotorz.Tile.Editor.RectangleTool">
       <summary>
@@ -3007,70 +2848,28 @@
             Raised to draw options GUI for custom tools.
             </summary>
     </member>
-    <member name="T:Rotorz.Tile.Editor.RefreshPreviews">
-      <summary>
-            Method in which previews should be refreshed.
-            </summary>
-    </member>
-    <member name="F:Rotorz.Tile.Editor.RefreshPreviews.DoNotRefresh">
-      <summary>
-            Do not refresh previews at all.
-            </summary>
-    </member>
-    <member name="F:Rotorz.Tile.Editor.RefreshPreviews.ClearCache">
-      <summary>
-            Clear in-memory cache of previews.
-            </summary>
-    </member>
-    <member name="F:Rotorz.Tile.Editor.RefreshPreviews.Regenerate">
-      <summary>
-            Clear in-memory cache of previews and regenerate.
-            </summary>
-    </member>
     <member name="T:Rotorz.Tile.Editor.RotorzEditorGUI">
       <summary>
             Provides additional editor GUI utility functionality.
             </summary>
     </member>
-    <member name="M:Rotorz.Tile.Editor.RotorzEditorGUI.BigButton(System.String)">
+    <member name="M:Rotorz.Tile.Editor.RotorzEditorGUI.BigButton(UnityEngine.GUIContent,UnityEngine.GUILayoutOption[])">
       <summary>
             Output big style button.
             </summary>
       <param name="label">Label text for button.</param>
-      <returns>
-            A value of <c>true</c> indicates that button was pressed.
-            </returns>
-    </member>
-    <member name="M:Rotorz.Tile.Editor.RotorzEditorGUI.BigButton(System.String,UnityEngine.GUILayoutOption[])">
-      <summary>
-            Output big style button.
-            </summary>
       <param name="options">
             An optional list of layout options that specify extra layouting properties.
             Any values passed in here will override settings defined by the style.
             <para>See: <a href="http://docs.unity3d.com/Documentation/ScriptReference/GUILayout.html">http://docs.unity3d.com/Documentation/ScriptReference/GUILayout.html</a></para></param>
-      <param name="label">Label text for button.</param>
       <returns>
             A value of <c>true</c> indicates that button was pressed.
             </returns>
     </member>
-    <member name="M:Rotorz.Tile.Editor.RotorzEditorGUI.BigButtonPadded(System.String)">
+    <member name="M:Rotorz.Tile.Editor.RotorzEditorGUI.BigButtonPadded(UnityEngine.GUIContent)">
       <summary>
             Output big style button with extra padding.
             </summary>
-      <param name="label">Label text for button.</param>
-      <returns>
-            A value of <c>true</c> indicates that button was pressed.
-            </returns>
-    </member>
-    <member name="M:Rotorz.Tile.Editor.RotorzEditorGUI.BigButtonPadded(System.String,UnityEngine.GUILayoutOption[])">
-      <summary>
-            Output big style button with extra padding.
-            </summary>
-      <param name="options">
-            An optional list of layout options that specify extra layouting properties.
-            Any values passed in here will override settings defined by the style.
-            <para>See: <a href="http://docs.unity3d.com/Documentation/ScriptReference/GUILayout.html">http://docs.unity3d.com/Documentation/ScriptReference/GUILayout.html</a></para></param>
       <param name="label">Label text for button.</param>
       <returns>
             A value of <c>true</c> indicates that button was pressed.
@@ -3080,7 +2879,7 @@
       <summary>
             Make a brush category selection field.
             </summary>
-      <param name="category">Brush category shown in field.</param>
+      <param name="categoryId">Brush category shown in field.</param>
       <param name="options">An optional list of layout options that specify extra
             layouting properties. Any values passed in here will override settings defined
             by the style. Please refer to Unity documentation for further details.</param>
@@ -3093,7 +2892,22 @@
             Make a brush category selection field.
             </summary>
       <param name="label">Label in front of field.</param>
-      <param name="category">Brush category shown in field.</param>
+      <param name="categoryId">Brush category shown in field.</param>
+      <param name="options">
+            An optional list of layout options that specify extra layouting properties.
+            Any values passed in here will override settings defined by the style.
+            Please refer to Unity documentation for further details.
+            </param>
+      <returns>
+            Brush category selected by user.
+            </returns>
+    </member>
+    <member name="M:Rotorz.Tile.Editor.RotorzEditorGUI.BrushCategoryField(UnityEngine.GUIContent,System.Int32,UnityEngine.GUILayoutOption[])">
+      <summary>
+            Make a brush category selection field.
+            </summary>
+      <param name="label">Label in front of field.</param>
+      <param name="categoryId">Brush category shown in field.</param>
       <param name="options">
             An optional list of layout options that specify extra layouting properties.
             Any values passed in here will override settings defined by the style.
@@ -3210,6 +3024,14 @@
       <param name="record">The brush record.</param>
       <param name="selected">Indicates if preview is highlighted.</param>
     </member>
+    <member name="M:Rotorz.Tile.Editor.RotorzEditorGUI.DrawBrushPreviewWithoutFallbackLabel(UnityEngine.Rect,Rotorz.Tile.Editor.BrushAssetRecord,System.Boolean)">
+      <summary>
+            Draw brush preview to GUI without assuming a fallback label.
+            </summary>
+      <param name="output">Output position of brush preview.</param>
+      <param name="record">The brush record.</param>
+      <param name="selected">Indicates if preview is highlighted.</param>
+    </member>
     <member name="M:Rotorz.Tile.Editor.RotorzEditorGUI.FoldoutSection(System.Boolean,System.String,System.Action)">
       <summary>
             Draw expandable section with emphasized title like header.
@@ -3305,17 +3127,13 @@
     </member>
     <member name="T:Rotorz.Tile.Editor.RotorzWindow">
       <summary>
-            Provides editor functionality for tile systems.
+            Base class for custom Unity editor windows.
             </summary>
     </member>
     <member name="M:Rotorz.Tile.Editor.RotorzWindow.#ctor">
       <summary>
-        <markup>
-          <include item="SMCAutoDocConstructor">
-            <parameter>Rotorz.Tile.Editor.RotorzWindow</parameter>
-          </include>
-        </markup>
-      </summary>
+            Initializes a new instance of the <see cref="T:Rotorz.Tile.Editor.RotorzWindow" /> class.
+            </summary>
     </member>
     <member name="P:Rotorz.Tile.Editor.RotorzWindow.CenterWhenFirstShown">
       <summary>
@@ -3347,6 +3165,8 @@
             Gets or sets initial size of window.
             </summary>
     </member>
+    <member name="P:Rotorz.Tile.Editor.RotorzWindow.title"></member>
+    <member name="P:Rotorz.Tile.Editor.RotorzWindow.titleImage"></member>
     <member name="T:Rotorz.Tile.Editor.RotorzWindow.CenterMode">
       <summary>
             Indicates whether window should be centered when first shown.
@@ -3740,6 +3560,293 @@
             Tile system event handler.
             </summary>
       <param name="system">Tile system instance.</param>
+    </member>
+    <member name="T:Rotorz.Tile.Editor.TileSystemPreset">
+      <summary>
+            A preset that describes a tile system which can be used to quickly create tile
+            systems with common configurations.
+            </summary>
+    </member>
+    <member name="M:Rotorz.Tile.Editor.TileSystemPreset.#ctor">
+      <summary>
+            Initializes a new instance of the <see cref="T:Rotorz.Tile.Editor.TileSystemPreset" /> class.
+            </summary>
+    </member>
+    <member name="P:Rotorz.Tile.Editor.TileSystemPreset.AddProceduralNormals">
+      <summary>
+            Gets or sets whether normals should be added to procedural meshes.
+            </summary>
+    </member>
+    <member name="P:Rotorz.Tile.Editor.TileSystemPreset.ApplyRuntimeStripping">
+      <summary>
+            Gets or sets whether to apply basic level of stripping at runtime.
+            </summary>
+    </member>
+    <member name="P:Rotorz.Tile.Editor.TileSystemPreset.ChunkHeight">
+      <summary>
+            Gets or sets the height of a chunk (in tiles).
+            </summary>
+    </member>
+    <member name="P:Rotorz.Tile.Editor.TileSystemPreset.ChunkWidth">
+      <summary>
+            Gets or sets the width of a chunk (in tiles).
+            </summary>
+    </member>
+    <member name="P:Rotorz.Tile.Editor.TileSystemPreset.Columns">
+      <summary>
+            Gets or sets the number of columns in tile system.
+            </summary>
+    </member>
+    <member name="P:Rotorz.Tile.Editor.TileSystemPreset.CombineChunkHeight">
+      <summary>
+            Gets or sets the height of a tile chunk to combine (in tiles).
+            </summary>
+    </member>
+    <member name="P:Rotorz.Tile.Editor.TileSystemPreset.CombineChunkWidth">
+      <summary>
+            Gets or sets the width of a tile chunk to combine (in tiles).
+            </summary>
+    </member>
+    <member name="P:Rotorz.Tile.Editor.TileSystemPreset.CombineIntoSubmeshes">
+      <summary>
+            Gets or sets whether tile meshes should be combined into submeshes when
+            they contain multiple materials. Disable to create individual mesh objects
+            on a per-material basis.
+            </summary>
+    </member>
+    <member name="P:Rotorz.Tile.Editor.TileSystemPreset.CombineMethod">
+      <summary>
+            Gets or sets the method of combining to perform upon build.
+            </summary>
+    </member>
+    <member name="P:Rotorz.Tile.Editor.TileSystemPreset.Direction">
+      <summary>
+            Gets or sets the initial direction of the tile system.
+            </summary>
+    </member>
+    <member name="P:Rotorz.Tile.Editor.TileSystemPreset.GenerateSecondUVs">
+      <summary>
+            Gets or sets whether second set of UVs should be generated.
+            </summary>
+    </member>
+    <member name="P:Rotorz.Tile.Editor.TileSystemPreset.GenerateSecondUVsParams">
+      <summary>
+            Gets or sets advanced paramaters used when generating secondary UVs.
+            </summary>
+    </member>
+    <member name="P:Rotorz.Tile.Editor.TileSystemPreset.HintEraseEmptyChunks">
+      <summary>
+            Gets or sets a hint of whether empty chunks should be erased at runtime.
+            </summary>
+    </member>
+    <member name="P:Rotorz.Tile.Editor.TileSystemPreset.MarkProceduralDynamic">
+      <summary>
+            Gets or sets whether procedural meshes should be marked as dynamic.
+            </summary>
+    </member>
+    <member name="P:Rotorz.Tile.Editor.TileSystemPreset.PregenerateProcedural">
+      <summary>
+            Gets or sets whether tiles that are procedurally generated should be
+            pre-generated when building tile system.
+            </summary>
+    </member>
+    <member name="P:Rotorz.Tile.Editor.TileSystemPreset.ReduceColliders">
+      <summary>
+            Gets options which are considered when reducing colliders.
+            </summary>
+    </member>
+    <member name="P:Rotorz.Tile.Editor.TileSystemPreset.Rows">
+      <summary>
+            Gets or sets the number of rows in tile system.
+            </summary>
+    </member>
+    <member name="M:Rotorz.Tile.Editor.TileSystemPreset.SetDefaults2D">
+      <summary>
+            Set to the default values for a tile system that has 2D tiles.
+            </summary>
+    </member>
+    <member name="M:Rotorz.Tile.Editor.TileSystemPreset.SetDefaults3D">
+      <summary>
+            Set to the default values for a tile system that has 3D tiles.
+            </summary>
+    </member>
+    <member name="P:Rotorz.Tile.Editor.TileSystemPreset.SortingLayerID">
+      <summary>
+            Gets or sets identifier of sorting layer which is used to control render
+            order of procedurally generated meshes.
+            </summary>
+    </member>
+    <member name="P:Rotorz.Tile.Editor.TileSystemPreset.SortingOrder">
+      <summary>
+            Gets or sets order in sorting layers which is used to control render order of
+            procedurally generated meshes.
+            </summary>
+    </member>
+    <member name="P:Rotorz.Tile.Editor.TileSystemPreset.StaticVertexSnapping">
+      <summary>
+            Gets or sets whether vertex snapping should be applied during build process.
+            </summary>
+    </member>
+    <member name="P:Rotorz.Tile.Editor.TileSystemPreset.StrippingOptions">
+      <summary>
+            Gets or sets options for custom stripping.
+            </summary>
+    </member>
+    <member name="P:Rotorz.Tile.Editor.TileSystemPreset.StrippingPreset">
+      <summary>
+            Gets or sets the stripping preset.
+            </summary>
+    </member>
+    <member name="P:Rotorz.Tile.Editor.TileSystemPreset.SystemName">
+      <summary>
+            Gets or sets the default name for the new tile system.
+            </summary>
+    </member>
+    <member name="P:Rotorz.Tile.Editor.TileSystemPreset.TileDepth">
+      <summary>
+            Gets or sets the depth of a tile.
+            </summary>
+    </member>
+    <member name="P:Rotorz.Tile.Editor.TileSystemPreset.TileHeight">
+      <summary>
+            Gets or sets the height of a tile.
+            </summary>
+    </member>
+    <member name="P:Rotorz.Tile.Editor.TileSystemPreset.TilesFacing">
+      <summary>
+            Gets or sets the direction that painted tiles will face.
+            </summary>
+    </member>
+    <member name="P:Rotorz.Tile.Editor.TileSystemPreset.TileWidth">
+      <summary>
+            Gets or sets the width of a tile.
+            </summary>
+    </member>
+    <member name="P:Rotorz.Tile.Editor.TileSystemPreset.UpdateProceduralAtStart">
+      <summary>
+            Gets or sets whether procedural meshes should be updated when tile system
+            becomes active.
+            </summary>
+    </member>
+    <member name="P:Rotorz.Tile.Editor.TileSystemPreset.VertexSnapThreshold">
+      <summary>
+            Gets or sets vertex snap threshold for vertex snapping and smoothing.
+            </summary>
+    </member>
+    <member name="T:Rotorz.Tile.Editor.TileSystemPresetUtility">
+      <summary>
+            Utility functions to asset with the management and usage of tile system presets.
+            </summary>
+    </member>
+    <member name="M:Rotorz.Tile.Editor.TileSystemPresetUtility.CreatePreset(Rotorz.Tile.Editor.TileSystemPreset,System.String)">
+      <summary>
+            Creates a new tile system preset by copying the properties of the source
+            preset. If a preset already exists with the same name then it will be
+            overwritten.
+            </summary>
+      <param name="source">Source preset.</param>
+      <param name="presetName">Name of the new preset.</param>
+      <returns>
+            A reference to the new <see cref="T:Rotorz.Tile.Editor.TileSystemPreset" /> asset.
+            </returns>
+      <exception cref="T:System.ArgumentNullException">
+        <list type="bullet">
+          <item>If <paramref name="source" /> is <c>null</c>.</item>
+          <item>If <paramref name="presetName" /> is <c>null</c>.</item>
+        </list>
+      </exception>
+      <exception cref="T:System.ArgumentException">
+            If <paramref name="presetName" /> is not a valid preset name.
+            </exception>
+    </member>
+    <member name="M:Rotorz.Tile.Editor.TileSystemPresetUtility.CreateTileSystemFromPreset(Rotorz.Tile.Editor.TileSystemPreset)">
+      <summary>
+            Creates a new tile system using properties from the specified preset.
+            </summary>
+      <param name="preset">Tile system preset.</param>
+      <returns>
+            A new game object with an initialized <see cref="T:Rotorz.Tile.TileSystem" />.
+            </returns>
+      <exception cref="T:System.ArgumentNullException">
+            If <paramref name="preset" /> is <c>null</c>.
+            </exception>
+      <exception cref="T:System.InvalidOperationException">
+        <list type="bullet">
+          <item>If preset defines an invalid name for a tile system.</item>
+          <item>If preset defines a tile system with less than one cell.</item>
+        </list>
+      </exception>
+    </member>
+    <member name="M:Rotorz.Tile.Editor.TileSystemPresetUtility.DeletePreset(Rotorz.Tile.Editor.TileSystemPreset)">
+      <summary>
+            Deletes an unwanted tile system preset.
+            </summary>
+      <param name="preset">Tile system preset.</param>
+      <exception cref="T:System.ArgumentNullException">
+            If <paramref name="preset" /> is <c>null</c>.
+            </exception>
+      <exception cref="T:System.InvalidOperationException">
+            If <paramref name="preset" /> is not a known asset file.
+            </exception>
+    </member>
+    <member name="M:Rotorz.Tile.Editor.TileSystemPresetUtility.GetPresets">
+      <summary>
+            Gets an array of all the <see cref="T:Rotorz.Tile.Editor.TileSystemPreset" /> assets in the project.
+            </summary>
+      <returns>
+            Array of <see cref="T:Rotorz.Tile.Editor.TileSystemPreset" /> assets.
+            </returns>
+    </member>
+    <member name="M:Rotorz.Tile.Editor.TileSystemPresetUtility.IsUserPreset(Rotorz.Tile.Editor.TileSystemPreset)">
+      <summary>
+            Determines whether the specified tile system preset is located within the
+            main "User Data" directory structure.
+            </summary>
+      <param name="preset">Tile system preset.</param>
+      <returns>
+            A value of <c>true</c> if the preset is located in the main "User Data"
+            directory; otherwise, a value of <c>false</c>.
+            </returns>
+      <exception cref="T:System.ArgumentNullException">
+            If <paramref name="preset" /> is <c>null</c>.
+            </exception>
+    </member>
+    <member name="M:Rotorz.Tile.Editor.TileSystemPresetUtility.IsValidPresetName(System.String)">
+      <summary>
+            Determines whether the specified name is valid for a tile system preset.
+            </summary>
+      <param name="presetName">The candidate preset name.</param>
+      <returns>
+            A value of <c>true</c> if the name was valid; otherwise, a value of <c>false</c>
+            if the name was invalid or <c>null</c>.
+            </returns>
+    </member>
+    <member name="M:Rotorz.Tile.Editor.TileSystemPresetUtility.LoadPresetFromGUID(System.String)">
+      <summary>
+            Loads the <see cref="T:Rotorz.Tile.Editor.TileSystemPreset" /> from the specified preset asset GUID.
+            </summary>
+      <param name="presetGuid">GUID of the preset.</param>
+      <returns>
+            The <see cref="T:Rotorz.Tile.Editor.TileSystemPreset" /> reference when found; otherwise, a value
+            of <c>null</c> if preset does not exist.
+            </returns>
+    </member>
+    <member name="M:Rotorz.Tile.Editor.TileSystemPresetUtility.OverwritePreset(Rotorz.Tile.Editor.TileSystemPreset,Rotorz.Tile.Editor.TileSystemPreset)">
+      <summary>
+            Overwrites an existing tile system preset by copying the properties of the
+            source preset into the destination preset.
+            </summary>
+      <param name="source">Source preset.</param>
+      <param name="dest">Destination preset.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <list type="bullet">
+          <item>If <paramref name="source" /> is <c>null</c>.</item>
+          <item>If <paramref name="dest" /> is <c>null</c>.</item>
+        </list>
+      </exception>
+      <exception cref="T:System.ArgumentException">
+            If <paramref name="dest" /> is not a persisted asset file.
+            </exception>
     </member>
     <member name="T:Rotorz.Tile.Editor.ToolBase">
       <summary>
@@ -4232,6 +4339,16 @@
     <member name="P:Rotorz.Tile.Editor.ToolUtility.ActivePlop">
       <summary>
             Gets or sets plop which is active for current tool.
+            </summary>
+    </member>
+    <member name="P:Rotorz.Tile.Editor.ToolUtility.ActiveTile">
+      <summary>
+            Gets the active tile.
+            </summary>
+    </member>
+    <member name="P:Rotorz.Tile.Editor.ToolUtility.ActiveTileIndex">
+      <summary>
+            Gets or sets zero-based index of the active tile.
             </summary>
     </member>
     <member name="P:Rotorz.Tile.Editor.ToolUtility.ActiveTileSystem">

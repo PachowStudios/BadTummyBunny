@@ -4,11 +4,11 @@ public class Flagpole : MonoBehaviour
 {
   private Animator animator;
 
-  public virtual bool Activated { get; protected set; }
+  public bool Activated { get; private set; }
 
-  protected Animator Animator => this.GetComponentIfNull(ref this.animator);
+  private Animator Animator => this.GetComponentIfNull(ref this.animator);
 
-  public virtual void Activate()
+  public void Activate()
   {
     if (Activated)
       return;
@@ -18,6 +18,6 @@ public class Flagpole : MonoBehaviour
     PlayActivateSound();
   }
 
-  protected virtual void PlayActivateSound() 
-    => SoundManager.PlaySFX(SoundManager.LoadFromGroup(SfxGroups.RespawnPoints));
+  private void PlayActivateSound() 
+    => SoundManager.PlaySFXFromGroup(SfxGroups.RespawnPoints);
 }

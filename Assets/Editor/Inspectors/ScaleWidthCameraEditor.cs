@@ -15,10 +15,10 @@ public class ScaleWidthCameraEditor : Editor
   {
     serializedObject.Update();
 
-    EditorGUILayout.LabelField("Current FOV", Target.currentFOV.ToString());
+    EditorGUILayout.LabelField("Current FOV", Target.CurrentFOV.ToString());
     EditorGUILayout.Space();
 
-    Target.currentFOV = Target.defaultFOV = EditorGUILayout.IntField("Default FOV", Target.defaultFOV);
+    Target.CurrentFOV = Target.defaultFOV = EditorGUILayout.IntField("Default FOV", Target.defaultFOV);
 
     this.showWorldSpaceUI.target = EditorGUILayout.Toggle("Use World Space UI", this.showWorldSpaceUI.target);
     Target.useWorldSpaceUI = this.showWorldSpaceUI.value;

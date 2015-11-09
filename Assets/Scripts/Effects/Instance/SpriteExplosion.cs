@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Particle = UnityEngine.ParticleSystem.Particle;
 using Random = UnityEngine.Random;
 
 public sealed class SpriteExplosion : MonoBehaviour
@@ -11,58 +12,70 @@ public sealed class SpriteExplosion : MonoBehaviour
   [SerializeField] private string sortingLayer = "Foreground";
   [SerializeField] private int sortingOrder = 1;
 
-  public Material Material { get; set; }
+  private new ParticleSystem particleSystem;
+  private Renderer particleRenderer;
 
-  private IEnumerator DoExplode(Vector3 velocity, Sprite sprite)
+  private ParticleSystem ParticleSystem => this.GetComponentIfNull(ref this.particleSystem);
+  private Renderer ParticleRenderer => ParticleSystem.GetComponentIfNull(ref this.particleRenderer);
+
+  public void Explode(Vector3 velocity, Sprite sprite, Material material = null)
+    => StartCoroutine(ExplodeCoroutine(velocity, sprite, material));
+
+  private IEnumerator ExplodeCoroutine(Vector3 velocity, Sprite sprite, Material material = null)
   {
-    var partSystem = GetComponent<ParticleSystem>();
-    var particles = new List<ParticleSystem.Particle>();
-    var currentParticle = new ParticleSystem.Particle();
+    var particles = new List<Particle>();
+    var currentParticle = new Particle();
 
-    partSystem.renderer.sortingLayerName = this.sortingLayer;
-    partSystem.renderer.sortingOrder = this.sortingOrder;
+    ParticleRenderer.sortingLayerName = this.sortingLayer;
+    ParticleRenderer.sortingOrder = this.sortingOrder;
     currentParticle.size = 1f / sprite.pixelsPerUnit;
 
-    var randomTranslate = new Vector2(Random.Range(-0.5f, 0.5f),
-                                      Random.Range(-0.5f, 0.5f));
+    var randomTranslate =
+      new Vector2(
+        Random.Range(-0.5f, 0.5f),
+        Random.Range(-0.5f, 0.5f));
 
-    if (Material != null)
-      partSystem.renderer.material = Material;
+    if (material != null)
+      ParticleRenderer.material = material;
 
     for (var i = 0; i < sprite.bounds.size.x * sprite.pixelsPerUnit; i++)
-    {
       for (var j = 0; j < sprite.bounds.size.y * sprite.pixelsPerUnit; j++)
       {
-        var particleColor = sprite.texture.GetPixel((int)sprite.rect.x + i,
-                                                    (int)sprite.rect.y + j);
+        var particleColor =
+          sprite.texture.GetPixel(
+            (int)sprite.rect.x + i,
+            (int)sprite.rect.y + j);
 
         if (Math.Abs(particleColor.a) <= 0.01f)
           continue;
 
-        var positionOffset = new Vector2(sprite.bounds.extents.x - sprite.bounds.center.x - 0.05f,
-                                         sprite.bounds.extents.y - sprite.bounds.center.y - 0.05f);
+        var positionOffset =
+          new Vector2(
+            sprite.bounds.extents.x - sprite.bounds.center.x - 0.05f,
+            sprite.bounds.extents.y - sprite.bounds.center.y - 0.05f);
 
-        var particlePosition = transform.TransformPoint((i / sprite.pixelsPerUnit) - positionOffset.x,
-                                                        (j / sprite.pixelsPerUnit) - positionOffset.y, 0);
+        var particlePosition =
+          transform.TransformPoint(
+            (i / sprite.pixelsPerUnit) - positionOffset.x,
+            (j / sprite.pixelsPerUnit) - positionOffset.y,
+            0);
 
         currentParticle.position = particlePosition;
         currentParticle.rotation = 0f;
         currentParticle.color = particleColor;
         currentParticle.startLifetime = currentParticle.lifetime = this.lifetime;
-        currentParticle.velocity = new Vector2(velocity.x + Random.Range(-3f, 3f),
-                                               velocity.y + Random.Range(-3f, 3f));
+        currentParticle.velocity =
+          new Vector2(
+            velocity.x + Random.Range(-3f, 3f),
+            velocity.y + Random.Range(-3f, 3f));
         currentParticle.velocity += randomTranslate.ToVector3();
 
         particles.Add(currentParticle);
       }
-    }
 
-    partSystem.SetParticles(particles.ToArray(), particles.Count);
+    ParticleSystem.SetParticles(particles.ToArray(), particles.Count);
     gameObject.Destroy(this.systemLifetime);
 
     yield return null;
   }
-
-  public void Explode(Vector3 velocity, Sprite sprite) 
-    => StartCoroutine(DoExplode(velocity, sprite));
 }

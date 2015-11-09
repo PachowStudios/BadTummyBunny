@@ -50,6 +50,12 @@
             with one another.
             </summary>
     </member>
+    <member name="P:Rotorz.Tile.AliasBrush.CoalesceWithBorder">
+      <summary>
+            Gets or sets a value indicating whether painted tiles can coalesce with
+            border of tile system.
+            </summary>
+    </member>
     <member name="P:Rotorz.Tile.AliasBrush.CoalesceWithBrushGroups">
       <summary>
             Gets editable collection of brush groups that painted tiles can coalesce with.
@@ -199,6 +205,12 @@
       <summary>
             Gets or sets the coalescing rule that defines how painted tiles orientate
             with one another.
+            </summary>
+    </member>
+    <member name="P:Rotorz.Tile.AutotileBrush.CoalesceWithBorder">
+      <summary>
+            Gets or sets a value indicating whether painted tiles can coalesce with
+            border of tile system.
             </summary>
     </member>
     <member name="P:Rotorz.Tile.AutotileBrush.CoalesceWithBrushGroups">
@@ -431,9 +443,9 @@
             preserved when refreshing tiles.
             </summary>
     </member>
-    <member name="F:Rotorz.Tile.Brush.category">
+    <member name="P:Rotorz.Tile.Brush.CategoryId">
       <summary>
-            Number of category that brush belongs to.
+            Gets or sets identifier of the category that the brush belongs to.
             </summary>
     </member>
     <member name="M:Rotorz.Tile.Brush.CountTileVariations(System.Int32)">
@@ -1102,6 +1114,16 @@
       <param name="allowAlias">Indicates whether alias brushes can be selected.</param>
       <param name="allowMaster">Indicates whether master brushes can be selected.</param>
     </member>
+    <member name="P:Rotorz.Tile.BrushPropertyAttribute.AllowAlias">
+      <summary>
+            Gets a value indicating whether alias brushes can be selected.
+            </summary>
+    </member>
+    <member name="P:Rotorz.Tile.BrushPropertyAttribute.AllowMaster">
+      <summary>
+            Gets a value indicating whether master brushes can be selected.
+            </summary>
+    </member>
     <member name="T:Rotorz.Tile.BrushVisibility">
       <summary>
             The visibility of a brush.
@@ -1516,6 +1538,12 @@
       <summary>
             Gets or sets the coalescing rule that defines how painted tiles orientate
             with one another.
+            </summary>
+    </member>
+    <member name="P:Rotorz.Tile.ICoalescableBrush.CoalesceWithBorder">
+      <summary>
+            Gets or sets a value indicating whether painted tiles can coalesce with
+            border of tile system.
             </summary>
     </member>
     <member name="P:Rotorz.Tile.ICoalescableBrush.CoalesceWithBrushGroups">
@@ -1978,6 +2006,12 @@
       <summary>
             Gets or sets the coalescing rule that defines how painted tiles orientate
             with one another.
+            </summary>
+    </member>
+    <member name="P:Rotorz.Tile.OrientedBrush.CoalesceWithBorder">
+      <summary>
+            Gets or sets a value indicating whether painted tiles can coalesce with
+            border of tile system.
             </summary>
     </member>
     <member name="P:Rotorz.Tile.OrientedBrush.CoalesceWithBrushGroups">
@@ -2600,24 +2634,29 @@
             Product information.
             </summary>
     </member>
-    <member name="F:Rotorz.Tile.ProductInfo.developer">
+    <member name="F:Rotorz.Tile.ProductInfo.CommitHash">
+      <summary>
+            Gets the commit hash of this build.
+            </summary>
+    </member>
+    <member name="F:Rotorz.Tile.ProductInfo.Developer">
       <summary>
             Gets the developer name.
             </summary>
     </member>
-    <member name="F:Rotorz.Tile.ProductInfo.developerUri">
+    <member name="F:Rotorz.Tile.ProductInfo.DeveloperUri">
       <summary>
             Gets the developer URI.
             </summary>
     </member>
-    <member name="F:Rotorz.Tile.ProductInfo.name">
+    <member name="F:Rotorz.Tile.ProductInfo.Name">
       <summary>
             Gets the name of this product.
             </summary>
     </member>
-    <member name="F:Rotorz.Tile.ProductInfo.version">
+    <member name="F:Rotorz.Tile.ProductInfo.Version">
       <summary>
-            Gets the version of this product.
+            Gets the version of this build.
             </summary>
     </member>
     <member name="T:Rotorz.Tile.ReduceColliderOptions">
@@ -2911,7 +2950,7 @@
     </member>
     <member name="M:Rotorz.Tile.TileData.GetUserFlag(System.Int32)">
       <summary>
-            Get state of custom user flag.
+            Gets the state of a custom user flag.
             </summary>
       <param name="flag">Number of flag (1-16)</param>
       <returns>
@@ -2971,7 +3010,7 @@
     </member>
     <member name="M:Rotorz.Tile.TileData.SetUserFlag(System.Int32,System.Boolean)">
       <summary>
-            Set state of custom user flag.
+            Sets the state of a custom user flag.
             </summary>
       <param name="flag">Number of flag (1-16)</param>
       <param name="on">Specify <c>true</c> to set flag, or <c>false</c> to unset flag.</param>
@@ -2995,6 +3034,12 @@
       <summary>
             Zero-based index of tile in tileset.
             </summary>
+    </member>
+    <member name="M:Rotorz.Tile.TileData.ToggleUserFlag(System.Int32)">
+      <summary>
+            Toggles the state of a custom user flag.
+            </summary>
+      <param name="flag">Number of flag (1-16)</param>
     </member>
     <member name="P:Rotorz.Tile.TileData.UserFlags">
       <summary>
@@ -3411,6 +3456,11 @@
             by brush. Container objects are named "tile" and can be seen in tile system hierarchy.
             </summary>
     </member>
+    <member name="F:Rotorz.Tile.TilesetBrush.applySimpleRotationToAttachment">
+      <summary>
+            Indicates whether simple tile rotation should be applied to attached objects.
+            </summary>
+    </member>
     <member name="M:Rotorz.Tile.TilesetBrush.ApplyTransforms(Rotorz.Tile.IBrushContext,Rotorz.Tile.TileData,Rotorz.Tile.Brush)">
       <summary>
             Apply transforms to newly painted tile and orientate against tile system.
@@ -3555,16 +3605,6 @@
       <summary>
             Main tile system component which allows you to interact with a tile system using
             runtime or editor scripts.
-            </summary>
-    </member>
-    <member name="P:Rotorz.Tile.TileSystem.ActiveTile">
-      <summary>
-            Gets the active tile.
-            </summary>
-    </member>
-    <member name="P:Rotorz.Tile.TileSystem.ActiveTileIndex">
-      <summary>
-            Gets or sets index of active tile.
             </summary>
     </member>
     <member name="F:Rotorz.Tile.TileSystem.addProceduralNormals">

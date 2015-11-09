@@ -39,7 +39,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dcc2588b3136b443a25ddc16a260595, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pocketName: Pocket
+  pocketName: 506f636b6574
   pocketType: 0
   pocketClips: []
   sfxGroups: []
@@ -50,7 +50,7 @@ MonoBehaviour:
   sfxVolumeVariations: []
   sfxPitchVariations: []
   showAsGrouped: 0
-  showSFXDetails: 
+  showSFXDetails: []
   groupAddIndex: 0
   autoPrepoolAmount: 0
   autoBaseVolume: 1
@@ -67,4 +67,3 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 100000}
   m_IsPrefabParent: 1
-  m_IsExploded: 1

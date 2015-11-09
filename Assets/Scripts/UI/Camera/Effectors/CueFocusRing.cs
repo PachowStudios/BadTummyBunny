@@ -17,8 +17,8 @@ public sealed class CueFocusRing : CueFocusBase
 
   private Vector3 EffectorPosition
   {
-    get { return transform.TransformPoint(EffectorTrigger.center); }
-    set { EffectorTrigger.center = transform.InverseTransformPoint(value); }
+    get { return transform.TransformPoint(EffectorTrigger.offset); }
+    set { EffectorTrigger.offset = transform.InverseTransformPoint(value); }
   }
 
   private float OuterRingRadius => EffectorTrigger.radius;

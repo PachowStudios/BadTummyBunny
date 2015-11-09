@@ -4,13 +4,14 @@
 [ExecuteInEditMode]
 public sealed class ParticleSystemSorting : MonoBehaviour
 {
-  [SerializeField] private ParticleSystem partSystem = null;
   [SerializeField] private string sortingLayer = "";
   [SerializeField] private int sortingOrder = 0;
 
   private void OnEnable()
   {
-    this.partSystem.renderer.sortingLayerName = this.sortingLayer;
-    this.partSystem.renderer.sortingOrder = this.sortingOrder;
+    var particleRenderer = GetComponent<ParticleSystem>().GetComponent<Renderer>();
+
+    particleRenderer.sortingLayerName = this.sortingLayer;
+    particleRenderer.sortingOrder = this.sortingOrder;
   }
 }

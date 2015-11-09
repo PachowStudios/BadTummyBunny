@@ -4,7 +4,6 @@ public interface IMovable
 {
   float Gravity { get; }
   float MoveSpeed { get; }
-  Transform Transform { get; }
   Collider2D Collider { get; }
   Vector3 Position { get; }
   Vector3 CenterPoint { get; }
@@ -24,4 +23,5 @@ public interface IMovable
   void Flip();
   bool Jump(float jumpHeight);
   void ApplyKnockback(Vector2 knockback, Vector2 direction);
+  void Disable();
 }

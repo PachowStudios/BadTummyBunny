@@ -11,7 +11,8 @@ MonoBehaviour:
   m_Script: {fileID: -1748923336, guid: ca8d1606cd5c9cf4680b1ed766df048c, type: 3}
   m_Name: Project Settings
   m_EditorClassIdentifier: 
-  _expandTilesetCreatorSection: 0
+  _brushesFolderRelativePath: TileBrushes
+  _expandTilesetCreatorSection: 1
   _opaqueTilesetMaterialTemplate: {fileID: 0}
   _transparentTilesetMaterialTemplate: {fileID: 0}
   _expandBrushCategoriesSection: 1

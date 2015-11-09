@@ -65,24 +65,10 @@ public sealed class PlayerControl : BaseMovable, IFartInfoProvider
       base.ApplyKnockback(knockback, direction);
   }
 
-  public void SetFart(IFart newFart)
+  public override void Disable()
   {
-    if (newFart == null)
-      return;
-
-    var fartInstance = (MonoBehaviour)Instantiate((MonoBehaviour)newFart, this.fartPoint.position, this.fartPoint.rotation);
-
-    fartInstance.name = newFart.FartName;
-    fartInstance.transform.parent = this.body;
-
-    ((MonoBehaviour)this.currentFart)?.DestroyGameObject();
-    this.currentFart = fartInstance as IFart;
-  }
-
-  public void DisableInput()
-  {
-    this.isInputEnabled = false;
-    ResetInput();
+    Collider.enabled = false;
+    DisableInput();
   }
 
   private void Awake() 
@@ -171,6 +157,12 @@ public sealed class PlayerControl : BaseMovable, IFartInfoProvider
       WillFart = this.playerActions.Fart.WasReleased && CanFart;
   }
 
+  private void DisableInput()
+  {
+    this.isInputEnabled = false;
+    ResetInput();
+  }
+
   private void UpdateFartTrajectory()
   {
     if (IsFartCharging)
@@ -231,6 +223,20 @@ public sealed class PlayerControl : BaseMovable, IFartInfoProvider
       this.velocity.y = 0f;
       LastGroundedPosition = transform.position;
     }
+  }
+
+  private void SetFart(IFart newFart)
+  {
+    if (newFart == null)
+      return;
+
+    var fartInstance = (MonoBehaviour)Instantiate((MonoBehaviour)newFart, this.fartPoint.position, this.fartPoint.rotation);
+
+    fartInstance.name = newFart.FartName;
+    fartInstance.transform.parent = this.body;
+
+    ((MonoBehaviour)this.currentFart)?.DestroyGameObject();
+    this.currentFart = fartInstance as IFart;
   }
 
   private void Fart(Vector2 fartDirection, float fartPower)

@@ -3,10 +3,13 @@
 public class GameMenu : MonoBehaviour
 {
   private CanvasGroup canvasGroup;
+  private AsyncOperation loadingOperation;
 
   public static GameMenu Instance { get; private set; }
 
-  public CanvasGroup Group => this.GetComponentIfNull(ref this.canvasGroup);
+  public bool IsLoadingLevel => !(this.loadingOperation?.isDone ?? true);
+
+  private CanvasGroup Group => this.GetComponentIfNull(ref this.canvasGroup);
 
   private void Awake()
   {
@@ -31,13 +34,13 @@ public class GameMenu : MonoBehaviour
 
   public void LoadLevel(string levelName)
   {
-    if (Application.isLoadingLevel)
+    if (IsLoadingLevel)
       return;
 
     if (levelName == "Retry")
       levelName = Application.loadedLevelName;
 
-    Application.LoadLevel(levelName);
+    this.loadingOperation = Application.LoadLevelAsync(levelName);
   }
 
   public void Quit()

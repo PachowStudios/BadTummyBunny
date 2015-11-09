@@ -9,8 +9,8 @@ public abstract class BaseEnemyAI : EnemyMovement
   [SerializeField] protected LayerMask blockVisibilityLayers = default(LayerMask);
 
   [Header("AI Components")]
-  [SerializeField] protected Transform frontCheck = null;
-  [SerializeField] protected Transform ledgeCheck = null;
+  [SerializeField] protected Transform frontCheck;
+  [SerializeField] protected Transform ledgeCheck;
 
   public bool IsAtWall
     => Physics2D.OverlapPoint(this.frontCheck.position, CollisionLayers) != null;
@@ -64,8 +64,11 @@ public abstract class BaseEnemyAI : EnemyMovement
     if (Vector3.Angle(FacingDirection, playerDirection) > maxAngle)
       return false;
 
-    var linecast = Physics2D.Linecast(collider2D.bounds.center,
-                                      Player.Instance.Movement.CenterPoint, this.blockVisibilityLayers);
+    var linecast =
+      Physics2D.Linecast(
+        Collider.bounds.center,
+        Player.Instance.Movement.CenterPoint,
+        this.blockVisibilityLayers);
 
     return linecast.collider == null && linecast.distance <= range;
   }
