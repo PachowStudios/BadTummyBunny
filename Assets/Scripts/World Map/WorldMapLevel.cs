@@ -44,11 +44,6 @@ public class WorldMapLevel : MonoBehaviour
   public bool HasNeighbor(WorldMapLevel level)
     => this.connections.Any(c => c.ConnectsToLevel(level));
 
-  public void Select()
-  {
-    WorldMap.SelectLevel(this);
-  }
-
   public void OnSelected()
   {
     

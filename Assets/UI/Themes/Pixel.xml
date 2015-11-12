@@ -1,0 +1,7 @@
+<Theme xmlns="http://www.markux.com/schema"
+       Name="Pixel">
+  <Label Font="Assets/Sprites/UI/Fonts/Pixel.fontsettings"
+         FontSize="1" FontColor="White"
+         LineSpacing="2" Scale="0.5"
+         TextAlignment="Center" AdjustToText="WidthAndHeight"/>
+</Theme>

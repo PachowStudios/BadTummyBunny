@@ -1,36 +1,55 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 [AddComponentMenu("World Map/Map")]
 public class WorldMap : MonoBehaviour
 {
-  [SerializeField] private WorldMapLevel selectedLevel;
+  public event Action<WorldMapLevel> LevelSelected;
+  public event Action<WorldMapLevel> LevelDeselected;
+
+  [SerializeField] private WorldMapLevel startingLevel = null;
   [SerializeField] private WorldMapPlayer player = null;
 
   private HashSet<WorldMapLevel> levels;
 
-  public IEnumerable<WorldMapLevel> Levels => this.levels;
+  public static WorldMap Instance { get; private set; }
 
-  public WorldMapLevel SelectedLevel => this.selectedLevel;
+  public WorldMapLevel SelectedLevel { get; private set; }
+
+  public IEnumerable<WorldMapLevel> Levels => this.levels;
 
   private void Awake()
   {
-    Assert.IsNotNull(this.selectedLevel, nameof(this.selectedLevel));
+    Assert.IsNotNull(this.startingLevel, nameof(this.startingLevel));
     Assert.IsNotNull(this.player, nameof(this.player));
 
+    Instance = this;
+
     this.levels = new HashSet<WorldMapLevel>(GetComponentsInChildren<WorldMapLevel>());
-    this.selectedLevel.Select();
+
+    SelectLevel(this.startingLevel);
   }
 
   public void SelectLevel(WorldMapLevel level)
   {
-    if (level.IsSelected)
-      return;
+    Assert.IsNotNull(level);
 
-    this.selectedLevel?.OnDeselected();
-    this.selectedLevel = level;
-    this.selectedLevel.OnSelected();
+    SelectedLevel?.OnDeselected();
+    SelectedLevel = level;
+    SelectedLevel.OnSelected();
+
+    LevelSelected?.Invoke(SelectedLevel);
+  }
+
+  public void DeselectLevel()
+  {
+    SelectedLevel?.OnDeselected();
+
+    LevelDeselected?.Invoke(SelectedLevel);
+
+    SelectedLevel = null;
   }
 
   public void NavigateToLevel(WorldMapLevel targetLevel)
@@ -38,7 +57,10 @@ public class WorldMap : MonoBehaviour
     IList<WorldMapLevel> path;
 
     if (TryGetPathToLevel(SelectedLevel, targetLevel, out path))
-      this.player.NavigatePath(path);
+    {
+      DeselectLevel();
+      this.player.NavigatePath(path, onCompleted: SelectLevel);
+    }
   }
 
   public bool TryGetPathToLevel(WorldMapLevel startLevel, WorldMapLevel endLevel, out IList<WorldMapLevel> path)
@@ -50,6 +72,9 @@ public class WorldMap : MonoBehaviour
     var nodes = new List<WorldMapLevel>(Levels);
     var distances = new Dictionary<WorldMapLevel, float>();
     var previousNodes = new Dictionary<WorldMapLevel, WorldMapLevel>();
+
+    if (startLevel == null || endLevel == null)
+      return path.ToList();
 
     foreach (var node in nodes)
       distances[node] = float.MaxValue;

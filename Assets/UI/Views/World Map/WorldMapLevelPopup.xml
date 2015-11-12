@@ -1,0 +1,5 @@
+<View xmlns="http://www.markux.com/schema"
+      ViewName="WorldMapLevelPopup"
+      Width="5" Height="2">
+  <Label Text="Popup" />
+</View>

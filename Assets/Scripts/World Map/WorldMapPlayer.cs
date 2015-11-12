@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
 using UnityEngine;
@@ -11,7 +12,7 @@ public class WorldMapPlayer : MonoBehaviour
 
   public bool IsNavigating { get; private set; }
 
-  public void NavigatePath(IList<WorldMapLevel> path)
+  public void NavigatePath(IList<WorldMapLevel> path, Action<WorldMapLevel> onCompleted = null)
   {
     if (IsNavigating)
       return;
@@ -28,7 +29,7 @@ public class WorldMapPlayer : MonoBehaviour
       .SetSpeedBased()
       .OnComplete(() =>
       {
-        path.Last().Select();
+        onCompleted?.Invoke(path.Last());
         IsNavigating = false;
       });
   }

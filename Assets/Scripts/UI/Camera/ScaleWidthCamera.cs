@@ -11,11 +11,11 @@ public sealed class ScaleWidthCamera : MonoBehaviour
 
   public int CurrentFOV { get; set; }
 
-  private new Camera camera;
+  private Camera controlledCamera;
 
   public static ScaleWidthCamera Instance { get; private set; }
 
-  private Camera Camera => this.GetComponentIfNull(ref this.camera);
+  private Camera Camera => this.GetComponentIfNull(ref this.controlledCamera);
 
   private void OnEnable()
   {
