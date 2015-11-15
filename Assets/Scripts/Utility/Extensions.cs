@@ -185,6 +185,9 @@ public static class Extensions
     return parent;
   }
 
+  public static bool None<T>(this IEnumerable<T> parent, Func<T, bool> predicate)
+    => !parent.Any(predicate);
+
   public static bool IsEmpty<T>(this IEnumerable<T> parent)
     => !parent.Any();
 
