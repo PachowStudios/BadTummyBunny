@@ -17,23 +17,31 @@ public partial class EventAggregator
     {
       this.reference = new WeakReference(handler);
 
-      foreach (var messageType in typeof(THandler).GetGenericArguments())
-        this.handlers[messageType] = typeof(THandler).GetMethod(nameof(IHandles<object>.Handle), new[] { messageType });
+      foreach (var messageType in
+        typeof(THandler).GetInterfaces()
+          .Where(i => i.IsAssignableFrom<IHandles<IMessage>>() && i.IsGenericType)
+          .Select(i => i.GetGenericArguments().First()))
+        this.handlers[messageType] =
+          typeof(THandler).GetMethod(
+            nameof(IHandles<IMessage>.Handle),
+            new[] { messageType });
     }
 
     public bool Handle<TMessage>(TMessage message)
+      where TMessage : IMessage
     {
       if (!IsAlive)
         return false;
 
-      foreach (var handler in this.handlers.Where(h => h.Key.IsAssignableFrom(typeof(TMessage))))
+      foreach (var handler in this.handlers.Where(h => h.Key.IsAssignableFrom<TMessage>()))
         handler.Value.Invoke(this.reference.Target, new object[] { message });
 
       return true;
     }
 
     public bool Handles<TMessage>()
-      => this.handlers.Any(h => h.Key.IsAssignableFrom(typeof(TMessage)));
+      where TMessage : IMessage
+        => this.handlers.Any(h => h.Key.IsAssignableFrom<TMessage>());
 
     public bool ReferenceEquals(object instance)
       => ReferenceEquals(this.reference.Target, instance);

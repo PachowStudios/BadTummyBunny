@@ -1,5 +1,19 @@
 <View xmlns="http://www.markux.com/schema"
       ViewName="WorldMapLevelPopup"
       Width="5" Height="2">
-  <Label Text="Popup" />
+  <Image Path="Assets/Sprites/UI/Menu/Menu Frame.png"
+         Type="Sliced" />
+  <Label Text="{LevelName}" />
+
+  <ViewAnimation Id="Show">
+    <Animate Field="Alpha"
+             From="0" To="1"
+             Duration="0.2s" EasingFunction="QuadraticEaseIn" />
+  </ViewAnimation>
+
+  <ViewAnimation Id="Hide">
+    <Animate Field="Alpha"
+             From="1" To="0"
+             Duration="0.2s" EasingFunction="QuadraticEaseIn" />
+  </ViewAnimation>
 </View>

@@ -3,31 +3,22 @@ using MarkUX;
 
 namespace BadTummyBunny.UI.ViewModels
 {
-  public class WorldMapScreen : View
+  public class WorldMapScreen : View, IHandles<LevelSelectedMessage>, IHandles<LevelDeselectedMessage>
   {
-    [UsedImplicitly]
-    private WorldMapLevelPopup levelPopup;
+    [UsedImplicitly] public WorldMapLevelPopup LevelPopup = null;
 
-    private void Start()
+    private void Awake()
+      => EventAggregator.Instance.Subscribe(this);
+
+    public void Handle(LevelSelectedMessage message)
     {
-      WorldMap.Instance.LevelSelected += OnLevelSelected;
-      WorldMap.Instance.LevelDeselected += OnLevelDeselected;
+      this.LevelPopup.SetLevel(message.Level);
+      this.LevelPopup.Show.StartAnimation();
     }
 
-    private void OnDestroy()
+    public void Handle(LevelDeselectedMessage message)
     {
-      WorldMap.Instance.LevelSelected -= OnLevelSelected;
-      WorldMap.Instance.LevelDeselected -= OnLevelDeselected;
-    }
-
-    private void OnLevelSelected(WorldMapLevel level)
-    {
-      
-    }
-
-    private void OnLevelDeselected(WorldMapLevel level)
-    {
-      
+      this.LevelPopup.Hide.StartAnimation();
     }
   }
 }

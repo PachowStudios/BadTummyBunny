@@ -191,6 +191,9 @@ public static class Extensions
   public static bool IsEmpty<T>(this IEnumerable<T> parent)
     => !parent.Any();
 
+  public static bool IsAssignableFrom<T>(this Type parent)
+    => parent.IsAssignableFrom(typeof(T));
+
   public static T GetAttributeOfType<T>(this Enum parent)
     where T : Attribute
   {

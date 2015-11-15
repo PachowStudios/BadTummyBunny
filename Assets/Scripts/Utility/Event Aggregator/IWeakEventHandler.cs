@@ -4,8 +4,12 @@
   {
     bool IsAlive { get; }
 
-    bool Handle<TMessage>(TMessage message);
-    bool Handles<TMessage>();
+    bool Handle<TMessage>(TMessage message)
+      where TMessage : IMessage;
+
+    bool Handles<TMessage>()
+      where TMessage : IMessage;
+
     bool ReferenceEquals(object instance);
   }
 }

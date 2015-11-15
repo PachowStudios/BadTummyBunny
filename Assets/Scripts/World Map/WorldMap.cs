@@ -6,15 +6,10 @@ using UnityEngine;
 [AddComponentMenu("World Map/Map")]
 public class WorldMap : MonoBehaviour
 {
-  public event Action<WorldMapLevel> LevelSelected;
-  public event Action<WorldMapLevel> LevelDeselected;
-
   [SerializeField] private WorldMapLevel startingLevel = null;
   [SerializeField] private WorldMapPlayer player = null;
 
   private HashSet<WorldMapLevel> levels;
-
-  public static WorldMap Instance { get; private set; }
 
   public WorldMapLevel SelectedLevel { get; private set; }
 
@@ -25,12 +20,11 @@ public class WorldMap : MonoBehaviour
     Assert.IsNotNull(this.startingLevel, nameof(this.startingLevel));
     Assert.IsNotNull(this.player, nameof(this.player));
 
-    Instance = this;
-
     this.levels = new HashSet<WorldMapLevel>(GetComponentsInChildren<WorldMapLevel>());
-
-    SelectLevel(this.startingLevel);
   }
+
+  private void Start()
+    => SelectLevel(this.startingLevel);
 
   public void SelectLevel(WorldMapLevel level)
   {
@@ -40,14 +34,14 @@ public class WorldMap : MonoBehaviour
     SelectedLevel = level;
     SelectedLevel.OnSelected();
 
-    LevelSelected?.Invoke(SelectedLevel);
+    EventAggregator.Instance.Publish(new LevelSelectedMessage(SelectedLevel));
   }
 
   public void DeselectLevel()
   {
     SelectedLevel?.OnDeselected();
 
-    LevelDeselected?.Invoke(SelectedLevel);
+    EventAggregator.Instance.Publish(new LevelDeselectedMessage(SelectedLevel));
 
     SelectedLevel = null;
   }
