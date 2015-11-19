@@ -1,11 +1,13 @@
 fileFormatVersion: 2
-guid: 0eb29c6c753ebca4fb0b15e7653eb201
-timeCreated: 1447631613
+guid: 25ed66de719437d45b14c0609f33c2b5
+timeCreated: 1447824287
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
-    21300000: Normal
-    21300002: Pressed
+    21300000: Yellow Gem
+    21300002: Red Gem
+    21300004: Green Gem
+    21300006: Empty Gem
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -45,33 +47,53 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: .5, y: .5}
-  spriteBorder: {x: 3, y: 3, z: 3, w: 3}
-  spritePixelsToUnits: 16
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 10
   alphaIsTransparency: 1
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
     sprites:
-    - name: Normal
+    - name: Yellow Gem
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 20
-        height: 20
+        width: 11
+        height: 9
       alignment: 0
       pivot: {x: .5, y: .5}
-      border: {x: 3, y: 5, z: 3, w: 3}
-    - name: Pressed
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Red Gem
       rect:
         serializedVersion: 2
-        x: 22
+        x: 13
         y: 0
-        width: 20
-        height: 20
+        width: 11
+        height: 9
       alignment: 0
       pivot: {x: .5, y: .5}
-      border: {x: 2, y: 2, z: 2, w: 2}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Green Gem
+      rect:
+        serializedVersion: 2
+        x: 26
+        y: 0
+        width: 11
+        height: 9
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Empty Gem
+      rect:
+        serializedVersion: 2
+        x: 39
+        y: 0
+        width: 11
+        height: 9
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
   spritePackingTag: 
   userData: 
   assetBundleName: 

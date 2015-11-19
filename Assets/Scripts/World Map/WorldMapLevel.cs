@@ -7,6 +7,8 @@ using Touch = InControl.Touch;
 public class WorldMapLevel : MonoBehaviour
 {
   [SerializeField] private Scenes levelScene = Scenes.Level1;
+  [SerializeField] private int collectedStars = 0;
+  [SerializeField] private int possibleStars = 3;
   [SerializeField] private List<WorldMapConnection> connections = new List<WorldMapConnection>();
 
   private WorldMap worldMap;
@@ -14,6 +16,8 @@ public class WorldMapLevel : MonoBehaviour
   public bool IsSelected => ReferenceEquals(this, WorldMap.SelectedLevel);
 
   public string LevelName => this.levelScene.GetDescription();
+  public int CollectedStars => this.collectedStars;
+  public int PossibleStars => this.possibleStars;
   public IEnumerable<WorldMapConnection> Connections => this.connections;
   public IEnumerable<WorldMapConnection> EnabledConnections => Connections.Where(c => c.IsEnabled);
   public bool HasEnabledConnections => Connections.Any(c => c.IsEnabled);

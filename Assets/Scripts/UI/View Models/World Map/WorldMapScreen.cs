@@ -1,7 +1,7 @@
 ﻿using JetBrains.Annotations;
 using MarkUX;
 
-namespace BadTummyBunny.UI.ViewModels
+namespace BadTummyBunny.UI
 {
   public class WorldMapScreen : View, IHandles<LevelSelectedMessage>, IHandles<LevelDeselectedMessage>
   {
@@ -13,12 +13,12 @@ namespace BadTummyBunny.UI.ViewModels
     public void Handle(LevelSelectedMessage message)
     {
       this.LevelPopup.SetLevel(message.Level);
-      this.LevelPopup.Show.StartAnimation();
+      this.LevelPopup.ShowAnimation.StartAnimation();
     }
 
     public void Handle(LevelDeselectedMessage message)
     {
-      this.LevelPopup.Hide.StartAnimation();
+      this.LevelPopup.HideAnimation.StartAnimation();
     }
   }
 }

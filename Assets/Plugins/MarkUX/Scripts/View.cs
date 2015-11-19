@@ -174,6 +174,7 @@ namespace MarkUX
             FieldBindings = new List<FieldBinding>();
             FieldChangeHandlers = new List<FieldChangeHandler>();
             HideFlags = HideFlags.None;
+            Scale = Vector3.one;
             Pivot = new Vector2(0.5f, 0.5f);
             BackgroundImage = null;
             BackgroundMaterial = null;
@@ -559,15 +560,19 @@ namespace MarkUX
 
                     // positioning and margins
                     rectTransform.offsetMin = new Vector2(
-                        offsetMinX - Margin.Left.Pixels + Offset.Left.Pixels - Offset.Right.Pixels + OffsetFromParent.Left.Pixels - OffsetFromParent.Right.Pixels,
-                        offsetMinY - Margin.Bottom.Pixels - Offset.Top.Pixels + Offset.Bottom.Pixels - OffsetFromParent.Top.Pixels + OffsetFromParent.Bottom.Pixels);
+                        offsetMinX + Margin.Left.Pixels + Offset.Left.Pixels - Offset.Right.Pixels + OffsetFromParent.Left.Pixels - OffsetFromParent.Right.Pixels,
+                        offsetMinY + Margin.Bottom.Pixels - Offset.Top.Pixels + Offset.Bottom.Pixels - OffsetFromParent.Top.Pixels + OffsetFromParent.Bottom.Pixels);
                     rectTransform.offsetMax = new Vector2(
-                        offsetMaxX + Margin.Right.Pixels + Offset.Left.Pixels - Offset.Right.Pixels + OffsetFromParent.Left.Pixels - OffsetFromParent.Right.Pixels,
-                        offsetMaxY + Margin.Top.Pixels - Offset.Top.Pixels + Offset.Bottom.Pixels - OffsetFromParent.Top.Pixels + OffsetFromParent.Bottom.Pixels);
+                        offsetMaxX - Margin.Right.Pixels + Offset.Left.Pixels - Offset.Right.Pixels + OffsetFromParent.Left.Pixels - OffsetFromParent.Right.Pixels,
+                        offsetMaxY - Margin.Top.Pixels - Offset.Top.Pixels + Offset.Bottom.Pixels - OffsetFromParent.Top.Pixels + OffsetFromParent.Bottom.Pixels);
 
                     rectTransform.anchoredPosition = new Vector2(
-                        (rectTransform.offsetMin.x / 2.0f + rectTransform.offsetMax.x / 2.0f) * this.Scale.x,
-                        (rectTransform.offsetMin.y / 2.0f + rectTransform.offsetMax.y / 2.0f) * this.Scale.y);
+                      rectTransform.anchoredPosition.x * this.Scale.x,
+                      rectTransform.anchoredPosition.y * this.Scale.y);
+
+                    //rectTransform.anchoredPosition = new Vector2(
+                    //    (rectTransform.offsetMin.x / 2.0f + rectTransform.offsetMax.x / 2.0f) * this.Scale.x,
+                    //    (rectTransform.offsetMin.y / 2.0f + rectTransform.offsetMax.y / 2.0f) * this.Scale.y);
 
                     // pivot
                     rectTransform.pivot = Pivot;

@@ -1,0 +1,12 @@
+﻿<View xmlns="http://www.markux.com/schema"
+      ViewName="WorldMapLevelStar"
+      Width="11em" Height="10em">
+  <ViewSwitcher Id="StarSelector"
+                StartView="EmptyStar"
+                SwitchToDefault="True">
+    <Image Id="EmptyStar"
+           Path="Assets/Sprites/UI/Menu/Star Container.png:Empty" />
+    <Image Id="FilledStar"
+           Path="Assets/Sprites/UI/Menu/Star Container.png:Filled" />
+  </ViewSwitcher>
+</View>

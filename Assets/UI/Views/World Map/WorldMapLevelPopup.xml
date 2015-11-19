@@ -1,17 +1,34 @@
 <View xmlns="http://www.markux.com/schema"
       ViewName="WorldMapLevelPopup"
       Width="5" Height="2">
-  <Image Path="Assets/Sprites/UI/Menu/Menu Frame.png"
+  <Image Path="Assets/Sprites/UI/Menu/Menu Frame.png:Normal"
          Type="Sliced" />
-  <Label Text="{LevelName}" />
+  
+  <Label Text="{LevelName}"
+         Width="8"
+         AdjustToText="Height"
+         Alignment="Top" />
 
-  <ViewAnimation Id="Show">
+  <List Id="StarList"
+        Items="{Stars}"
+        Orientation="Horizontal" Spacing="4em"
+        ItemWidth="11em" ItemHeight="10em"
+        Alignment="Bottom" ContentAlignment="Center"
+        OffsetFromParent="0,0,0,6em"
+        CanSelect="False">
+    <ListItem Id="Template"
+              ShowItemLabel="False">
+      <WorldMapLevelStar IsCollected="{Item.Value}" />
+    </ListItem>
+  </List>
+
+  <ViewAnimation Id="ShowAnimation">
     <Animate Field="Alpha"
              From="0" To="1"
              Duration="0.2s" EasingFunction="QuadraticEaseIn" />
   </ViewAnimation>
 
-  <ViewAnimation Id="Hide">
+  <ViewAnimation Id="HideAnimation">
     <Animate Field="Alpha"
              From="1" To="0"
              Duration="0.2s" EasingFunction="QuadraticEaseIn" />
