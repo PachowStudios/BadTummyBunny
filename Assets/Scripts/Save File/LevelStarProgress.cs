@@ -2,9 +2,9 @@
 
 public class LevelStarProgress
 {
-  [XmlElement(nameof(StarId))]
+  [XmlAttribute(nameof(StarId))]
   public string StarId { get; set; }
 
-  [XmlElement(nameof(IsComplete))]
+  [XmlAttribute(nameof(IsComplete))]
   public bool IsComplete { get; set; }
 }

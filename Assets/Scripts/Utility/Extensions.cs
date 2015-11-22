@@ -191,6 +191,12 @@ public static class Extensions
   public static bool IsEmpty<T>(this IEnumerable<T> parent)
     => !parent.Any();
 
+  public static bool HasSingle<T>(this IEnumerable<T> collection)
+    => collection.Count() == 1;
+
+  public static bool HasMultiple<T>(this IEnumerable<T> collection)
+    => collection.Count() > 1;
+
   public static bool IsAssignableFrom<T>(this Type parent)
     => parent.IsAssignableFrom(typeof(T));
 

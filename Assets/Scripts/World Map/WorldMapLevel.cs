@@ -6,7 +6,7 @@ using Touch = InControl.Touch;
 [AddComponentMenu("World Map/Level")]
 public class WorldMapLevel : MonoBehaviour
 {
-  [SerializeField] private Scenes levelScene = Scenes.Level1;
+  [SerializeField] private LevelConfig levelConfig = null;
   [SerializeField] private int collectedStars = 0;
   [SerializeField] private int possibleStars = 3;
   [SerializeField] private List<WorldMapConnection> connections = new List<WorldMapConnection>();
@@ -15,7 +15,7 @@ public class WorldMapLevel : MonoBehaviour
 
   public bool IsSelected => ReferenceEquals(this, WorldMap.SelectedLevel);
 
-  public string LevelName => this.levelScene.GetDescription();
+  public string LevelName => this.levelConfig.LevelName;
   public int CollectedStars => this.collectedStars;
   public int PossibleStars => this.possibleStars;
   public IEnumerable<WorldMapConnection> Connections => this.connections;
@@ -43,7 +43,7 @@ public class WorldMapLevel : MonoBehaviour
   }
 
   public void LoadScene()
-    => Application.LoadLevel(LevelName);
+    => Application.LoadLevel(this.levelConfig.LevelScene);
 
   public bool HasNeighbor(WorldMapLevel level)
     => this.connections.Any(c => c.ConnectsToLevel(level));

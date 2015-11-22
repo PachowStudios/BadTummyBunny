@@ -3,13 +3,13 @@ using System.Xml.Serialization;
 
 public class LevelProgress
 {
-  [XmlElement(nameof(LevelId))]
+  [XmlAttribute(nameof(LevelId))]
   public string LevelId { get; set; }
 
-  [XmlElement(nameof(IsUnlocked))]
+  [XmlAttribute(nameof(IsUnlocked))]
   public bool IsUnlocked { get; set; }
 
-  [XmlElement(nameof(IsComplete))]
+  [XmlAttribute(nameof(IsComplete))]
   public bool IsComplete { get; set; }
 
   [XmlArray(nameof(Stars))]

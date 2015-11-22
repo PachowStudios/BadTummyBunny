@@ -305,7 +305,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a7080fc5bd003e47be9e5a64016cbd2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelScene: 1
+  levelConfig: {fileID: 0}
+  collectedStars: 0
+  possibleStars: 3
   connections:
   - connectedLevel: {fileID: 11409618}
     isEnabled: 1
@@ -350,7 +352,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a7080fc5bd003e47be9e5a64016cbd2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelScene: 1
+  levelConfig: {fileID: 0}
+  collectedStars: 0
+  possibleStars: 3
   connections:
   - connectedLevel: {fileID: 11409602}
     isEnabled: 1
@@ -367,7 +371,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a7080fc5bd003e47be9e5a64016cbd2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelScene: 1
+  levelConfig: {fileID: 11400000, guid: da1b8e89c88d8f64ca271aefeb46568d, type: 2}
+  collectedStars: 2
+  possibleStars: 3
   connections:
   - connectedLevel: {fileID: 11409618}
     isEnabled: 1
@@ -440,7 +446,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a7080fc5bd003e47be9e5a64016cbd2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelScene: 1
+  levelConfig: {fileID: 0}
+  collectedStars: 0
+  possibleStars: 3
   connections:
   - connectedLevel: {fileID: 11409608}
     isEnabled: 1
@@ -485,7 +493,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a7080fc5bd003e47be9e5a64016cbd2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelScene: 1
+  levelConfig: {fileID: 0}
+  collectedStars: 0
+  possibleStars: 3
   connections:
   - connectedLevel: {fileID: 11409608}
     isEnabled: 1
