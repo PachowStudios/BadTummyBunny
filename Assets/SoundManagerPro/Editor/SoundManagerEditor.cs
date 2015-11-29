@@ -26,9 +26,6 @@ public partial class SoundManagerEditor : Editor {
 	private Texture2D footer;
 	private Texture2D icon;
 	
-	private bool listeningForGuiChanges;
-    private bool guiChanged;
-	
 	private Color softGreen = new Color(.67f,.89f,.67f,1f);
 	private Color hardGreen = Color.green;
 	private Color inactiveColor = new Color(.65f,.65f,.65f);

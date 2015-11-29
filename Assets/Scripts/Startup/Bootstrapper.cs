@@ -1,24 +1,21 @@
-﻿using UnityEngine;
+﻿using System;
+using Zenject;
 
-public class Bootstrapper : MonoBehaviour
+namespace BadTummyBunny
 {
-  private static Bootstrapper Instance { get; set; }
-
-  private void Awake()
+  public class Bootstrapper : IInitializable, IDisposable
   {
-    EnsureSingleInstance();
+    [Inject]
+    private SaveService SaveService { get; set; }
 
-    Instance = this;
+    public void Initialize()
+    {
+      SaveService.Load();
+    }
 
-    SaveService.Load();
-  }
-
-  private void OnApplicationQuit()
-    => SaveService.Save();
-
-  private void EnsureSingleInstance()
-  {
-    if (FindObjectsOfType<Bootstrapper>().HasMultiple())
-      this.DestroyGameObject();    
+    public void Dispose()
+    {
+      SaveService.Save();
+    }
   }
 }

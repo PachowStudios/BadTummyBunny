@@ -9,14 +9,21 @@ using System.Xml.Serialization;
 [TypeConverter(typeof(VersionCodeConverter))]
 public class VersionCode : ICloneable, IComparable<VersionCode>, IEquatable<VersionCode>
 {
-  [XmlAttribute]
+  [XmlIgnore]
   public int Major { get; private set; }
-  [XmlAttribute]
+  [XmlIgnore]
   public int Minor { get; private set; }
-  [XmlAttribute]
+  [XmlIgnore]
   public int Build { get; private set; } = -1;
-  [XmlAttribute]
+  [XmlIgnore]
   public int Revision { get; private set; } = -1;
+
+  [XmlAttribute]
+  public string Value
+  {
+    get { return ToString(); }
+    private set { Parse(value); }
+  }
 
   public VersionCode() { }
 
@@ -42,39 +49,7 @@ public class VersionCode : ICloneable, IComparable<VersionCode>, IEquatable<Vers
 
   public VersionCode(string version)
   {
-    if (version == null)
-      throw new ArgumentNullException(nameof(version));
-
-    var components = new Stack<string>(version.Split('.'));
-
-    if (components.Count < 2 || components.Count > 4)
-      throw new ArgumentException(nameof(version));
-
-    Major = int.Parse(components.Pop(), CultureInfo.InvariantCulture);
-
-    if (Major < 0)
-      throw new ArgumentOutOfRangeException(nameof(version), $"{nameof(Major)} cannot be less than 0");
-
-    Minor = int.Parse(components.Pop(), CultureInfo.InvariantCulture);
-
-    if (Minor < 0)
-      throw new ArgumentOutOfRangeException(nameof(version), $"{nameof(Minor)} cannot be less than 0");
-
-    if (components.IsEmpty())
-      return;
-
-    Build = int.Parse(components.Pop(), CultureInfo.InvariantCulture);
-
-    if (Build < 0)
-      throw new ArgumentOutOfRangeException(nameof(version), $"{nameof(Build)} cannot be less than 0");
-
-    if (components.IsEmpty())
-      return;
-
-    Revision = int.Parse(components.Pop(), CultureInfo.InvariantCulture);
-
-    if (Revision < 0)
-      throw new ArgumentOutOfRangeException(nameof(version), $"{nameof(Revision)} cannot be less than 0");
+    Parse(version);
   }
 
   public object Clone()
@@ -130,6 +105,43 @@ public class VersionCode : ICloneable, IComparable<VersionCode>, IEquatable<Vers
     => Build < 0 ? $"{Major}.{Minor}"
       : Revision < 0 ? $"{Major}.{Minor}.{Build}"
         : $"{Major}.{Minor}.{Build}.{Revision}";
+
+  private void Parse(string version)
+  {
+    if (version == null)
+      throw new ArgumentNullException(nameof(version));
+
+    var components = new Stack<string>(version.Split('.'));
+
+    if (components.Count < 2 || components.Count > 4)
+      throw new ArgumentException(nameof(version));
+
+    Major = int.Parse(components.Pop(), CultureInfo.InvariantCulture);
+
+    if (Major < 0)
+      throw new ArgumentOutOfRangeException(nameof(version), $"{nameof(Major)} cannot be less than 0");
+
+    Minor = int.Parse(components.Pop(), CultureInfo.InvariantCulture);
+
+    if (Minor < 0)
+      throw new ArgumentOutOfRangeException(nameof(version), $"{nameof(Minor)} cannot be less than 0");
+
+    if (components.IsEmpty())
+      return;
+
+    Build = int.Parse(components.Pop(), CultureInfo.InvariantCulture);
+
+    if (Build < 0)
+      throw new ArgumentOutOfRangeException(nameof(version), $"{nameof(Build)} cannot be less than 0");
+
+    if (components.IsEmpty())
+      return;
+
+    Revision = int.Parse(components.Pop(), CultureInfo.InvariantCulture);
+
+    if (Revision < 0)
+      throw new ArgumentOutOfRangeException(nameof(version), $"{nameof(Revision)} cannot be less than 0");
+  }
 }
 
 public class VersionCodeConverter : TypeConverter

@@ -305,7 +305,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a7080fc5bd003e47be9e5a64016cbd2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelConfig: {fileID: 0}
+  levelConfig: {fileID: 11400000, guid: 9219e03a36c298b4e96e89dcb119b3b4, type: 2}
   collectedStars: 0
   possibleStars: 3
   connections:
@@ -352,7 +352,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a7080fc5bd003e47be9e5a64016cbd2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelConfig: {fileID: 0}
+  levelConfig: {fileID: 11400000, guid: efaa84093ad1c264196437ef58fe2a7e, type: 2}
   collectedStars: 0
   possibleStars: 3
   connections:
@@ -446,7 +446,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a7080fc5bd003e47be9e5a64016cbd2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelConfig: {fileID: 0}
+  levelConfig: {fileID: 11400000, guid: 246760872a3c3c54b9638f072b6d7b4c, type: 2}
   collectedStars: 0
   possibleStars: 3
   connections:
@@ -493,7 +493,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a7080fc5bd003e47be9e5a64016cbd2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelConfig: {fileID: 0}
+  levelConfig: {fileID: 11400000, guid: 284c376b41b98a84db79016281ce8be0, type: 2}
   collectedStars: 0
   possibleStars: 3
   connections:
@@ -519,7 +519,9 @@ SpriteRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -545,7 +547,9 @@ SpriteRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -571,7 +575,9 @@ SpriteRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -597,7 +603,9 @@ SpriteRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -623,7 +631,9 @@ SpriteRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}

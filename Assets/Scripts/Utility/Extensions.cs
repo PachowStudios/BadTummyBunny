@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Reflection;
+using JetBrains.Annotations;
 using UnityEngine;
+using Zenject;
 using Component = UnityEngine.Component;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
@@ -166,6 +169,15 @@ public static class Extensions
     return lastItem;
   }
 
+  [NotNull]
+  public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, Func<TValue> factory)
+  {
+    if (!dictionary.ContainsKey(key) || dictionary[key] == null)
+      dictionary[key] = factory.Invoke();
+
+    return dictionary[key];
+  }
+
   [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
   public static IEnumerable<T> ForEach<T>(this IEnumerable<T> parent, Action<T> action)
   {
@@ -200,19 +212,26 @@ public static class Extensions
   public static bool IsAssignableFrom<T>(this Type parent)
     => parent.IsAssignableFrom(typeof(T));
 
+  public static T GetAttributeOfType<T>(this PropertyInfo propertyInfo, bool inherit = false)
+    => (T)propertyInfo.GetCustomAttributes(typeof(T), inherit).FirstOrDefault();
+
   public static T GetAttributeOfType<T>(this Enum parent)
     where T : Attribute
-  {
-    var type = parent.GetType();
-    var memInfo = type.GetMember(parent.ToString());
-    var attributes = memInfo[0].GetCustomAttributes(typeof(T), false);
-
-    return (T)attributes.FirstOrDefault();
-  }
+    => (T)parent
+      .GetType()
+      .GetMember(parent.ToString()).First()
+      .GetCustomAttributes(typeof(T), false).FirstOrDefault();
 
   public static string GetDescription(this Enum parent)
     => parent.GetAttributeOfType<DescriptionAttribute>()?.Description
-       ?? string.Empty;
+    ?? string.Empty;
+
+  public static IEnumerable<PropertyInfo> GetPropertiesWithAttribute<T>(this Type targetType, bool inherit = false)
+    where T : Attribute
+    => targetType
+      .GetProperties(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance)
+      .Where(p => Attribute.IsDefined(p, typeof(T), inherit))
+      .ToList();
 
   public static int RandomSign()
     => Random.value < 0.5 ? -1 : 1;
@@ -235,8 +254,8 @@ public static class Extensions
 
   public static Vector3 SuperSmoothLerp(Vector3 followOld, Vector3 targetOld, Vector3 targetNew, float elapsedTime, float lerpAmount)
     => (targetNew - ((targetNew - targetOld) / (lerpAmount * elapsedTime)))
-       + (((followOld - targetOld) + ((targetNew - targetOld) / (lerpAmount * elapsedTime)))
-          * Mathf.Exp(-lerpAmount * elapsedTime));
+    + (((followOld - targetOld) + ((targetNew - targetOld) / (lerpAmount * elapsedTime)))
+    * Mathf.Exp(-lerpAmount * elapsedTime));
 
   public static Vector3 Vector3Range(Vector3 min, Vector3 max)
     => new Vector3(
@@ -249,4 +268,11 @@ public static class Extensions
       Camera.main.ViewportToWorldPoint(Vector3.zero)
       + new Vector3(units, 0f))
       .x;
+
+  public static void BindLifetimeSingleton<T>(this DiContainer container)
+    where T : IInitializable, IDisposable
+  {
+    container.Bind<IInitializable>().ToSingle<T>();
+    container.Bind<IDisposable>().ToSingle<T>();
+  }
 }

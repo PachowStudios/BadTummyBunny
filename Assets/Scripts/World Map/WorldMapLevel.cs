@@ -1,17 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Assertions;
+using Zenject;
 using Touch = InControl.Touch;
 
-[AddComponentMenu("World Map/Level")]
+[AddComponentMenu("Bad Tummy Bunny/World Map/Level")]
 public class WorldMapLevel : MonoBehaviour
 {
   [SerializeField] private LevelConfig levelConfig = null;
   [SerializeField] private int collectedStars = 0;
   [SerializeField] private int possibleStars = 3;
   [SerializeField] private List<WorldMapConnection> connections = new List<WorldMapConnection>();
-
-  private WorldMap worldMap;
 
   public bool IsSelected => ReferenceEquals(this, WorldMap.SelectedLevel);
 
@@ -23,14 +23,13 @@ public class WorldMapLevel : MonoBehaviour
   public bool HasEnabledConnections => Connections.Any(c => c.IsEnabled);
   public Vector3 Position => transform.position;
 
-  private WorldMap WorldMap => this.GetComponentInParentIfNull(ref this.worldMap);
+  [Inject]
+  private WorldMap WorldMap { get; set; }
 
   private void Awake()
   {
-    if (Connections.IsEmpty())
-      Debug.LogWarning($"{name} doesn't have any connections!");
-    else if (Connections.Any(c => c.ConnectedLevel == null))
-      Debug.LogWarning($"{name} has an uninitialized connection!");
+    Assert.IsFalse(Connections.IsEmpty(), $"{name} doesn't have any connections!");
+    Assert.IsFalse(Connections.Any(c => c.ConnectedLevel == null), $"{name} has an uninitialized connection!");
   }
 
   private void OnDrawGizmosSelected()

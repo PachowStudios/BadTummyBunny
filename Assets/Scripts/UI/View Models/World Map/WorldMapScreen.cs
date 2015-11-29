@@ -1,5 +1,6 @@
 ﻿using JetBrains.Annotations;
 using MarkUX;
+using Zenject;
 
 namespace BadTummyBunny.UI
 {
@@ -7,8 +8,12 @@ namespace BadTummyBunny.UI
   {
     [UsedImplicitly] public WorldMapLevelPopup LevelPopup = null;
 
-    private void Awake()
-      => EventAggregator.Instance.Subscribe(this);
+    [Inject]
+    private IEventAggregator EventAggregator { get; set; }
+
+    [PostInject]
+    private void PostInject()
+      => EventAggregator.Subscribe(this);
 
     public void Handle(LevelSelectedMessage message)
     {

@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 [AddComponentMenu("Player/Score")]
 public class PlayerScore : MonoBehaviour, IScoreKeeper
@@ -20,14 +21,14 @@ public class PlayerScore : MonoBehaviour, IScoreKeeper
 
   public void AddCoins(int coinsToAdd)
   {
-    Assert.IsGreaterThan(coinsToAdd, 0);
+    Assert.IsTrue(coinsToAdd > 0);
 
     Coins += coinsToAdd;
   }
 
   public void RemoveCoins(int coinsToRemove)
   {
-    Assert.IsGreaterThan(coinsToRemove, 0);
+    Assert.IsTrue(coinsToRemove > 0);
 
     Coins -= coinsToRemove;
   }

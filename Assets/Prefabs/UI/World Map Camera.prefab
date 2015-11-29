@@ -113,7 +113,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 4.49953032
+  orthographic size: 4.49530983
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -152,14 +152,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ada637011e40b4c4d9160dd583bfd929, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  snapToBottom: 1
-  snapToTop: 1
-  snapToRight: 1
-  snapToLeft: 1
-  bottomConstraint: -4.5
-  topConstraint: 4.5
-  rightConstraint: 8
-  leftConstraint: -8
+  snapToBottom: 0
+  snapToTop: 0
+  snapToRight: 0
+  snapToLeft: 0
+  bottomConstraint: 0
+  topConstraint: 0
+  rightConstraint: 0
+  leftConstraint: 0
 --- !u!114 &11413438
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -171,9 +171,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f14eb5fd3c54431f9eb25d1b64a8d94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 2
-  height: 2
-  axis: 3
+  width: 3
+  height: 3
+  axis: 0
 --- !u!114 &11413440
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -237,11 +237,11 @@ MonoBehaviour:
   verticalOffset: 0
   enablePlatformSnap: 0
   isPlatformSnapExclusiveWhenEnabled: 0
-  platformSnapVerticalOffset: -2
+  platformSnapVerticalOffset: 0
   cameraSmoothingType: 1
-  smoothDampTime: .100000001
-  springDampingRatio: .800000012
-  springAngularFrequency: 30
+  smoothDampTime: .0799999982
+  springDampingRatio: .699999988
+  springAngularFrequency: 20
   lerpTowardsFactor: .00200000009
 --- !u!124 &12413436
 Behaviour:

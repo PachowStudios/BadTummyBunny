@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 public abstract class BaseHasHealth : MonoBehaviour, IHasHealth
 {
@@ -14,7 +15,7 @@ public abstract class BaseHasHealth : MonoBehaviour, IHasHealth
 
   public virtual void Heal(int amountToHeal)
   {
-    Assert.IsGreaterThan(amountToHeal, 0);
+    Assert.IsTrue(amountToHeal > 0);
 
     Health += amountToHeal;
   }

@@ -3,11 +3,7 @@ using System.Linq;
 
 public partial class EventAggregator : IEventAggregator
 {
-  private static IEventAggregator instance;
-
   private readonly List<IWeakEventHandler> handlers = new List<IWeakEventHandler>();
-
-  public static IEventAggregator Instance => instance ?? (instance = new EventAggregator());
 
   public bool HandlerExistsFor<TMessage>()
     where TMessage : IMessage

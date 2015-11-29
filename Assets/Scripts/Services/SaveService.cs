@@ -2,13 +2,13 @@
 using System.Xml;
 using UnityEngine;
 
-public static class SaveService
+public class SaveService
 {
-  private static string SaveFilePath => Path.Combine(Application.persistentDataPath, "BadTummyBunny.save.xml");
+  private static string SaveFilePath { get; } = Path.Combine(Application.persistentDataPath, "BadTummyBunny.save.xml");
 
-  public static SaveFile CurrentSave { get; private set; } = new SaveFile();
+  public SaveFile CurrentSave { get; private set; } = new SaveFile();
 
-  public static void Load()
+  public void Load()
   {
     if (!File.Exists(SaveFilePath))
       return;
@@ -19,7 +19,7 @@ public static class SaveService
     CurrentSave = xmlDoc.DeserializeToObject<SaveFile>();
   }
 
-  public static void Save()
+  public void Save()
   {
     if (CurrentSave == null)
       return;

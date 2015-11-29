@@ -1,15 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Assertions;
+using Zenject;
 
-[AddComponentMenu("World Map/Map")]
+[AddComponentMenu("Bad Tummy Bunny/World Map/Map")]
 public class WorldMap : MonoBehaviour
 {
   [SerializeField] private WorldMapLevel startingLevel = null;
-  [SerializeField] private WorldMapPlayer player = null;
 
   private HashSet<WorldMapLevel> levels;
+
+  [Inject]
+  private WorldMapPlayer Player { get; set; }
+
+  [Inject]
+  private IEventAggregator EventAggregator { get; set; }
 
   public WorldMapLevel SelectedLevel { get; private set; }
 
@@ -18,7 +24,6 @@ public class WorldMap : MonoBehaviour
   private void Awake()
   {
     Assert.IsNotNull(this.startingLevel, nameof(this.startingLevel));
-    Assert.IsNotNull(this.player, nameof(this.player));
 
     this.levels = new HashSet<WorldMapLevel>(GetComponentsInChildren<WorldMapLevel>());
   }
@@ -34,14 +39,14 @@ public class WorldMap : MonoBehaviour
     SelectedLevel = level;
     SelectedLevel.OnSelected();
 
-    EventAggregator.Instance.Publish(new LevelSelectedMessage(SelectedLevel));
+    EventAggregator.Publish(new LevelSelectedMessage(SelectedLevel));
   }
 
   public void DeselectLevel()
   {
     SelectedLevel?.OnDeselected();
 
-    EventAggregator.Instance.Publish(new LevelDeselectedMessage(SelectedLevel));
+    EventAggregator.Publish(new LevelDeselectedMessage(SelectedLevel));
 
     SelectedLevel = null;
   }
@@ -53,7 +58,7 @@ public class WorldMap : MonoBehaviour
     if (TryGetPathToLevel(SelectedLevel, targetLevel, out path))
     {
       DeselectLevel();
-      this.player.NavigatePath(path, onCompleted: SelectLevel);
+      Player.NavigatePath(path, onCompleted: SelectLevel);
     }
   }
 

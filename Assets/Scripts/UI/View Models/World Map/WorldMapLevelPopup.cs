@@ -21,7 +21,7 @@ namespace BadTummyBunny.UI
 
     public void SetLevel(WorldMapLevel level)
     {
-      SetValue(() => this.LevelName, level.name);
+      SetValue(() => this.LevelName, level.LevelName);
       UpdateStars(level.CollectedStars, level.PossibleStars);
     }
 
