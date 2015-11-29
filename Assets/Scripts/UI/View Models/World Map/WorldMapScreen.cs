@@ -4,7 +4,9 @@ using Zenject;
 
 namespace BadTummyBunny.UI
 {
-  public class WorldMapScreen : View, IHandles<LevelSelectedMessage>, IHandles<LevelDeselectedMessage>
+  public class WorldMapScreen : View,
+    IHandles<LevelSelectedMessage>,
+    IHandles<LevelDeselectedMessage>
   {
     [UsedImplicitly] public WorldMapLevelPopup LevelPopup = null;
 

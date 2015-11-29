@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
 
-[AddComponentMenu("UI/Camera/Effectors/Cue Focus Polygon")]
-[RequireComponent(typeof(PolygonCollider2D))]
-public class CueFocusPolygon : CueFocusBase
+namespace BadTummyBunny
 {
-  protected new PolygonCollider2D EffectorTrigger => (PolygonCollider2D)base.EffectorTrigger;
+  [AddComponentMenu("Bad Tummy Bunny/UI/Camera/Effectors/Cue Focus Polygon")]
+  [RequireComponent(typeof(PolygonCollider2D))]
+  public class CueFocusPolygon : CueFocusBase
+  {
+    protected new PolygonCollider2D EffectorTrigger => (PolygonCollider2D)base.EffectorTrigger;
 
-  public override float GetEffectorWeight() => this.effectorWeight;
+    public override float GetEffectorWeight() => EffectorWeight;
+  }
 }

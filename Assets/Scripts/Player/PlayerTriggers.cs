@@ -1,30 +1,41 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using UnityEngine;
+using Zenject;
 
-[AddComponentMenu("Player/Triggers")]
-public sealed class PlayerTriggers : MonoBehaviour
+namespace BadTummyBunny
 {
-  public event Action<IEnemy>       EnemyTriggered;
-  public event Action<Coin>         CoinTriggered;
-  public event Action<Carrot>       CarrotTriggered;
-  public event Action<Flagpole>     FlagpoleTriggered;
-  public event Action<RespawnPoint> RespawnPointTriggered;
-  public event Action               KillzoneTriggered;
-
-  [Conditional("UNITY_EDITOR")]
-  private void Update() { }
-
-  private void OnTriggerEnter2D(Collider2D other)
+  [AddComponentMenu("Bad Tummy Bunny/Player/Triggers")]
+  public sealed class PlayerTriggers : MonoBehaviour
   {
-    switch (other.tag)
+    [Inject]
+    private IEventAggregator EventAggregator { get; set; }
+
+    [Conditional("UNITY_EDITOR")]
+    private void Update() { }
+
+    private void OnTriggerEnter2D(Collider2D other)
     {
-      case Tags.Enemy: EnemyTriggered?.Invoke(other.GetInterface<IEnemy>()); break;
-      case Tags.Coin: CoinTriggered?.Invoke(other.GetComponent<Coin>()); break;
-      case Tags.Carrot: CarrotTriggered?.Invoke(other.GetComponent<Carrot>()); break;
-      case Tags.Flagpole: FlagpoleTriggered?.Invoke(other.GetComponent<Flagpole>()); break;
-      case Tags.RespawnPoint: RespawnPointTriggered?.Invoke(other.GetComponent<RespawnPoint>()); break;
-      case Tags.Killzone: KillzoneTriggered?.Invoke(); break;
+      switch (other.tag)
+      {
+        case Tags.Enemy:
+          EventAggregator.Publish(new PlayerEnemyTriggeredMessage(other.GetInterface<IEnemy>()));
+          break;
+        case Tags.Coin:
+          EventAggregator.Publish(new PlayerCoinTriggeredMessage(other.GetComponent<Coin>()));
+          break;
+        case Tags.Carrot:
+          EventAggregator.Publish(new PlayerCarrotTriggeredMessage(other.GetComponent<Carrot>()));
+          break;
+        case Tags.Flagpole:
+          EventAggregator.Publish(new PlayerFlagpoleTriggeredMessage(other.GetComponent<Flagpole>()));
+          break;
+        case Tags.RespawnPoint:
+          EventAggregator.Publish(new PlayerRespawnPointTriggeredMessage(other.GetComponent<RespawnPoint>()));
+          break;
+        case Tags.Killzone:
+          EventAggregator.Publish(new PlayerKillzoneTriggeredMessage());
+          break;
+      }
     }
   }
 }

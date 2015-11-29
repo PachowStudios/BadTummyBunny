@@ -1,4 +1,4 @@
-﻿namespace AI.Patrol
+﻿namespace BadTummyBunny.AI.Patrol
 {
   public class FollowState : FiniteState<PatrolAI>
   {
@@ -18,7 +18,8 @@
     {
       if (Context.CanFollowPlayer)
       {
-        if (Context.IsPlayerInRange(max: Context.AttackRange) && this.cooldownTimer <= 0f)
+        if (Context.IsPlayerInRange(max: Context.AttackRange)
+            && this.cooldownTimer <= 0f)
           StateMachine.GoToState<AttackState>();
       }
       else

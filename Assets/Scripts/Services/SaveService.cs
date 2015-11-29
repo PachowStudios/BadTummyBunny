@@ -20,12 +20,5 @@ public class SaveService
   }
 
   public void Save()
-  {
-    if (CurrentSave == null)
-      return;
-
-    var xmlDoc = CurrentSave.SerializeToXml();
-
-    xmlDoc.Save(SaveFilePath);
-  }
+    => CurrentSave?.SerializeToXml().Save(SaveFilePath);
 }

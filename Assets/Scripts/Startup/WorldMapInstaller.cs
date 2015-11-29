@@ -12,8 +12,8 @@ namespace BadTummyBunny
     public override void InstallBindings()
     {
       // Existing game objects
-      Container.BindInstance(this.worldMapInstance);
-      Container.BindInstance(this.playerInstance);
+      Container.Bind<WorldMap>().ToInstance(this.worldMapInstance);
+      Container.Bind<WorldMapPlayer>().ToInstance(this.playerInstance);
     }
   }
 }

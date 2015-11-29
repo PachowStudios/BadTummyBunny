@@ -1,55 +1,66 @@
 ﻿using UnityEngine;
+using Zenject;
 
-[AddComponentMenu("UI/Camera/Effectors/Fart Aim Lean")]
-public sealed class FartAimLean : MonoBehaviour, ICameraEffector
+namespace BadTummyBunny
 {
-  [SerializeField] private float effectorWeight = 5f;
-  [SerializeField] private float leanDistance = 3f;
-  [SerializeField] private float minimumPower = 0.2f;
-  [SerializeField] private AnimationCurve effectorFalloff = AnimationCurve.Linear(0f, 0f, 1f, 1f);
-
-  public bool IsEnabled { get; private set; }
-
-  private static IFartInfoProvider FartStatusProvider => Player.Instance.FartStatusProvider;
-
-  private void Update()
+  [AddComponentMenu("Bad Tummy Bunny/UI/Camera/Effectors/Fart Aim Lean")]
+  public sealed class FartAimLean : MonoBehaviour, ICameraEffector
   {
-    if (Player.Instance.FartStatusProvider.IsFartCharging && !IsEnabled)
-      Activate();
-    else if (!FartStatusProvider.IsFartCharging && IsEnabled)
-      Deactivate();
-  }
+    [SerializeField] private float effectorWeight = 5f;
+    [SerializeField] private float leanDistance = 3f;
+    [SerializeField] private float minimumPower = 0.2f;
+    [SerializeField] private AnimationCurve effectorFalloff = AnimationCurve.Linear(0f, 0f, 1f, 1f);
 
-  public Vector3 GetDesiredPositionDelta(Bounds targetBounds, Vector3 basePosition, Vector3 targetAverageVelocity)
-  {
-    var targetPosition = Player.Instance.Movement.Position;
+    [Inject]
+    private CameraController CameraController { get; set; }
 
-    targetPosition += this.leanDistance * FartStatusProvider.FartDirection.ToVector3();
+    [Inject(Tags.Player)]
+    private IFartInfoProvider FartInfo { get; set; }
 
-    return targetPosition;
-  }
+    [Inject(Tags.Player)]
+    private IMovable PlayerMovement { get; set; }
 
-  public float GetEffectorWeight()
-  {
-    var startingPower = FartStatusProvider.FartPower;
+    public bool IsEnabled { get; private set; }
 
-    if (startingPower < this.minimumPower)
-      return 0f;
+    private void Update()
+    {
+      if (FartInfo.IsFartCharging && !IsEnabled)
+        Activate();
+      else if (!FartInfo.IsFartCharging && IsEnabled)
+        Deactivate();
+    }
 
-    var adjustedPower = Extensions.ConvertRange(startingPower, 0f, 1f, this.minimumPower, 1f);
+    public Vector3 GetDesiredPositionDelta(Bounds targetBounds, Vector3 basePosition, Vector3 targetAverageVelocity)
+    {
+      var targetPosition = PlayerMovement.Position;
 
-    return this.effectorWeight * this.effectorFalloff.Evaluate(adjustedPower);
-  }
+      targetPosition += this.leanDistance * FartInfo.FartDirection.ToVector3();
 
-  private void Activate()
-  {
-    IsEnabled = true;
-    CameraController.Instance.AddCameraEffector(this);
-  }
+      return targetPosition;
+    }
 
-  private void Deactivate()
-  {
-    IsEnabled = false;
-    CameraController.Instance.RemoveCameraEffector(this);
+    public float GetEffectorWeight()
+    {
+      var startingPower = FartInfo.FartPower;
+
+      if (startingPower < this.minimumPower)
+        return 0f;
+
+      var adjustedPower = Extensions.ConvertRange(startingPower, 0f, 1f, this.minimumPower, 1f);
+
+      return this.effectorWeight * this.effectorFalloff.Evaluate(adjustedPower);
+    }
+
+    private void Activate()
+    {
+      IsEnabled = true;
+      CameraController.AddCameraEffector(this);
+    }
+
+    private void Deactivate()
+    {
+      IsEnabled = false;
+      CameraController.RemoveCameraEffector(this);
+    }
   }
 }

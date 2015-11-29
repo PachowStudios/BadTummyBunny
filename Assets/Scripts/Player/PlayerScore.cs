@@ -1,47 +1,55 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Assertions;
+using Zenject;
 
-[AddComponentMenu("Player/Score")]
-public class PlayerScore : MonoBehaviour, IScoreKeeper
+namespace BadTummyBunny
 {
-  public event Action<int> CoinsChanged;
-
-  private int coins;
-
-  public int Coins
+  [AddComponentMenu("Player/Score")]
+  public class PlayerScore : MonoBehaviour, IScoreKeeper,
+    IHandles<PlayerCoinTriggeredMessage>
   {
-    get { return this.coins; }
-    private set
+    private int coins;
+
+    [Inject]
+    private IEventAggregator EventAggregator { get; set; }
+
+    public int Coins
     {
-      this.coins = value;
-      CoinsChanged?.Invoke(this.coins);
+      get { return this.coins; }
+      private set
+      {
+        this.coins = value;
+        EventAggregator.Publish(new PlayerCoinsChangedMessage(this.coins));
+      }
     }
-  }
 
-  public void AddCoins(int coinsToAdd)
-  {
-    Assert.IsTrue(coinsToAdd > 0);
+    [PostInject]
+    private void PostInject()
+      => EventAggregator.Subscribe(this);
 
-    Coins += coinsToAdd;
-  }
+    public void AddCoins(int coinsToAdd)
+    {
+      Assert.IsTrue(coinsToAdd > 0);
 
-  public void RemoveCoins(int coinsToRemove)
-  {
-    Assert.IsTrue(coinsToRemove > 0);
+      Coins += coinsToAdd;
+    }
 
-    Coins -= coinsToRemove;
-  }
+    public void RemoveCoins(int coinsToRemove)
+    {
+      Assert.IsTrue(coinsToRemove > 0);
 
-  private void Start() => Player.Instance.Triggers.CoinTriggered += CollectCoin;
+      Coins -= coinsToRemove;
+    }
 
-  private void OnDestroy() => Player.Instance.Triggers.CoinTriggered -= CollectCoin;
+    private void CollectCoin(Coin coin)
+    {
+      Assert.IsNotNull(coin);
 
-  private void CollectCoin(Coin coin)
-  {
-    Assert.IsNotNull(coin);
+      AddCoins(coin.Value);
+      coin.Collect();
+    }
 
-    AddCoins(coin.Value);
-    coin.Collect();
+    public void Handle(PlayerCoinTriggeredMessage message)
+      => CollectCoin(message.Coin);
   }
 }

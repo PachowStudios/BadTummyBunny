@@ -98,7 +98,7 @@ namespace Zenject
             // derived methods to be added as well
             var methods = type.GetAllMethods(
                 BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
-                .Where(x => x.GetCustomAttributes(typeof(PostInjectAttribute), false).Any()).ToList();
+                .Where(x => x.GetCustomAttributes(typeof(PostInjectAttribute), true).Any()).ToList();
 
             var heirarchyList = type.Yield().Concat(type.GetParentTypes()).Reverse().ToList();
 

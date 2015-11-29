@@ -6,6 +6,7 @@ public abstract class BaseHasHealth : MonoBehaviour, IHasHealth
 {
   public event Action<int> HealthChanged;
 
+  // ReSharper disable once InconsistentNaming
   protected int health = 0;
 
   public abstract int MaxHealth { get; }
@@ -25,5 +26,6 @@ public abstract class BaseHasHealth : MonoBehaviour, IHasHealth
   public abstract void Damage(int damage, Vector2 knockback, Vector2 knockbackDirection);
   public abstract void Kill();
 
-  protected void RaiseHealthChanged(int newHealth) => HealthChanged?.Invoke(newHealth);
+  protected virtual void RaiseHealthChanged(int newHealth)
+    => HealthChanged?.Invoke(newHealth);
 }

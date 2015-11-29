@@ -114,6 +114,10 @@ public static class Extensions
     where T : class
     => Array.ConvertAll(parent.GetComponents(typeof(T)), c => c as T);
 
+  public static T GetInterface<T>(this GameObject gameObject)
+    where T : class
+    => gameObject.GetComponent(typeof(T)) as T;
+
   public static void DestroyGameObject(this MonoBehaviour parent)
     => parent.gameObject.Destroy();
 

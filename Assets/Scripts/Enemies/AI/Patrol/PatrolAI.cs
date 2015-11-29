@@ -1,20 +1,19 @@
 ﻿using System;
 using UnityEngine;
 
-namespace AI.Patrol
+namespace BadTummyBunny.AI.Patrol
 {
   [AddComponentMenu("Enemy/AI/Patrol AI")]
-  // ReSharper disable once InconsistentNaming
   public class PatrolAI : BaseEnemyAI
   {
     [Header("Patrol AI")]
-    [SerializeField] protected Vector2 followSpeedRange = new Vector2(2.5f, 3.5f);
-    [SerializeField] protected float visibilityAngle = 45f;
-    [SerializeField] protected float followRange = 5f;
-    [SerializeField] protected float attackRange = 1f;
-    [SerializeField] protected float attackJumpHeight = 0.5f;
-    [SerializeField] protected float cooldownTime = 1f;
-    [SerializeField] protected Vector2 sightLostWaitTimeRange = new Vector2(1f, 2.5f);
+    [SerializeField] private Vector2 followSpeedRange = new Vector2(2.5f, 3.5f);
+    [SerializeField] private float visibilityAngle = 45f;
+    [SerializeField] private float followRange = 5f;
+    [SerializeField] private float attackRange = 1f;
+    [SerializeField] private float attackJumpHeight = 0.5f;
+    [SerializeField] private float cooldownTime = 1f;
+    [SerializeField] private Vector2 sightLostWaitTimeRange = new Vector2(1f, 2.5f);
 
     public Vector2 FollowSpeedRange => this.followSpeedRange;
     public float AttackRange => this.attackRange;
@@ -24,19 +23,19 @@ namespace AI.Patrol
     public Animator Animator => this.animator;
 
     public bool CanFollowPlayer
-      => IsPlayerInLineOfSight(this.followRange, this.visibilityAngle) &&
-         Math.Abs(RelativePlayerLastGrounded) < 0.025f &&
-         !IsAtLedge &&
-         !IsAtWall;
+      => IsPlayerInLineOfSight(this.followRange, this.visibilityAngle)
+      && Math.Abs(RelativePlayerLastGrounded) < 0.025f
+      && !IsAtLedge
+      && !IsAtWall;
 
     protected IFiniteStateMachine<PatrolAI> StateMachine { get; private set; }
 
     protected virtual void Awake()
       => StateMachine = new FiniteStateMachine<PatrolAI>(this)
-                            .AddState<PatrolState>()
-                            .AddState<FollowState>()
-                            .AddState<SightLostState>()
-                            .AddState<AttackState>();
+        .AddState<PatrolState>()
+        .AddState<FollowState>()
+        .AddState<SightLostState>()
+        .AddState<AttackState>();
 
     protected override void InternalUpdate()
     {

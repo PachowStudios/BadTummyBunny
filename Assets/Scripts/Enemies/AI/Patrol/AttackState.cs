@@ -1,4 +1,4 @@
-﻿namespace AI.Patrol
+﻿namespace BadTummyBunny.AI.Patrol
 {
   public class AttackState : FiniteState<PatrolAI>
   {

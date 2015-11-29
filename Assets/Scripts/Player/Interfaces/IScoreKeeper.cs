@@ -1,9 +1,5 @@
-﻿using System;
-
-public interface IScoreKeeper
+﻿public interface IScoreKeeper
 {
-  event Action<int> CoinsChanged;
-
   int Coins { get; }
 
   void AddCoins(int coins);

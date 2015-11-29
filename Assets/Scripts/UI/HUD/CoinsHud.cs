@@ -1,27 +1,30 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
-[AddComponentMenu("UI/HUD/Coins")]
-public class CoinsHud : MonoBehaviour
+namespace BadTummyBunny
 {
-  [SerializeField] protected Text coinsText;
-  [SerializeField] protected int coinsDigits = 3;
-
-  public static CoinsHud Instance { get; private set; }
-
-  protected virtual void Awake()
+  [AddComponentMenu("Bad Tummy Bunny/UI/HUD/Coins")]
+  public class CoinsHud : MonoBehaviour,
+    IHandles<PlayerCoinsChangedMessage>
   {
-    Instance = this;
+    [SerializeField] private Text coinsText = null;
+    [SerializeField] private int coinsDigits = 3;
 
-    this.coinsText.text = new string('0', this.coinsDigits);
+    [Inject(Tags.Player)]
+    private IScoreKeeper PlayerScore { get; set; }
+
+    [Inject]
+    private IEventAggregator EventAggregator { get; set; }
+
+    [PostInject]
+    private void PostInject()
+      => EventAggregator.Subscribe(this);
+
+    private void Awake()
+      => this.coinsText.text = new string('0', this.coinsDigits);
+
+    public void Handle(PlayerCoinsChangedMessage message)
+      => this.coinsText.text = message.Coins.ToString().PadLeft(this.coinsDigits, '0');
   }
-
-  protected virtual void Start()
-    => Player.Instance.Score.CoinsChanged += OnCoinsChanged;
-
-  protected virtual void OnDestroy()
-    => Player.Instance.Score.CoinsChanged -= OnCoinsChanged;
-
-  protected virtual void OnCoinsChanged(int newCoins)
-    => this.coinsText.text = newCoins.ToString().PadLeft(this.coinsDigits, '0');
 }

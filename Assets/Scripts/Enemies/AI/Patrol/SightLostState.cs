@@ -1,4 +1,4 @@
-﻿namespace AI.Patrol
+﻿namespace BadTummyBunny.AI.Patrol
 {
   public class SightLostState : FiniteState<PatrolAI>
   {
@@ -30,10 +30,10 @@
     {
       this.waitTimer -= deltaTime;
 
-      if (this.waitTimer < this.waitTime / 2f &&
-          !this.flipped &&
-          !Context.IsAtLedge &&
-          !Context.IsAtWall)
+      if (this.waitTimer < this.waitTime / 2f
+          && !this.flipped
+          && !Context.IsAtLedge
+          && !Context.IsAtWall)
       {
         Context.Flip();
         this.flipped = true;
