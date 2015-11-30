@@ -20,7 +20,6 @@ namespace BadTummyBunny.AI.Patrol
     public float AttackJumpHeight => this.attackJumpHeight;
     public float CooldownTime => this.cooldownTime;
     public Vector2 SightLostWaitTimeRange => this.sightLostWaitTimeRange;
-    public Animator Animator => this.animator;
 
     public bool CanFollowPlayer
       => IsPlayerInLineOfSight(this.followRange, this.visibilityAngle)
@@ -45,9 +44,9 @@ namespace BadTummyBunny.AI.Patrol
 
     protected virtual void ApplyAnimation()
     {
-      this.animator.SetBool("Walking", HorizontalMovement != 0);
-      this.animator.SetBool("Grounded", IsGrounded);
-      this.animator.SetBool("Falling", Velocity.y < 0f);
+      Animator.SetBool("Walking", HorizontalMovement != 0);
+      Animator.SetBool("Grounded", IsGrounded);
+      Animator.SetBool("Falling", ((BaseMovable)this).Velocity.y < 0f);
     }
   }
 }

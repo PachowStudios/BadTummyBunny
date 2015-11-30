@@ -23,7 +23,7 @@ PlayerSettings:
   m_MobileRenderingPath: 0
   m_ActiveColorSpace: 0
   m_MTRendering: 1
-  m_MobileMTRendering: 0
+  m_MobileMTRendering: 1
   m_Stereoscopic3D: 0
   iosShowActivityIndicatorOnLoading: -1
   androidShowActivityIndicatorOnLoading: -1
@@ -86,7 +86,7 @@ PlayerSettings:
     16:9: 1
     Others: 0
   bundleIdentifier: com.PachowStudios.BadTummyBunny
-  bundleVersion: 1.0
+  bundleVersion: 0.1.0
   preloadedAssets: []
   metroEnableIndependentInputSource: 0
   metroEnableLowLatencyPresentationAPI: 0

@@ -83,6 +83,10 @@ namespace BadTummyBunny
       DisableInput();
     }
 
+    [PostInject]
+    private void PostInject()
+      => SetFart(this.startingFart);
+
     private void Awake()
     {
       Assert.IsNotNull(this.startingFart, "No starting fart assigned.");
@@ -92,9 +96,6 @@ namespace BadTummyBunny
 
     private void OnEnable()
       => this.playerActions = PlayerActions.CreateWithDefaultBindings();
-
-    private void Start()
-      => SetFart(this.startingFart);
 
     private void OnDisable()
       => this.playerActions.Destroy();
@@ -169,7 +170,7 @@ namespace BadTummyBunny
     private void UpdateFartTrajectory()
     {
       if (IsFartCharging)
-        this.currentFart.DrawTrajectory(FartPower, FartDirection, this.gravity, CenterPoint);
+        this.currentFart.DrawTrajectory(FartPower, FartDirection, Gravity, CenterPoint);
       else
         this.currentFart.ClearTrajectory();
     }
@@ -178,7 +179,7 @@ namespace BadTummyBunny
     {
       Animator.SetBool("Walking", Math.Abs(this.horizontalMovement) > 0.01f && !IsFarting);
       Animator.SetBool("Grounded", IsGrounded);
-      Animator.SetBool("Falling", this.velocity.y < 0f);
+      Animator.SetBool("Falling", Velocity.y < 0f);
     }
 
     private void GetMovement()
@@ -206,24 +207,27 @@ namespace BadTummyBunny
     {
       if (IsFarting)
       {
-        this.body.CorrectScaleForRotation(this.velocity.DirectionToRotation2D());
+        this.body.CorrectScaleForRotation(Velocity.DirectionToRotation2D());
         this.fartingTime += Time.deltaTime;
       }
       else
       {
         var smoothedMovement = IsGrounded ? this.groundDamping : this.airDamping;
 
-        this.velocity.x = Mathf.Lerp(this.velocity.x, this.horizontalMovement * this.moveSpeed,
-                                     smoothedMovement * Time.deltaTime);
+        Velocity = Velocity.SetX(
+          Mathf.Lerp(
+            Velocity.x,
+            this.horizontalMovement * MoveSpeed,
+            smoothedMovement * Time.deltaTime));
       }
 
-      this.velocity.y += this.gravity * Time.deltaTime;
-      this.controller.Move(this.velocity * Time.deltaTime);
-      this.velocity = this.controller.Velocity;
+      Velocity = Velocity.AddY(Gravity * Time.deltaTime);
+      Controller.Move(Velocity * Time.deltaTime);
+      Velocity = Controller.Velocity;
 
       if (IsGrounded)
       {
-        this.velocity.y = 0f;
+        Velocity = Velocity.SetY(0f);
         LastGroundedPosition = transform.position;
       }
     }
@@ -255,7 +259,7 @@ namespace BadTummyBunny
 
       this.fartingTime = 0f;
       this.availableFart = Mathf.Max(0f, this.availableFart - CalculateFartUsage(fartPower));
-      this.velocity = fartDirection * this.currentFart.CalculateSpeed(FartPower);
+      Velocity = fartDirection * this.currentFart.CalculateSpeed(FartPower);
 
       this.currentFart.StartFart(FartPower, FartDirection);
     }
@@ -271,9 +275,9 @@ namespace BadTummyBunny
       ResetOrientation();
 
       if (killXVelocity)
-        this.velocity.x = 0f;
+        Velocity = Velocity.SetX(0f);
 
-      this.velocity.y = 0f;
+      Velocity = Velocity.SetY(0f);
     }
 
     private float CalculateFartUsage(float fartPower) => Extensions.ConvertRange(fartPower, 0f, 1f, this.fartUsageRange.x, this.fartUsageRange.y);

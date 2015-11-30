@@ -64,6 +64,15 @@ namespace BadTummyBunny
     protected virtual void OnDestroy()
       => VectorLine.Destroy(ref this.trajectoryLine);
 
+    protected virtual void OnTriggerEnter2D(Collider2D other)
+    {
+      if (!IsFarting)
+        return;
+
+      if (other.tag == Tags.Enemy)
+        OnEnemyTriggered(other.GetInterface<ICharacter>());
+    }
+
     public virtual void StartFart(float power, Vector2 direction)
     {
       if (IsFarting)
@@ -73,15 +82,6 @@ namespace BadTummyBunny
 
       PlaySound(power.Clamp01());
       Wait.ForFixedUpdate(StartParticles);
-    }
-
-    protected virtual void OnTriggerEnter2D(Collider2D other)
-    {
-      if (!IsFarting)
-        return;
-
-      if (other.tag == Tags.Enemy)
-        OnEnemyTriggered(other.GetInterface<ICharacter>());
     }
 
     public virtual void StopFart()

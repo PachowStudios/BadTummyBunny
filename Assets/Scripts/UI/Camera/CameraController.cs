@@ -15,7 +15,8 @@ namespace BadTummyBunny
     [Tooltip("percentage from -0.5 - 0.5 from the center of the screen")]
     [SerializeField, Range(-0.5f, 0.5f)] private float verticalOffset = 0f;
 
-    [Header("Platform Snap")] [Tooltip("all platform snap settings only apply if enablePlatformSnap is true")]
+    [Header("Platform Snap")]
+    [Tooltip("All platform snap settings only apply if enabled")]
     [SerializeField] private bool enablePlatformSnap = false;
     [Tooltip("If true, no other base behaviors will be able to modify the y-position of the camera when grounded")]
     [SerializeField] private bool isPlatformSnapExclusiveWhenEnabled = false;
@@ -23,9 +24,9 @@ namespace BadTummyBunny
 
     [Header("Smoothing")]
     [SerializeField] private CameraSmoothingType cameraSmoothingType = CameraSmoothingType.SmoothDamp;
-    [Tooltip("approximately the time it will take to reach the target. A smaller value will reach the target faster.")]
+    [Tooltip("Approximately the time it will take to reach the target. A smaller value will reach the target faster.")]
     [SerializeField] private float smoothDampTime = 0.08f;
-    [Tooltip("lower values are less damped and higher values are more damped resulting in less springiness. should be between 0.01f, 1f to avoid unstable systems.")]
+    [Tooltip("Lower values are less damped and higher values are more damped resulting in less springiness. should be between 0.01f, 1f to avoid unstable systems.")]
     [SerializeField] private float springDampingRatio = 0.7f;
     [Tooltip("An angular frequency of 2pi (radians per second) means the oscillation completes one full period over one second, i.e. 1Hz. should be less than 35 or so to remain stable")]
     [SerializeField] private float springAngularFrequency = 20f;
@@ -41,8 +42,10 @@ namespace BadTummyBunny
 
     private Camera controlledCamera;
 
-    [Inject(Tags.Player)]
+    [InjectOptional(Tags.Player)]
     private IMovable PlayerMovement { get; set; }
+
+    private bool IsPlayerGrounded => PlayerMovement?.IsGrounded ?? false;
 
     public Camera Camera => this.GetComponentIfNull(ref this.controlledCamera);
 
@@ -76,7 +79,7 @@ namespace BadTummyBunny
           .Select(b => b.GetDesiredPositionDelta(targetBounds, basePosition, targetAvgVelocity))
           .Aggregate(Vector3.zero, (current, desired) => current + desired);
 
-      if (this.enablePlatformSnap && PlayerMovement.IsGrounded)
+      if (this.enablePlatformSnap && IsPlayerGrounded)
       {
         // when exclusive, no base behaviors can mess with y
         if (this.isPlatformSnapExclusiveWhenEnabled)
@@ -158,6 +161,9 @@ namespace BadTummyBunny
     #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
+      if (Camera == null)
+        return;
+
       var positionInFrontOfCamera = GetNormalizedCameraPosition();
 
       positionInFrontOfCamera.z = 1f;

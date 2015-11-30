@@ -14,25 +14,26 @@ QualitySettings:
     shadowProjection: 1
     shadowCascades: 1
     shadowDistance: 0
+    shadowNearPlaneOffset: 2
+    shadowCascade2Split: .333333343
+    shadowCascade4Split: {x: .0666666701, y: .200000003, z: .466666669}
     blendWeights: 1
     textureQuality: 0
     anisotropicTextures: 0
     antiAliasing: 0
     softParticles: 0
     softVegetation: 1
+    realtimeReflectionProbes: 0
+    billboardsFaceCameraPosition: 0
     vSyncCount: 0
     lodBias: 2
     maximumLODLevel: 0
     particleRaycastBudget: 4096
     excludedTargetPlatforms:
-    - iPhone
-    - Android
     - BlackBerry
     - FlashPlayer
     - Windows Store Apps
     - WP8
-    - Standalone
-    - Web
   m_PerPlatformDefaultQuality:
     Android: 0
     BlackBerry: 0
@@ -47,6 +48,7 @@ QualitySettings:
     Tizen: 2
     WP8: 0
     Web: 0
+    WebGL: 0
     Windows Store Apps: 0
     XBOX360: 3
     XboxOne: 3

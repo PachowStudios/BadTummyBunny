@@ -12,10 +12,10 @@ public sealed class SpriteExplosion : MonoBehaviour
   [SerializeField] private string sortingLayer = "Foreground";
   [SerializeField] private int sortingOrder = 1;
 
-  private new ParticleSystem particleSystem;
+  private ParticleSystem particleSystemComponent;
   private Renderer particleRenderer;
 
-  private ParticleSystem ParticleSystem => this.GetComponentIfNull(ref this.particleSystem);
+  private ParticleSystem ParticleSystem => this.GetComponentIfNull(ref this.particleSystemComponent);
   private Renderer ParticleRenderer => ParticleSystem.GetComponentIfNull(ref this.particleRenderer);
 
   public void Explode(Vector3 velocity, Sprite sprite, Material material = null)

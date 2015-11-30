@@ -153,7 +153,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gravity: -35
   moveSpeed: 5
-  controller: {fileID: 11400002}
   jumpHeight: 1.5
   groundDamping: 10
   airDamping: 5
