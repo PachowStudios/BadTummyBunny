@@ -49,9 +49,7 @@ MonoBehaviour:
   m_Script: {fileID: -1048109949, guid: 533361e04fa896b4395cced4d33088c3, type: 3}
   m_Name: Grass (Autotile)
   m_EditorClassIdentifier: 
-  _internalFlags: 0
   disableImmediatePreview: 0
-  _previewAssetId: 
   customPreviewImage: {fileID: 0}
   customPreviewDesignTime: 1
   _static: 1

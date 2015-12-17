@@ -29,7 +29,6 @@ namespace BadTummyBunny
 
     private float horizontalMovement;
     private bool willJump;
-    private bool isInputEnabled = true;
 
     private IFart currentFart;
     private bool isFartingEnabled = true;
@@ -52,6 +51,8 @@ namespace BadTummyBunny
     public bool WillFart { get; private set; }
     public Vector2 FartDirection { get; private set; }
     public float FartPower { get; private set; }
+
+    private bool IsInputEnabled { get; set; } = true;
 
     private bool IsMovingRight => this.horizontalMovement > 0f;
     private bool IsMovingLeft => this.horizontalMovement < 0f;
@@ -115,7 +116,8 @@ namespace BadTummyBunny
         return;
 
       GetMovement();
-      UpdateFartTrajectory();
+      // Disabled due to strange Vectrosity performance
+      //UpdateFartTrajectory();
       ApplyMovement();
     }
 
@@ -132,7 +134,7 @@ namespace BadTummyBunny
 
     private void GetInput()
     {
-      if (!this.isInputEnabled)
+      if (!this.IsInputEnabled)
         return;
 
       this.horizontalMovement = this.playerActions.Move.Value;
@@ -163,7 +165,7 @@ namespace BadTummyBunny
 
     private void DisableInput()
     {
-      this.isInputEnabled = false;
+      this.IsInputEnabled = false;
       ResetInput();
     }
 

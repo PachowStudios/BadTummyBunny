@@ -13,5 +13,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   UILayer: UI
   ViewPaths:
-  - Assets/MarkUX/Views/
-  - Assets/Views/
+  - Assets/UI/Views/
+  - Assets/UI/Themes/

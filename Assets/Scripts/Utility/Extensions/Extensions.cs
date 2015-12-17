@@ -220,11 +220,8 @@ public static class Extensions
     return result;
   }
 
-  public static float UnitsToPixels(float units)
-    => Camera.main.WorldToScreenPoint(
-      Camera.main.ViewportToWorldPoint(Vector3.zero)
-      + new Vector3(units, 0f))
-      .x;
+  public static float UnitsToPixels(this Camera camera, float units)
+    => camera.WorldToScreenPoint(camera.ViewportToWorldPoint(Vector3.zero).AddX(units)).x;
 
   public static void BindLifetimeSingleton<T>(this DiContainer container)
     where T : IInitializable, IDisposable

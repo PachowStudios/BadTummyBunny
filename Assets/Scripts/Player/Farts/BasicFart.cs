@@ -14,11 +14,11 @@ namespace BadTummyBunny
   public class BasicFart : MonoBehaviour, IFart
   {
     [SuppressMessage("ReSharper", "InconsistentNaming")]
-    [Serializable]
+    [Serializable, UsedImplicitly(ImplicitUseTargetFlags.Members)]
     protected struct SfxPowerMapping
     {
-      [UsedImplicitly] public SfxGroups sfxGroup;
-      [UsedImplicitly] public float power;
+      public SfxGroups sfxGroup;
+      public float power;
     }
 
     [Header("Options")]
@@ -175,10 +175,9 @@ namespace BadTummyBunny
         currentDelta.y += gravity * i;
         currentDelta *= timeStep * i;
 
-        if (bufferSqrMagnitude > currentDelta.sqrMagnitude)
-          points[i] = startPosition + bufferDelta;
-        else
-          points[i] = startPosition + currentDelta;
+        points[i] = bufferSqrMagnitude > currentDelta.sqrMagnitude
+          ? startPosition + bufferDelta
+          : startPosition + currentDelta;
 
         if (i <= 0)
           continue;
@@ -224,7 +223,7 @@ namespace BadTummyBunny
         new VectorLine(
           "Trajectory",
           new List<Vector3>(this.trajectorySegments),
-          Extensions.UnitsToPixels(this.trajectoryWidth),
+          CameraController.Camera.UnitsToPixels(this.trajectoryWidth),
           LineType.Continuous,
           Joins.Fill)
         {
