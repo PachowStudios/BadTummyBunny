@@ -1,7 +1,10 @@
-﻿public enum CameraSmoothingType
+﻿namespace PachowStudios.BadTummyBunny
 {
-  None,
-  SmoothDamp,
-  Spring,
-  Lerp
+  public enum CameraSmoothingType
+  {
+    None,
+    SmoothDamp,
+    Spring,
+    Lerp
+  }
 }

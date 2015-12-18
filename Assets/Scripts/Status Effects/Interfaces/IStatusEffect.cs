@@ -1,13 +1,16 @@
 ﻿using System;
 
-public interface IStatusEffect
+namespace PachowStudios.BadTummyBunny
 {
-  event Action<IStatusEffect> Deactivated;
+  public interface IStatusEffect
+  {
+    event Action<IStatusEffect> Deactivated;
 
-  string StatusEffectName { get; }
-  ICharacter AffectedCharacter { get; }
-  bool IsActive { get; }
-  bool IsDisposed { get; }
+    string StatusEffectName { get; }
+    ICharacter AffectedCharacter { get; }
+    bool IsActive { get; }
+    bool IsDisposed { get; }
 
-  void Activate(ICharacter affectedCharacter);
+    void Activate(ICharacter affectedCharacter);
+  }
 }

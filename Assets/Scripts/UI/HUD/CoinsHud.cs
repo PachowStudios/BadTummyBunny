@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using Zenject;
 
-namespace BadTummyBunny
+namespace PachowStudios.BadTummyBunny
 {
   [AddComponentMenu("Bad Tummy Bunny/UI/HUD/Coins")]
   public class CoinsHud : MonoBehaviour,

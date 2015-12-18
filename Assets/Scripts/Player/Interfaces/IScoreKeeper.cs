@@ -1,7 +1,11 @@
-﻿public interface IScoreKeeper
+﻿namespace PachowStudios.BadTummyBunny
 {
-  int Coins { get; }
+  public interface IScoreKeeper
+  {
+    int Coins { get; }
 
-  void AddCoins(int coins);
-  void RemoveCoins(int coins);
+    void AddCoins(int coins);
+    void RemoveCoins(int coins);
+  }
+
 }

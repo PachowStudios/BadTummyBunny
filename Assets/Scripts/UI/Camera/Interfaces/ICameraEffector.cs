@@ -1,4 +1,7 @@
-﻿public interface ICameraEffector : ICameraPositionAssertion
+﻿namespace PachowStudios.BadTummyBunny
 {
-  float GetEffectorWeight();
+  public interface ICameraEffector : ICameraPositionAssertion
+  {
+    float GetEffectorWeight();
+  }
 }

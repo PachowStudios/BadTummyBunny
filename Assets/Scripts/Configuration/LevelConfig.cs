@@ -1,15 +1,17 @@
 ﻿using System.Collections.Generic;
-using JetBrains.Annotations;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Configuration/Level Config", fileName = "NewLevelConfig.asset")]
-public class LevelConfig : ScriptableObject
+namespace PachowStudios.BadTummyBunny
 {
-  [UsedImplicitly] public string LevelId;
-  [UsedImplicitly] public string LevelScene;
-  [UsedImplicitly] public string LevelName;
+  [CreateAssetMenu(menuName = "Configuration/Level Config", fileName = "NewLevelConfig.asset")]
+  public class LevelConfig : ScriptableObject
+  {
+    public string LevelId;
+    public string LevelScene;
+    public string LevelName;
 
-  [UsedImplicitly] public int RequiredStars;
+    public int RequiredStars;
 
-  [UsedImplicitly] public List<LevelStarConfig> Stars;
+    public List<LevelStarConfig> Stars;
+  }
 }

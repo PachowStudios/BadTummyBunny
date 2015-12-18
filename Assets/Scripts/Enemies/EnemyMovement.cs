@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace BadTummyBunny
+namespace PachowStudios.BadTummyBunny
 {
   public abstract class EnemyMovement : BaseMovable, IActivatable
   {
@@ -14,7 +14,12 @@ namespace BadTummyBunny
 
     private bool isActivated;
 
-    public bool IsActivated => this.isActivated || !this.deactivatedOutsideCamera;
+    public bool IsActivated
+    {
+      get { return this.isActivated || !this.deactivatedOutsideCamera; }
+      set { this.isActivated = value; }
+    }
+
     public int HorizontalMovement { get; set; }
 
     protected ICharacter ThisEnemy => this.GetInterfaceIfNull(ref this.thisEnemy);
@@ -77,11 +82,5 @@ namespace BadTummyBunny
 
       return true;
     }
-
-    public virtual void Activate()
-      => this.isActivated = true;
-
-    public virtual void Deactivate()
-      => this.isActivated = false;
   }
 }

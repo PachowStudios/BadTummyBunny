@@ -1,7 +1,7 @@
 ﻿using System;
 using Zenject;
 
-namespace BadTummyBunny
+namespace PachowStudios.BadTummyBunny
 {
   public class Bootstrapper : IInitializable, IDisposable
   {

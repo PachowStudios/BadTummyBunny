@@ -2,7 +2,7 @@
 using MarkUX;
 using Zenject;
 
-namespace BadTummyBunny.UI
+namespace PachowStudios.BadTummyBunny.UI
 {
   public class WorldMapScreen : View,
     IHandles<LevelSelectedMessage>,

@@ -1,29 +1,32 @@
 ﻿using UnityEngine;
 
-public class Coin : MonoBehaviour
+namespace PachowStudios.BadTummyBunny
 {
-  public enum CoinValue
+  public class Coin : MonoBehaviour
   {
-    Copper = 1,
-    Silver = 10,
-    Gold = 50
-  };
+    public enum CoinValue
+    {
+      Copper = 1,
+      Silver = 10,
+      Gold = 50
+    };
 
-  [SerializeField] private CoinValue value = CoinValue.Copper;
+    [SerializeField] private CoinValue value = CoinValue.Copper;
 
-  private SpriteRenderer spriteRenderer;
+    private SpriteRenderer spriteRenderer;
 
-  public int Value => (int)this.value;
+    public int Value => (int)this.value;
 
-  private SpriteRenderer SpriteRenderer => this.GetComponentIfNull(ref this.spriteRenderer);
+    private SpriteRenderer SpriteRenderer => this.GetComponentIfNull(ref this.spriteRenderer);
 
-  public void Collect()
-  {
-    PlayCollectSound();
-    ExplodeEffect.Instance.Explode(transform, Vector3.zero, SpriteRenderer.sprite);
-    Destroy(gameObject);
+    public void Collect()
+    {
+      PlayCollectSound();
+      ExplodeEffect.Instance.Explode(transform, Vector3.zero, SpriteRenderer.sprite);
+      Destroy(gameObject);
+    }
+
+    private static void PlayCollectSound() 
+      => SoundManager.PlaySFXFromGroup(SfxGroup.Coins);
   }
-
-  private void PlayCollectSound() 
-    => SoundManager.PlaySFXFromGroup(SfxGroups.Coins);
 }

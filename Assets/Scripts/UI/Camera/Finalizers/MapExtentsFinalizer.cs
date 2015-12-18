@@ -2,7 +2,7 @@
 using UnityEngine;
 using Zenject;
 
-namespace BadTummyBunny
+namespace PachowStudios.BadTummyBunny
 {
   [AddComponentMenu("Bad Tummy Bunny/UI/Camera/Finalizers/Map Extents Finalizer")]
   public class MapExtentsFinalizer : MonoBehaviour, ICameraFinalizer

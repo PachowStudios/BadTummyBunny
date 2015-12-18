@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using Zenject;
 
-namespace BadTummyBunny
+namespace PachowStudios.BadTummyBunny
 {
   [AddComponentMenu("Bad Tummy Bunny/UI/Camera/Effectors/Fart Aim Lean")]
   public sealed class FartAimLean : MonoBehaviour, ICameraEffector
@@ -46,7 +46,7 @@ namespace BadTummyBunny
       if (startingPower < this.minimumPower)
         return 0f;
 
-      var adjustedPower = Extensions.ConvertRange(startingPower, 0f, 1f, this.minimumPower, 1f);
+      var adjustedPower = MathHelper.ConvertRange(startingPower, 0f, 1f, this.minimumPower, 1f);
 
       return this.effectorWeight * this.effectorFalloff.Evaluate(adjustedPower);
     }

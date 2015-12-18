@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 using MarkUX;
 using MarkUX.Views;
 
-namespace BadTummyBunny.UI
+namespace PachowStudios.BadTummyBunny.UI
 {
   [InternalView]
   public class WorldMapLevelPopup : View

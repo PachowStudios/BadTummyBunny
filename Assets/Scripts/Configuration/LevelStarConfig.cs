@@ -1,9 +1,11 @@
-﻿using JetBrains.Annotations;
-using UnityEngine;
+﻿using UnityEngine;
 
-[CreateAssetMenu(menuName = "Configuration/Level Star Config", fileName = "NewLevelStarConfig.asset")]
-public class LevelStarConfig : ScriptableObject
+namespace PachowStudios.BadTummyBunny
 {
-  [UsedImplicitly] public string StarId;
-  [UsedImplicitly] public string StarName;
+  [CreateAssetMenu(menuName = "Configuration/Level Star Config", fileName = "NewLevelStarConfig.asset")]
+  public class LevelStarConfig : ScriptableObject
+  {
+    public string StarId;
+    public string StarName;
+  }
 }

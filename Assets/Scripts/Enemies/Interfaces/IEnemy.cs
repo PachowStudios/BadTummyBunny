@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
 
-public interface IEnemy : ICharacter
+namespace PachowStudios.BadTummyBunny
 {
-  int ContactDamage { get; }
-  Vector2 ContactKnockback { get; }
+  public interface IEnemy : ICharacter
+  {
+    int ContactDamage { get; }
+    Vector2 ContactKnockback { get; }
+  }
 }

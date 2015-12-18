@@ -4,7 +4,7 @@
 using UnityEditor;
 #endif
 
-namespace BadTummyBunny
+namespace PachowStudios.BadTummyBunny
 {
   [AddComponentMenu("Bad Tummy Bunny/UI/Camera/Effectors/Cue Focus Ring")]
   [RequireComponent(typeof(CircleCollider2D))]

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace BadTummyBunny
+namespace PachowStudios.BadTummyBunny
 {
   [AddComponentMenu("Bad Tummy Bunny/UI/Camera/Effectors/Cue Focus Polygon")]
   [RequireComponent(typeof(PolygonCollider2D))]

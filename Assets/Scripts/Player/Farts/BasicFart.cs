@@ -1,24 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using JetBrains.Annotations;
 using UnityEngine;
 using Vectrosity;
 using Zenject;
 
-namespace BadTummyBunny
+namespace PachowStudios.BadTummyBunny
 {
   [AddComponentMenu("Bad Tummy Bunny/Player/Farts/Basic Fart")]
   [RequireComponent(typeof(Rigidbody2D), typeof(PolygonCollider2D))]
   public class BasicFart : MonoBehaviour, IFart
   {
-    [SuppressMessage("ReSharper", "InconsistentNaming")]
     [Serializable, UsedImplicitly(ImplicitUseTargetFlags.Members)]
     protected struct SfxPowerMapping
     {
-      public SfxGroups sfxGroup;
-      public float power;
+      public SfxGroup SfxGroup;
+      public float Power;
     }
 
     [Header("Options")]
@@ -43,8 +41,9 @@ namespace BadTummyBunny
     [SerializeField] private PolygonCollider2D fartCollider = null;
     [SerializeField] private List<ParticleSystem> particles = new List<ParticleSystem>();
 
-    private HashSet<ICharacter> pendingTargets = new HashSet<ICharacter>();
-    private HashSet<ICharacter> damagedEnemies = new HashSet<ICharacter>();
+    private readonly HashSet<ICharacter> pendingTargets = new HashSet<ICharacter>();
+    private readonly HashSet<ICharacter> damagedEnemies = new HashSet<ICharacter>();
+
     private VectorLine trajectoryLine;
 
     [Inject(Tags.Player)]
@@ -97,7 +96,7 @@ namespace BadTummyBunny
     }
 
     public virtual float CalculateSpeed(float power)
-      => Extensions.ConvertRange(power, 0f, 1f, this.speedRange.x, this.speedRange.y);
+      => MathHelper.ConvertRange(power, 0f, 1f, this.speedRange.x, this.speedRange.y);
 
     public virtual void DrawTrajectory(float power, Vector3 direction, float gravity, Vector3 startPosition)
     {
@@ -202,9 +201,9 @@ namespace BadTummyBunny
 
     protected void PlaySound(float powerPercentage)
     {
-      foreach (var sfxMapping in this.soundEffects.Where(e => e.power <= powerPercentage))
+      foreach (var sfxMapping in this.soundEffects.Where(e => e.Power <= powerPercentage))
       {
-        SoundManager.PlayCappedSFXFromGroup(sfxMapping.sfxGroup);
+        SoundManager.PlayCappedSFXFromGroup(sfxMapping.SfxGroup);
         break;
       }
     }

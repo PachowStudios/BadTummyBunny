@@ -1,9 +1,12 @@
 ﻿using System.Collections.ObjectModel;
 
-public interface IStatusEffectable
+namespace PachowStudios.BadTummyBunny
 {
-  ReadOnlyCollection<IStatusEffect> StatusEffects { get; }
+  public interface IStatusEffectable
+  {
+    ReadOnlyCollection<IStatusEffect> StatusEffects { get; }
 
-  void AddStatusEffect(IStatusEffect statusEffect);
-  void RemoveStatusEffect(IStatusEffect statusEffect);
+    void AddStatusEffect(IStatusEffect statusEffect);
+    void RemoveStatusEffect(IStatusEffect statusEffect);
+  }
 }

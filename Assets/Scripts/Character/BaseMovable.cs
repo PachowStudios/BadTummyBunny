@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace BadTummyBunny
+namespace PachowStudios.BadTummyBunny
 {
   public abstract class BaseMovable : MonoBehaviour, IMovable
   {

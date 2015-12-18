@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Extensions;
 using UnityEngine;
 using Zenject;
 
-namespace BadTummyBunny
+namespace PachowStudios.BadTummyBunny
 {
   [AddComponentMenu("Bad Tummy Bunny/UI/Camera/Camera Controller")]
   [RequireComponent(typeof(Camera))]
@@ -32,11 +33,11 @@ namespace BadTummyBunny
     [SerializeField] private float springAngularFrequency = 20f;
     [SerializeField] private float lerpTowardsFactor = 0.002f;
 
-    private List<ICameraBaseBehavior> baseCameraBehaviors = new List<ICameraBaseBehavior>(3);
-    private List<ICameraEffector> cameraEffectors = new List<ICameraEffector>(3);
-    private List<ICameraFinalizer> cameraFinalizers = new List<ICameraFinalizer>(1);
+    private readonly List<ICameraBaseBehavior> baseCameraBehaviors = new List<ICameraBaseBehavior>(3);
+    private readonly List<ICameraEffector> cameraEffectors = new List<ICameraEffector>(3);
+    private readonly List<ICameraFinalizer> cameraFinalizers = new List<ICameraFinalizer>(1);
 
-    private FixedSizedVector3Queue averageVelocityQueue = new FixedSizedVector3Queue(10);
+    private readonly FixedSizedVector3Queue averageVelocityQueue = new FixedSizedVector3Queue(10);
     private Vector3 targetPositionLastFrame;
     private Vector3 cameraVelocity;
 

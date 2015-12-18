@@ -3,39 +3,42 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using UnityEngine;
 
-public abstract class StatusEffectableCharacter : MonoBehaviour, ICharacter, IStatusEffectable
+namespace PachowStudios.BadTummyBunny
 {
-  public abstract IMovable Movement { get; }
-  public abstract IHasHealth Health { get; }
-
-  protected List<IStatusEffect> statusEffects = new List<IStatusEffect>();
-
-  public ReadOnlyCollection<IStatusEffect> StatusEffects => this.statusEffects.AsReadOnly();
-
-  public void AddStatusEffect(IStatusEffect newStatusEffect)
+  public abstract class StatusEffectableCharacter : MonoBehaviour, ICharacter, IStatusEffectable
   {
-    if (newStatusEffect == null || this.statusEffects.Any(e => e.StatusEffectName == newStatusEffect.StatusEffectName))
-      return;
+    public abstract IMovable Movement { get; }
+    public abstract IHasHealth Health { get; }
 
-    var instance = (MonoBehaviour)Instantiate((MonoBehaviour)newStatusEffect, Movement.CenterPoint, Quaternion.identity);
+    protected readonly List<IStatusEffect> statusEffects = new List<IStatusEffect>();
 
-    instance.name = newStatusEffect.StatusEffectName;
-    instance.transform.parent = transform;
+    public ReadOnlyCollection<IStatusEffect> StatusEffects => this.statusEffects.AsReadOnly();
 
-    var statusEffectInstance = (IStatusEffect)instance;
+    public void AddStatusEffect(IStatusEffect newStatusEffect)
+    {
+      if (newStatusEffect == null || this.statusEffects.Any(e => e.StatusEffectName == newStatusEffect.StatusEffectName))
+        return;
 
-    statusEffectInstance.Deactivated += RemoveStatusEffect;
-    statusEffectInstance.Activate(this);
-    this.statusEffects.Add(statusEffectInstance);
-  }
+      var instance = (MonoBehaviour)Instantiate((MonoBehaviour)newStatusEffect, Movement.CenterPoint, Quaternion.identity);
 
-  public void RemoveStatusEffect(IStatusEffect oldStatusEffect)
-  {
-    if (oldStatusEffect == null)
-      return;
+      instance.name = newStatusEffect.StatusEffectName;
+      instance.transform.parent = transform;
 
-    oldStatusEffect.Deactivated -= RemoveStatusEffect;
-    this.statusEffects.Remove(oldStatusEffect);
-    (oldStatusEffect as MonoBehaviour)?.DestroyGameObject();
+      var statusEffectInstance = (IStatusEffect)instance;
+
+      statusEffectInstance.Deactivated += RemoveStatusEffect;
+      statusEffectInstance.Activate(this);
+      this.statusEffects.Add(statusEffectInstance);
+    }
+
+    public void RemoveStatusEffect(IStatusEffect oldStatusEffect)
+    {
+      if (oldStatusEffect == null)
+        return;
+
+      oldStatusEffect.Deactivated -= RemoveStatusEffect;
+      this.statusEffects.Remove(oldStatusEffect);
+      (oldStatusEffect as MonoBehaviour)?.DestroyGameObject();
+    }
   }
 }

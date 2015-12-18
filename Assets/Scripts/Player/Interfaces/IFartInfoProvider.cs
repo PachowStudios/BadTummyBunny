@@ -1,8 +1,11 @@
 ﻿using UnityEngine;
 
-public interface IFartInfoProvider
+namespace PachowStudios.BadTummyBunny
 {
-  bool IsFartCharging { get; }
-  float FartPower { get; }
-  Vector2 FartDirection { get; }
+  public interface IFartInfoProvider
+  {
+    bool IsFartCharging { get; }
+    float FartPower { get; }
+    Vector2 FartDirection { get; }
+  }
 }

@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
-using Zenject;
 
-namespace BadTummyBunny
+namespace PachowStudios.BadTummyBunny
 {
   [AddComponentMenu("Bad Tummy Bunny/Player/Farts/Status Effect Fart")]
   public class StatusEffectFart : BasicFart, IStatusEffectAttacher

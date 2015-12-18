@@ -1,18 +1,21 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Serialization;
 
-public class LevelProgress
+namespace PachowStudios.BadTummyBunny
 {
-  [XmlAttribute(nameof(LevelId))]
-  public string LevelId { get; set; }
+  public class LevelProgress
+  {
+    [XmlAttribute(nameof(LevelId))]
+    public string LevelId { get; set; }
 
-  [XmlAttribute(nameof(IsUnlocked))]
-  public bool IsUnlocked { get; set; }
+    [XmlAttribute(nameof(IsUnlocked))]
+    public bool IsUnlocked { get; set; }
 
-  [XmlAttribute(nameof(IsComplete))]
-  public bool IsComplete { get; set; }
+    [XmlAttribute(nameof(IsComplete))]
+    public bool IsComplete { get; set; }
 
-  [XmlArray(nameof(Stars))]
-  [XmlArrayItem(nameof(LevelStarProgress))]
-  public List<LevelStarProgress> Stars { get; set; }
+    [XmlArray(nameof(Stars))]
+    [XmlArrayItem(nameof(LevelStarProgress))]
+    public List<LevelStarProgress> Stars { get; set; }
+  }
 }

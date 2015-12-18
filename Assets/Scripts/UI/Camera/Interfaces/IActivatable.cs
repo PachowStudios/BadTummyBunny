@@ -1,7 +1,8 @@
-﻿public interface IActivatable
+﻿namespace PachowStudios.BadTummyBunny
 {
-  bool IsActivated { get; }
+  public interface IActivatable
+  {
+    bool IsActivated { get; set; }
+  }
 
-  void Activate();
-  void Deactivate();
 }

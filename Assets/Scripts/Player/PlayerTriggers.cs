@@ -2,7 +2,7 @@
 using UnityEngine;
 using Zenject;
 
-namespace BadTummyBunny
+namespace PachowStudios.BadTummyBunny
 {
   [AddComponentMenu("Bad Tummy Bunny/Player/Triggers")]
   public sealed class PlayerTriggers : MonoBehaviour

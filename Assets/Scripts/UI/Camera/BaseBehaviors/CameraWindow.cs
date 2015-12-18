@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using UnityEngine;
 
-namespace BadTummyBunny
+namespace PachowStudios.BadTummyBunny
 {
   [AddComponentMenu("Bad Tummy Bunny/UI/Camera/Base Behaviors/Camera Window")]
   public class CameraWindow : MonoBehaviour, ICameraBaseBehavior

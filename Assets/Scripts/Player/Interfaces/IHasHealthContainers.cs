@@ -1,7 +1,10 @@
 ﻿using System;
 
-public interface IHasHealthContainers
+namespace PachowStudios.BadTummyBunny
 {
-  int HealthContainers { get; }
-  int HealthPerContainer { get; }
+  public interface IHasHealthContainers
+  {
+    int HealthContainers { get; }
+    int HealthPerContainer { get; }
+  }
 }

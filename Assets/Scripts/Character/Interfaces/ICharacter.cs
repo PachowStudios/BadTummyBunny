@@ -1,5 +1,9 @@
-﻿public interface ICharacter
+﻿namespace PachowStudios.BadTummyBunny
 {
-  IMovable Movement { get; }
-  IHasHealth Health { get; }
+  public interface ICharacter
+  {
+    IMovable Movement { get; }
+    IHasHealth Health { get; }
+  }
+
 }

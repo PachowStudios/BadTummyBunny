@@ -1,4 +1,4 @@
-﻿namespace BadTummyBunny
+﻿namespace PachowStudios.BadTummyBunny
 {
   public class PlayerHealthChangedMessage : IMessage
   {

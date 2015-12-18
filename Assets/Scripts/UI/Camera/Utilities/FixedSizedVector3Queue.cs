@@ -1,33 +1,37 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Extensions;
 using UnityEngine;
 
-public class FixedSizedVector3Queue
+namespace PachowStudios.BadTummyBunny
 {
-  private List<Vector3> list;
-  private int limit;
-
-  public FixedSizedVector3Queue(int limit)
+  public class FixedSizedVector3Queue
   {
-    this.limit = limit;
-    this.list = new List<Vector3>(limit);
-  }
+    private List<Vector3> List { get; }
+    private int Limit { get; }
 
-  public void Push(Vector3 item)
-  {
-    if (this.list.Count == this.limit)
-      this.list.RemoveAt(0);
+    public FixedSizedVector3Queue(int limit)
+    {
+      Limit = limit;
+      List = new List<Vector3>(limit);
+    }
 
-    this.list.Add(item);
-  }
+    public void Push(Vector3 item)
+    {
+      if (List.Count == Limit)
+        List.RemoveAt(0);
 
-  public Vector3 Average()
-  {
-    if (this.list.Count == 0)
-      return Vector3.zero;
+      List.Add(item);
+    }
 
-    var avg = this.list.Aggregate(Vector3.zero, (current, t) => current + t);
+    public Vector3 Average()
+    {
+      if (List.IsEmpty())
+        return Vector3.zero;
 
-    return avg / this.list.Count;
+      var avg = List.Aggregate(Vector3.zero, (current, t) => current + t);
+
+      return avg / List.Count;
+    }
   }
 }

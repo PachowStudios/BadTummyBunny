@@ -1,4 +1,7 @@
-﻿public class PlayerStatsService
+﻿namespace PachowStudios.BadTummyBunny
 {
+  public class PlayerStatsService
+  {
   
+  }
 }

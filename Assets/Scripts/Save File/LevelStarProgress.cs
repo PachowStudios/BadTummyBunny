@@ -1,10 +1,13 @@
 ﻿using System.Xml.Serialization;
 
-public class LevelStarProgress
+namespace PachowStudios.BadTummyBunny
 {
-  [XmlAttribute(nameof(StarId))]
-  public string StarId { get; set; }
+  public class LevelStarProgress
+  {
+    [XmlAttribute(nameof(StarId))]
+    public string StarId { get; set; }
 
-  [XmlAttribute(nameof(IsComplete))]
-  public bool IsComplete { get; set; }
+    [XmlAttribute(nameof(IsComplete))]
+    public bool IsComplete { get; set; }
+  }
 }

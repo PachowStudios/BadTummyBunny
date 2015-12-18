@@ -1,13 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Serialization;
 
-[XmlRoot(nameof(SaveFile), Namespace = "http://schema.pachowstudios.com/badtummybunny/savefile")]
-public class SaveFile
+namespace PachowStudios.BadTummyBunny
 {
-  [XmlElement(nameof(Version))]
-  public VersionCode Version { get; set; } = new VersionCode(0, 1);
+  [XmlRoot(nameof(SaveFile), Namespace = "http://schema.pachowstudios.com/badtummybunny/savefile")]
+  public class SaveFile
+  {
+    [XmlElement(nameof(Version))]
+    public VersionCode Version { get; set; } = new VersionCode(0, 1);
 
-  [XmlArray(nameof(Levels))]
-  [XmlArrayItem(nameof(LevelProgress))]
-  public List<LevelProgress> Levels { get; set; } 
+    [XmlArray(nameof(Levels))]
+    [XmlArrayItem(nameof(LevelProgress))]
+    public List<LevelProgress> Levels { get; set; } 
+  }
 }

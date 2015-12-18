@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace BadTummyBunny
+namespace PachowStudios.BadTummyBunny
 {
   [AddComponentMenu("Player/Player")]
   [RequireComponent(typeof(IMovable), typeof(IHasHealth), typeof(IScoreKeeper))]

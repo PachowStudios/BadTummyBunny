@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using Zenject;
 
-namespace BadTummyBunny
+namespace PachowStudios.BadTummyBunny
 {
   public abstract class BaseEnemyAI : EnemyMovement
   {
@@ -28,7 +28,7 @@ namespace BadTummyBunny
       => PlayerMovement.Position.x > ThisEnemy.Movement.Position.x;
 
     public float RelativePlayerLastGrounded
-      => (ThisEnemy.Movement.LastGroundedPosition.y - PlayerMovement.LastGroundedPosition.y).RoundToHalf();
+      => (ThisEnemy.Movement.LastGroundedPosition.y - PlayerMovement.LastGroundedPosition.y).RoundToFraction(2);
 
     public float RelativePlayerHeight
       => ThisEnemy.Movement.Position.y - PlayerMovement.Position.y;

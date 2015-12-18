@@ -31,6 +31,6 @@ public class RespawnPoint : MonoBehaviour
     this.animator.SetBool("IsActivated", IsActivated);
   }
 
-  private void PlayActivateSound() 
-    => SoundManager.PlaySFXFromGroup(SfxGroups.RespawnPoints);
+  private static void PlayActivateSound() 
+    => SoundManager.PlaySFXFromGroup(SfxGroup.RespawnPoints);
 }

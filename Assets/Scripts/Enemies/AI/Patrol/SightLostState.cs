@@ -1,10 +1,15 @@
-﻿namespace BadTummyBunny.AI.Patrol
+﻿using UnityEngine;
+
+namespace PachowStudios.BadTummyBunny.AI.Patrol
 {
   public class SightLostState : FiniteState<PatrolAI>
   {
     private float waitTime;
     private float waitTimer;
     private bool flipped;
+
+    public SightLostState(IFiniteStateMachine<PatrolAI> stateMachine, PatrolAI context)
+      : base(stateMachine, context) { }
 
     public override void Begin()
     {
@@ -17,16 +22,16 @@
     public override void Reason()
     {
       if (Context.CanFollowPlayer)
-        StateMachine.GoToState<FollowState>();
+        StateMachine.GoTo<FollowState>();
 
       if (this.waitTimer <= 0f)
       {
         Context.Flip();
-        StateMachine.GoToState<PatrolState>();
+        StateMachine.GoTo<PatrolState>();
       }
     }
 
-    public override void Update(float deltaTime)
+    public override void Tick(float deltaTime)
     {
       this.waitTimer -= deltaTime;
 

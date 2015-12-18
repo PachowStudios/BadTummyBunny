@@ -1,74 +1,77 @@
 ﻿using InControl;
 
-public class PlayerActions : PlayerActionSet
+namespace PachowStudios.BadTummyBunny
 {
-  private readonly PlayerAction moveLeft;
-  private readonly PlayerAction moveRight;
-
-  private readonly PlayerAction fartLeft;
-  private readonly PlayerAction fartRight;
-  private readonly PlayerAction fartDown;
-  private readonly PlayerAction fartUp;
-
-  public PlayerOneAxisAction Move { get; }
-  public PlayerTwoAxisAction Fart { get; }
-
-  public PlayerAction Jump { get; }
-
-  public PlayerActions()
+  public class PlayerActions : PlayerActionSet
   {
-    this.moveLeft = CreatePlayerAction("Move Left");
-    this.moveRight = CreatePlayerAction("Move Right");
+    private readonly PlayerAction moveLeft;
+    private readonly PlayerAction moveRight;
 
-    this.fartLeft = CreatePlayerAction("Fart Aim Left");
-    this.fartRight = CreatePlayerAction("Fart Aim Right");
-    this.fartDown = CreatePlayerAction("Fart Aim Down");
-    this.fartUp = CreatePlayerAction("Fart Aim Up");
+    private readonly PlayerAction fartLeft;
+    private readonly PlayerAction fartRight;
+    private readonly PlayerAction fartDown;
+    private readonly PlayerAction fartUp;
 
-    Move = CreateOneAxisPlayerAction(this.moveLeft, this.moveRight);
-    Fart = CreateTwoAxisPlayerAction(this.fartLeft, this.fartRight, this.fartDown, this.fartUp);
+    public PlayerOneAxisAction Move { get; }
+    public PlayerTwoAxisAction Fart { get; }
 
-    Jump = CreatePlayerAction("Jump");
-  }
+    public PlayerAction Jump { get; }
 
-  public static PlayerActions CreateWithDefaultBindings()
-  {
-    var playerActions = new PlayerActions();
+    public PlayerActions()
+    {
+      this.moveLeft = CreatePlayerAction("Move Left");
+      this.moveRight = CreatePlayerAction("Move Right");
 
-    playerActions.moveLeft.AddDefaultBinding(Key.A);
-    playerActions.moveLeft.AddDefaultBinding(InputControlType.LeftStickLeft);
-    playerActions.moveLeft.AddDefaultBinding(InputControlType.DPadLeft);
+      this.fartLeft = CreatePlayerAction("Fart Aim Left");
+      this.fartRight = CreatePlayerAction("Fart Aim Right");
+      this.fartDown = CreatePlayerAction("Fart Aim Down");
+      this.fartUp = CreatePlayerAction("Fart Aim Up");
 
-    playerActions.moveRight.AddDefaultBinding(Key.D);
-    playerActions.moveRight.AddDefaultBinding(InputControlType.LeftStickRight);
-    playerActions.moveRight.AddDefaultBinding(InputControlType.DPadRight);
+      Move = CreateOneAxisPlayerAction(this.moveLeft, this.moveRight);
+      Fart = CreateTwoAxisPlayerAction(this.fartLeft, this.fartRight, this.fartDown, this.fartUp);
 
-    playerActions.fartLeft.AddDefaultBinding(InputControlType.RightStickLeft);
+      Jump = CreatePlayerAction("Jump");
+    }
 
-    playerActions.fartRight.AddDefaultBinding(InputControlType.RightStickRight);
+    public static PlayerActions CreateWithDefaultBindings()
+    {
+      var playerActions = new PlayerActions();
 
-    playerActions.fartDown.AddDefaultBinding(InputControlType.RightStickDown);
+      playerActions.moveLeft.AddDefaultBinding(Key.A);
+      playerActions.moveLeft.AddDefaultBinding(InputControlType.LeftStickLeft);
+      playerActions.moveLeft.AddDefaultBinding(InputControlType.DPadLeft);
 
-    playerActions.fartUp.AddDefaultBinding(InputControlType.RightStickUp);
+      playerActions.moveRight.AddDefaultBinding(Key.D);
+      playerActions.moveRight.AddDefaultBinding(InputControlType.LeftStickRight);
+      playerActions.moveRight.AddDefaultBinding(InputControlType.DPadRight);
 
-    playerActions.Jump.AddDefaultBinding(Key.Space);
-    playerActions.Jump.AddDefaultBinding(InputControlType.Action1);
+      playerActions.fartLeft.AddDefaultBinding(InputControlType.RightStickLeft);
 
-    playerActions.ListenOptions.IncludeUnknownControllers = false;
-    playerActions.ListenOptions.MaxAllowedBindings = 3;
+      playerActions.fartRight.AddDefaultBinding(InputControlType.RightStickRight);
 
-    playerActions.ListenOptions.OnBindingFound = OnBindingFound;
+      playerActions.fartDown.AddDefaultBinding(InputControlType.RightStickDown);
 
-    return playerActions;
-  }
+      playerActions.fartUp.AddDefaultBinding(InputControlType.RightStickUp);
 
-  private static bool OnBindingFound(PlayerAction action, BindingSource binding)
-  {
-    if (binding != new KeyBindingSource(Key.Escape))
-      return true;
+      playerActions.Jump.AddDefaultBinding(Key.Space);
+      playerActions.Jump.AddDefaultBinding(InputControlType.Action1);
 
-    action.StopListeningForBinding();
+      playerActions.ListenOptions.IncludeUnknownControllers = false;
+      playerActions.ListenOptions.MaxAllowedBindings = 3;
 
-    return false;
+      playerActions.ListenOptions.OnBindingFound = OnBindingFound;
+
+      return playerActions;
+    }
+
+    private static bool OnBindingFound(PlayerAction action, BindingSource binding)
+    {
+      if (binding != new KeyBindingSource(Key.Escape))
+        return true;
+
+      action.StopListeningForBinding();
+
+      return false;
+    }
   }
 }

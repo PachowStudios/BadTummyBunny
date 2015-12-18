@@ -2,7 +2,7 @@
 using UnityEngine.Assertions;
 using Zenject;
 
-namespace BadTummyBunny
+namespace PachowStudios.BadTummyBunny
 {
   [AddComponentMenu("Player/Score")]
   public class PlayerScore : MonoBehaviour, IScoreKeeper,

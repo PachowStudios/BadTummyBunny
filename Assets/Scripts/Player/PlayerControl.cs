@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Assertions;
 using Zenject;
 
-namespace BadTummyBunny
+namespace PachowStudios.BadTummyBunny
 {
   [AddComponentMenu("Bad Tummy Bunny/Player/Control")]
   public sealed class PlayerControl : BaseMovable, IFartInfoProvider,
@@ -40,6 +40,9 @@ namespace BadTummyBunny
 
     [Inject(Tags.Player)]
     private IHasHealth Health { get; set; }
+
+    [Inject]
+    private IEventAggregator EventAggregator { get; set; }
 
     [Inject]
     private IInstantiator Instantiator { get; set; }
@@ -86,7 +89,10 @@ namespace BadTummyBunny
 
     [PostInject]
     private void PostInject()
-      => SetFart(this.startingFart);
+    {
+      EventAggregator.Subscribe(this);
+      SetFart(this.startingFart);
+    }
 
     private void Awake()
     {
@@ -125,7 +131,7 @@ namespace BadTummyBunny
     {
       if (IsFarting
           && this.fartingTime > 0.05f
-          && CollisionLayers.ContainsLayer(other))
+          && CollisionLayers.HasLayer(other))
         StopFart(!IsGrounded);
     }
 
@@ -134,7 +140,7 @@ namespace BadTummyBunny
 
     private void GetInput()
     {
-      if (!this.IsInputEnabled)
+      if (!IsInputEnabled)
         return;
 
       this.horizontalMovement = this.playerActions.Move.Value;
@@ -165,7 +171,7 @@ namespace BadTummyBunny
 
     private void DisableInput()
     {
-      this.IsInputEnabled = false;
+      IsInputEnabled = false;
       ResetInput();
     }
 
@@ -282,7 +288,7 @@ namespace BadTummyBunny
       Velocity = Velocity.SetY(0f);
     }
 
-    private float CalculateFartUsage(float fartPower) => Extensions.ConvertRange(fartPower, 0f, 1f, this.fartUsageRange.x, this.fartUsageRange.y);
+    private float CalculateFartUsage(float fartPower) => MathHelper.ConvertRange(fartPower, 0f, 1f, this.fartUsageRange.x, this.fartUsageRange.y);
 
     private void CollectCarrot(Carrot carrot)
     {
@@ -323,16 +329,16 @@ namespace BadTummyBunny
     private void PlayWalkingSound(int rightStep)
     {
       if (!IsFarting && IsGrounded)
-        SoundManager.PlayCappedSFXFromGroup(rightStep == 1 ? SfxGroups.WalkingGrassRight : SfxGroups.WalkingGrassLeft);
+        SoundManager.PlayCappedSFXFromGroup(rightStep == 1 ? SfxGroup.WalkingGrassRight : SfxGroup.WalkingGrassLeft);
     }
-
-    private void PlayLandingSound()
-      => SoundManager.PlayCappedSFXFromGroup(SfxGroups.LandingGrass);
 
     public void Handle(PlayerCarrotTriggeredMessage message)
       => CollectCarrot(message.Carrot);
 
     public void Handle(PlayerFlagpoleTriggeredMessage message)
       => ActivateLevelFlagpole(message.Flagpole);
+
+    private static void PlayLandingSound()
+      => SoundManager.PlayCappedSFXFromGroup(SfxGroup.LandingGrass);
   }
 }

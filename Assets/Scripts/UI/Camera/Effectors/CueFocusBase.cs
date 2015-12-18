@@ -2,7 +2,7 @@
 using UnityEngine;
 using Zenject;
 
-namespace BadTummyBunny
+namespace PachowStudios.BadTummyBunny
 {
   [RequireComponent(typeof(Collider2D))]
   public abstract class CueFocusBase : MonoBehaviour, ICameraEffector

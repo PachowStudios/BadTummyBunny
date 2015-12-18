@@ -1,20 +1,23 @@
-﻿namespace BadTummyBunny.AI.Patrol
+﻿namespace PachowStudios.BadTummyBunny.AI.Patrol
 {
   public class PatrolState : FiniteState<PatrolAI>
   {
+    public PatrolState(IFiniteStateMachine<PatrolAI> stateMachine, PatrolAI context)
+      : base(stateMachine, context) { }
+
     public override void Begin()
     {
       if (Context.HorizontalMovement == 0)
-        Context.HorizontalMovement = Extensions.RandomSign();
+        Context.HorizontalMovement = MathHelper.RandomSign();
     }
 
     public override void Reason()
     {
       if (Context.CanFollowPlayer)
-        StateMachine.GoToState<FollowState>();
+        StateMachine.GoTo<FollowState>();
     }
 
-    public override void Update(float deltaTime)
+    public override void Tick(float deltaTime)
     {
       if (Context.IsAtWall || Context.IsAtLedge)
         Context.HorizontalMovement *= -1;

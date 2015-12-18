@@ -1,4 +1,7 @@
-﻿public interface IStatusEffectAttacher
+﻿namespace PachowStudios.BadTummyBunny
 {
-  void AttachStatusEffect(IStatusEffectable statusEffectableObject);
+  public interface IStatusEffectAttacher
+  {
+    void AttachStatusEffect(IStatusEffectable statusEffectableObject);
+  }
 }

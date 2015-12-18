@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using Zenject;
 
-namespace BadTummyBunny
+namespace PachowStudios.BadTummyBunny
 {
   [AddComponentMenu("Bad Tummy Bunny/Startup/Global Installer")]
   public class GlobalInstaller : MonoInstaller
@@ -9,7 +9,7 @@ namespace BadTummyBunny
     public override void InstallBindings()
     {
       // Game management singletons
-      Container.BindLifetimeSingleton<Bootstrapper>();
+      Container.BindAllInterfacesToSingle<Bootstrapper>();
 
       // Services
       Container.Bind<IEventAggregator>().ToSingle<EventAggregator>();

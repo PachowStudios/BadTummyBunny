@@ -1,5 +1,6 @@
 using UnityEngine;
 using antilunchbox;
+using System;
 
 public partial class SoundManager : Singleton<SoundManager>
 {
@@ -1370,7 +1371,7 @@ public partial class SoundManager : Singleton<SoundManager>
     }
 
     // Get random clip from list
-    result = grp.clips[Random.Range(0, grp.clips.Count)];
+    result = grp.clips[UnityEngine.Random.Range(0, grp.clips.Count)];
 
     // return result
     return result;

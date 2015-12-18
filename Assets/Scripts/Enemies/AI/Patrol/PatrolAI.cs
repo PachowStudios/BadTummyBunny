@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace BadTummyBunny.AI.Patrol
+namespace PachowStudios.BadTummyBunny.AI.Patrol
 {
   [AddComponentMenu("Enemy/AI/Patrol AI")]
   public class PatrolAI : BaseEnemyAI
@@ -31,14 +31,14 @@ namespace BadTummyBunny.AI.Patrol
 
     protected virtual void Awake()
       => StateMachine = new FiniteStateMachine<PatrolAI>(this)
-        .AddState<PatrolState>()
-        .AddState<FollowState>()
-        .AddState<SightLostState>()
-        .AddState<AttackState>();
+        .Add<PatrolState>()
+        .Add<FollowState>()
+        .Add<SightLostState>()
+        .Add<AttackState>();
 
     protected override void InternalUpdate()
     {
-      StateMachine.Update(Time.deltaTime);
+      StateMachine.Tick(Time.deltaTime);
       ApplyAnimation();
     }
 

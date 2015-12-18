@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 
-public interface ICameraPositionAssertion
+namespace PachowStudios.BadTummyBunny
 {
-  Vector3 GetDesiredPositionDelta(Bounds targetBounds, Vector3 basePosition, Vector3 targetAverageVelocity);
+  public interface ICameraPositionAssertion
+  {
+    Vector3 GetDesiredPositionDelta(Bounds targetBounds, Vector3 basePosition, Vector3 targetAverageVelocity);
+  }
 }

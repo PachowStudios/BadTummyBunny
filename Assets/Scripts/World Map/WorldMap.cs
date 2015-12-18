@@ -4,119 +4,122 @@ using UnityEngine;
 using UnityEngine.Assertions;
 using Zenject;
 
-[AddComponentMenu("Bad Tummy Bunny/World Map/Map")]
-public class WorldMap : MonoBehaviour
+namespace PachowStudios.BadTummyBunny
 {
-  [SerializeField] private WorldMapLevel startingLevel = null;
-
-  private HashSet<WorldMapLevel> levels;
-
-  [Inject]
-  private WorldMapPlayer Player { get; set; }
-
-  [Inject]
-  private IEventAggregator EventAggregator { get; set; }
-
-  public WorldMapLevel SelectedLevel { get; private set; }
-
-  public IEnumerable<WorldMapLevel> Levels => this.levels;
-
-  private void Awake()
+  [AddComponentMenu("Bad Tummy Bunny/World Map/Map")]
+  public class WorldMap : MonoBehaviour
   {
-    Assert.IsNotNull(this.startingLevel, nameof(this.startingLevel));
+    [SerializeField] private WorldMapLevel startingLevel = null;
 
-    this.levels = new HashSet<WorldMapLevel>(GetComponentsInChildren<WorldMapLevel>());
-  }
+    private HashSet<WorldMapLevel> levels;
 
-  private void Start()
-    => SelectLevel(this.startingLevel);
+    [Inject]
+    private WorldMapPlayer Player { get; set; }
 
-  public void SelectLevel(WorldMapLevel level)
-  {
-    Assert.IsNotNull(level);
+    [Inject]
+    private IEventAggregator EventAggregator { get; set; }
 
-    SelectedLevel?.OnDeselected();
-    SelectedLevel = level;
-    SelectedLevel.OnSelected();
+    public WorldMapLevel SelectedLevel { get; private set; }
 
-    EventAggregator.Publish(new LevelSelectedMessage(SelectedLevel));
-  }
+    public IEnumerable<WorldMapLevel> Levels => this.levels;
 
-  public void DeselectLevel()
-  {
-    SelectedLevel?.OnDeselected();
-
-    EventAggregator.Publish(new LevelDeselectedMessage(SelectedLevel));
-
-    SelectedLevel = null;
-  }
-
-  public void NavigateToLevel(WorldMapLevel targetLevel)
-  {
-    IList<WorldMapLevel> path;
-
-    if (TryGetPathToLevel(SelectedLevel, targetLevel, out path))
+    private void Awake()
     {
-      DeselectLevel();
-      Player.NavigatePath(path, onCompleted: SelectLevel);
+      Assert.IsNotNull(this.startingLevel, nameof(this.startingLevel));
+
+      this.levels = new HashSet<WorldMapLevel>(GetComponentsInChildren<WorldMapLevel>());
     }
-  }
 
-  public bool TryGetPathToLevel(WorldMapLevel startLevel, WorldMapLevel endLevel, out IList<WorldMapLevel> path)
-    => (path = GetPathToLevel(startLevel, endLevel)).Any();
+    private void Start()
+      => SelectLevel(this.startingLevel);
 
-  public IList<WorldMapLevel> GetPathToLevel(WorldMapLevel startLevel, WorldMapLevel endLevel)
-  {
-    var path = new Stack<WorldMapLevel>();
-    var nodes = new List<WorldMapLevel>(Levels);
-    var distances = new Dictionary<WorldMapLevel, float>();
-    var previousNodes = new Dictionary<WorldMapLevel, WorldMapLevel>();
-
-    if (startLevel == null || endLevel == null)
-      return path.ToList();
-
-    foreach (var node in nodes)
-      distances[node] = float.MaxValue;
-
-    distances[startLevel] = 0f;
-
-    while (nodes.Any())
+    public void SelectLevel(WorldMapLevel level)
     {
-      nodes.Sort((x, y) => distances[x].CompareTo(distances[y]));
+      Assert.IsNotNull(level);
 
-      var smallestNode = nodes.First();
+      SelectedLevel?.OnDeselected();
+      SelectedLevel = level;
+      SelectedLevel.OnSelected();
 
-      nodes.Remove(smallestNode);
+      EventAggregator.Publish(new LevelSelectedMessage(SelectedLevel));
+    }
 
-      if (ReferenceEquals(smallestNode, endLevel))
+    public void DeselectLevel()
+    {
+      SelectedLevel?.OnDeselected();
+
+      EventAggregator.Publish(new LevelDeselectedMessage(SelectedLevel));
+
+      SelectedLevel = null;
+    }
+
+    public void NavigateToLevel(WorldMapLevel targetLevel)
+    {
+      IList<WorldMapLevel> path;
+
+      if (TryGetPathToLevel(SelectedLevel, targetLevel, out path))
       {
-        while (previousNodes.ContainsKey(smallestNode))
+        DeselectLevel();
+        Player.NavigatePath(path, onCompleted: SelectLevel);
+      }
+    }
+
+    public bool TryGetPathToLevel(WorldMapLevel startLevel, WorldMapLevel endLevel, out IList<WorldMapLevel> path)
+      => (path = GetPathToLevel(startLevel, endLevel)).Any();
+
+    public IList<WorldMapLevel> GetPathToLevel(WorldMapLevel startLevel, WorldMapLevel endLevel)
+    {
+      var path = new Stack<WorldMapLevel>();
+      var nodes = new List<WorldMapLevel>(Levels);
+      var distances = new Dictionary<WorldMapLevel, float>();
+      var previousNodes = new Dictionary<WorldMapLevel, WorldMapLevel>();
+
+      if (startLevel == null || endLevel == null)
+        return path.ToList();
+
+      foreach (var node in nodes)
+        distances[node] = float.MaxValue;
+
+      distances[startLevel] = 0f;
+
+      while (nodes.Any())
+      {
+        nodes.Sort((x, y) => distances[x].CompareTo(distances[y]));
+
+        var smallestNode = nodes.First();
+
+        nodes.Remove(smallestNode);
+
+        if (ReferenceEquals(smallestNode, endLevel))
         {
-          path.Push(smallestNode);
-          smallestNode = previousNodes[smallestNode];
+          while (previousNodes.ContainsKey(smallestNode))
+          {
+            path.Push(smallestNode);
+            smallestNode = previousNodes[smallestNode];
+          }
+
+          return path.ToList();
         }
 
-        return path.ToList();
+        if (distances[smallestNode] >= float.MaxValue)
+          break;
+
+        foreach (var connection in smallestNode.EnabledConnections)
+        {
+          var distance =
+            distances[smallestNode]
+            + smallestNode.Position.DistanceTo(connection.ConnectedLevel.Position);
+          var connectedLevel = connection.ConnectedLevel;
+
+          if (distance >= distances[connectedLevel])
+            continue;
+
+          distances[connectedLevel] = distance;
+          previousNodes[connectedLevel] = smallestNode;
+        }
       }
 
-      if (distances[smallestNode] >= float.MaxValue)
-        break;
-
-      foreach (var connection in smallestNode.EnabledConnections)
-      {
-        var distance =
-          distances[smallestNode]
-          + smallestNode.Position.DistanceTo(connection.ConnectedLevel.Position);
-        var connectedLevel = connection.ConnectedLevel;
-
-        if (distance >= distances[connectedLevel])
-          continue;
-
-        distances[connectedLevel] = distance;
-        previousNodes[connectedLevel] = smallestNode;
-      }
+      return path.ToList();
     }
-
-    return path.ToList();
-  } 
+  }
 }

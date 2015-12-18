@@ -1,17 +1,27 @@
 ﻿using System.Diagnostics;
 using UnityEngine;
 
-namespace BadTummyBunny
+namespace PachowStudios.BadTummyBunny
 {
   [AddComponentMenu("Bad Tummy Bunny/UI/Camera/Object Activator")]
   [RequireComponent(typeof(Collider2D))]
   public sealed class ObjectActivator : MonoBehaviour
   {
     private void OnTriggerEnter2D(Collider2D other)
-      => other.GetInterface<IActivatable>()?.Activate();
+    {
+      var activatable = other.GetInterface<IActivatable>();
+
+      if (activatable != null && !activatable.IsActivated)
+        activatable.IsActivated = true;
+    }
 
     private void OnTriggerExit2D(Collider2D other)
-      => other.GetInterface<IActivatable>()?.Deactivate();
+    {
+      var activatable = other.GetInterface<IActivatable>();
+
+      if (activatable != null && activatable.IsActivated)
+        activatable.IsActivated = false;
+    }
 
     [Conditional("UNITY_EDITOR")]
     private void Update() { }

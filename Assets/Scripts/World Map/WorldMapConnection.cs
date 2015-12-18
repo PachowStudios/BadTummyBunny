@@ -2,16 +2,19 @@
 using System.Diagnostics;
 using UnityEngine;
 
-[DebuggerDisplay("Connects to {ConnectedLevel.name}")]
-[Serializable]
-public class WorldMapConnection
+namespace PachowStudios.BadTummyBunny
 {
-  [SerializeField] private WorldMapLevel connectedLevel = null;
-  [SerializeField] private bool isEnabled = false;
+  [DebuggerDisplay("Connects to {ConnectedLevel.name}")]
+  [Serializable]
+  public class WorldMapConnection
+  {
+    [SerializeField] private WorldMapLevel connectedLevel = null;
+    [SerializeField] private bool isEnabled = false;
 
-  public WorldMapLevel ConnectedLevel => this.connectedLevel;
-  public bool IsEnabled => this.isEnabled;
+    public WorldMapLevel ConnectedLevel => this.connectedLevel;
+    public bool IsEnabled => this.isEnabled;
 
-  public bool ConnectsToLevel(WorldMapLevel level)
-    => ReferenceEquals(this.connectedLevel, level);
+    public bool ConnectsToLevel(WorldMapLevel level)
+      => ReferenceEquals(this.connectedLevel, level);
+  }
 }

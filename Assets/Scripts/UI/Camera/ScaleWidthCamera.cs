@@ -1,43 +1,46 @@
 ﻿using DG.Tweening;
 using UnityEngine;
 
-[AddComponentMenu("UI/Camera/Scale Width Camera")]
-[ExecuteInEditMode]
-public sealed class ScaleWidthCamera : MonoBehaviour
+namespace PachowStudios.BadTummyBunny
 {
-  [SerializeField] public int defaultFOV = 500;
-  [SerializeField] public bool useWorldSpaceUI;
-  [SerializeField] public RectTransform worldSpaceUI;
-
-  public int CurrentFOV { get; set; }
-
-  private Camera controlledCamera;
-
-  public static ScaleWidthCamera Instance { get; private set; }
-
-  private Camera Camera => this.GetComponentIfNull(ref this.controlledCamera);
-
-  private void OnEnable()
+  [AddComponentMenu("UI/Camera/Scale Width Camera")]
+  [ExecuteInEditMode]
+  public sealed class ScaleWidthCamera : MonoBehaviour
   {
-    Instance = this;
+    [SerializeField] public int defaultFOV = 500;
+    [SerializeField] public bool useWorldSpaceUI;
+    [SerializeField] public RectTransform worldSpaceUI;
 
-    CurrentFOV = this.defaultFOV;
-  }
+    public int CurrentFOV { get; set; }
 
-  private void OnPreRender()
-  {
-    Camera.orthographicSize = CurrentFOV / 32f / Camera.aspect;
+    private Camera controlledCamera;
 
-    if (this.useWorldSpaceUI && this.worldSpaceUI != null)
-      this.worldSpaceUI.sizeDelta =
-        new Vector2(
-          CurrentFOV / 16f,
-          CurrentFOV / 16f / Camera.aspect);
-  }
+    public static ScaleWidthCamera Instance { get; private set; }
 
-  public void AnimateFOV(int newFOV, float time)
-  {
-    DOTween.To(() => CurrentFOV, x => CurrentFOV = x, newFOV, time)
-      .SetEase(Ease.OutQuint);
+    private Camera Camera => this.GetComponentIfNull(ref this.controlledCamera);
+
+    private void OnEnable()
+    {
+      Instance = this;
+
+      CurrentFOV = this.defaultFOV;
+    }
+
+    private void OnPreRender()
+    {
+      Camera.orthographicSize = CurrentFOV / 32f / Camera.aspect;
+
+      if (this.useWorldSpaceUI && this.worldSpaceUI != null)
+        this.worldSpaceUI.sizeDelta =
+          new Vector2(
+            CurrentFOV / 16f,
+            CurrentFOV / 16f / Camera.aspect);
+    }
+
+    public void AnimateFOV(int newFOV, float time)
+    {
+      DOTween.To(() => CurrentFOV, x => CurrentFOV = x, newFOV, time)
+        .SetEase(Ease.OutQuint);
+    }
   }
 }

@@ -1,8 +1,11 @@
 ﻿using System;
 
-[Flags]
-public enum CameraAxis
+namespace PachowStudios.BadTummyBunny
 {
-  Horizontal = 1 << 0,
-  Vertical   = 1 << 1
+  [Flags]
+  public enum CameraAxis
+  {
+    Horizontal = 1 << 0,
+    Vertical   = 1 << 1
+  }
 }

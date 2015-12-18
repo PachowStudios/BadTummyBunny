@@ -2,45 +2,48 @@
 using UnityEditor.AnimatedValues;
 using UnityEngine;
 
-[CustomEditor(typeof(ScaleWidthCamera))]
-public class ScaleWidthCameraEditor : Editor
+namespace PachowStudios.BadTummyBunny
 {
-  private AnimBool showWorldSpaceUI;
-
-  private ScaleWidthCamera Target => (ScaleWidthCamera)target;
-
-  private void OnEnable() => this.showWorldSpaceUI = new AnimBool(Target.useWorldSpaceUI);
-
-  public override void OnInspectorGUI()
+  [CustomEditor(typeof(ScaleWidthCamera))]
+  public class ScaleWidthCameraEditor : Editor
   {
-    serializedObject.Update();
+    private AnimBool showWorldSpaceUI;
 
-    EditorGUILayout.LabelField("Current FOV", Target.CurrentFOV.ToString());
-    EditorGUILayout.Space();
+    private ScaleWidthCamera Target => (ScaleWidthCamera)target;
 
-    Target.CurrentFOV = Target.defaultFOV = EditorGUILayout.IntField("Default FOV", Target.defaultFOV);
+    private void OnEnable() => this.showWorldSpaceUI = new AnimBool(Target.useWorldSpaceUI);
 
-    this.showWorldSpaceUI.target = EditorGUILayout.Toggle("Use World Space UI", this.showWorldSpaceUI.target);
-    Target.useWorldSpaceUI = this.showWorldSpaceUI.value;
-
-    if (EditorGUILayout.BeginFadeGroup(this.showWorldSpaceUI.faded))
+    public override void OnInspectorGUI()
     {
-      EditorGUI.indentLevel++;
+      serializedObject.Update();
 
-      Target.worldSpaceUI = (RectTransform)EditorGUILayout.ObjectField("World Space UI", Target.worldSpaceUI, typeof(RectTransform), true);
+      EditorGUILayout.LabelField("Current FOV", Target.CurrentFOV.ToString());
+      EditorGUILayout.Space();
 
-      if (Target.worldSpaceUI == null)
-        EditorGUILayout.HelpBox("No world space UI selected!", MessageType.Error);
+      Target.CurrentFOV = Target.defaultFOV = EditorGUILayout.IntField("Default FOV", Target.defaultFOV);
 
-      EditorGUI.indentLevel--;
+      this.showWorldSpaceUI.target = EditorGUILayout.Toggle("Use World Space UI", this.showWorldSpaceUI.target);
+      Target.useWorldSpaceUI = this.showWorldSpaceUI.value;
+
+      if (EditorGUILayout.BeginFadeGroup(this.showWorldSpaceUI.faded))
+      {
+        EditorGUI.indentLevel++;
+
+        Target.worldSpaceUI = (RectTransform)EditorGUILayout.ObjectField("World Space UI", Target.worldSpaceUI, typeof(RectTransform), true);
+
+        if (Target.worldSpaceUI == null)
+          EditorGUILayout.HelpBox("No world space UI selected!", MessageType.Error);
+
+        EditorGUI.indentLevel--;
+      }
+
+      EditorGUILayout.EndFadeGroup();
+
+      if (GUI.changed)
+        EditorUtility.SetDirty(Target);
+
+      serializedObject.ApplyModifiedProperties();
+      Repaint();
     }
-
-    EditorGUILayout.EndFadeGroup();
-
-    if (GUI.changed)
-      EditorUtility.SetDirty(Target);
-
-    serializedObject.ApplyModifiedProperties();
-    Repaint();
   }
 }

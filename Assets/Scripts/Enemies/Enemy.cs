@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace BadTummyBunny
+namespace PachowStudios.BadTummyBunny
 {
   [AddComponentMenu("Bad Tummy Bunny/Enemy/Enemy")]
   [RequireComponent(typeof(IMovable), typeof(IHasHealth))]
