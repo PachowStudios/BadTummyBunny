@@ -1,6 +1,9 @@
 using UnityEngine;
 using antilunchbox;
 using System;
+using System.ComponentModel;
+using System.Linq;
+using System.Reflection;
 
 public partial class SoundManager : Singleton<SoundManager>
 {
@@ -122,7 +125,7 @@ public partial class SoundManager : Singleton<SoundManager>
   }
 
   public static AudioSource PlaySFXFromGroup(System.Enum sfxGroup)
-    => PlaySFX(LoadFromGroup(sfxGroup.GetDescription()));
+    => PlaySFX(LoadFromGroup(GetEnumDescription(sfxGroup)));
 
   /// <summary>
   /// Plays the SFX IFF other SFX with the same cappedID are not over the cap limit. Will default the location to (0,0,0), pitch to SoundManager.Instance.pitchSFX, volume to SoundManager.Instance.volumeSFX
@@ -315,7 +318,7 @@ public partial class SoundManager : Singleton<SoundManager>
   }
 
   public static AudioSource PlayCappedSFXFromGroup(System.Enum sfxGroup)
-    => PlayCappedSFXFromGroup(sfxGroup.GetDescription());
+    => PlayCappedSFXFromGroup(GetEnumDescription(sfxGroup));
 
   public static AudioSource PlayCappedSFXFromGroup(string groupAndCappedId)
     => PlayCappedSFX(LoadFromGroup(groupAndCappedId), groupAndCappedId);
@@ -1605,4 +1608,15 @@ public partial class SoundManager : Singleton<SoundManager>
   {
     CrossOut(duration, sfxObject.GetComponent<AudioSource>(), runOnEndFunction);
   }
+
+  private static string GetEnumDescription(Enum source)
+      => GetAttributeOfType<DescriptionAttribute>(source)?.Description
+      ?? string.Empty;
+
+  private static T GetAttributeOfType<T>(Enum source)
+      where T : Attribute
+      => (T)source
+        .GetType()
+        .GetMember(source.ToString()).First()
+        .GetCustomAttributes(typeof(T), false).FirstOrDefault();
 }
