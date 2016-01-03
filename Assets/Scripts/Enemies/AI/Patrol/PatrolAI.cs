@@ -1,33 +1,39 @@
 ﻿using System;
 using UnityEngine;
+using Zenject;
 
 namespace PachowStudios.BadTummyBunny.AI.Patrol
 {
   [AddComponentMenu("Enemy/AI/Patrol AI")]
   public class PatrolAI : BaseEnemyAI
   {
-    [Header("Patrol AI")]
-    [SerializeField] private Vector2 followSpeedRange = new Vector2(2.5f, 3.5f);
-    [SerializeField] private float visibilityAngle = 45f;
-    [SerializeField] private float followRange = 5f;
-    [SerializeField] private float attackRange = 1f;
-    [SerializeField] private float attackJumpHeight = 0.5f;
-    [SerializeField] private float cooldownTime = 1f;
-    [SerializeField] private Vector2 sightLostWaitTimeRange = new Vector2(1f, 2.5f);
+    [InstallerSettings]
+    public class Settings : BaseAISettings
+    {
+      public Vector2 FollowSpeedRange = new Vector2(2.5f, 3.5f);
+      public float VisibilityAngle = 45f;
+      public float FollowRange = 5f;
+      public float AttackRange = 1f;
+      public float AttackJumpHeight = 0.5f;
+      public float CooldownTime = 1f;
+      public Vector2 SightLostWaitTimeRange = new Vector2(1f, 2.5f);
+    }
 
-    public Vector2 FollowSpeedRange => this.followSpeedRange;
-    public float AttackRange => this.attackRange;
-    public float AttackJumpHeight => this.attackJumpHeight;
-    public float CooldownTime => this.cooldownTime;
-    public Vector2 SightLostWaitTimeRange => this.sightLostWaitTimeRange;
+    [Inject] private Settings Config { get; set; }
+
+    public Vector2 FollowSpeedRange => Config.FollowSpeedRange;
+    public float AttackRange => Config.AttackRange;
+    public float AttackJumpHeight => Config.AttackJumpHeight;
+    public float CooldownTime => Config.CooldownTime;
+    public Vector2 SightLostWaitTimeRange => Config.SightLostWaitTimeRange;
 
     public bool CanFollowPlayer
-      => IsPlayerInLineOfSight(this.followRange, this.visibilityAngle)
+      => IsPlayerInLineOfSight(Config.FollowRange, Config.VisibilityAngle)
       && Math.Abs(RelativePlayerLastGrounded) < 0.025f
       && !IsAtLedge
       && !IsAtWall;
 
-    protected IFiniteStateMachine<PatrolAI> StateMachine { get; private set; }
+    private FiniteStateMachine<PatrolAI> StateMachine { get; set; }
 
     protected virtual void Awake()
       => StateMachine = new FiniteStateMachine<PatrolAI>(this)
@@ -36,7 +42,7 @@ namespace PachowStudios.BadTummyBunny.AI.Patrol
         .Add<SightLostState>()
         .Add<AttackState>();
 
-    protected override void InternalUpdate()
+    protected override void InternalTick()
     {
       StateMachine.Tick(Time.deltaTime);
       ApplyAnimation();
@@ -44,9 +50,9 @@ namespace PachowStudios.BadTummyBunny.AI.Patrol
 
     protected virtual void ApplyAnimation()
     {
-      Animator.SetBool("Walking", HorizontalMovement != 0);
-      Animator.SetBool("Grounded", IsGrounded);
-      Animator.SetBool("Falling", ((BaseMovable)this).Velocity.y < 0f);
+      View.Animator.SetBool("Walking", HorizontalMovement != 0);
+      View.Animator.SetBool("Grounded", IsGrounded);
+      View.Animator.SetBool("Falling", Velocity.y < 0f);
     }
   }
 }

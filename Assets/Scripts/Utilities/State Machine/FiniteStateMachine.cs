@@ -4,16 +4,16 @@ using UnityEngine.Assertions;
 
 namespace PachowStudios
 {
-  public sealed class FiniteStateMachine<T> : IFiniteStateMachine<T>
+  public sealed class FiniteStateMachine<T>
     where T : class
   {
     public event Action StateChanged;
 
-    public IFiniteState<T> CurrentState { get; private set; }
-    public IFiniteState<T> PreviousState { get; private set; }
+    public FiniteState<T> CurrentState { get; private set; }
+    public FiniteState<T> PreviousState { get; private set; }
     public float ElapsedTimeInState { get; private set; }
 
-    private readonly Dictionary<Type, IFiniteState<T>> states = new Dictionary<Type, IFiniteState<T>>();
+    private readonly Dictionary<Type, FiniteState<T>> states = new Dictionary<Type, FiniteState<T>>();
     private readonly T context;
 
     public FiniteStateMachine(T context)
@@ -21,8 +21,8 @@ namespace PachowStudios
       this.context = context;
     }
 
-    public IFiniteStateMachine<T> Add<TState>()
-      where TState : IFiniteState<T>
+    public FiniteStateMachine<T> Add<TState>()
+      where TState : FiniteState<T>
     {
       this.states[typeof(TState)] = ReflectionHelper.Create<TState>(this, this.context);
 
@@ -36,10 +36,12 @@ namespace PachowStudios
     }
 
     public TState GoTo<TState>()
-      where TState : IFiniteState<T>
+      where TState : FiniteState<T>
     {
-      if (CurrentState is TState)
-        return (TState)CurrentState;
+      var matchedState = CurrentState as TState;
+
+      if (matchedState != null)
+        return matchedState;
 
       CurrentState?.End();
 
@@ -55,7 +57,7 @@ namespace PachowStudios
     }
 
     public bool CameFrom<TState>()
-      where TState : IFiniteState<T>
+      where TState : FiniteState<T>
       => PreviousState is TState;
 
     public void Tick(float deltaTime)

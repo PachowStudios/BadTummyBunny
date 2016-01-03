@@ -1,22 +1,23 @@
 ﻿using UnityEngine;
+using Zenject;
 
 namespace PachowStudios.BadTummyBunny
 {
-  [AddComponentMenu("Bad Tummy Bunny/Enemy/Enemy")]
-  [RequireComponent(typeof(IMovable), typeof(IHasHealth))]
   public class Enemy : StatusEffectableCharacter, IEnemy
   {
-    [Header("Contact Damage")]
-    [SerializeField] private int contactDamage = 1;
-    [SerializeField] private Vector2 contactKnockback = new Vector2(2f, 1f);
+    [InstallerSettings]
+    public class Settings : ScriptableObject
+    {
+      public int ContactDamage = 1;
+      public Vector2 ContactKnockback = new Vector2(2f, 1f);
+    }
 
-    private EnemyMovement movement;
-    private EnemyHealth health;
+    [Inject] private Settings Config { get; set; }
 
-    public override IMovable Movement => this.GetComponentIfNull(ref this.movement);
-    public override IHasHealth Health => this.GetComponentIfNull(ref this.health);
+    [Inject] public override IMovable Movement { get; protected set; }
+    [Inject] public override IHasHealth Health { get; protected set; }
 
-    public int ContactDamage => this.contactDamage;
-    public Vector2 ContactKnockback => this.contactKnockback;
+    public int ContactDamage => Config.ContactDamage;
+    public Vector2 ContactKnockback => Config.ContactKnockback;
   }
 }

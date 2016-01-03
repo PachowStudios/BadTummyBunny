@@ -1,8 +1,10 @@
 using System;
+using JetBrains.Annotations;
 
 namespace Zenject
 {
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
+    [MeansImplicitUse]
     public class InjectLocalAttribute : InjectAttributeBase
     {
         public InjectLocalAttribute(string identifier)
@@ -18,6 +20,7 @@ namespace Zenject
     }
 
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
+    [MeansImplicitUse]
     public class InjectLocalOptionalAttribute : InjectAttributeBase
     {
         public InjectLocalOptionalAttribute(string identifier)

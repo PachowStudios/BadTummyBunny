@@ -1,5 +1,17 @@
-﻿namespace PachowStudios.BadTummyBunny
+﻿using UnityEngine;
+
+namespace PachowStudios.BadTummyBunny
 {
+  public class PlayerCollidedMessage : IMessage
+  {
+    public Collider2D Collider { get; }
+
+    public PlayerCollidedMessage(Collider2D collider)
+    {
+      Collider = collider;
+    }
+  }
+
   public class PlayerHealthChangedMessage : IMessage
   {
     public int Health { get; }
@@ -79,6 +91,4 @@
       RespawnPoint = respawnPoint;
     }
   }
-
-  public class PlayerKillzoneTriggeredMessage : IMessage { }
 }

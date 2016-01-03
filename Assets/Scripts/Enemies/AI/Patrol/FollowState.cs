@@ -8,7 +8,7 @@ namespace PachowStudios.BadTummyBunny.AI.Patrol
 
     private float cooldownTimer;
 
-    public FollowState(IFiniteStateMachine<PatrolAI> stateMachine, PatrolAI context)
+    public FollowState(FiniteStateMachine<PatrolAI> stateMachine, PatrolAI context)
       : base(stateMachine, context)
     {
       this.followSpeed = Context.FollowSpeedRange.RandomRange();

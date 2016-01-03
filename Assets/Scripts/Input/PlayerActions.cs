@@ -31,37 +31,31 @@ namespace PachowStudios.BadTummyBunny
       Fart = CreateTwoAxisPlayerAction(this.fartLeft, this.fartRight, this.fartDown, this.fartUp);
 
       Jump = CreatePlayerAction("Jump");
+
+      AssignDefaultBindings();
     }
 
-    public static PlayerActions CreateWithDefaultBindings()
+    private void AssignDefaultBindings()
     {
-      var playerActions = new PlayerActions();
+      this.moveLeft.AddDefaultBinding(Key.A);
+      this.moveLeft.AddDefaultBinding(InputControlType.LeftStickLeft);
+      this.moveLeft.AddDefaultBinding(InputControlType.DPadLeft);
 
-      playerActions.moveLeft.AddDefaultBinding(Key.A);
-      playerActions.moveLeft.AddDefaultBinding(InputControlType.LeftStickLeft);
-      playerActions.moveLeft.AddDefaultBinding(InputControlType.DPadLeft);
+      this.moveRight.AddDefaultBinding(Key.D);
+      this.moveRight.AddDefaultBinding(InputControlType.LeftStickRight);
+      this.moveRight.AddDefaultBinding(InputControlType.DPadRight);
 
-      playerActions.moveRight.AddDefaultBinding(Key.D);
-      playerActions.moveRight.AddDefaultBinding(InputControlType.LeftStickRight);
-      playerActions.moveRight.AddDefaultBinding(InputControlType.DPadRight);
+      this.fartLeft.AddDefaultBinding(InputControlType.RightStickLeft);
+      this.fartRight.AddDefaultBinding(InputControlType.RightStickRight);
+      this.fartDown.AddDefaultBinding(InputControlType.RightStickDown);
+      this.fartUp.AddDefaultBinding(InputControlType.RightStickUp);
 
-      playerActions.fartLeft.AddDefaultBinding(InputControlType.RightStickLeft);
+      Jump.AddDefaultBinding(Key.Space);
+      Jump.AddDefaultBinding(InputControlType.Action1);
 
-      playerActions.fartRight.AddDefaultBinding(InputControlType.RightStickRight);
-
-      playerActions.fartDown.AddDefaultBinding(InputControlType.RightStickDown);
-
-      playerActions.fartUp.AddDefaultBinding(InputControlType.RightStickUp);
-
-      playerActions.Jump.AddDefaultBinding(Key.Space);
-      playerActions.Jump.AddDefaultBinding(InputControlType.Action1);
-
-      playerActions.ListenOptions.IncludeUnknownControllers = false;
-      playerActions.ListenOptions.MaxAllowedBindings = 3;
-
-      playerActions.ListenOptions.OnBindingFound = OnBindingFound;
-
-      return playerActions;
+      this.ListenOptions.IncludeUnknownControllers = false;
+      this.ListenOptions.MaxAllowedBindings = 3;
+      this.ListenOptions.OnBindingFound = OnBindingFound;
     }
 
     private static bool OnBindingFound(PlayerAction action, BindingSource binding)

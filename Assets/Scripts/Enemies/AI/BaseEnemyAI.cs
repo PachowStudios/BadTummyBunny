@@ -5,39 +5,34 @@ namespace PachowStudios.BadTummyBunny
 {
   public abstract class BaseEnemyAI : EnemyMovement
   {
-    [Header("Attacking")]
-    [SerializeField] private Vector2 knockback = new Vector2(2f, 1f);
+    [InstallerSettings]
+    public class BaseAISettings : MovementSettings
+    {
+      public LayerMask BlockVisibilityLayers = default(LayerMask);
+    }
 
-    [Header("AI Settings")]
-    [SerializeField] private LayerMask blockVisibilityLayers = default(LayerMask);
+    [Inject] private BaseAISettings Config { get; set; }
 
-    [Header("AI Components")]
-    [SerializeField] private Transform frontCheck = null;
-    [SerializeField] private Transform ledgeCheck = null;
-
-    [Inject(Tags.Player)]
-    private IMovable PlayerMovement { get; set; }
+    [Inject(Tags.Player)] private IMovable PlayerMovement { get; set; }
 
     public bool IsAtWall
-      => Physics2D.OverlapPoint(this.frontCheck.position, CollisionLayers) != null;
+      => Physics2D.OverlapPoint(EnemyView.FrontCheck.position, CollisionLayers) != null;
 
     public bool IsAtLedge
-      => IsGrounded && Physics2D.OverlapPoint(this.ledgeCheck.position, CollisionLayers) == null;
+      => IsGrounded
+      && Physics2D.OverlapPoint(EnemyView.LedgeCheck.position, CollisionLayers) == null;
 
-    public bool IsPlayerOnRight
-      => PlayerMovement.Position.x > ThisEnemy.Movement.Position.x;
+    public bool IsPlayerOnRight => PlayerMovement.Position.x > Position.x;
+    public float RelativePlayerHeight => Position.y - PlayerMovement.Position.y;
 
     public float RelativePlayerLastGrounded
-      => (ThisEnemy.Movement.LastGroundedPosition.y - PlayerMovement.LastGroundedPosition.y).RoundToFraction(2);
-
-    public float RelativePlayerHeight
-      => ThisEnemy.Movement.Position.y - PlayerMovement.Position.y;
+      => (LastGroundedPosition.y - PlayerMovement.LastGroundedPosition.y).RoundToFraction(2);
 
     public virtual void FollowPlayer(float buffer = 1f)
     {
-      if (transform.position.x + buffer < PlayerMovement.Position.x)
+      if (View.Transform.position.x + buffer < PlayerMovement.Position.x)
         HorizontalMovement = 1;
-      else if (transform.position.x - buffer > PlayerMovement.Position.x)
+      else if (View.Transform.position.x - buffer > PlayerMovement.Position.x)
         HorizontalMovement = -1;
       else
       {
@@ -49,7 +44,7 @@ namespace PachowStudios.BadTummyBunny
     public virtual void FacePlayer()
     {
       if (IsPlayerOnRight ^ IsFacingRight)
-        transform.Flip();
+        View.Transform.Flip();
     }
 
     public virtual bool IsPlayerInRange(float min = 0f, float max = Mathf.Infinity)
@@ -72,7 +67,7 @@ namespace PachowStudios.BadTummyBunny
         Physics2D.Linecast(
           Collider.bounds.center,
           PlayerMovement.CenterPoint,
-          this.blockVisibilityLayers);
+          Config.BlockVisibilityLayers);
 
       return linecast.collider == null && linecast.distance <= range;
     }

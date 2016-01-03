@@ -1,4 +1,6 @@
-﻿namespace PachowStudios
+﻿using JetBrains.Annotations;
+
+namespace PachowStudios
 {
   public partial class EventAggregator
   {
@@ -6,12 +8,14 @@
     {
       bool IsAlive { get; }
 
-      bool Handle<TMessage>(TMessage message)
+      bool Handle<TMessage>([NotNull] TMessage message)
         where TMessage : IMessage;
 
+      [Pure]
       bool Handles<TMessage>()
         where TMessage : IMessage;
 
+      [Pure]
       bool ReferenceEquals(object instance);
     }
   }

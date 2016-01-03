@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using ModestTree.Util;
 using System.Linq;
 using ModestTree;
 
@@ -7,12 +8,10 @@ namespace Zenject
 {
     // Update tasks once per frame based on a priority
     [System.Diagnostics.DebuggerStepThrough]
-    public class TaskUpdater<TTask>
+    public abstract class TaskUpdater<TTask>
     {
         readonly LinkedList<TaskInfo> _tasks = new LinkedList<TaskInfo>();
         readonly List<TaskInfo> _queuedTasks = new List<TaskInfo>();
-
-        Action<TTask> _updateFunc;
 
         IEnumerable<TaskInfo> AllTasks
         {
@@ -28,11 +27,6 @@ namespace Zenject
             {
                 return _tasks;
             }
-        }
-
-        public TaskUpdater(Action<TTask> updateFunc)
-        {
-            _updateFunc = updateFunc;
         }
 
         public void AddTask(TTask task, int priority)
@@ -83,7 +77,7 @@ namespace Zenject
                 if (!taskInfo.IsRemoved && taskInfo.Priority >= minPriority
                     && (maxPriority == int.MaxValue || taskInfo.Priority < maxPriority))
                 {
-                    _updateFunc(taskInfo.Task);
+                    UpdateItem(taskInfo.Task);
                 }
 
                 node = next;
@@ -113,8 +107,10 @@ namespace Zenject
 
         void AddQueuedTasks()
         {
-            foreach (var task in _queuedTasks)
+            for (int i = 0; i < _queuedTasks.Count; i++)
             {
+                var task = _queuedTasks[i];
+
                 if (!task.IsRemoved)
                 {
                     InsertTaskSorted(task);
@@ -137,6 +133,8 @@ namespace Zenject
             _tasks.AddLast(task);
         }
 
+        protected abstract void UpdateItem(TTask task);
+
         class TaskInfo
         {
             public TTask Task;
@@ -147,6 +145,45 @@ namespace Zenject
             {
                 Task = task;
                 Priority = priority;
+            }
+        }
+    }
+
+    public class TickablesTaskUpdater : TaskUpdater<ITickable>
+    {
+        protected override void UpdateItem(ITickable task)
+        {
+#if PROFILING_ENABLED
+            using (ProfileBlock.Start("{0}.Tick()".Fmt(task.GetType().Name())))
+#endif
+            {
+                task.Tick();
+            }
+        }
+    }
+
+    public class LateTickablesTaskUpdater : TaskUpdater<ILateTickable>
+    {
+        protected override void UpdateItem(ILateTickable task)
+        {
+#if PROFILING_ENABLED
+            using (ProfileBlock.Start("{0}.LateTick()".Fmt(task.GetType().Name())))
+#endif
+            {
+                task.LateTick();
+            }
+        }
+    }
+
+    public class FixedTickablesTaskUpdater : TaskUpdater<IFixedTickable>
+    {
+        protected override void UpdateItem(IFixedTickable task)
+        {
+#if PROFILING_ENABLED
+            using (ProfileBlock.Start("{0}.FixedTick()".Fmt(task.GetType().Name())))
+#endif
+            {
+                task.FixedTick();
             }
         }
     }

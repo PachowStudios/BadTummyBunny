@@ -54,32 +54,42 @@ namespace System.Linq.Extensions
       return source;
     }
 
-    public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> source)
+    [NotNull]
+    public static IEnumerable<T> Shuffle<T>([NotNull] this IEnumerable<T> source)
       => source.OrderBy(x => Guid.NewGuid());
 
-    public static T GetRandom<T>(this IList<T> list)
-      => list[UnityEngine.Random.Range(0, list.Count)];
+    [NotNull]
+    public static T GetRandom<T>([NotNull] this IList<T> source)
+      => source[UnityEngine.Random.Range(0, source.Count)];
 
     [NotNull]
-    public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, Func<TValue> factory)
+    public static T Remove<T>([NotNull] this IList<T> source, [NotNull] Func<T, bool> predicate)
     {
-      if (!dictionary.ContainsKey(key) || dictionary[key] == null)
-        dictionary[key] = factory.Invoke();
+      var item = source.Single(predicate);
 
-      return dictionary[key];
+      source.Remove(item);
+
+      return item;
     }
 
-    public static T Pop<T>(this IList<T> parent)
+    [NotNull]
+    public static T Pop<T>([NotNull] this IList<T> source)
     {
-      if (parent == null || parent.IsEmpty())
-        return default(T);
+      var lastIndex = source.Count - 1;
+      var lastItem = source[lastIndex];
 
-      var lastIndex = parent.Count - 1;
-      var lastItem = parent[lastIndex];
-
-      parent.RemoveAt(lastIndex);
+      source.RemoveAt(lastIndex);
 
       return lastItem;
+    }
+
+    [NotNull]
+    public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> source, TKey key, Func<TValue> factory)
+    {
+      if (!source.ContainsKey(key) || source[key] == null)
+        source[key] = factory.Invoke();
+
+      return source[key];
     }
   }
 }

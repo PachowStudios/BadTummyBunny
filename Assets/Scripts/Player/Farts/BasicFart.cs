@@ -1,75 +1,65 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using UnityEngine;
 using Vectrosity;
 using Zenject;
 
 namespace PachowStudios.BadTummyBunny
 {
-  [AddComponentMenu("Bad Tummy Bunny/Player/Farts/Basic Fart")]
-  [RequireComponent(typeof(Rigidbody2D), typeof(PolygonCollider2D))]
-  public class BasicFart : MonoBehaviour, IFart
+  public class BasicFart : IFart
   {
-    [Serializable, UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    protected struct SfxPowerMapping
+    [InstallerSettings]
+    public class BasicSettings : ScriptableObject
     {
-      public SfxGroup SfxGroup;
-      public float Power;
+      [Serializable, InstallerSettings]
+      public struct SfxPowerMapping
+      {
+        public SfxGroup SfxGroup;
+        public float Power;
+      }
+
+      [Header("Options")]
+      public string FartName = "Basic Fart";
+      public Vector2 SpeedRange = default(Vector2);
+      public int Damage = 4;
+      public float DamageDelay = 0.1f;
+      public Vector2 Knockback = new Vector2(1f, 1f);
+      public List<SfxPowerMapping> SoundEffects = new List<SfxPowerMapping>();
+
+      [Header("Trajectory")]
+      public float TrajectoryPreviewTime = 1f;
+      public float TrajectoryStartDistance = 1f;
+      public float TrajectoryWidth = 0.3f;
+      [Range(8, 64)] public int TrajectorySegments = 16;
+      public Gradient TrajectoryGradient = default(Gradient);
+      public Material TrajectoryMaterial = null;
+      public string TrajectorySortingLayer = "UI";
+      public int TrajectorySortingOrder = -1;
     }
-
-    [Header("Options")]
-    [SerializeField] private string fartName = "Basic Fart";
-    [SerializeField] private Vector2 speedRange = default(Vector2);
-    [SerializeField] private int damage = 4;
-    [SerializeField] private float damageDelay = 0.1f;
-    [SerializeField] private Vector2 knockback = new Vector2(1f, 1f);
-    [SerializeField] private List<SfxPowerMapping> soundEffects = new List<SfxPowerMapping>();
-
-    [Header("Trajectory")]
-    [SerializeField] private float trajectoryPreviewTime = 1f;
-    [SerializeField] private float trajectoryStartDistance = 1f;
-    [SerializeField] private float trajectoryWidth = 0.3f;
-    [SerializeField, Range(8, 64)] private int trajectorySegments = 16;
-    [SerializeField] private Gradient trajectoryGradient = default(Gradient);
-    [SerializeField] private Material trajectoryMaterial = null;
-    [SerializeField] private string trajectorySortingLayer = "UI";
-    [SerializeField] private int trajectorySortingOrder = -1;
-
-    [Header("Components")]
-    [SerializeField] private PolygonCollider2D fartCollider = null;
-    [SerializeField] private List<ParticleSystem> particles = new List<ParticleSystem>();
 
     private readonly HashSet<ICharacter> pendingTargets = new HashSet<ICharacter>();
     private readonly HashSet<ICharacter> damagedEnemies = new HashSet<ICharacter>();
 
     private VectorLine trajectoryLine;
 
-    [Inject(Tags.Player)]
-    private IMovable PlayerMovement { get; set; }
-
-    [Inject]
-    private CameraController CameraController { get; set; }
-
-    public string FartName => this.fartName;
+    [Inject] private BasicSettings Config { get; set; }
+    [Inject] private FartView View { get; set; }
+    [Inject] private IMovable PlayerMovement { get; set; }
+    [Inject] private CameraController CameraController { get; set; }
 
     public bool IsFarting { get; protected set; }
 
+    public string FartName => Config.FartName;
+
     [PostInject]
-    private void PostInject()
+    private void Initialize()
       => InitializeTrajectoryLine();
 
-    protected virtual void OnDestroy()
-      => VectorLine.Destroy(ref this.trajectoryLine);
-
-    protected virtual void OnTriggerEnter2D(Collider2D other)
+    public virtual void Dispose()
     {
-      if (!IsFarting)
-        return;
-
-      if (other.tag == Tags.Enemy)
-        OnEnemyTriggered(other.GetInterface<ICharacter>());
+      VectorLine.Destroy(ref this.trajectoryLine);
+      View.Dispose();
     }
 
     public virtual void StartFart(float power, Vector2 direction)
@@ -92,11 +82,11 @@ namespace PachowStudios.BadTummyBunny
 
       this.pendingTargets.Clear();
       this.damagedEnemies.Clear();
-      this.particles.ForEach(p => p.Stop());
+      View.Particles.ForEach(p => p.Stop());
     }
 
     public virtual float CalculateSpeed(float power)
-      => MathHelper.ConvertRange(power, 0f, 1f, this.speedRange.x, this.speedRange.y);
+      => MathHelper.ConvertRange(power, 0f, 1f, Config.SpeedRange.x, Config.SpeedRange.y);
 
     public virtual void DrawTrajectory(float power, Vector3 direction, float gravity, Vector3 startPosition)
     {
@@ -104,7 +94,7 @@ namespace PachowStudios.BadTummyBunny
 
       if (points != null)
       {
-        this.trajectoryLine.SetColor(this.trajectoryGradient.Evaluate(power));
+        this.trajectoryLine.SetColor(Config.TrajectoryGradient.Evaluate(power));
         this.trajectoryLine.MakeSpline(points);
         this.trajectoryLine.Draw();
       }
@@ -118,14 +108,14 @@ namespace PachowStudios.BadTummyBunny
       this.trajectoryLine.Draw();
     }
 
-    protected virtual void OnEnemyTriggered(ICharacter enemy)
+    public virtual void OnEnemyTriggered(ICharacter enemy)
     {
       if (this.pendingTargets.Contains(enemy) || this.damagedEnemies.Contains(enemy))
         return;
 
       this.pendingTargets.Add(enemy);
       Wait.ForSeconds(
-        this.damageDelay,
+        Config.DamageDelay,
         () =>
         {
           this.pendingTargets.Remove(enemy);
@@ -138,10 +128,10 @@ namespace PachowStudios.BadTummyBunny
       if (this.damagedEnemies.Contains(enemy))
         return;
 
-      var origin = this.fartCollider.transform.position;
+      var origin = View.FartCollider.transform.position;
 
-      if (this.fartCollider.OverlapPoint(enemy.Movement.CenterPoint) &&
-          Physics2D.Linecast(origin, enemy.Movement.CenterPoint, PlayerMovement.CollisionLayers).collider == null)
+      if (View.FartCollider.OverlapPoint(enemy.Movement.CenterPoint)
+          && Physics2D.Linecast(origin, enemy.Movement.CenterPoint, PlayerMovement.CollisionLayers).collider == null)
       {
         this.damagedEnemies.Add(enemy);
         DamageEnemy(enemy);
@@ -149,25 +139,25 @@ namespace PachowStudios.BadTummyBunny
     }
 
     protected virtual void DamageEnemy(ICharacter enemy)
-      => enemy.Health.Damage(this.damage, this.knockback, PlayerMovement.MovementDirection.Dot(-1f, 1f));
+      => enemy.Health.Damage(Config.Damage, Config.Knockback, PlayerMovement.MovementDirection.Dot(-1f, 1f));
 
     protected virtual Vector3[] CalculateTrajectory(float power, Vector3 direction, float gravity, Vector3 startPosition)
     {
       if (power <= 0f)
         return null;
 
-      var points = new Vector3[this.trajectorySegments];
+      var points = new Vector3[Config.TrajectorySegments];
       var speed = CalculateSpeed(power);
       var velocity = direction * speed;
-      var timeStep = this.trajectoryPreviewTime / this.trajectorySegments;
-      var bufferDelta = direction * this.trajectoryStartDistance;
+      var timeStep = Config.TrajectoryPreviewTime / Config.TrajectorySegments;
+      var bufferDelta = direction * Config.TrajectoryStartDistance;
 
       gravity *= timeStep * 0.5f;
-      bufferDelta.y += gravity * Mathf.Pow(this.trajectoryStartDistance / speed, 2) * 0.5f;
+      bufferDelta.y += gravity * Mathf.Pow(Config.TrajectoryStartDistance / speed, 2) * 0.5f;
 
       var bufferSqrMagnitude = bufferDelta.sqrMagnitude;
 
-      for (var i = 0; i < this.trajectorySegments; i++)
+      for (var i = 0; i < Config.TrajectorySegments; i++)
       {
         var currentDelta = velocity;
 
@@ -190,7 +180,7 @@ namespace PachowStudios.BadTummyBunny
         if (linecast.collider == null)
           continue;
 
-        for (var j = i - 1; j < this.trajectorySegments; j++)
+        for (var j = i - 1; j < Config.TrajectorySegments; j++)
           points[j] = linecast.point;
 
         break;
@@ -201,7 +191,7 @@ namespace PachowStudios.BadTummyBunny
 
     protected void PlaySound(float powerPercentage)
     {
-      foreach (var sfxMapping in this.soundEffects.Where(e => e.Power <= powerPercentage))
+      foreach (var sfxMapping in Config.SoundEffects.Where(e => e.Power <= powerPercentage))
       {
         SoundManager.PlayCappedSFXFromGroup(sfxMapping.SfxGroup);
         break;
@@ -209,24 +199,24 @@ namespace PachowStudios.BadTummyBunny
     }
 
     protected void StartParticles()
-      => this.particles.ForEach(p => p.Play());
+      => View.Particles.ForEach(p => p.Play());
 
     protected void InitializeTrajectoryLine()
     {
       VectorLine.SetCanvasCamera(CameraController.Camera);
       VectorLine.canvas.planeDistance = 9;
-      VectorLine.canvas.sortingLayerName = this.trajectorySortingLayer;
-      VectorLine.canvas.sortingOrder = this.trajectorySortingOrder;
+      VectorLine.canvas.sortingLayerName = Config.TrajectorySortingLayer;
+      VectorLine.canvas.sortingOrder = Config.TrajectorySortingOrder;
 
       this.trajectoryLine =
         new VectorLine(
           "Trajectory",
-          new List<Vector3>(this.trajectorySegments),
-          CameraController.Camera.UnitsToPixels(this.trajectoryWidth),
+          new List<Vector3>(Config.TrajectorySegments),
+          CameraController.Camera.UnitsToPixels(Config.TrajectoryWidth),
           LineType.Continuous,
           Joins.Fill)
         {
-          material = this.trajectoryMaterial,
+          material = Config.TrajectoryMaterial,
           textureScale = 1f
         };
     }

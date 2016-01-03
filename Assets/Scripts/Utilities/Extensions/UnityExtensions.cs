@@ -1,4 +1,6 @@
 ﻿using System;
+using JetBrains.Annotations;
+using PachowStudios;
 
 namespace UnityEngine
 {
@@ -28,14 +30,20 @@ namespace UnityEngine
       where T : class
       => Array.ConvertAll(component.GetComponents(typeof(T)), c => c as T);
 
-    public static void DestroyGameObject(this MonoBehaviour parent)
-      => parent.gameObject.Destroy();
+    public static TModel GetViewModel<TModel>(this Component component)
+      => component.GetInterface<IView<TModel>>().Model;
 
-    public static void Destroy(this GameObject parent)
-      => Object.Destroy(parent);
+    public static void Dispose(this MonoBehaviour monoBehaviour)
+      => monoBehaviour.DestroyGameObject();
 
-    public static void Destroy(this GameObject parent, float delay)
-      => Object.Destroy(parent, delay);
+    public static void DestroyGameObject(this MonoBehaviour monoBehaviour)
+      => monoBehaviour.gameObject.Destroy();
+
+    public static void Destroy(this GameObject gameObject)
+      => Object.Destroy(gameObject);
+
+    public static void Destroy(this GameObject gameObject, float delay)
+      => Object.Destroy(gameObject, delay);
 
     public static void DetachAndDestroy(this ParticleSystem parent)
     {
@@ -63,6 +71,15 @@ namespace UnityEngine
 
       return gameObject;
     }
+
+    public static void Flash([NotNull] this SpriteRenderer spriteRenderer, Color color, float time)
+    {
+      spriteRenderer.color = color;
+      Wait.ForSeconds(time, spriteRenderer.ResetColor);
+    }
+
+    public static void ResetColor([NotNull] this SpriteRenderer spriteRenderer)
+      => spriteRenderer.color = Color.white;
 
     public static bool HasLayer(this LayerMask parent, int layer)
       => (parent.value & (1 << layer)) > 0;

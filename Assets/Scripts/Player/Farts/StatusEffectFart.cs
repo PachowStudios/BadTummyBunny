@@ -1,15 +1,19 @@
-﻿using UnityEngine;
+﻿using Zenject;
 
 namespace PachowStudios.BadTummyBunny
 {
-  [AddComponentMenu("Bad Tummy Bunny/Player/Farts/Status Effect Fart")]
   public class StatusEffectFart : BasicFart, IStatusEffectAttacher
   {
-    [Header("Status Effects")]
-    [SerializeField] private MonoBehaviour statusEffect = null;
+    [InstallerSettings]
+    public class Settings : BasicSettings
+    {
+      public StatusEffectType StatusEffectType;
+    }
 
-    public void AttachStatusEffect(IStatusEffectable statusEffectableObject)
-      => statusEffectableObject.AddStatusEffect((IStatusEffect)this.statusEffect);
+    [Inject] private Settings Config { get; set; }
+
+    public void AttachStatusEffect(IStatusEffectable target)
+      => target.AddStatusEffect(Config.StatusEffectType);
 
     protected override void DamageEnemy(ICharacter enemy)
     {

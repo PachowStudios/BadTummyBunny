@@ -1,12 +1,12 @@
 ﻿namespace PachowStudios
 {
-  public abstract class FiniteState<T> : IFiniteState<T>
+  public abstract class FiniteState<T>
     where T : class
   {
-    protected IFiniteStateMachine<T> StateMachine { get; }
+    protected FiniteStateMachine<T> StateMachine { get; }
     protected T Context { get; }
 
-    protected FiniteState(IFiniteStateMachine<T> stateMachine, T context)
+    protected FiniteState(FiniteStateMachine<T> stateMachine, T context)
     {
       StateMachine = stateMachine;
       Context = context;

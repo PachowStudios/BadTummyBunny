@@ -8,7 +8,7 @@ namespace PachowStudios.BadTummyBunny.AI.Patrol
     private float waitTimer;
     private bool flipped;
 
-    public SightLostState(IFiniteStateMachine<PatrolAI> stateMachine, PatrolAI context)
+    public SightLostState(FiniteStateMachine<PatrolAI> stateMachine, PatrolAI context)
       : base(stateMachine, context) { }
 
     public override void Begin()
@@ -24,25 +24,25 @@ namespace PachowStudios.BadTummyBunny.AI.Patrol
       if (Context.CanFollowPlayer)
         StateMachine.GoTo<FollowState>();
 
-      if (this.waitTimer <= 0f)
-      {
-        Context.Flip();
-        StateMachine.GoTo<PatrolState>();
-      }
+      if (this.waitTimer > 0f)
+        return;
+
+      Context.Flip();
+      StateMachine.GoTo<PatrolState>();
     }
 
     public override void Tick(float deltaTime)
     {
       this.waitTimer -= deltaTime;
 
-      if (this.waitTimer < this.waitTime / 2f
-          && !this.flipped
-          && !Context.IsAtLedge
-          && !Context.IsAtWall)
-      {
-        Context.Flip();
-        this.flipped = true;
-      }
+      if (this.waitTimer >= this.waitTime / 2f
+          || this.flipped
+          || Context.IsAtLedge
+          || Context.IsAtWall)
+        return;
+
+      Context.Flip();
+      this.flipped = true;
     }
 
     public override void End()

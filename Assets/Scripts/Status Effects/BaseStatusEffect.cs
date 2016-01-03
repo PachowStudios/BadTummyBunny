@@ -1,52 +1,32 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
+using Zenject;
 
 namespace PachowStudios.BadTummyBunny
 {
-  public abstract class BaseStatusEffect : MonoBehaviour, IStatusEffect
+  public abstract class BaseStatusEffect : IStatusEffect
   {
-    public event Action<IStatusEffect> Deactivated;
-
-    [SerializeField] private string statusEffectName = "Status Effect";
-
-    public string StatusEffectName => this.statusEffectName;
-
-    public ICharacter AffectedCharacter { get; private set; }
-    public bool IsActive { get; private set; }
-    public bool IsDisposed { get; private set; }
-
-    public void Update()
+    [InstallerSettings]
+    public abstract class BaseSettings : ScriptableObject
     {
-      if (IsActive)
-        UpdateEffect();
+      public StatusEffectType Type;
+      public string Name = "New Status Effect";
+      public GameObject Prefab;
     }
 
-    public void Activate(ICharacter affectedCharacter)
-    {
-      if (IsActive || IsDisposed)
-        return;
+    [Inject] private BaseSettings Config { get; set; }
 
-      IsActive = true;
+    public IStatusEffectable AffectedCharacter { get; private set; }
+
+    public string Name => Config.Name;
+    public StatusEffectType Type => Config.Type;
+
+    public virtual void Attach(IStatusEffectable affectedCharacter)
+    {
       AffectedCharacter = affectedCharacter;
-      OnActivate();
     }
 
-    protected void Deactivate()
-    {
-      if (!IsActive || IsDisposed)
-        return;
+    public virtual void Dispose() { }
 
-      IsActive = false;
-      IsDisposed = true;
-      OnDeactivate();
-      Deactivated?.Invoke(this);
-    }
-
-    protected virtual void UpdateEffect() { }
-    protected virtual void OnActivate() { }
-    protected virtual void OnDeactivate() { }
-
-    private void OnDisable() 
-      => Deactivate();
+    public virtual void Tick() { }
   }
 }

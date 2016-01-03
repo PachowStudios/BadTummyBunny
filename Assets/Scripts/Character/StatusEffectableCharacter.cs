@@ -1,44 +1,40 @@
 ﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using UnityEngine;
+using System.Linq.Extensions;
+using Zenject;
 
 namespace PachowStudios.BadTummyBunny
 {
-  public abstract class StatusEffectableCharacter : MonoBehaviour, ICharacter, IStatusEffectable
+  public abstract class StatusEffectableCharacter : Facade, IStatusEffectable
   {
-    public abstract IMovable Movement { get; }
-    public abstract IHasHealth Health { get; }
+    private readonly List<IStatusEffect> statusEffects = new List<IStatusEffect>();
 
-    protected readonly List<IStatusEffect> statusEffects = new List<IStatusEffect>();
+    [Inject] private StatusEffectFactory StatusEffectFactory { get; set; }
 
-    public ReadOnlyCollection<IStatusEffect> StatusEffects => this.statusEffects.AsReadOnly();
+    [Inject] public IView View { get; private set; }
 
-    public void AddStatusEffect(IStatusEffect newStatusEffect)
+    public abstract IMovable Movement { get; protected set; }
+    public abstract IHasHealth Health { get; protected set; }
+
+    public IEnumerable<IStatusEffect> StatusEffects => this.statusEffects;
+
+    public bool HasStatusEffect(StatusEffectType type)
+      => this.statusEffects.Any(e => e.Type == type);
+
+    public void AddStatusEffect(StatusEffectType type)
     {
-      if (newStatusEffect == null || this.statusEffects.Any(e => e.StatusEffectName == newStatusEffect.StatusEffectName))
+      if (HasStatusEffect(type))
         return;
 
-      var instance = (MonoBehaviour)Instantiate((MonoBehaviour)newStatusEffect, Movement.CenterPoint, Quaternion.identity);
+      var statusEffect = StatusEffectFactory.Create(type);
 
-      instance.name = newStatusEffect.StatusEffectName;
-      instance.transform.parent = transform;
-
-      var statusEffectInstance = (IStatusEffect)instance;
-
-      statusEffectInstance.Deactivated += RemoveStatusEffect;
-      statusEffectInstance.Activate(this);
-      this.statusEffects.Add(statusEffectInstance);
+      statusEffect.Attach(this);
+      this.statusEffects.Add(statusEffect);
     }
 
-    public void RemoveStatusEffect(IStatusEffect oldStatusEffect)
-    {
-      if (oldStatusEffect == null)
-        return;
-
-      oldStatusEffect.Deactivated -= RemoveStatusEffect;
-      this.statusEffects.Remove(oldStatusEffect);
-      (oldStatusEffect as MonoBehaviour)?.DestroyGameObject();
-    }
+    public void RemoveStatusEffect(StatusEffectType type)
+      => this.statusEffects
+        .Remove(e => e.Type == type)
+        .Dispose();
   }
 }

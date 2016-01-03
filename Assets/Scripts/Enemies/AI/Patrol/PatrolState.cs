@@ -2,7 +2,7 @@
 {
   public class PatrolState : FiniteState<PatrolAI>
   {
-    public PatrolState(IFiniteStateMachine<PatrolAI> stateMachine, PatrolAI context)
+    public PatrolState(FiniteStateMachine<PatrolAI> stateMachine, PatrolAI context)
       : base(stateMachine, context) { }
 
     public override void Begin()
