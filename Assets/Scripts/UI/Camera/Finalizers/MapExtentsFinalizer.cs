@@ -4,7 +4,7 @@ using Zenject;
 
 namespace PachowStudios.BadTummyBunny
 {
-  [AddComponentMenu("Bad Tummy Bunny/UI/Camera/Finalizers/Map Extents Finalizer")]
+  [AddComponentMenu("Bad Tummy Bunny/Camera/Finalizers/Map Extents Finalizer")]
   public class MapExtentsFinalizer : MonoBehaviour, ICameraFinalizer
   {
     [SerializeField] private bool snapToBottom = false;

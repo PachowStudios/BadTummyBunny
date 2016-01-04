@@ -2,7 +2,7 @@
 
 namespace PachowStudios.BadTummyBunny
 {
-  [CreateAssetMenu(menuName = "Configuration/Level Star Config", fileName = "NewLevelStarConfig.asset")]
+  [InstallerSettings]
   public class LevelStarConfig : ScriptableObject
   {
     public string StarId;

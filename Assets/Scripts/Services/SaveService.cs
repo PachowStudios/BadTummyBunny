@@ -8,7 +8,7 @@ namespace PachowStudios.BadTummyBunny
   {
     private static string SaveFilePath { get; } = Path.Combine(Application.persistentDataPath, "BadTummyBunny.save.xml");
 
-    public SaveFile CurrentSave { get; private set; } = new SaveFile();
+    public SaveFile CurrentSave { get; private set; }
 
     public void Load()
     {
@@ -22,6 +22,8 @@ namespace PachowStudios.BadTummyBunny
     }
 
     public void Save()
-      => CurrentSave?.SerializeToXml().Save(SaveFilePath);
+      => (CurrentSave ?? new SaveFile())
+        .SerializeToXml()
+        .Save(SaveFilePath);
   }
 }

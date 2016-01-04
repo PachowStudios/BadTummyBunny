@@ -5,8 +5,7 @@ namespace PachowStudios.BadTummyBunny
 {
   public class Bootstrapper : IInitializable, IDisposable
   {
-    [Inject]
-    private SaveService SaveService { get; set; }
+    [Inject] private SaveService SaveService { get; set; }
 
     public void Initialize()
     {

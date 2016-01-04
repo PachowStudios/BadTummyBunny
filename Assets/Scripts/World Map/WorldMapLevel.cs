@@ -26,8 +26,7 @@ namespace PachowStudios.BadTummyBunny
     public bool HasEnabledConnections => Connections.Any(c => c.IsEnabled);
     public Vector3 Position => transform.position;
 
-    [Inject]
-    private WorldMap WorldMap { get; set; }
+    [Inject] private WorldMap WorldMap { get; set; }
 
     private void Awake()
     {

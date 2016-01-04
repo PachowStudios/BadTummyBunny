@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Zenject;
 
 namespace PachowStudios.BadTummyBunny
 {
@@ -6,12 +7,14 @@ namespace PachowStudios.BadTummyBunny
   {
     private SpriteRenderer spriteRenderer;
 
+    [Inject] private ExplodeEffect ExplodeEffect { get; set; }
+
     private SpriteRenderer SpriteRenderer => this.GetComponentIfNull(ref this.spriteRenderer);
 
     public void Collect()
     {
       PlayCollectSound();
-      ExplodeEffect.Instance.Explode(transform, Vector3.zero, SpriteRenderer.sprite);
+      ExplodeEffect.Explode(transform, Vector3.zero, SpriteRenderer.sprite);
       Destroy(gameObject);
     }
 

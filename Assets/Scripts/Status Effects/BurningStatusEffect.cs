@@ -3,7 +3,6 @@ using Zenject;
 
 namespace PachowStudios.BadTummyBunny
 {
-  [AddComponentMenu("Status Effects/Burning")]
   public class BurningStatusEffect : BaseStatusEffect
   {
     [InstallerSettings]
@@ -30,7 +29,7 @@ namespace PachowStudios.BadTummyBunny
       View.Attach(affectectedCharacter);
     }
 
-    public override void Dispose()
+    public override void Detach()
       => View.Detach();
 
     public override void Tick()
@@ -48,7 +47,7 @@ namespace PachowStudios.BadTummyBunny
       this.durationTimer += Time.deltaTime;
 
       if (this.durationTimer >= this.duration)
-        Dispose();
+        Detach();
     }
   }
 }

@@ -9,9 +9,9 @@ namespace PachowStudios.BadTummyBunny
     [SerializeField] private Transform body = null;
     [SerializeField] private Transform fartPoint = null;
 
-    [Inject] public override Player Model { get; protected set; }
-
     [InjectLocal] private IEventAggregator EventAggregator { get; set; }
+
+    [InjectLocal] public override Player Model { get; protected set; }
 
     public Transform Body => this.body;
     public Transform FartPoint => this.fartPoint;
@@ -23,7 +23,7 @@ namespace PachowStudios.BadTummyBunny
       switch (other.tag)
       {
         case Tags.Enemy:
-          EventAggregator.Publish(new PlayerEnemyTriggeredMessage(other.GetInterface<IEnemy>()));
+          EventAggregator.Publish(new PlayerEnemyTriggeredMessage(other.GetViewModel<IEnemy>()));
           break;
         case Tags.Coin:
           EventAggregator.Publish(new PlayerCoinTriggeredMessage(other.GetComponent<Coin>()));

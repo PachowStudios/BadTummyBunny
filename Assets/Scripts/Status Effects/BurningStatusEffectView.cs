@@ -21,6 +21,9 @@ namespace PachowStudios.BadTummyBunny
     }
 
     public void Detach()
-      => ParticleSystem.DetachAndDestroy();
+    {
+      ParticleSystem.DetachAndDestroy();
+      Dispose();
+    }
   }
 }

@@ -7,8 +7,8 @@ using Zenject;
 
 namespace PachowStudios.BadTummyBunny
 {
-  [AddComponentMenu("Bad Tummy Bunny/UI/HUD/Health")]
-  public class HealthHud : MonoBehaviour,
+  [AddComponentMenu("Bad Tummy Bunny/UI/HUD/Health HUD")]
+  public class HealthHud : BaseView,
     IHandles<PlayerHealthChangedMessage>,
     IHandles<PlayerHealthContainersChangedMessage>
   {
@@ -17,22 +17,19 @@ namespace PachowStudios.BadTummyBunny
     [Tooltip("Order is empty to full")]
     [SerializeField] private Sprite[] heartImages = new Sprite[5];
 
-    private List<Image> healthContainers;
+    [Inject] private Player Player { get; set; }
+    [Inject] private IEventAggregator EventAggregator { get; set; }
 
-    [Inject(Tags.Player)]
-    private IHasHealthContainers PlayerHealthContainers { get; set; }
+    private List<Image> HealthContainers { get; set; }
 
-    [Inject]
-    private IEventAggregator EventAggregator { get; set; }
-
-    private int HealthPerContainer => PlayerHealthContainers.HealthPerContainer;
+    private int HealthPerContainer => Player.HealthContainers.HealthPerContainer;
 
     [PostInject]
     private void PostInject()
       => EventAggregator.Subscribe(this);
 
     private void Awake()
-      => this.healthContainers = transform
+      => HealthContainers = Transform
         .GetComponentsInChildren<Image>()
         .OrderBy(h => h.rectTransform.anchoredPosition.x)
         .ToList();
@@ -41,26 +38,23 @@ namespace PachowStudios.BadTummyBunny
     {
       var newHealthContainers = message.HealthContainers;
 
-      if (this.healthContainers.Count < newHealthContainers)
+      while (HealthContainers.HasLessThan(newHealthContainers))
       {
-        while (this.healthContainers.Count < newHealthContainers)
-        {
-          var newHeart = (Image)Instantiate(this.heartPrefab, Vector3.zero, Quaternion.identity);
+        var newHeart = (Image)Instantiate(this.heartPrefab, Vector3.zero, Quaternion.identity);
 
-          newHeart.transform.SetParent(transform, false);
-          newHeart.sprite = this.heartImages[0];
+        newHeart.transform.SetParent(Transform, false);
+        newHeart.sprite = this.heartImages.First();
 
-          if (this.healthContainers.Count > 0)
-            newHeart.rectTransform.anchoredPosition = new Vector2(this.healthContainers.Last().rectTransform.offsetMax.x + this.spaceBetweenHearts, this.healthContainers.Last().rectTransform.anchoredPosition.y);
+        if (HealthContainers.Any())
+          newHeart.rectTransform.anchoredPosition = new Vector2(
+            HealthContainers.Last().rectTransform.offsetMax.x + this.spaceBetweenHearts,
+            HealthContainers.Last().rectTransform.anchoredPosition.y);
 
-          this.healthContainers.Add(newHeart);
-        }
+        HealthContainers.Add(newHeart);
       }
-      else if (this.healthContainers.Count > newHealthContainers)
-      {
-        while (this.healthContainers.Count > newHealthContainers)
-          Destroy(this.healthContainers.Pop().gameObject);
-      }
+
+      while (HealthContainers.HasMoreThan(newHealthContainers))
+        HealthContainers.Pop().Destroy();
     }
 
     public void Handle(PlayerHealthChangedMessage message)
@@ -68,14 +62,14 @@ namespace PachowStudios.BadTummyBunny
       var fullContainers = message.Health / HealthPerContainer;
       var partialHealth = message.Health % HealthPerContainer;
 
-      foreach (var container in this.healthContainers)
+      foreach (var container in HealthContainers)
       {
         if (fullContainers > 0)
           container.sprite = this.heartImages[HealthPerContainer];
         else if (fullContainers == 0)
           container.sprite = this.heartImages[partialHealth];
         else
-          container.sprite = this.heartImages[0];
+          container.sprite = this.heartImages.First();
 
         fullContainers--;
       }

@@ -1,29 +1,30 @@
-﻿using UnityEngine;
+﻿using JetBrains.Annotations;
+using UnityEngine;
+using Zenject;
 
 namespace PachowStudios.BadTummyBunny
 {
-  public class Coin : MonoBehaviour
+  public class Coin : BaseView
   {
+    [UsedImplicitly]
     public enum CoinValue
     {
       Copper = 1,
       Silver = 10,
       Gold = 50
-    };
+    }
 
     [SerializeField] private CoinValue value = CoinValue.Copper;
 
-    private SpriteRenderer spriteRenderer;
+    [Inject] private ExplodeEffect ExplodeEffect { get; set; }
 
     public int Value => (int)this.value;
-
-    private SpriteRenderer SpriteRenderer => this.GetComponentIfNull(ref this.spriteRenderer);
 
     public void Collect()
     {
       PlayCollectSound();
-      ExplodeEffect.Instance.Explode(transform, Vector3.zero, SpriteRenderer.sprite);
-      Destroy(gameObject);
+      ExplodeEffect.Explode(Transform, Vector3.zero, SpriteRenderer.sprite);
+      Dispose();
     }
 
     private static void PlayCollectSound() 

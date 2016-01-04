@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using MarkUX;
+﻿using MarkUX;
 using Zenject;
 
 namespace PachowStudios.BadTummyBunny.UI
@@ -8,10 +7,9 @@ namespace PachowStudios.BadTummyBunny.UI
     IHandles<LevelSelectedMessage>,
     IHandles<LevelDeselectedMessage>
   {
-    [UsedImplicitly] public WorldMapLevelPopup LevelPopup = null;
+    [DataBound] public WorldMapLevelPopup LevelPopup = null;
 
-    [Inject]
-    private IEventAggregator EventAggregator { get; set; }
+    [Inject] private IEventAggregator EventAggregator { get; set; }
 
     [PostInject]
     private void PostInject()

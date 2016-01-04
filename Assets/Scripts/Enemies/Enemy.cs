@@ -10,12 +10,15 @@ namespace PachowStudios.BadTummyBunny
     {
       public int ContactDamage = 1;
       public Vector2 ContactKnockback = new Vector2(2f, 1f);
+
+      public EnemyMovement.MovementSettings Movement;
+      public EnemyHealth.Settings Health;
     }
 
-    [Inject] private Settings Config { get; set; }
+    [InjectLocal] private Settings Config { get; set; }
 
-    [Inject] public override IMovable Movement { get; protected set; }
-    [Inject] public override IHasHealth Health { get; protected set; }
+    [InjectLocal] public override IMovable Movement { get; protected set; }
+    [InjectLocal] public override IHasHealth Health { get; protected set; }
 
     public int ContactDamage => Config.ContactDamage;
     public Vector2 ContactKnockback => Config.ContactKnockback;

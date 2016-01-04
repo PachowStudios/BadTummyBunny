@@ -4,7 +4,6 @@ using Zenject;
 
 namespace PachowStudios.BadTummyBunny.AI.Patrol
 {
-  [AddComponentMenu("Enemy/AI/Patrol AI")]
   public class PatrolAI : BaseEnemyAI
   {
     [InstallerSettings]
@@ -19,7 +18,7 @@ namespace PachowStudios.BadTummyBunny.AI.Patrol
       public Vector2 SightLostWaitTimeRange = new Vector2(1f, 2.5f);
     }
 
-    [Inject] private Settings Config { get; set; }
+    [InjectLocal] private Settings Config { get; set; }
 
     public Vector2 FollowSpeedRange => Config.FollowSpeedRange;
     public float AttackRange => Config.AttackRange;

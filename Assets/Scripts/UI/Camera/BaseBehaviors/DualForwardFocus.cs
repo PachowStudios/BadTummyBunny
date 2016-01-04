@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace PachowStudios.BadTummyBunny
 {
-  [AddComponentMenu("Bad Tummy Bunny/UI/Camera/Base Behaviors/Dual Forward Focus")]
+  [AddComponentMenu("Bad Tummy Bunny/Camera/Base Behaviors/Dual Forward Focus")]
   public class DualForwardFocus : MonoBehaviour, ICameraBaseBehavior
   {
     public enum DualForwardFocusType

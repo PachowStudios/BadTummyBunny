@@ -6,37 +6,35 @@ using Zenject;
 
 namespace PachowStudios.BadTummyBunny
 {
-  public class StatusEffectFactory : IFactory<StatusEffectType, IStatusEffect>
+  public class FartFactory : IFactory<FartType, IFart>
   {
     [InstallerSettings]
     public class Settings : ScriptableObject
     {
-      public List<BaseStatusEffect.BaseSettings> StatusEffectSettings;
+      public List<Fart.Settings> FartSettings;
     }
 
     [Inject] private DiContainer Container { get; set; }
     [Inject] private Settings Config { get; set; }
 
-    private Dictionary<StatusEffectType, BaseStatusEffect.BaseSettings> StatusEffectSettings { get; set; }
+    private Dictionary<FartType, Fart.Settings> FartSettings { get; set; }
 
     [PostInject]
     private void Initialize()
-      => StatusEffectSettings = Config.StatusEffectSettings.ToDictionary(s => s.Type);
-    
-    public IStatusEffect Create(StatusEffectType type)
+      => FartSettings = Config.FartSettings.ToDictionary(s => s.Type);
+
+    public IFart Create(FartType type)
     {
       var subContainer = Container.CreateSubContainer();
-      var settings = StatusEffectSettings[type];
+      var settings = FartSettings[type];
       var mappedType = type.GetTypeMapping();
 
       subContainer.Bind(settings.GetType()).ToInstance(settings);
       subContainer.BindAllInterfacesToSingle(mappedType);
       subContainer.Bind(mappedType).ToSingle();
+      subContainer.Bind<FartView>().ToSinglePrefab(settings.Prefab);
 
-      if (settings.Prefab != null)
-        subContainer.Bind<IStatusEffectView>().ToSinglePrefab(settings.Prefab);
-
-      return subContainer.Resolve<IStatusEffect>();
+      return subContainer.Resolve<IFart>();
     }
   }
 }

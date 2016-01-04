@@ -3,7 +3,7 @@ using Zenject;
 
 namespace PachowStudios.BadTummyBunny
 {
-  [AddComponentMenu("Bad Tummy Bunny/Startup/World Map Installer")]
+  [AddComponentMenu("Bad Tummy Bunny/Installers/World Map Installer")]
   public class WorldMapInstaller : MonoInstaller
   {
     [SerializeField] private CameraController cameraController = null;
@@ -12,10 +12,17 @@ namespace PachowStudios.BadTummyBunny
 
     public override void InstallBindings()
     {
-      // Bind scene objects
-      Container.Bind<CameraController>().ToInstance(this.cameraController);
+      InstallSceneBindings();
+      InstallWorldMapBindings();
+    }
 
-      // Bind world map objects
+    private void InstallSceneBindings()
+    {
+      Container.Bind<CameraController>().ToInstance(this.cameraController);
+    }
+
+    private void InstallWorldMapBindings()
+    {
       Container.Bind<WorldMap>().ToInstance(this.worldMapInstance);
       Container.Bind<WorldMapPlayer>().ToInstance(this.playerInstance);
     }

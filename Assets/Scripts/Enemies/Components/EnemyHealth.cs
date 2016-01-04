@@ -4,7 +4,6 @@ using Zenject;
 
 namespace PachowStudios.BadTummyBunny
 {
-  [AddComponentMenu("Enemy/Health")]
   public class EnemyHealth : BaseHasHealth, IDisposable,
     IHandles<CharacterKillzoneTriggeredMessage>
   {
@@ -16,10 +15,14 @@ namespace PachowStudios.BadTummyBunny
       public float FlashLength = 0.25f;
     }
 
-    [Inject] private Settings Config { get; set; }
-    [Inject] private EnemyView View { get; set; }
-    [Inject] private IMovable Movement { get; set; }
-    [Inject] private IEventAggregator EventAggregator { get; set; }
+    private int health;
+
+    [InjectLocal] private Settings Config { get; set; }
+    [InjectLocal] private EnemyView View { get; set; }
+    [InjectLocal] private IMovable Movement { get; set; }
+    [InjectLocal] private IEventAggregator LocalEventAggregator { get; set; }
+
+    [Inject] private ExplodeEffect ExplodeEffect { get; set; }
 
     public override int Health
     {
@@ -40,7 +43,7 @@ namespace PachowStudios.BadTummyBunny
 
     [PostInject]
     private void Initialize()
-      => EventAggregator.Subscribe(this);
+      => LocalEventAggregator.Subscribe(this);
 
     public void Dispose()
       => View.Dispose();
@@ -62,7 +65,7 @@ namespace PachowStudios.BadTummyBunny
     public override void Kill()
     {
       IsDead = true;
-      ExplodeEffect.Instance.Explode(View.Transform, Movement.Velocity, View.SpriteRenderer.sprite);
+      ExplodeEffect.Explode(View.Transform, Movement.Velocity, View.SpriteRenderer.sprite);
       Dispose();
     }
 

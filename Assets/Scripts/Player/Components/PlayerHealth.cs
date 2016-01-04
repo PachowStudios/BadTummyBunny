@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using Zenject;
 
 namespace PachowStudios.BadTummyBunny
@@ -10,8 +9,8 @@ namespace PachowStudios.BadTummyBunny
     IHandles<PlayerEnemyTriggeredMessage>,
     IHandles<PlayerRespawnPointTriggeredMessage>
   {
-    [Serializable, InstallerSettings]
-    public class Settings
+    [InstallerSettings]
+    public class Settings : ScriptableObject
     {
       public int HealthContainers = 3;
       public int CarrotHealthRecharge = 1;
@@ -21,32 +20,39 @@ namespace PachowStudios.BadTummyBunny
 
     private const float FlashTime = 0.25f;
 
+    private int health;
+    private int healthContainers;
+
     private float lastHitTime;
     private float flashTimer;
     private float smoothFlashTime;
 
     private RespawnPoint respawnPoint;
 
-    [Inject] private Settings Config { get; set; }
-    [Inject] private PlayerView View { get; set; }
-    [Inject] private IMovable Movement { get; set; }
-    [Inject] private IEventAggregator EventAggregator { get; set; }
+    [InjectLocal] private Settings Config { get; set; }
+    [InjectLocal] private PlayerView View { get; set; }
+    [InjectLocal] private IMovable Movement { get; set; }
+    [InjectLocal] private IEventAggregator LocalEventAggregator { get; set; }
+
+    [Inject] private IEventAggregator EventAggregator { set; get; }
+    [Inject] private IGameMenu GameMenu { get; set; }
+    [Inject] private ExplodeEffect ExplodeEffect { get; set; }
 
     public int HealthContainers
     {
-      get { return Config.HealthContainers; }
+      get { return this.healthContainers; }
       set
       {
-        if (Config.HealthContainers == value)
+        if (this.healthContainers == value)
           return;
 
-        if (Config.HealthContainers < value)
-          this.health = Mathf.Min(this.health + ((value - Config.HealthContainers) * HealthPerContainer), value * HealthPerContainer);
-        else if (Config.HealthContainers > value)
+        if (this.healthContainers < value)
+          this.health = Mathf.Min(this.health + ((value - this.healthContainers) * HealthPerContainer), value * HealthPerContainer);
+        else if (this.healthContainers > value)
           this.health = Mathf.Min(this.health, value * HealthPerContainer);
 
-        Config.HealthContainers = value;
-        RaiseHealthContainersChanged(value);
+        this.healthContainers = value;
+        RaiseHealthContainersChanged();
       }
     }
 
@@ -59,7 +65,7 @@ namespace PachowStudios.BadTummyBunny
           this.lastHitTime = Time.time;
 
         this.health = Mathf.Clamp(value, 0, MaxHealth);
-        RaiseHealthChanged(this.health);
+        RaiseHealthChanged();
         CheckDeath();
       }
     }
@@ -67,17 +73,18 @@ namespace PachowStudios.BadTummyBunny
     public int HealthPerContainer => 4;
     public override int MaxHealth => HealthContainers * HealthPerContainer;
 
-    private bool IsInvincible => Time.time <= this.lastHitTime + Config.InvincibilityPeriod;
+    private bool IsInvincible => this.lastHitTime + Config.InvincibilityPeriod >= Time.time;
 
     public PlayerHealth()
     {
+      this.healthContainers = Config.HealthContainers;
       this.health = MaxHealth;
       this.lastHitTime = Time.time - Config.InvincibilityPeriod;
     }
 
     [PostInject]
     private void Initialize()
-      => EventAggregator.Subscribe(this);
+      => LocalEventAggregator.Subscribe(this);
 
     public void Tick()
     {
@@ -123,13 +130,13 @@ namespace PachowStudios.BadTummyBunny
 
     private void CheckDeath()
     {
-      if (this.health > 0 || IsDead)
+      if (Health > 0 || IsDead)
         return;
 
       IsDead = true;
 
-      GameMenu.Instance.ShowGameOver();
-      ExplodeEffect.Instance.Explode(View.Transform, Movement.Velocity, View.SpriteRenderer.sprite);
+      GameMenu.ShowGameOverScreen();
+      ExplodeEffect.Explode(View.Transform, Movement.Velocity, View.SpriteRenderer.sprite);
       View.SetRenderersEnabled(false);
       Movement.Disable();
     }
@@ -165,13 +172,13 @@ namespace PachowStudios.BadTummyBunny
     private void Damage(IEnemy enemy)
       => Damage(enemy.ContactDamage, enemy.ContactKnockback, enemy.Movement.MovementDirection);
 
-    private void RaiseHealthChanged(int newHealth)
-      => EventAggregator.Publish(new PlayerHealthChangedMessage(newHealth));
+    private void RaiseHealthChanged()
+      => EventAggregator.Publish(new PlayerHealthChangedMessage(Health));
 
-    private void RaiseHealthContainersChanged(int value)
+    private void RaiseHealthContainersChanged()
     {
-      EventAggregator.Publish(new PlayerHealthContainersChangedMessage(value));
-      RaiseHealthChanged(Health);
+      EventAggregator.Publish(new PlayerHealthContainersChangedMessage(HealthContainers));
+      RaiseHealthChanged();
     }
 
     public void Handle(CharacterKillzoneTriggeredMessage message)

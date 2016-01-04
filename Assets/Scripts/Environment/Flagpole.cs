@@ -2,11 +2,11 @@
 
 public class Flagpole : MonoBehaviour
 {
-  private Animator animator;
+  private Animator animatorComponent;
 
   public bool Activated { get; private set; }
 
-  private Animator Animator => this.GetComponentIfNull(ref this.animator);
+  private Animator Animator => this.GetComponentIfNull(ref this.animatorComponent);
 
   public void Activate()
   {
@@ -14,9 +14,12 @@ public class Flagpole : MonoBehaviour
       return;
 
     Activated = true;
-    Animator.SetTrigger("Activate");
+    PlayActivateAnimation();
     PlayActivateSound();
   }
+
+  private void PlayActivateAnimation()
+    => Animator.SetTrigger("Activate");
 
   private static void PlayActivateSound() 
     => SoundManager.PlaySFXFromGroup(SfxGroup.RespawnPoints);

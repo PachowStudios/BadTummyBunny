@@ -4,6 +4,6 @@ using JetBrains.Annotations;
 namespace PachowStudios
 {
   [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
-  [MeansImplicitUse(ImplicitUseKindFlags.Assign, ImplicitUseTargetFlags.Members)]
+  [MeansImplicitUse(ImplicitUseTargetFlags.Members)]
   public class InstallerSettingsAttribute : Attribute { }
 }

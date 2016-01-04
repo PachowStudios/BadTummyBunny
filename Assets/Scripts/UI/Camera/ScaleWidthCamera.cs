@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace PachowStudios.BadTummyBunny
 {
-  [AddComponentMenu("UI/Camera/Scale Width Camera")]
+  [AddComponentMenu("Bad Tummy Bunny/Camera/Scale Width Camera")]
   [ExecuteInEditMode]
   public sealed class ScaleWidthCamera : MonoBehaviour
   {
@@ -13,16 +13,12 @@ namespace PachowStudios.BadTummyBunny
 
     public int CurrentFOV { get; set; }
 
-    private Camera controlledCamera;
+    private Camera cameraComponent;
 
-    public static ScaleWidthCamera Instance { get; private set; }
-
-    private Camera Camera => this.GetComponentIfNull(ref this.controlledCamera);
+    private Camera Camera => this.GetComponentIfNull(ref this.cameraComponent);
 
     private void OnEnable()
     {
-      Instance = this;
-
       CurrentFOV = this.defaultFOV;
     }
 
@@ -38,9 +34,8 @@ namespace PachowStudios.BadTummyBunny
     }
 
     public void AnimateFOV(int newFOV, float time)
-    {
-      DOTween.To(() => CurrentFOV, x => CurrentFOV = x, newFOV, time)
+      => DOTween
+        .To(() => CurrentFOV, x => CurrentFOV = x, newFOV, time)
         .SetEase(Ease.OutQuint);
-    }
   }
 }

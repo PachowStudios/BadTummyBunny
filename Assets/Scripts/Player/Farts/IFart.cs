@@ -3,9 +3,11 @@ using UnityEngine;
 
 namespace PachowStudios.BadTummyBunny
 {
-  public interface IFart : IDisposable
+  public interface IFart : IAttachable<PlayerView>
   {
-    string FartName { get; }
+    string Name { get; }
+    FartType Type { get; }
+
     bool IsFarting { get; }
 
     void StartFart(float power, Vector2 direction);

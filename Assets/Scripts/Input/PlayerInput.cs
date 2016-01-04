@@ -2,7 +2,7 @@
 
 namespace PachowStudios.BadTummyBunny
 {
-  public class PlayerActions : PlayerActionSet
+  public class PlayerInput : PlayerActionSet
   {
     private readonly PlayerAction moveLeft;
     private readonly PlayerAction moveRight;
@@ -17,7 +17,7 @@ namespace PachowStudios.BadTummyBunny
 
     public PlayerAction Jump { get; }
 
-    public PlayerActions()
+    public PlayerInput()
     {
       this.moveLeft = CreatePlayerAction("Move Left");
       this.moveRight = CreatePlayerAction("Move Right");

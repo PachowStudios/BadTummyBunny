@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace PachowStudios.BadTummyBunny
 {
-  [AddComponentMenu("Bad Tummy Bunny/UI/Camera/Base Behaviors/Camera Window")]
+  [AddComponentMenu("Bad Tummy Bunny/Camera/Base Behaviors/Camera Window")]
   public class CameraWindow : MonoBehaviour, ICameraBaseBehavior
   {
     [SerializeField, Range(0f, 20f)] private float width = 3f;

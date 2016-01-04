@@ -65,7 +65,6 @@ namespace MarkUX
   /// Sets a view field change handler.
   /// </summary>
   [AttributeUsage(AttributeTargets.Field, AllowMultiple = true)]
-  [MeansImplicitUse]
   public class ChangeHandler : Attribute
   {
     private string _changeHandlerName;

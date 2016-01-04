@@ -2,20 +2,20 @@
 
 namespace PachowStudios.BadTummyBunny
 {
-  public class StatusEffectFart : BasicFart, IStatusEffectAttacher
+  public class StatusEffectFart : Fart
   {
     [InstallerSettings]
-    public class Settings : BasicSettings
+    public class StatusEffectSettings : Settings
     {
       public StatusEffectType StatusEffectType;
     }
 
-    [Inject] private Settings Config { get; set; }
+    [Inject] private StatusEffectSettings Config { get; set; }
 
     public void AttachStatusEffect(IStatusEffectable target)
       => target.AddStatusEffect(Config.StatusEffectType);
 
-    protected override void DamageEnemy(ICharacter enemy)
+    protected override void DamageEnemy(IEnemy enemy)
     {
       base.DamageEnemy(enemy);
 

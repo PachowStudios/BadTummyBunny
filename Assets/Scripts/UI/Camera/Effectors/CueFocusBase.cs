@@ -13,11 +13,8 @@ namespace PachowStudios.BadTummyBunny
     [SerializeField] private float effectorWeight = 0.5f;
     [Tooltip("when true, an additional inner ring can be used to have it's own specific weight indpendent of the outer ring")] [SerializeField] protected bool onlyTriggerWhenGrounded = false;
 
-    [Inject]
-    private CameraController CameraController { get; set; }
-
-    [Inject(Tags.Player)]
-    private IMovable PlayerMovement { get; set; }
+    [Inject] private CameraController CameraController { get; set; }
+    [Inject] private Player Player { get; set; }
 
     protected Transform TrackedTarget { get; private set; }
 
@@ -34,7 +31,7 @@ namespace PachowStudios.BadTummyBunny
     {
       if (TrackedTarget == null
           && other.tag == Tags.Player
-          && (!this.onlyTriggerWhenGrounded || PlayerMovement.IsGrounded))
+          && (!this.onlyTriggerWhenGrounded || Player.Movement.IsGrounded))
         Activate(other.transform);
     }
 

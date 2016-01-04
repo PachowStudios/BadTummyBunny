@@ -8,6 +8,9 @@
     public static float Abs(this float number)
       => Mathf.Abs(number);
 
+    public static float Sqr(this float number)
+      => Mathf.Pow(number, 2);
+
     public static int RoundToInt(this float number)
       => Mathf.RoundToInt(number);
 

@@ -5,8 +5,6 @@ namespace PachowStudios.BadTummyBunny
 {
   public abstract class BaseHasHealth : IHasHealth
   {
-    protected int health = 0;
-
     public abstract int MaxHealth { get; }
     public abstract int Health { get; protected set; }
 

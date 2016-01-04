@@ -6,7 +6,7 @@ using UnityEditor;
 
 namespace PachowStudios.BadTummyBunny
 {
-  [AddComponentMenu("Bad Tummy Bunny/UI/Camera/Effectors/Cue Focus Ring")]
+  [AddComponentMenu("Bad Tummy Bunny/Camera/Effectors/Cue Focus Ring")]
   [RequireComponent(typeof(CircleCollider2D))]
   public sealed class CueFocusRing : CueFocusBase
   {

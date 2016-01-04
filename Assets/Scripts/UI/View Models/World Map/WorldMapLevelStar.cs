@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using MarkUX;
+﻿using MarkUX;
 using MarkUX.Views;
 
 namespace PachowStudios.BadTummyBunny.UI
@@ -7,9 +6,9 @@ namespace PachowStudios.BadTummyBunny.UI
   [InternalView]
   public class WorldMapLevelStar : View
   {
-    [UsedImplicitly] public ViewSwitcher StarSelector = null;
-    [UsedImplicitly] public Image EmptyStar = null;
-    [UsedImplicitly] public Image FilledStar = null;
+    [DataBound] public ViewSwitcher StarSelector = null;
+    [DataBound] public Image EmptyStar = null;
+    [DataBound] public Image FilledStar = null;
 
     [ChangeHandler(nameof(UpdateLayout))]
     public bool IsCollected = false;
@@ -18,10 +17,7 @@ namespace PachowStudios.BadTummyBunny.UI
     {
       base.UpdateLayout();
 
-      this.StarSelector.SwitchTo(
-          this.IsCollected
-            ? this.FilledStar
-            : this.EmptyStar);
+      this.StarSelector.SwitchTo(this.IsCollected ? this.FilledStar : this.EmptyStar);
     }
   }
 }

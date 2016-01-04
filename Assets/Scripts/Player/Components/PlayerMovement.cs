@@ -1,6 +1,5 @@
 ﻿using System;
 using UnityEngine;
-using UnityEngine.Assertions;
 using Zenject;
 
 namespace PachowStudios.BadTummyBunny
@@ -10,14 +9,14 @@ namespace PachowStudios.BadTummyBunny
     IHandles<PlayerCarrotTriggeredMessage>,
     IHandles<PlayerFlagpoleTriggeredMessage>
   {
-    [Serializable, InstallerSettings]
+    [InstallerSettings]
     public class Settings : BaseSettings
     {
       [Header("Movement")]
       public float JumpHeight = 5f;
 
       [Header("Farting")]
-      public GameObject StartingFart = null;
+      public FartType StartingFartType = FartType.Basic;
       public float MaxAvailableFart = 10f;
       public float FartRechargePerSecond = 1f;
       [Range(0f, 1f)] public float CarrotFartRechargePercent = 0.25f;
@@ -33,12 +32,14 @@ namespace PachowStudios.BadTummyBunny
     private float availableFart;
     private float fartingTime;
 
-    [Inject] private Settings Config { get; set; }
-    [Inject] private PlayerActions PlayerActions { get; set; }
-    [Inject] private PlayerView PlayerView { get; set; }
-    [Inject] private IHasHealth Health { get; set; }
-    [Inject] private IEventAggregator EventAggregator { get; set; }
-    [Inject] private IInstantiator Instantiator { get; set; }
+    [InjectLocal] private Settings Config { get; set; }
+    [InjectLocal] private PlayerInput PlayerInput { get; set; }
+    [InjectLocal] private PlayerView PlayerView { get; set; }
+    [InjectLocal] private IHasHealth Health { get; set; }
+    [InjectLocal] private IEventAggregator LocalEventAggregator { get; set; }
+
+    [Inject] private IFactory<FartType, IFart> FartFactory { get; set; }
+    [Inject] private IGameMenu GameMenu { get; set; }
 
     public bool IsFarting { get; private set; }
     public bool IsFartCharging { get; private set; }
@@ -58,16 +59,14 @@ namespace PachowStudios.BadTummyBunny
 
     public PlayerMovement()
     {
-      Assert.IsNotNull(Config.StartingFart, "No starting fart assigned.");
-
       this.availableFart = Config.MaxAvailableFart;
     }
 
     [PostInject]
     private void Initialize()
     {
-      EventAggregator.Subscribe(this);
-      SetFart(Config.StartingFart);
+      LocalEventAggregator.Subscribe(this);
+      SetFart(Config.StartingFartType);
     }
 
     public void Tick()
@@ -91,7 +90,7 @@ namespace PachowStudios.BadTummyBunny
     }
 
     public void Dispose()
-      => PlayerActions.Destroy();
+      => PlayerInput.Destroy();
 
     public override void Flip() => PlayerView.Body.Flip();
 
@@ -122,14 +121,14 @@ namespace PachowStudios.BadTummyBunny
       if (!IsInputEnabled)
         return;
 
-      this.horizontalMovement = PlayerActions.Move.Value;
-      this.willJump = PlayerActions.Jump.WasPressed && IsGrounded;
+      this.horizontalMovement = PlayerInput.Move.Value;
+      this.willJump = PlayerInput.Jump.WasPressed && IsGrounded;
 
-      IsFartCharging = PlayerActions.Fart.IsPressed && CanFart;
+      IsFartCharging = PlayerInput.Fart.IsPressed && CanFart;
 
       if (IsFartCharging)
       {
-        var rawFartMagnitude = PlayerActions.Fart.Value.magnitude;
+        var rawFartMagnitude = PlayerInput.Fart.Value.magnitude;
 
         if (rawFartMagnitude <= Config.FartDeadZone)
         {
@@ -139,13 +138,13 @@ namespace PachowStudios.BadTummyBunny
         }
         else
         {
-          FartDirection = PlayerActions.Fart.Value.normalized;
+          FartDirection = PlayerInput.Fart.Value.normalized;
           FartPower = Mathf.InverseLerp(Config.FartDeadZone, 1f, rawFartMagnitude);
         }
       }
 
       if (!IsFartCharging)
-        WillFart = PlayerActions.Fart.WasReleased && CanFart;
+        WillFart = PlayerInput.Fart.WasReleased && CanFart;
     }
 
     private void DisableInput()
@@ -219,21 +218,13 @@ namespace PachowStudios.BadTummyBunny
       }
     }
 
-    private void SetFart(GameObject newFart)
+    private void SetFart(FartType type)
     {
-      if (newFart == null)
-        return;
+      var fart = FartFactory.Create(type);
 
-      var fartInstance = Instantiator.InstantiatePrefab(newFart);
-      var fartComponent = fartInstance.GetInterface<IFart>();
-
-      fartInstance.name = fartComponent.FartName;
-      fartInstance.transform.position = PlayerView.FartPoint.position;
-      fartInstance.transform.rotation = PlayerView.FartPoint.rotation;
-      fartInstance.transform.parent = PlayerView.Body;
-
-      this.currentFart.Dispose();
-      this.currentFart = fartComponent;
+      fart.Attach(PlayerView);
+      this.currentFart.Detach();
+      this.currentFart = fart;
     }
 
     private void Fart(Vector2 fartDirection, float fartPower)
@@ -287,7 +278,7 @@ namespace PachowStudios.BadTummyBunny
 
       flagpole.Activate();
       DisableInput();
-      Wait.ForSeconds(1.2f, GameMenu.Instance.ShowGameOver);
+      Wait.ForSeconds(1.2f, GameMenu.ShowGameOverScreen);
     }
 
     private void ResetOrientation()

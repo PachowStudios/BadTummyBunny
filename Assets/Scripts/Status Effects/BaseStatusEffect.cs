@@ -21,11 +21,9 @@ namespace PachowStudios.BadTummyBunny
     public StatusEffectType Type => Config.Type;
 
     public virtual void Attach(IStatusEffectable affectedCharacter)
-    {
-      AffectedCharacter = affectedCharacter;
-    }
+      => AffectedCharacter = affectedCharacter;
 
-    public virtual void Dispose() { }
+    public virtual void Detach() { }
 
     public virtual void Tick() { }
   }

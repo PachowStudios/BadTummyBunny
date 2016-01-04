@@ -13,11 +13,8 @@ namespace PachowStudios.BadTummyBunny
 
     private HashSet<WorldMapLevel> levels;
 
-    [Inject]
-    private WorldMapPlayer Player { get; set; }
-
-    [Inject]
-    private IEventAggregator EventAggregator { get; set; }
+    [Inject] private WorldMapPlayer Player { get; set; }
+    [Inject] private IEventAggregator EventAggregator { get; set; }
 
     public WorldMapLevel SelectedLevel { get; private set; }
 

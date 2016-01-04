@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace PachowStudios.BadTummyBunny
 {
-  [CreateAssetMenu(menuName = "Configuration/Level Config", fileName = "NewLevelConfig.asset")]
+  [InstallerSettings]
   public class LevelConfig : ScriptableObject
   {
     public string LevelId;

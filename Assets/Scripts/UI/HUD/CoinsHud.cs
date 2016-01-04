@@ -4,18 +4,14 @@ using Zenject;
 
 namespace PachowStudios.BadTummyBunny
 {
-  [AddComponentMenu("Bad Tummy Bunny/UI/HUD/Coins")]
+  [AddComponentMenu("Bad Tummy Bunny/UI/HUD/Coins HUD")]
   public class CoinsHud : MonoBehaviour,
     IHandles<PlayerCoinsChangedMessage>
   {
     [SerializeField] private Text coinsText = null;
     [SerializeField] private int coinsDigits = 3;
 
-    [Inject(Tags.Player)]
-    private IScoreKeeper PlayerScore { get; set; }
-
-    [Inject]
-    private IEventAggregator EventAggregator { get; set; }
+    [Inject] private IEventAggregator EventAggregator { get; set; }
 
     [PostInject]
     private void PostInject()

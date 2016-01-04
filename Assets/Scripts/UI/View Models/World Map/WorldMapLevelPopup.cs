@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using JetBrains.Annotations;
 using MarkUX;
 using MarkUX.Views;
 
@@ -8,15 +7,15 @@ namespace PachowStudios.BadTummyBunny.UI
   [InternalView]
   public class WorldMapLevelPopup : View
   {
-    [UsedImplicitly] public List StarList = null;
+    [DataBound] public List StarList = null;
 
-    [UsedImplicitly] public ViewAnimation ShowAnimation = null;
-    [UsedImplicitly] public ViewAnimation HideAnimation = null;
+    [DataBound] public ViewAnimation ShowAnimation = null;
+    [DataBound] public ViewAnimation HideAnimation = null;
 
-    [ChangeHandler(nameof(UpdateLayout))]
+    [DataBound, ChangeHandler(nameof(UpdateLayout))]
     public string LevelName = "Level X";
 
-    [ChangeHandler(nameof(UpdateLayout))]
+    [DataBound, ChangeHandler(nameof(UpdateLayout))]
     public List<Field<bool>> Stars = new List<Field<bool>>();
 
     public void SetLevel(WorldMapLevel level)

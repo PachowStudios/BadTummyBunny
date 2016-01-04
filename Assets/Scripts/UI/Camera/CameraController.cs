@@ -6,7 +6,7 @@ using Zenject;
 
 namespace PachowStudios.BadTummyBunny
 {
-  [AddComponentMenu("Bad Tummy Bunny/UI/Camera/Camera Controller")]
+  [AddComponentMenu("Bad Tummy Bunny/Camera/Camera Controller")]
   [RequireComponent(typeof(Camera))]
   public class CameraController : MonoBehaviour
   {
@@ -52,10 +52,10 @@ namespace PachowStudios.BadTummyBunny
 
     private void Awake()
     {
-      foreach (var baseBehavior in this.GetInterfaces<ICameraBaseBehavior>())
+      foreach (var baseBehavior in GetComponents<ICameraBaseBehavior>())
         AddCameraBaseBehavior(baseBehavior);
 
-      foreach (var finalizer in this.GetInterfaces<ICameraFinalizer>())
+      foreach (var finalizer in GetComponents<ICameraFinalizer>())
         AddCameraFinalizer(finalizer);
     }
 
@@ -169,10 +169,10 @@ namespace PachowStudios.BadTummyBunny
 
       positionInFrontOfCamera.z = 1f;
 
-      foreach (var baseBehavior in this.GetInterfaces<ICameraBaseBehavior>().Where(b => b.IsEnabled))
+      foreach (var baseBehavior in GetComponents<ICameraBaseBehavior>().Where(b => b.IsEnabled))
         baseBehavior.onDrawGizmos(positionInFrontOfCamera);
 
-      foreach (var finalizer in this.GetInterfaces<ICameraFinalizer>().Where(f => f.IsEnabled))
+      foreach (var finalizer in GetComponents<ICameraFinalizer>().Where(f => f.IsEnabled))
         finalizer.onDrawGizmos(positionInFrontOfCamera);
 
       if (!this.enablePlatformSnap)

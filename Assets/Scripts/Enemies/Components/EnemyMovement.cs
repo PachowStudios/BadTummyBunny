@@ -13,9 +13,9 @@ namespace PachowStudios.BadTummyBunny
 
     private bool isActivated;
 
-    [Inject] private MovementSettings Config { get; set; }
+    [InjectLocal] private MovementSettings Config { get; set; }
 
-    [Inject] protected EnemyView EnemyView { get; private set; }
+    [InjectLocal] protected EnemyView EnemyView { get; private set; }
 
     protected override IView View => EnemyView;
 

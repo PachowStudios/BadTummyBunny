@@ -1,58 +1,65 @@
-﻿using System;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using PachowStudios;
 
 namespace UnityEngine
 {
   public static class UnityExtensions
   {
-    public static T GetComponentInParentIfNull<T>(this Component component, ref T target)
-      where T : Component
-      => target ?? (target = component.GetComponentInParent<T>());
-
-    public static T GetComponentIfNull<T>(this Component component, ref T target)
-      where T : Component
-      => target ?? (target = component.GetComponent<T>());
-
-    public static T GetInterfaceIfNull<T>(this Component component, ref T target)
+    [CanBeNull]
+    public static T GetComponentInParentIfNull<T>([NotNull] this Component component, [CanBeNull] ref T target)
       where T : class
-      => target ?? (target = component.GetInterface<T>());
+      => component.gameObject.GetComponentInParentIfNull(ref target);
 
-    public static T GetInterface<T>(this Component component)
+    [CanBeNull]
+    public static T GetComponentInParentIfNull<T>([NotNull] this GameObject gameObject, [CanBeNull] ref T target)
       where T : class
-      => component.GetComponent(typeof(T)) as T;
+      // ReSharper disable once ConvertConditionalTernaryToNullCoalescing
+      // The ?? operator doesn't use Unity's overloaded null check
+      => target == null ? (target = gameObject.GetComponentInParent<T>()) : target;
 
-    public static T GetInterface<T>(this GameObject gameObject)
+    [CanBeNull]
+    public static T GetComponentIfNull<T>([NotNull] this Component component, [CanBeNull] ref T target)
       where T : class
-      => gameObject.GetComponent(typeof(T)) as T;
+      => component.gameObject.GetComponentIfNull(ref target);
 
-    public static T[] GetInterfaces<T>(this Component component)
+    [CanBeNull]
+    public static T GetComponentIfNull<T>([NotNull] this GameObject gameObject, [CanBeNull] ref T target)
       where T : class
-      => Array.ConvertAll(component.GetComponents(typeof(T)), c => c as T);
+      // ReSharper disable once ConvertConditionalTernaryToNullCoalescing
+      // The ?? operator doesn't use Unity's overloaded null check
+      => target == null ? (target = gameObject.GetComponent<T>()) : target;
 
-    public static TModel GetViewModel<TModel>(this Component component)
-      => component.GetInterface<IView<TModel>>().Model;
+    [NotNull]
+    public static TModel GetViewModel<TModel>([NotNull] this Component component)
+      where TModel : class
+      => component.gameObject.GetViewModel<TModel>();
 
-    public static void Dispose(this MonoBehaviour monoBehaviour)
-      => monoBehaviour.DestroyGameObject();
+    [NotNull]
+    public static TModel GetViewModel<TModel>([NotNull] this GameObject gameObject)
+      where TModel : class
+      => gameObject.GetComponent<IView<TModel>>().Model;
 
-    public static void DestroyGameObject(this MonoBehaviour monoBehaviour)
+    public static void Destroy([NotNull] this MonoBehaviour monoBehaviour)
       => monoBehaviour.gameObject.Destroy();
 
-    public static void Destroy(this GameObject gameObject)
+    public static void Destroy([NotNull] this MonoBehaviour monoBehaviour, float delay)
+      => monoBehaviour.gameObject.Destroy(delay);
+
+    public static void Destroy([NotNull] this GameObject gameObject)
       => Object.Destroy(gameObject);
 
-    public static void Destroy(this GameObject gameObject, float delay)
+    public static void Destroy([NotNull] this GameObject gameObject, float delay)
       => Object.Destroy(gameObject, delay);
 
-    public static void DetachAndDestroy(this ParticleSystem parent)
+    public static void DetachAndDestroy([NotNull] this ParticleSystem parent)
     {
       parent.transform.parent = null;
       parent.enableEmission = false;
       parent.gameObject.Destroy(parent.startLifetime);
     }
 
-    public static GameObject HideInHierarchy(this GameObject gameObject)
+    [NotNull]
+    public static GameObject HideInHierarchy([NotNull] this GameObject gameObject)
     {
       gameObject.hideFlags |= HideFlags.HideInHierarchy;
 
@@ -62,7 +69,8 @@ namespace UnityEngine
       return gameObject;
     }
 
-    public static GameObject UnhideInHierarchy(this GameObject gameObject)
+    [NotNull]
+    public static GameObject UnhideInHierarchy([NotNull] this GameObject gameObject)
     {
       gameObject.hideFlags &= ~HideFlags.HideInHierarchy;
 
@@ -70,6 +78,19 @@ namespace UnityEngine
       gameObject.SetActive(true);
 
       return gameObject;
+    }
+
+    public static Vector3 TransformPoint([NotNull] this Transform transform, float x, float y)
+      => transform.TransformPoint(x, y, 0f);
+
+    /// <summary>
+    /// Sets the position, rotation, and localScale to that of the target transform.
+    /// </summary>
+    public static void AlignWith([NotNull] this Transform transform, Transform target)
+    {
+      transform.position = target.position;
+      transform.rotation = target.rotation;
+      transform.localScale = target.localScale;
     }
 
     public static void Flash([NotNull] this SpriteRenderer spriteRenderer, Color color, float time)
@@ -81,16 +102,16 @@ namespace UnityEngine
     public static void ResetColor([NotNull] this SpriteRenderer spriteRenderer)
       => spriteRenderer.color = Color.white;
 
-    public static bool HasLayer(this LayerMask parent, int layer)
-      => (parent.value & (1 << layer)) > 0;
+    public static bool HasLayer(this LayerMask mask, int layer)
+      => (mask.value & (1 << layer)) > 0;
 
-    public static bool HasLayer(this LayerMask parent, GameObject obj)
-      => parent.HasLayer(obj.layer);
+    public static bool HasLayer(this LayerMask mask, [NotNull] GameObject obj)
+      => mask.HasLayer(obj.layer);
 
-    public static bool HasLayer(this LayerMask parent, Collider2D collider)
-      => parent.HasLayer(collider.gameObject.layer);
+    public static bool HasLayer(this LayerMask mask, [NotNull] Collider2D collider)
+      => mask.HasLayer(collider.gameObject.layer);
 
-    public static float UnitsToPixels(this Camera camera, float units)
+    public static float UnitsToPixels([NotNull] this Camera camera, float units)
       => camera.WorldToScreenPoint(camera.ViewportToWorldPoint(Vector3.zero).AddX(units)).x;
   }
 }

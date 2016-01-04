@@ -9,7 +9,7 @@ namespace PachowStudios.BadTummyBunny
   {
     private readonly List<IStatusEffect> statusEffects = new List<IStatusEffect>();
 
-    [Inject] private StatusEffectFactory StatusEffectFactory { get; set; }
+    [Inject] private IFactory<StatusEffectType, IStatusEffect> StatusEffectFactory { get; set; }
 
     [Inject] public IView View { get; private set; }
 
@@ -35,6 +35,6 @@ namespace PachowStudios.BadTummyBunny
     public void RemoveStatusEffect(StatusEffectType type)
       => this.statusEffects
         .Remove(e => e.Type == type)
-        .Dispose();
+        .Detach();
   }
 }

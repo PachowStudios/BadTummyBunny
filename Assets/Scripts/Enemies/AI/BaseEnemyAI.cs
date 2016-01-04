@@ -11,9 +11,9 @@ namespace PachowStudios.BadTummyBunny
       public LayerMask BlockVisibilityLayers = default(LayerMask);
     }
 
-    [Inject] private BaseAISettings Config { get; set; }
+    [InjectLocal] private BaseAISettings Config { get; set; }
 
-    [Inject(Tags.Player)] private IMovable PlayerMovement { get; set; }
+    [Inject] private Player Player { get; set; }
 
     public bool IsAtWall
       => Physics2D.OverlapPoint(EnemyView.FrontCheck.position, CollisionLayers) != null;
@@ -22,17 +22,17 @@ namespace PachowStudios.BadTummyBunny
       => IsGrounded
       && Physics2D.OverlapPoint(EnemyView.LedgeCheck.position, CollisionLayers) == null;
 
-    public bool IsPlayerOnRight => PlayerMovement.Position.x > Position.x;
-    public float RelativePlayerHeight => Position.y - PlayerMovement.Position.y;
+    public bool IsPlayerOnRight => Player.Movement.Position.x > Position.x;
+    public float RelativePlayerHeight => Position.y - Player.Movement.Position.y;
 
     public float RelativePlayerLastGrounded
-      => (LastGroundedPosition.y - PlayerMovement.LastGroundedPosition.y).RoundToFraction(2);
+      => (LastGroundedPosition.y - Player.Movement.LastGroundedPosition.y).RoundToFraction(2);
 
     public virtual void FollowPlayer(float buffer = 1f)
     {
-      if (View.Transform.position.x + buffer < PlayerMovement.Position.x)
+      if (View.Transform.position.x + buffer < Player.Movement.Position.x)
         HorizontalMovement = 1;
-      else if (View.Transform.position.x - buffer > PlayerMovement.Position.x)
+      else if (View.Transform.position.x - buffer > Player.Movement.Position.x)
         HorizontalMovement = -1;
       else
       {
@@ -49,7 +49,7 @@ namespace PachowStudios.BadTummyBunny
 
     public virtual bool IsPlayerInRange(float min = 0f, float max = Mathf.Infinity)
     {
-      var distance = Mathf.Abs(PlayerMovement.Position.x - Position.x);
+      var distance = Mathf.Abs(Player.Movement.Position.x - Position.x);
 
       return distance >= min && distance <= max;
     }
@@ -60,13 +60,13 @@ namespace PachowStudios.BadTummyBunny
         return false;
 
 
-      if (Vector3.Angle(FacingDirection, PlayerMovement.CenterPoint - CenterPoint) > maxAngle)
+      if (Vector3.Angle(FacingDirection, Player.Movement.CenterPoint - CenterPoint) > maxAngle)
         return false;
 
       var linecast =
         Physics2D.Linecast(
           Collider.bounds.center,
-          PlayerMovement.CenterPoint,
+          Player.Movement.CenterPoint,
           Config.BlockVisibilityLayers);
 
       return linecast.collider == null && linecast.distance <= range;

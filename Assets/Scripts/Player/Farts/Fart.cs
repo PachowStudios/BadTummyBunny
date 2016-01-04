@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Extensions;
 using UnityEngine;
 using Vectrosity;
 using Zenject;
 
 namespace PachowStudios.BadTummyBunny
 {
-  public class BasicFart : IFart
+  public class Fart : IFart
   {
     [InstallerSettings]
-    public class BasicSettings : ScriptableObject
+    public class Settings : ScriptableObject
     {
       [Serializable, InstallerSettings]
       public struct SfxPowerMapping
@@ -19,8 +20,12 @@ namespace PachowStudios.BadTummyBunny
         public float Power;
       }
 
+      [Header("Definition")]
+      public string Name = "Basic Fart";
+      public FartType Type;
+      public GameObject Prefab;
+
       [Header("Options")]
-      public string FartName = "Basic Fart";
       public Vector2 SpeedRange = default(Vector2);
       public int Damage = 4;
       public float DamageDelay = 0.1f;
@@ -43,23 +48,28 @@ namespace PachowStudios.BadTummyBunny
 
     private VectorLine trajectoryLine;
 
-    [Inject] private BasicSettings Config { get; set; }
-    [Inject] private FartView View { get; set; }
-    [Inject] private IMovable PlayerMovement { get; set; }
+    [InjectLocal] private Settings Config { get; set; }
+    [InjectLocal] private FartView View { get; set; }
+
+    [Inject] private Player Player { get; set; }
     [Inject] private CameraController CameraController { get; set; }
 
     public bool IsFarting { get; protected set; }
 
-    public string FartName => Config.FartName;
+    public string Name => Config.Name;
+    public FartType Type => Config.Type;
 
     [PostInject]
     private void Initialize()
       => InitializeTrajectoryLine();
 
-    public virtual void Dispose()
+    public void Attach(PlayerView playerView)
+      => View.Attach(playerView);
+
+    public void Detach()
     {
       VectorLine.Destroy(ref this.trajectoryLine);
-      View.Dispose();
+      View.Detach();
     }
 
     public virtual void StartFart(float power, Vector2 direction)
@@ -108,22 +118,7 @@ namespace PachowStudios.BadTummyBunny
       this.trajectoryLine.Draw();
     }
 
-    public virtual void OnEnemyTriggered(ICharacter enemy)
-    {
-      if (this.pendingTargets.Contains(enemy) || this.damagedEnemies.Contains(enemy))
-        return;
-
-      this.pendingTargets.Add(enemy);
-      Wait.ForSeconds(
-        Config.DamageDelay,
-        () =>
-        {
-          this.pendingTargets.Remove(enemy);
-          TryDamageEnemy(enemy);
-        });
-    }
-
-    protected virtual void TryDamageEnemy(ICharacter enemy)
+    protected virtual void TryDamageEnemy(IEnemy enemy)
     {
       if (this.damagedEnemies.Contains(enemy))
         return;
@@ -131,15 +126,18 @@ namespace PachowStudios.BadTummyBunny
       var origin = View.FartCollider.transform.position;
 
       if (View.FartCollider.OverlapPoint(enemy.Movement.CenterPoint)
-          && Physics2D.Linecast(origin, enemy.Movement.CenterPoint, PlayerMovement.CollisionLayers).collider == null)
+          && Physics2D.Linecast(origin, enemy.Movement.CenterPoint, Player.Movement.CollisionLayers).collider == null)
       {
         this.damagedEnemies.Add(enemy);
         DamageEnemy(enemy);
       }
     }
 
-    protected virtual void DamageEnemy(ICharacter enemy)
-      => enemy.Health.Damage(Config.Damage, Config.Knockback, PlayerMovement.MovementDirection.Dot(-1f, 1f));
+    protected virtual void DamageEnemy(IEnemy enemy)
+      => enemy.Health.Damage(
+        Config.Damage,
+        Config.Knockback,
+        Player.Movement.MovementDirection.Dot(-1f, 1f));
 
     protected virtual Vector3[] CalculateTrajectory(float power, Vector3 direction, float gravity, Vector3 startPosition)
     {
@@ -175,7 +173,7 @@ namespace PachowStudios.BadTummyBunny
           Physics2D.Linecast(
             points[i - 1],
             points[i],
-            PlayerMovement.CollisionLayers);
+            Player.Movement.CollisionLayers);
 
         if (linecast.collider == null)
           continue;
@@ -190,13 +188,11 @@ namespace PachowStudios.BadTummyBunny
     }
 
     protected void PlaySound(float powerPercentage)
-    {
-      foreach (var sfxMapping in Config.SoundEffects.Where(e => e.Power <= powerPercentage))
-      {
-        SoundManager.PlayCappedSFXFromGroup(sfxMapping.SfxGroup);
-        break;
-      }
-    }
+      => SoundManager.PlayCappedSFXFromGroup(
+        Config.SoundEffects
+          .Where(e => e.Power <= powerPercentage)
+          .Highest(e => e.Power)
+          .SfxGroup);
 
     protected void StartParticles()
       => View.Particles.ForEach(p => p.Play());
@@ -219,6 +215,21 @@ namespace PachowStudios.BadTummyBunny
           material = Config.TrajectoryMaterial,
           textureScale = 1f
         };
+    }
+
+    public virtual void OnEnemyTriggered(IEnemy enemy)
+    {
+      if (this.pendingTargets.Contains(enemy) || this.damagedEnemies.Contains(enemy))
+        return;
+
+      this.pendingTargets.Add(enemy);
+      Wait.ForSeconds(
+        Config.DamageDelay,
+        () =>
+        {
+          this.pendingTargets.Remove(enemy);
+          TryDamageEnemy(enemy);
+        });
     }
   }
 }

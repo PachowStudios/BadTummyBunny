@@ -10,6 +10,7 @@ namespace PachowStudios.BadTummyBunny
     private int coins;
 
     [Inject] private IEventAggregator EventAggregator { get; set; }
+    [InjectLocal] private IEventAggregator LocalEventAggregator { get; set; }
 
     public int Coins
     {
@@ -23,7 +24,7 @@ namespace PachowStudios.BadTummyBunny
 
     [PostInject]
     private void Initialize()
-      => EventAggregator.Subscribe(this);
+      => LocalEventAggregator.Subscribe(this);
 
     public void AddCoins(int coinsToAdd)
     {
@@ -46,7 +47,7 @@ namespace PachowStudios.BadTummyBunny
     }
 
     private void RaiseCoinsChanged()
-      => EventAggregator.Publish(new PlayerCoinsChangedMessage(this.coins));
+      => EventAggregator.Publish(new PlayerCoinsChangedMessage(Coins));
 
     public void Handle(PlayerCoinTriggeredMessage message)
       => CollectCoin(message.Coin);

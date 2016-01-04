@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace PachowStudios.BadTummyBunny
 {
-  [AddComponentMenu("World Map/Player")]
+  [AddComponentMenu("Bad Tummy Bunny/World Map/Player")]
   public class WorldMapPlayer : MonoBehaviour
   {
     [SerializeField] private float moveSpeed = 3f;
