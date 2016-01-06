@@ -7,20 +7,10 @@ namespace PachowStudios.BadTummyBunny
   public class LevelInstaller : MonoInstaller
   {
     [SerializeField] private CameraController cameraController = null;
-    [SerializeField] private Player playerInstance = null;
 
     public override void InstallBindings()
     {
-      // Bind scene objects
-      Container.Bind<CameraController>().ToInstance(this.cameraController);
-      
-      // Bind player components
-      Container.Bind<Player>().ToInstance(this.playerInstance);
-      Container.Bind<IMovable>(Tags.Player).ToGetter<Player>(p => p.Movement);
-      Container.Bind<IHasHealth>(Tags.Player).ToGetter<Player>(p => p.Health);
-      Container.Bind<IScoreKeeper>(Tags.Player).ToGetter<Player>(p => p.Score);
-      Container.Bind<IFartInfoProvider>(Tags.Player).ToGetter<Player>(p => p.FartInfo);
-      Container.Bind<IHasHealthContainers>(Tags.Player).ToGetter<Player>(p => p.HealthContainers);
+      Container.BindInstance(this.cameraController);
     }
   }
 }

@@ -29,9 +29,8 @@ namespace PachowStudios.BadTummyBunny
       var settings = StatusEffectSettings[type];
       var mappedType = type.GetTypeMapping();
 
-      subContainer.Bind(settings.GetType()).ToInstance(settings);
-      subContainer.BindAllInterfacesToSingle(mappedType);
-      subContainer.Bind(mappedType).ToSingle();
+      subContainer.BindInstance(settings);
+      subContainer.BindSingleWithInterfaces(mappedType);
 
       if (settings.Prefab != null)
         subContainer.Bind<IStatusEffectView>().ToSinglePrefab(settings.Prefab);

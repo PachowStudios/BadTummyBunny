@@ -18,13 +18,13 @@ namespace PachowStudios.BadTummyBunny
 
     private void InstallSceneBindings()
     {
-      Container.Bind<CameraController>().ToInstance(this.cameraController);
+      Container.BindInstance(this.cameraController);
     }
 
     private void InstallWorldMapBindings()
     {
-      Container.Bind<WorldMap>().ToInstance(this.worldMapInstance);
-      Container.Bind<WorldMapPlayer>().ToInstance(this.playerInstance);
+      Container.BindInstance(this.worldMapInstance);
+      Container.BindInstance(this.playerInstance);
     }
   }
 }

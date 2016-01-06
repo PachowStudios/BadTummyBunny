@@ -3,7 +3,7 @@ using Zenject;
 
 namespace PachowStudios.BadTummyBunny
 {
-  public class Bootstrapper : IInitializable, IDisposable
+  public class Bootystrapper : IInitializable, IDisposable
   {
     [Inject] private SaveService SaveService { get; set; }
 

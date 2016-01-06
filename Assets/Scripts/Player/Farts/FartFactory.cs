@@ -29,9 +29,8 @@ namespace PachowStudios.BadTummyBunny
       var settings = FartSettings[type];
       var mappedType = type.GetTypeMapping();
 
-      subContainer.Bind(settings.GetType()).ToInstance(settings);
-      subContainer.BindAllInterfacesToSingle(mappedType);
-      subContainer.Bind(mappedType).ToSingle();
+      subContainer.BindInstance(settings);
+      subContainer.BindSingleWithInterfaces(mappedType);
       subContainer.Bind<FartView>().ToSinglePrefab(settings.Prefab);
 
       return subContainer.Resolve<IFart>();

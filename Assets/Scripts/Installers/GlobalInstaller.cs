@@ -8,7 +8,7 @@ namespace PachowStudios.BadTummyBunny
   {
     public override void InstallBindings()
     {
-      Container.BindAllInterfacesToSingle<Bootstrapper>();
+      Container.BindAllInterfacesToSingle<Bootystrapper>();
 
       InstallServiceBindings();
     }
@@ -16,8 +16,8 @@ namespace PachowStudios.BadTummyBunny
     private void InstallServiceBindings()
     {
       Container.Bind<IEventAggregator>().ToSingle<EventAggregator>();
-      Container.Bind<SaveService>().ToSingle();
-      Container.Bind<PlayerStatsService>().ToSingle();
+      Container.BindSingle<SaveService>();
+      Container.BindSingle<PlayerStatsService>();
     }
   }
 }

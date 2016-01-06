@@ -8,9 +8,15 @@ namespace PachowStudios.BadTummyBunny
     [InstallerSettings]
     public class Settings : ScriptableObject
     {
+      [Header("Definition")]
+      public string Name = "New Enemy";
+      public EnemyView Prefab;
+
+      [Header("Options")]
       public int ContactDamage = 1;
       public Vector2 ContactKnockback = new Vector2(2f, 1f);
 
+      [Header("Component Settings")]
       public EnemyMovement.MovementSettings Movement;
       public EnemyHealth.Settings Health;
     }

@@ -6,6 +6,7 @@ namespace PachowStudios.BadTummyBunny
   [AddComponentMenu("Bad Tummy Bunny/Enemy")]
   public class EnemyView : BaseView<Enemy>
   {
+    [SerializeField] private EnemyType type;
     [SerializeField] private Transform frontCheck = null;
     [SerializeField] private Transform ledgeCheck = null;
 
@@ -13,6 +14,7 @@ namespace PachowStudios.BadTummyBunny
 
     [InjectLocal] public override Enemy Model { get; protected set; }
 
+    public EnemyType Type => this.type;
     public Transform FrontCheck => this.frontCheck;
     public Transform LedgeCheck => this.ledgeCheck;
 
