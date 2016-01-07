@@ -2,7 +2,6 @@
 {
   public interface IGameMenu
   {
-    void ShowGameOverScreen();
-    void HideGameOverScreen();
+    bool ShowGameOverScreen { get; set; }
   }
 }

@@ -6,7 +6,7 @@ namespace PachowStudios.BadTummyBunny
   [AddComponentMenu("Bad Tummy Bunny/Enemy")]
   public class EnemyView : BaseView<Enemy>
   {
-    [SerializeField] private EnemyType type;
+    [SerializeField] private EnemyType type = EnemyType.Fox;
     [SerializeField] private Transform frontCheck = null;
     [SerializeField] private Transform ledgeCheck = null;
 
@@ -17,6 +17,10 @@ namespace PachowStudios.BadTummyBunny
     public EnemyType Type => this.type;
     public Transform FrontCheck => this.frontCheck;
     public Transform LedgeCheck => this.ledgeCheck;
+
+    [PostInject]
+    private void Initialize()
+      => name = Model.Name;
 
     private void OnTriggerEnter2D(Collider2D other)
     {

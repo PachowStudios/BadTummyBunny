@@ -18,19 +18,16 @@ namespace PachowStudios.BadTummyBunny
     private Camera Camera => this.GetComponentIfNull(ref this.cameraComponent);
 
     private void OnEnable()
-    {
-      CurrentFOV = this.defaultFOV;
-    }
+      => CurrentFOV = this.defaultFOV;
 
     private void OnPreRender()
     {
       Camera.orthographicSize = CurrentFOV / 32f / Camera.aspect;
 
       if (this.useWorldSpaceUI && this.worldSpaceUI != null)
-        this.worldSpaceUI.sizeDelta =
-          new Vector2(
-            CurrentFOV / 16f,
-            CurrentFOV / 16f / Camera.aspect);
+        this.worldSpaceUI.sizeDelta = new Vector2(
+          CurrentFOV / 16f,
+          CurrentFOV / 16f / Camera.aspect);
     }
 
     public void AnimateFOV(int newFOV, float time)

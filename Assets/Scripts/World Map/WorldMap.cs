@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Assertions;
 using Zenject;
@@ -30,10 +31,8 @@ namespace PachowStudios.BadTummyBunny
     private void Start()
       => SelectLevel(this.startingLevel);
 
-    public void SelectLevel(WorldMapLevel level)
+    public void SelectLevel([NotNull] WorldMapLevel level)
     {
-      Assert.IsNotNull(level);
-
       SelectedLevel?.OnDeselected();
       SelectedLevel = level;
       SelectedLevel.OnSelected();
@@ -50,7 +49,7 @@ namespace PachowStudios.BadTummyBunny
       SelectedLevel = null;
     }
 
-    public void NavigateToLevel(WorldMapLevel targetLevel)
+    public void NavigateToLevel([NotNull] WorldMapLevel targetLevel)
     {
       IList<WorldMapLevel> path;
 

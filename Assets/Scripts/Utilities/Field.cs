@@ -13,6 +13,12 @@ namespace PachowStudios
     public Field(T value)
     {
       this.Value = value;
-    } 
+    }
+
+    public static implicit operator T(Field<T> @this)
+      => @this.Value;
+
+    public static implicit operator Field<T>(T @value)
+      => new Field<T>(@value);
   }
 }

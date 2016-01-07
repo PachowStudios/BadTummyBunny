@@ -29,7 +29,7 @@ namespace PachowStudios.BadTummyBunny.UI
       this.Stars.Clear();
 
       for (var i = 0; i < possible; i++)
-        this.Stars.Add(new Field<bool>(i < collected));
+        this.Stars.Add(i < collected);
 
       SetChanged(() => this.Stars);
     }

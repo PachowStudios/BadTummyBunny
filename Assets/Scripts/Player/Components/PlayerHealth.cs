@@ -135,7 +135,7 @@ namespace PachowStudios.BadTummyBunny
 
       IsDead = true;
 
-      GameMenu.ShowGameOverScreen();
+      GameMenu.ShowGameOverScreen = true;
       ExplodeEffect.Explode(View.Transform, Movement.Velocity, View.SpriteRenderer.sprite);
       View.SetRenderersEnabled(false);
       Movement.Disable();

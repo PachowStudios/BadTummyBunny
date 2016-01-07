@@ -278,7 +278,7 @@ namespace PachowStudios.BadTummyBunny
 
       flagpole.Activate();
       DisableInput();
-      Wait.ForSeconds(1.2f, GameMenu.ShowGameOverScreen);
+      Wait.ForSeconds(1.2f, () => GameMenu.ShowGameOverScreen = true);
     }
 
     private void ResetOrientation()

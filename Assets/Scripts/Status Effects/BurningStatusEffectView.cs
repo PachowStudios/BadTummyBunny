@@ -11,9 +11,12 @@ namespace PachowStudios.BadTummyBunny
 
     private ParticleSystem ParticleSystem => this.GetComponentIfNull(ref this.particleSystemComponent);
 
+    [PostInject]
+    private void Initialize()
+      => name = Model.Name;
+
     public void Attach(IStatusEffectable affectedCharacter)
     {
-      name = Model.Name;
       Transform.position = affectedCharacter.Movement.CenterPoint;
       Transform.parent = affectedCharacter.View.Transform;
 

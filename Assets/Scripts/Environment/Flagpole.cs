@@ -1,12 +1,8 @@
-﻿using UnityEngine;
+﻿using PachowStudios.BadTummyBunny;
 
-public class Flagpole : MonoBehaviour
+public class Flagpole : BaseView
 {
-  private Animator animatorComponent;
-
   public bool Activated { get; private set; }
-
-  private Animator Animator => this.GetComponentIfNull(ref this.animatorComponent);
 
   public void Activate()
   {

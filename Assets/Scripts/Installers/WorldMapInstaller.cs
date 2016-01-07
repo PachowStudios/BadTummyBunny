@@ -7,6 +7,7 @@ namespace PachowStudios.BadTummyBunny
   public class WorldMapInstaller : MonoInstaller
   {
     [SerializeField] private CameraController cameraController = null;
+
     [SerializeField] private WorldMap worldMapInstance = null;
     [SerializeField] private WorldMapPlayer playerInstance = null;
 

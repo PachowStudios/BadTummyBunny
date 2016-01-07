@@ -14,9 +14,12 @@ namespace PachowStudios.BadTummyBunny
     public List<ParticleSystem> Particles => this.particles;
     public PolygonCollider2D FartCollider => this.fartCollider;
 
+    [PostInject]
+    private void Initialize()
+      => name = Model.Name;
+
     public void Attach(PlayerView playerView)
     {
-      name = Model.Name;
       Transform.position = playerView.FartPoint.position;
       Transform.rotation = playerView.FartPoint.rotation;
       Transform.parent = playerView.Body;

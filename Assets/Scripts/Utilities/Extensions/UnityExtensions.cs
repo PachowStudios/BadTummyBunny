@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using JetBrains.Annotations;
 using PachowStudios;
 
 namespace UnityEngine
@@ -51,13 +52,6 @@ namespace UnityEngine
     public static void Destroy([NotNull] this GameObject gameObject, float delay)
       => Object.Destroy(gameObject, delay);
 
-    public static void DetachAndDestroy([NotNull] this ParticleSystem parent)
-    {
-      parent.transform.parent = null;
-      parent.enableEmission = false;
-      parent.gameObject.Destroy(parent.startLifetime);
-    }
-
     [NotNull]
     public static GameObject HideInHierarchy([NotNull] this GameObject gameObject)
     {
@@ -101,6 +95,29 @@ namespace UnityEngine
 
     public static void ResetColor([NotNull] this SpriteRenderer spriteRenderer)
       => spriteRenderer.color = Color.white;
+
+    public static void DetachAndDestroy([NotNull] this ParticleSystem particleSystem)
+    {
+      particleSystem.transform.parent = null;
+      particleSystem.SetEmissionEnabled(false);
+      particleSystem.gameObject.Destroy(particleSystem.startLifetime);
+    }
+
+    public static void SetEmissionEnabled([NotNull] this ParticleSystem particleSystem, bool enabled)
+    {
+      var emission = particleSystem.emission;
+      emission.enabled = enabled;
+    }
+
+    public static bool IsVisible([NotNull] this CanvasGroup canvasGroup)
+      => !canvasGroup.alpha.IsZero();
+
+    public static void SetVisibility([NotNull] this CanvasGroup canvasGroup, bool visible)
+    {
+      canvasGroup.alpha = visible.ToInt();
+      canvasGroup.interactable = visible;
+      canvasGroup.blocksRaycasts = visible;
+    }
 
     public static bool HasLayer(this LayerMask mask, int layer)
       => (mask.value & (1 << layer)) > 0;

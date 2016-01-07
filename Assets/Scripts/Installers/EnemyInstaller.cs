@@ -7,7 +7,7 @@ namespace PachowStudios.BadTummyBunny
   [AddComponentMenu("Bad Tummy Bunny/Installers/Enemy Installer")]
   public class EnemyInstaller : MonoInstaller
   {
-    [SerializeField] private EnemyFactory.Settings enemySettings;
+    [SerializeField] private EnemyFactory.Settings enemySettings = null;
 
     public override void InstallBindings()
     {
@@ -21,6 +21,8 @@ namespace PachowStudios.BadTummyBunny
 
     private static void InstallFacade(DiContainer subContainer, Enemy.Settings settings, EnemyView view)
     {
+      subContainer.Bind<IEventAggregator>().ToSingle<EventAggregator>();
+
       subContainer.BindInstance(settings);
       subContainer.BindSingleWithInterfaces(view.Type.GetTypeMapping());
       subContainer.BindInstance(view);

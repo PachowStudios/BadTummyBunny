@@ -8,6 +8,7 @@ namespace PachowStudios.BadTummyBunny
     [SerializeField] private Vector3 localRespawnPoint = default(Vector3);
 
     public bool IsActivated { get; private set; }
+
     public Vector3 Location => Transform.TransformPoint(this.localRespawnPoint);
 
     public void Activate()

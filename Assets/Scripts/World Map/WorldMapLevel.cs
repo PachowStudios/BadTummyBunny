@@ -18,7 +18,7 @@ namespace PachowStudios.BadTummyBunny
 
     public bool IsSelected => ReferenceEquals(this, WorldMap.SelectedLevel);
 
-    public string LevelName => this.levelConfig.LevelName;
+    public string LevelName => this.levelConfig.Name;
     public int CollectedStars => this.collectedStars;
     public int PossibleStars => this.possibleStars;
     public IEnumerable<WorldMapConnection> Connections => this.connections;
@@ -27,6 +27,7 @@ namespace PachowStudios.BadTummyBunny
     public Vector3 Position => transform.position;
 
     [Inject] private WorldMap WorldMap { get; set; }
+    [Inject] private ISceneLoader SceneLoader { get; }
 
     private void Awake()
     {
@@ -44,7 +45,7 @@ namespace PachowStudios.BadTummyBunny
     }
 
     public void LoadScene()
-      => Application.LoadLevel(this.levelConfig.LevelScene);
+      => SceneLoader.LoadScene(this.levelConfig.Scene);
 
     public bool HasNeighbor(WorldMapLevel level)
       => this.connections.Any(c => c.ConnectsToLevel(level));

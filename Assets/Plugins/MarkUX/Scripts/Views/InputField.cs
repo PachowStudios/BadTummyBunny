@@ -125,8 +125,8 @@ namespace MarkUX.Views
             inputFieldComponent.onEndEdit.RemoveAllListeners();
             inputFieldComponent.onEndEdit.AddListener(InputFieldEndEdit);
 
-            inputFieldComponent.onValueChange.RemoveAllListeners();
-            inputFieldComponent.onValueChange.AddListener(InputFieldValueUpdated);
+            inputFieldComponent.onValueChanged.RemoveAllListeners();
+            inputFieldComponent.onValueChanged.AddListener(InputFieldValueUpdated);
         }
 
         /// <summary>

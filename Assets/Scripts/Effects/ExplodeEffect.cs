@@ -12,7 +12,7 @@ namespace PachowStudios.BadTummyBunny
     [InstallerSettings]
     public class Settings : ScriptableObject
     {
-      public GameObject ExplosionPrefab;
+      public SpriteExplosion ExplosionPrefab;
     }
 
     [Inject] private Settings Config { get; set; }
@@ -20,7 +20,7 @@ namespace PachowStudios.BadTummyBunny
 
     public void Explode([NotNull] Transform target, Vector3 velocity, [NotNull] Sprite sprite, Material material = null)
       => Instantiator
-        .InstantiatePrefabForComponent<SpriteExplosion>(Config.ExplosionPrefab)
+        .InstantiatePrefab(Config.ExplosionPrefab)
         .Explode(target, velocity, sprite, material);
 
     public sealed class SpriteExplosion : MonoBehaviour
@@ -49,7 +49,7 @@ namespace PachowStudios.BadTummyBunny
         var spriteWidth = (int)(sprite.bounds.size.x * sprite.pixelsPerUnit);
         var spriteHeight = (int)(sprite.bounds.size.y * sprite.pixelsPerUnit);
         var particles = new List<Particle>(spriteWidth * spriteHeight);
-        var particle = new Particle() { size = 1f / sprite.pixelsPerUnit };
+        var particle = new Particle() { startSize = 1f / sprite.pixelsPerUnit };
         var positionOffset = new Vector2(
           sprite.bounds.extents.x - sprite.bounds.center.x - 0.05f,
           sprite.bounds.extents.y - sprite.bounds.center.y - 0.05f);
@@ -75,7 +75,7 @@ namespace PachowStudios.BadTummyBunny
             particle.position = Transform.TransformPoint(
               (widthIndex / sprite.pixelsPerUnit) - positionOffset.x,
               (heightIndex / sprite.pixelsPerUnit) - positionOffset.y);
-            particle.color = color;
+            particle.startColor = color;
             particle.startLifetime = particle.lifetime = this.particleLifetime;
             particle.velocity = velocity.Vary(3f);
 

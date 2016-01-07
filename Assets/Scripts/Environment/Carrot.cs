@@ -3,19 +3,16 @@ using Zenject;
 
 namespace PachowStudios.BadTummyBunny
 {
-  public class Carrot : MonoBehaviour
+  [AddComponentMenu("Bad Tummy Bunny/Environment/Carrot")]
+  public class Carrot : BaseView
   {
-    private SpriteRenderer spriteRenderer;
-
     [Inject] private ExplodeEffect ExplodeEffect { get; set; }
-
-    private SpriteRenderer SpriteRenderer => this.GetComponentIfNull(ref this.spriteRenderer);
 
     public void Collect()
     {
       PlayCollectSound();
       ExplodeEffect.Explode(transform, Vector3.zero, SpriteRenderer.sprite);
-      Destroy(gameObject);
+      Dispose();
     }
 
     private static void PlayCollectSound()

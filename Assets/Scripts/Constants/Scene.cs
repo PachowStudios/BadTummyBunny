@@ -2,7 +2,7 @@
 
 namespace PachowStudios.BadTummyBunny
 {
-  public enum Level
+  public enum Scene
   {
     [Description("World Map")]
     WorldMap,

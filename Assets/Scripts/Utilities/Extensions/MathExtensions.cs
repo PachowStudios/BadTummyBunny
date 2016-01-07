@@ -1,9 +1,19 @@
-﻿namespace UnityEngine
+﻿using System;
+
+namespace UnityEngine
 {
   public static class MathExtensions
   {
+    private const float FloatingPointTolerance = 0.0001f;
+
+    public static bool IsZero(this float number)
+      => number.Abs() <= FloatingPointTolerance;
+
+    public static bool Is(this float number, float value)
+      => Math.Abs(number - value) < FloatingPointTolerance;
+
     public static int Sign(this float number)
-    => (int)Mathf.Sign(number);
+      => (int)Mathf.Sign(number);
 
     public static float Abs(this float number)
       => Mathf.Abs(number);

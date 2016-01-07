@@ -6,9 +6,8 @@ namespace PachowStudios.BadTummyBunny
   [InstallerSettings]
   public class LevelConfig : ScriptableObject
   {
-    public string LevelId;
-    public string LevelScene;
-    public string LevelName;
+    public string Name;
+    public Scene Scene;
 
     public int RequiredStars;
 

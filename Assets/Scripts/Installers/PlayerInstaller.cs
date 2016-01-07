@@ -17,11 +17,10 @@ namespace PachowStudios.BadTummyBunny
 
     private void InstallFacade(DiContainer subContainer)
     {
-      subContainer.BindInstance(this.playerSettings.Movement);
-      subContainer.BindInstance(this.playerSettings.Health);
-
       subContainer.Bind<IEventAggregator>().ToSingle<EventAggregator>();
 
+      subContainer.BindInstance(this.playerSettings.Movement);
+      subContainer.BindInstance(this.playerSettings.Health);
       subContainer.BindInstanceWithInterfaces(this.playerInstance);
 
       subContainer.BindSingleWithInterfaces<PlayerMovement>();

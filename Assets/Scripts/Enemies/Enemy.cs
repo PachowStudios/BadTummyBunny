@@ -26,6 +26,8 @@ namespace PachowStudios.BadTummyBunny
     [InjectLocal] public override IMovable Movement { get; protected set; }
     [InjectLocal] public override IHasHealth Health { get; protected set; }
 
+    public string Name => Config.Name;
+    public EnemyType Type => Config.Prefab.Type;
     public int ContactDamage => Config.ContactDamage;
     public Vector2 ContactKnockback => Config.ContactKnockback;
   }
