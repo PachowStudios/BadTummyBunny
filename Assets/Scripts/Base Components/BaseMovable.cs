@@ -36,6 +36,9 @@ namespace PachowStudios.BadTummyBunny
     public virtual bool WasGrounded => View.CharacterController.WasGroundedLastFrame;
     public virtual LayerMask CollisionLayers => View.CharacterController.PlatformMask;
 
+    public virtual void SetPosition(Vector3 position)
+      => View.Transform.position = position;
+
     public virtual void Move(Vector3 moveVelocity)
     {
       View.CharacterController.Move(moveVelocity * Time.deltaTime);

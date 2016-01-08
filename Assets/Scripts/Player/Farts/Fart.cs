@@ -8,7 +8,8 @@ using Zenject;
 
 namespace PachowStudios.BadTummyBunny
 {
-  public class Fart : IFart
+  public class Fart : IFart,
+    IHandles<FartEnemyTriggeredMessage>
   {
     [InstallerSettings]
     public class Settings : ScriptableObject
@@ -37,7 +38,7 @@ namespace PachowStudios.BadTummyBunny
       public float TrajectoryStartDistance = 1f;
       public float TrajectoryWidth = 0.3f;
       [Range(8, 64)] public int TrajectorySegments = 16;
-      public Gradient TrajectoryGradient = default(Gradient);
+      public Gradient TrajectoryGradient = null;
       public Material TrajectoryMaterial = null;
       public string TrajectorySortingLayer = "UI";
       public int TrajectorySortingOrder = -1;
@@ -50,6 +51,8 @@ namespace PachowStudios.BadTummyBunny
 
     [InjectLocal] private Settings Config { get; set; }
     [InjectLocal] private FartView View { get; set; }
+    [InjectLocal] private IEventAggregator EventAggregator { get; set; }
+
 
     [Inject] private Player Player { get; set; }
     [Inject] private CameraController CameraController { get; set; }
@@ -61,7 +64,10 @@ namespace PachowStudios.BadTummyBunny
 
     [PostInject]
     private void Initialize()
-      => InitializeTrajectoryLine();
+    {
+      EventAggregator.Subscribe(this);
+      InitializeTrajectoryLine();
+    }
 
     public void Attach(PlayerView playerView)
       => View.Attach(playerView);
@@ -217,9 +223,13 @@ namespace PachowStudios.BadTummyBunny
         };
     }
 
-    public virtual void OnEnemyTriggered(IEnemy enemy)
+    public void Handle(FartEnemyTriggeredMessage message)
     {
-      if (this.pendingTargets.Contains(enemy) || this.damagedEnemies.Contains(enemy))
+      var enemy = message.Enemy;
+
+      if (!IsFarting
+          || this.pendingTargets.Contains(enemy)
+          || this.damagedEnemies.Contains(enemy))
         return;
 
       this.pendingTargets.Add(enemy);

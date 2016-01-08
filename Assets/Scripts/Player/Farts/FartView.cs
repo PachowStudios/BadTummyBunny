@@ -4,24 +4,20 @@ using Zenject;
 
 namespace PachowStudios.BadTummyBunny
 {
-  public class FartView : BaseView<Fart>, IAttachable<PlayerView>
+  [AddComponentMenu("Bad Tummy Bunny/Farts/Fart View")]
+  public class FartView : BaseView, IAttachable<PlayerView>
   {
     [SerializeField] private List<ParticleSystem> particles = new List<ParticleSystem>();
     [SerializeField] private PolygonCollider2D fartCollider = null;
 
-    [Inject] public override Fart Model { get; protected set; }
+    [InjectLocal] private IEventAggregator EventAggregator { get; set; }
 
     public List<ParticleSystem> Particles => this.particles;
     public PolygonCollider2D FartCollider => this.fartCollider;
 
-    [PostInject]
-    private void Initialize()
-      => name = Model.Name;
-
     public void Attach(PlayerView playerView)
     {
-      Transform.position = playerView.FartPoint.position;
-      Transform.rotation = playerView.FartPoint.rotation;
+      Transform.AlignWith(playerView.FartPoint);
       Transform.parent = playerView.Body;
     }
 
@@ -30,11 +26,8 @@ namespace PachowStudios.BadTummyBunny
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-      if (!Model.IsFarting)
-        return;
-
       if (other.tag == Tags.Enemy)
-        Model.OnEnemyTriggered(other.GetViewModel<IEnemy>());
+        EventAggregator.Publish(new FartEnemyTriggeredMessage(other.GetViewModel<IEnemy>()));
     }
   }
 }

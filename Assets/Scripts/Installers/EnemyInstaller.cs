@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 
@@ -7,15 +8,16 @@ namespace PachowStudios.BadTummyBunny
   [AddComponentMenu("Bad Tummy Bunny/Installers/Enemy Installer")]
   public class EnemyInstaller : MonoInstaller
   {
-    [SerializeField] private EnemyFactory.Settings enemySettings = null;
+    [SerializeField] private List<Enemy.Settings> enemySettings = null;
 
     public override void InstallBindings()
     {
-      Container.BindInstance(this.enemySettings);
-
       Container.BindFacadeFactory<Enemy.Settings, EnemyView, Enemy, EnemyFacadeFactory>(InstallFacade);
+
       Container.BindIFactory<EnemyType, Enemy>().ToCustomFactory<EnemyFactory>();
       Container.BindIFactory<EnemyView, Enemy>().ToCustomFactory<EnemyFactory>();
+      Container.BindInstance(this.enemySettings).WhenInjectedInto<EnemyFactory>();
+
       Container.Bind<Enemy>().ToIFactoryWithContext<EnemyView, Enemy>();
     }
 

@@ -21,6 +21,7 @@ namespace PachowStudios.BadTummyBunny
 
     float? MoveSpeedOverride { get; set; }
 
+    void SetPosition(Vector3 position);
     void Move(Vector3 moveVelocity);
     void Flip();
     bool Jump(float jumpHeight);
