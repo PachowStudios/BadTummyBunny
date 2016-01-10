@@ -2,10 +2,10 @@
 using UnityEditor.AnimatedValues;
 using UnityEngine;
 
-namespace PachowStudios.BadTummyBunny
+namespace PachowStudios.BadTummyBunny.Editor
 {
   [CustomEditor(typeof(ScaleWidthCamera))]
-  public class ScaleWidthCameraEditor : Editor
+  public class ScaleWidthCameraEditor : UnityEditor.Editor
   {
     private AnimBool showWorldSpaceUI;
 

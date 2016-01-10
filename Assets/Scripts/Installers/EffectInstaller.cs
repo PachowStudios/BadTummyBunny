@@ -6,7 +6,7 @@ namespace PachowStudios.BadTummyBunny
   [AddComponentMenu("Bad Tummy Bunny/Installers/Effect Installer")]
   public class EffectInstaller : MonoInstaller
   {
-    [SerializeField] private ExplodeEffect.Settings explodeEffetSettings = null;
+    [SerializeField] private ExplodeEffectSettings explodeEffetSettings = null;
 
     public override void InstallBindings()
     {

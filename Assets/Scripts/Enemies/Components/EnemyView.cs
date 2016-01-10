@@ -3,7 +3,7 @@ using Zenject;
 
 namespace PachowStudios.BadTummyBunny
 {
-  [AddComponentMenu("Bad Tummy Bunny/Enemy")]
+  [AddComponentMenu("Bad Tummy Bunny/Enemies/Enemy View")]
   public class EnemyView : BaseView<Enemy>
   {
     [SerializeField] private EnemyType type = EnemyType.Fox;

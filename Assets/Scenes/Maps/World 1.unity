@@ -8,25 +8,25 @@ SceneSettings:
   m_PVSPortalsArray: []
   m_OcclusionBakeSettings:
     smallestOccluder: 5
-    smallestHole: .25
+    smallestHole: 0.25
     backfaceThreshold: 100
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 6
   m_Fog: 0
-  m_FogColor: {r: .5, g: .5, b: .5, a: 1}
+  m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FogMode: 3
-  m_FogDensity: .00999999978
+  m_FogDensity: 0.01
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: .200000003, g: .200000003, b: .200000003, a: 1}
-  m_AmbientEquatorColor: {r: .200000003, g: .200000003, b: .200000003, a: 1}
-  m_AmbientGroundColor: {r: .200000003, g: .200000003, b: .200000003, a: 1}
+  m_AmbientSkyColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
+  m_AmbientEquatorColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
+  m_AmbientGroundColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
   m_AmbientIntensity: 1
   m_AmbientMode: 3
   m_SkyboxMaterial: {fileID: 0}
-  m_HaloStrength: .5
+  m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
   m_HaloTexture: {fileID: 0}
@@ -40,7 +40,7 @@ RenderSettings:
 --- !u!157 &4
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 5
+  serializedVersion: 6
   m_GIWorkflowMode: 1
   m_LightmapsMode: 1
   m_GISettings:
@@ -66,7 +66,7 @@ LightmapSettings:
     m_FinalGather: 0
     m_FinalGatherRayCount: 1024
     m_ReflectionCompression: 2
-  m_LightmapSnapshot: {fileID: 0}
+  m_LightingDataAsset: {fileID: 0}
   m_RuntimeCPUUsage: 25
 --- !u!196 &5
 NavMeshSettings:
@@ -74,15 +74,15 @@ NavMeshSettings:
   m_ObjectHideFlags: 0
   m_BuildSettings:
     serializedVersion: 2
-    agentRadius: .5
+    agentRadius: 0.5
     agentHeight: 2
     agentSlope: 45
-    agentClimb: .400000006
+    agentClimb: 0.4
     ledgeDropHeight: 0
     maxJumpAcrossDistance: 0
     accuratePlacement: 0
     minRegionArea: 2
-    cellSize: .166666657
+    cellSize: 0.16666666
     manualCellSize: 0
   m_NavMeshData: {fileID: 0}
 --- !u!20 &105656740 stripped
@@ -208,7 +208,7 @@ MonoBehaviour:
   RotationSet: 0
   Scale: {x: 1, y: 1, z: 1}
   ScaleSet: 0
-  Pivot: {x: .5, y: .5}
+  Pivot: {x: 0.5, y: 0.5}
   HideFlags: 1
   AlwaysBlockRaycast: 0
   SortIndex: 0
@@ -318,7 +318,7 @@ RectTransform:
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: .5, y: .5}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!225 &119120411
 CanvasGroup:
   m_ObjectHideFlags: 1
@@ -480,7 +480,7 @@ MonoBehaviour:
   RotationSet: 0
   Scale: {x: 1, y: 1, z: 1}
   ScaleSet: 0
-  Pivot: {x: .5, y: .5}
+  Pivot: {x: 0.5, y: 0.5}
   HideFlags: 0
   AlwaysBlockRaycast: 0
   SortIndex: 0
@@ -747,11 +747,11 @@ RectTransform:
   - {fileID: 1751253234}
   m_Father: {fileID: 1027699764}
   m_RootOrder: 2
-  m_AnchorMin: {x: .5, y: 0}
-  m_AnchorMax: {x: .5, y: 0}
-  m_AnchoredPosition: {x: 0, y: .375}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0.375}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: .5, y: .5}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &246528412
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -956,7 +956,7 @@ MonoBehaviour:
   RotationSet: 0
   Scale: {x: 1, y: 1, z: 1}
   ScaleSet: 0
-  Pivot: {x: .5, y: .5}
+  Pivot: {x: 0.5, y: 0.5}
   HideFlags: 0
   AlwaysBlockRaycast: 0
   SortIndex: 0
@@ -1063,7 +1063,7 @@ RectTransform:
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: .5, y: .5}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &309553739
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1180,13 +1180,15 @@ SpriteRenderer:
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
   m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: .5
+  m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1155055469
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 23182b47457f6a14181cadba292066f0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
 --- !u!4 &354415205
 Transform:
   m_ObjectHideFlags: 0
@@ -1234,7 +1236,7 @@ RectTransform:
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: .5, y: .5}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &362303017
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1334,7 +1336,7 @@ MonoBehaviour:
   RotationSet: 0
   Scale: {x: 1, y: 1, z: 1}
   ScaleSet: 0
-  Pivot: {x: .5, y: .5}
+  Pivot: {x: 0.5, y: 0.5}
   HideFlags: 0
   AlwaysBlockRaycast: 0
   SortIndex: 0
@@ -1518,7 +1520,7 @@ RectTransform:
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: .5, y: .5}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &507175223
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1618,7 +1620,7 @@ MonoBehaviour:
   RotationSet: 0
   Scale: {x: 1, y: 1, z: 1}
   ScaleSet: 0
-  Pivot: {x: .5, y: .5}
+  Pivot: {x: 0.5, y: 0.5}
   HideFlags: 1
   AlwaysBlockRaycast: 0
   SortIndex: 0
@@ -1791,7 +1793,7 @@ RectTransform:
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: .5, y: .5}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &558422433
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1891,7 +1893,7 @@ MonoBehaviour:
   RotationSet: 0
   Scale: {x: 1, y: 1, z: 1}
   ScaleSet: 0
-  Pivot: {x: .5, y: .5}
+  Pivot: {x: 0.5, y: 0.5}
   HideFlags: 0
   AlwaysBlockRaycast: 0
   SortIndex: 0
@@ -2053,7 +2055,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14232be49bc88a0419fa24d0a8d44940, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cameraController: {fileID: 300576767}
+  cameraControllerInstance: {fileID: 300576767}
   worldMapInstance: {fileID: 1974133359}
   playerInstance: {fileID: 282379821}
 --- !u!114 &603769675
@@ -2068,7 +2070,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   OnlyInjectWhenActive: 1
-  InjectFullScene: 0
   Installers:
   - {fileID: 603769674}
 --- !u!4 &603769676
@@ -2103,6 +2104,7 @@ Sprite:
   m_Border: {x: 0, y: 0, z: 0, w: 0}
   m_PixelsToUnits: 16
   m_Extrude: 0
+  m_IsPolygon: 0
   m_AtlasName: 
   m_PackingTag: 
   m_RD:
@@ -2161,7 +2163,7 @@ RectTransform:
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: .5, y: .5}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!225 &871406587
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -2185,7 +2187,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: .469999999}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.47}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -2241,7 +2243,7 @@ RectTransform:
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: .5, y: .5}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!225 &879830099
 CanvasGroup:
   m_ObjectHideFlags: 1
@@ -2352,7 +2354,7 @@ MonoBehaviour:
   RotationSet: 0
   Scale: {x: 1, y: 1, z: 1}
   ScaleSet: 0
-  Pivot: {x: .5, y: .5}
+  Pivot: {x: 0.5, y: 0.5}
   HideFlags: 1
   AlwaysBlockRaycast: 0
   SortIndex: 0
@@ -2477,7 +2479,7 @@ MonoBehaviour:
   AutoReverse: 0
   Field: Alpha
   ReverseSpeed: 1
-  Duration: .200000003
+  Duration: 0.2
   StartOffset: 0
   FromStringValue: 1
   ToStringValue: 0
@@ -2549,7 +2551,7 @@ RectTransform:
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: .5, y: .5}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!225 &930935554
 CanvasGroup:
   m_ObjectHideFlags: 1
@@ -2660,7 +2662,7 @@ MonoBehaviour:
   RotationSet: 0
   Scale: {x: 1, y: 1, z: 1}
   ScaleSet: 0
-  Pivot: {x: .5, y: .5}
+  Pivot: {x: 0.5, y: 0.5}
   HideFlags: 1
   AlwaysBlockRaycast: 0
   SortIndex: 0
@@ -2864,7 +2866,7 @@ RectTransform:
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: .5, y: .5}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!225 &997535843
 CanvasGroup:
   m_ObjectHideFlags: 1
@@ -2975,7 +2977,7 @@ MonoBehaviour:
   RotationSet: 0
   Scale: {x: 1, y: 1, z: 1}
   ScaleSet: 0
-  Pivot: {x: .5, y: .5}
+  Pivot: {x: 0.5, y: 0.5}
   HideFlags: 1
   AlwaysBlockRaycast: 0
   SortIndex: 0
@@ -3106,8 +3108,8 @@ MonoBehaviour:
   AutoReset: 0
   AutoReverse: 0
   Field: BackgroundColor
-  ReverseSpeed: .25
-  Duration: .100000001
+  ReverseSpeed: 0.25
+  Duration: 0.1
   StartOffset: 0
   FromStringValue: 
   ToStringValue: 
@@ -3547,7 +3549,7 @@ MonoBehaviour:
   RotationSet: 0
   Scale: {x: 1, y: 1, z: 1}
   ScaleSet: 0
-  Pivot: {x: .5, y: .5}
+  Pivot: {x: 0.5, y: 0.5}
   HideFlags: 1
   AlwaysBlockRaycast: 0
   SortIndex: 0
@@ -3657,7 +3659,7 @@ RectTransform:
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: .5, y: .5}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!225 &1032218407
 CanvasGroup:
   m_ObjectHideFlags: 1
@@ -3737,7 +3739,7 @@ RectTransform:
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: .5, y: .5}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!225 &1038209904
 CanvasGroup:
   m_ObjectHideFlags: 1
@@ -3848,7 +3850,7 @@ MonoBehaviour:
   RotationSet: 0
   Scale: {x: 1, y: 1, z: 1}
   ScaleSet: 0
-  Pivot: {x: .5, y: .5}
+  Pivot: {x: 0.5, y: 0.5}
   HideFlags: 1
   AlwaysBlockRaycast: 0
   SortIndex: 0
@@ -4048,11 +4050,11 @@ RectTransform:
   - {fileID: 1419489354}
   m_Father: {fileID: 1785621121}
   m_RootOrder: 5
-  m_AnchorMin: {x: .5, y: .5}
-  m_AnchorMax: {x: .5, y: .5}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: .6875, y: .625}
-  m_Pivot: {x: .5, y: .5}
+  m_SizeDelta: {x: 0.6875, y: 0.625}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1052737295
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4152,7 +4154,7 @@ MonoBehaviour:
   RotationSet: 0
   Scale: {x: 1, y: 1, z: 1}
   ScaleSet: 0
-  Pivot: {x: .5, y: .5}
+  Pivot: {x: 0.5, y: 0.5}
   HideFlags: 0
   AlwaysBlockRaycast: 0
   SortIndex: 0
@@ -4403,7 +4405,7 @@ MonoBehaviour:
   RotationSet: 0
   Scale: {x: 1, y: 1, z: 1}
   ScaleSet: 0
-  Pivot: {x: .5, y: .5}
+  Pivot: {x: 0.5, y: 0.5}
   HideFlags: 0
   AlwaysBlockRaycast: 0
   SortIndex: 0
@@ -4440,7 +4442,7 @@ RectTransform:
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: .5, y: .5}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1199936589
 GameObject:
   m_ObjectHideFlags: 1
@@ -4476,7 +4478,7 @@ RectTransform:
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: .5, y: .5}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!225 &1199936591
 CanvasGroup:
   m_ObjectHideFlags: 1
@@ -4587,7 +4589,7 @@ MonoBehaviour:
   RotationSet: 0
   Scale: {x: 1, y: 1, z: 1}
   ScaleSet: 0
-  Pivot: {x: .5, y: .5}
+  Pivot: {x: 0.5, y: 0.5}
   HideFlags: 1
   AlwaysBlockRaycast: 0
   SortIndex: 0
@@ -4790,7 +4792,7 @@ RectTransform:
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: .5, y: .5}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1373065926
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4890,7 +4892,7 @@ MonoBehaviour:
   RotationSet: 0
   Scale: {x: 1, y: 1, z: 1}
   ScaleSet: 0
-  Pivot: {x: .5, y: .5}
+  Pivot: {x: 0.5, y: 0.5}
   HideFlags: 0
   AlwaysBlockRaycast: 0
   SortIndex: 0
@@ -5103,7 +5105,7 @@ RectTransform:
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: .5, y: .5}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1380508858
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5203,7 +5205,7 @@ MonoBehaviour:
   RotationSet: 0
   Scale: {x: 1, y: 1, z: 1}
   ScaleSet: 0
-  Pivot: {x: .5, y: .5}
+  Pivot: {x: 0.5, y: 0.5}
   HideFlags: 0
   AlwaysBlockRaycast: 0
   SortIndex: 0
@@ -5375,7 +5377,7 @@ RectTransform:
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: .5, y: .5}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1419489355
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5475,7 +5477,7 @@ MonoBehaviour:
   RotationSet: 0
   Scale: {x: 1, y: 1, z: 1}
   ScaleSet: 0
-  Pivot: {x: .5, y: .5}
+  Pivot: {x: 0.5, y: 0.5}
   HideFlags: 0
   AlwaysBlockRaycast: 0
   SortIndex: 0
@@ -5643,15 +5645,15 @@ RectTransform:
   m_GameObject: {fileID: 1550828837}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: .5, y: .5, z: .5}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children: []
   m_Father: {fileID: 1027699764}
   m_RootOrder: 1
-  m_AnchorMin: {x: .5, y: 1}
-  m_AnchorMax: {x: .5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -.5}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: -0.5}
   m_SizeDelta: {x: 8, y: 2}
-  m_Pivot: {x: .5, y: .5}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1550828839
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5749,9 +5751,9 @@ MonoBehaviour:
   AlphaSet: 0
   Rotation: {x: 0, y: 0, z: 0}
   RotationSet: 0
-  Scale: {x: .5, y: .5, z: .5}
+  Scale: {x: 0.5, y: 0.5, z: 0.5}
   ScaleSet: 1
-  Pivot: {x: .5, y: .5}
+  Pivot: {x: 0.5, y: 0.5}
   HideFlags: 0
   AlwaysBlockRaycast: 0
   SortIndex: 0
@@ -5939,9 +5941,10 @@ MonoBehaviour:
     m_FontSize: 1
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 10
+    m_MinSize: 1
     m_MaxSize: 40
     m_Alignment: 4
+    m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
@@ -5982,6 +5985,10 @@ Texture2D:
   m_ColorSpace: 1
   image data: 1024
   _typelessdata: ffba00abffba00abffba00abffba00abffba00abffba00abffba00abffba00abffba00abffba00abffba00abffba00abffba00abffba00abffba00abffba00abffba00ab00000000000000000000000000000000000000000000000000000000ff6e6e6e00000000000000000000000000000000000000000000000000000000ffba00ab00000000000000000000000000000000000000000000000000000000ff6e6e6e00000000000000000000000000000000000000000000000000000000ffba00ab00000000000000000000000000000000000000000000000000000000ff6e6e6e00000000000000000000000000000000000000000000000000000000ffba00ab00000000000000000000000000000000000000000000000000000000ff6e6e6e00000000000000000000000000000000000000000000000000000000ffba00ab00000000000000000000000000000000000000000000000000000000ff6e6e6e00000000000000000000000000000000000000000000000000000000ffba00ab00000000000000000000000000000000000000000000000000000000ff6e6e6e00000000000000000000000000000000000000000000000000000000ffba00ab00000000000000000000000000000000000000000000000000000000ff6e6e6e00000000000000000000000000000000000000000000000000000000ffba00abff6e6e6eff6e6e6eff6e6e6eff6e6e6eff6e6e6eff6e6e6eff6e6e6eff6e6e6eff6e6e6eff6e6e6eff6e6e6eff6e6e6eff6e6e6eff6e6e6eff6e6e6effba00ab00000000000000000000000000000000000000000000000000000000ff6e6e6e00000000000000000000000000000000000000000000000000000000ffba00ab00000000000000000000000000000000000000000000000000000000ff6e6e6e00000000000000000000000000000000000000000000000000000000ffba00ab00000000000000000000000000000000000000000000000000000000ff6e6e6e00000000000000000000000000000000000000000000000000000000ffba00ab00000000000000000000000000000000000000000000000000000000ff6e6e6e00000000000000000000000000000000000000000000000000000000ffba00ab00000000000000000000000000000000000000000000000000000000ff6e6e6e00000000000000000000000000000000000000000000000000000000ffba00ab00000000000000000000000000000000000000000000000000000000ff6e6e6e00000000000000000000000000000000000000000000000000000000ffba00ab00000000000000000000000000000000000000000000000000000000ff6e6e6e00000000000000000000000000000000000000000000000000000000
+  m_StreamData:
+    offset: 0
+    size: 0
+    path: 
 --- !u!1 &1669580400
 GameObject:
   m_ObjectHideFlags: 1
@@ -6014,7 +6021,7 @@ RectTransform:
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: .5, y: .5}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1669580402
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -6114,7 +6121,7 @@ MonoBehaviour:
   RotationSet: 0
   Scale: {x: 1, y: 1, z: 1}
   ScaleSet: 0
-  Pivot: {x: .5, y: .5}
+  Pivot: {x: 0.5, y: 0.5}
   HideFlags: 1
   AlwaysBlockRaycast: 0
   SortIndex: 0
@@ -6250,7 +6257,7 @@ MonoBehaviour:
   RotationSet: 0
   Scale: {x: 1, y: 1, z: 1}
   ScaleSet: 0
-  Pivot: {x: .5, y: .5}
+  Pivot: {x: 0.5, y: 0.5}
   HideFlags: 0
   AlwaysBlockRaycast: 0
   SortIndex: 0
@@ -6426,7 +6433,7 @@ RectTransform:
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: .5, y: .5}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1754116476
 GameObject:
   m_ObjectHideFlags: 0
@@ -6456,15 +6463,15 @@ RectTransform:
   m_GameObject: {fileID: 1754116476}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: .5, y: .5, z: .5}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children: []
   m_Father: {fileID: 1785621121}
   m_RootOrder: 0
-  m_AnchorMin: {x: .5, y: .5}
-  m_AnchorMax: {x: .5, y: .5}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 41.375}
-  m_Pivot: {x: .5, y: .5}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1754116478
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6562,9 +6569,9 @@ MonoBehaviour:
   AlphaSet: 0
   Rotation: {x: 0, y: 0, z: 0}
   RotationSet: 0
-  Scale: {x: .5, y: .5, z: .5}
+  Scale: {x: 0.5, y: 0.5, z: 0.5}
   ScaleSet: 1
-  Pivot: {x: .5, y: .5}
+  Pivot: {x: 0.5, y: 0.5}
   HideFlags: 0
   AlwaysBlockRaycast: 0
   SortIndex: 0
@@ -6871,6 +6878,7 @@ MonoBehaviour:
     m_MinSize: 10
     m_MaxSize: 40
     m_Alignment: 4
+    m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
@@ -6918,8 +6926,8 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 16, y: 8.99906063}
-  m_Pivot: {x: .5, y: .5}
+  m_SizeDelta: {x: 16, y: 8.999061}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1780551111
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6932,7 +6940,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8cb390b94714dd848b9fc481ad13d2b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ElementSize: .0625
+  ElementSize: 0.0625
   GridPixelsPerUnit: 16
   DrawGrid: 1
   MainView: WorldMapScreen
@@ -7001,6 +7009,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingLayerID: -1327128247
   m_SortingOrder: 0
+  m_TargetDisplay: 0
 --- !u!1 &1785621120
 GameObject:
   m_ObjectHideFlags: 0
@@ -7039,11 +7048,11 @@ RectTransform:
   - {fileID: 1052737294}
   m_Father: {fileID: 1751253234}
   m_RootOrder: 0
-  m_AnchorMin: {x: .5, y: .5}
-  m_AnchorMax: {x: .5, y: .5}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: .6875, y: .625}
-  m_Pivot: {x: .5, y: .5}
+  m_SizeDelta: {x: 0.6875, y: 0.625}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1785621122
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7143,7 +7152,7 @@ MonoBehaviour:
   RotationSet: 0
   Scale: {x: 1, y: 1, z: 1}
   ScaleSet: 0
-  Pivot: {x: .5, y: .5}
+  Pivot: {x: 0.5, y: 0.5}
   HideFlags: 0
   AlwaysBlockRaycast: 0
   SortIndex: 0
@@ -7649,7 +7658,7 @@ RectTransform:
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: .5, y: .5}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!225 &1864761614
 CanvasGroup:
   m_ObjectHideFlags: 1
@@ -7760,7 +7769,7 @@ MonoBehaviour:
   RotationSet: 0
   Scale: {x: 1, y: 1, z: 1}
   ScaleSet: 0
-  Pivot: {x: .5, y: .5}
+  Pivot: {x: 0.5, y: 0.5}
   HideFlags: 1
   AlwaysBlockRaycast: 0
   SortIndex: 0
@@ -7885,7 +7894,7 @@ MonoBehaviour:
   AutoReverse: 0
   Field: Alpha
   ReverseSpeed: 1
-  Duration: .200000003
+  Duration: 0.2
   StartOffset: 0
   FromStringValue: 0
   ToStringValue: 1
@@ -7969,7 +7978,33 @@ Prefab:
       propertyPath: orthographic size
       value: 4.49953032
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 11413450, guid: fb22b93f5853e2340a34f56d144b12e6, type: 2}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11413438, guid: fb22b93f5853e2340a34f56d144b12e6, type: 2}
+      propertyPath: axis
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11413438, guid: fb22b93f5853e2340a34f56d144b12e6, type: 2}
+      propertyPath: width
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 11413438, guid: fb22b93f5853e2340a34f56d144b12e6, type: 2}
+      propertyPath: height
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 9213436, guid: fb22b93f5853e2340a34f56d144b12e6, type: 2}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8113436, guid: fb22b93f5853e2340a34f56d144b12e6, type: 2}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 12413436, guid: fb22b93f5853e2340a34f56d144b12e6, type: 2}
+    - {fileID: 9213436, guid: fb22b93f5853e2340a34f56d144b12e6, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: fb22b93f5853e2340a34f56d144b12e6, type: 2}
   m_IsPrefabParent: 0
 --- !u!1 &1962679016
@@ -8008,7 +8043,7 @@ RectTransform:
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: .5, y: .5}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1962679018
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -8108,7 +8143,7 @@ MonoBehaviour:
   RotationSet: 0
   Scale: {x: 1, y: 1, z: 1}
   ScaleSet: 0
-  Pivot: {x: .5, y: .5}
+  Pivot: {x: 0.5, y: 0.5}
   HideFlags: 1
   AlwaysBlockRaycast: 0
   SortIndex: 0
@@ -8291,7 +8326,7 @@ RectTransform:
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: .5, y: .5}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2044287922
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -8391,7 +8426,7 @@ MonoBehaviour:
   RotationSet: 0
   Scale: {x: 1, y: 1, z: 1}
   ScaleSet: 0
-  Pivot: {x: .5, y: .5}
+  Pivot: {x: 0.5, y: 0.5}
   HideFlags: 1
   AlwaysBlockRaycast: 0
   SortIndex: 0
@@ -8568,7 +8603,7 @@ RectTransform:
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: .5, y: .5}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2104878928
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -8668,7 +8703,7 @@ MonoBehaviour:
   RotationSet: 0
   Scale: {x: 1, y: 1, z: 1}
   ScaleSet: 0
-  Pivot: {x: .5, y: .5}
+  Pivot: {x: 0.5, y: 0.5}
   HideFlags: 1
   AlwaysBlockRaycast: 0
   SortIndex: 0

@@ -9,13 +9,7 @@ namespace PachowStudios.BadTummyBunny
 {
   public class ExplodeEffect
   {
-    [InstallerSettings]
-    public class Settings : ScriptableObject
-    {
-      public SpriteExplosion ExplosionPrefab;
-    }
-
-    [Inject] private Settings Config { get; set; }
+    [Inject] private ExplodeEffectSettings Config { get; set; }
     [Inject] private IInstantiator Instantiator { get; set; }
 
     public void Explode([NotNull] Transform target, Vector3 velocity, [NotNull] Sprite sprite, Material material = null)

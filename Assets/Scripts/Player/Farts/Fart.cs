@@ -51,11 +51,10 @@ namespace PachowStudios.BadTummyBunny
 
     [InjectLocal] private Settings Config { get; set; }
     [InjectLocal] private FartView View { get; set; }
-    [InjectLocal] private IEventAggregator EventAggregator { get; set; }
-
 
     [Inject] private Player Player { get; set; }
     [Inject] private CameraController CameraController { get; set; }
+    [Inject] private IEventAggregator EventAggregator { get; set; }
 
     public bool IsFarting { get; protected set; }
 

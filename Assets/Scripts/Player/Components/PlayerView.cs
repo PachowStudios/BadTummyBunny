@@ -3,7 +3,7 @@ using Zenject;
 
 namespace PachowStudios.BadTummyBunny
 {
-  [AddComponentMenu("Bad Tummy Bunny/Player")]
+  [AddComponentMenu("Bad Tummy Bunny/Player/Player View")]
   public class PlayerView : BaseView<Player>
   {
     [SerializeField] private Transform body = null;

@@ -10,7 +10,7 @@ namespace PachowStudios.BadTummyBunny
     [SerializeField] private List<ParticleSystem> particles = new List<ParticleSystem>();
     [SerializeField] private PolygonCollider2D fartCollider = null;
 
-    [InjectLocal] private IEventAggregator EventAggregator { get; set; }
+    [Inject] private IEventAggregator EventAggregator { get; set; }
 
     public List<ParticleSystem> Particles => this.particles;
     public PolygonCollider2D FartCollider => this.fartCollider;

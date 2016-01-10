@@ -5,15 +5,9 @@ namespace PachowStudios.BadTummyBunny
 {
   public class FartFactory : IFactory<FartType, IFart>
   {
-    [Inject] private DiContainer Container { get; set; }
+    [Inject] private IInstantiator Instantiator { get; set; }
 
     public IFart Create(FartType type)
-    {
-      var subContainer = Container.CreateSubContainer();
-
-      subContainer.Bind<IEventAggregator>().ToSingle<EventAggregator>();
-
-      return (IFart)subContainer.Instantiate(type.GetTypeMapping());
-    }
+      => (IFart)Instantiator.Instantiate(type.GetTypeMapping());
   }
 }
