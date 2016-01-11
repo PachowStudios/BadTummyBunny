@@ -7,7 +7,7 @@ using Debug = UnityEngine.Debug;
 
 namespace PachowStudios
 {
-  [AddComponentMenu("Bad Tummy Bunny/Utilities/Character Controller 2D")]
+  [AddComponentMenu("Pachow Studios/Character Controller 2D")]
   [RequireComponent(typeof(BoxCollider2D), typeof(Rigidbody2D))]
   public class CharacterController2D : MonoBehaviour
   {

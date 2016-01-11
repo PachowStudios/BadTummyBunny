@@ -12,12 +12,7 @@ GameObject:
   - 61: {fileID: 6100000}
   - 95: {fileID: 9500000}
   - 114: {fileID: 11400002}
-  - 114: {fileID: 11433846}
-  - 114: {fileID: 11400000}
-  - 114: {fileID: 11400006}
-  - 114: {fileID: 11400008}
-  - 114: {fileID: 11492086}
-  - 114: {fileID: 11492084}
+  - 114: {fileID: 11441754}
   m_Layer: 10
   m_Name: Player
   m_TagString: Player
@@ -89,7 +84,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 140130}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -.3125, y: .21875, z: 0}
+  m_LocalPosition: {x: -0.3125, y: 0.21875, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400002}
@@ -101,9 +96,10 @@ Rigidbody2D:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
+  m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDrag: 0
-  m_AngularDrag: .0500000007
+  m_AngularDrag: 0.05
   m_GravityScale: 1
   m_IsKinematic: 1
   m_Interpolate: 0
@@ -117,12 +113,13 @@ BoxCollider2D:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_Enabled: 1
+  m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_UsedByEffector: 0
-  m_Offset: {x: 0, y: .40625}
+  m_Offset: {x: 0, y: 0.40625}
   serializedVersion: 2
-  m_Size: {x: .730000019, y: .667500019}
+  m_Size: {x: 0.73, y: 0.6675}
 --- !u!95 &9500000
 Animator:
   serializedVersion: 3
@@ -140,30 +137,6 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 119b07e65fcda0a479c118af7764dad4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gravity: -35
-  moveSpeed: 5
-  jumpHeight: 1.5
-  groundDamping: 10
-  airDamping: 5
-  startingFart: {fileID: 158132, guid: 253ea252a81fd8c4097813e84f9ab066, type: 2}
-  maxAvailableFart: 10
-  fartRechargePerSecond: .5
-  carrotFartRechargePercent: .25
-  fartDeadZone: .200000003
-  fartUsageRange: {x: .5, y: 1}
-  body: {fileID: 400002}
-  fartPoint: {fileID: 440130}
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -175,14 +148,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a532b1d0a649fba43b6f32da545c87f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skinWidth: .0199999996
+  skinWidth: 0.02
   platformMask:
     serializedVersion: 2
     m_Bits: 256
   oneWayPlatformMask:
     serializedVersion: 2
     m_Bits: 0
-  jumpingThreshold: .0700000003
+  jumpingThreshold: 0.07
   slopeSpeedMultiplier:
     serializedVersion: 2
     m_Curve:
@@ -203,10 +176,11 @@ MonoBehaviour:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
+    m_RotationOrder: 4
   slopeLimit: 30
   totalHorizontalRays: 8
   totalVerticalRays: 4
---- !u!114 &11400006
+--- !u!114 &11441754
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -214,76 +188,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 100000}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 063fb456cba73ee4ca8524866448c59b, type: 3}
+  m_Script: {fileID: 11500000, guid: 070cdff0f98b4774faafbcca6ea7103a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthContainers: 3
-  carrotHealthRecharge: 1
-  falloutDamage: 1
-  invincibilityPeriod: 2
-  spriteRenderer: {fileID: 21200000}
---- !u!114 &11400008
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e4ce379170d21849a7052e4c32e0564, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &11433846
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0829ce0269314ff448bbe6c0cadaf93a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &11492084
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 02a4e00b135e0f642aad914d18dcc421, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  effectorWeight: 5
-  leanDistance: 3
-  minimumPower: 0
-  effectorFalloff:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    - time: 1
-      value: 1
-      inSlope: 2
-      outSlope: 2
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
---- !u!114 &11492086
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b63dd1eb45fa5674fb8e68b7defc3e95, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  body: {fileID: 400002}
+  fartPoint: {fileID: 440130}
 --- !u!212 &21200000
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -305,13 +214,15 @@ SpriteRenderer:
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
   m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: .5
+  m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1029183563
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: c6c8cea878710fc4fa21f20b6292554b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

@@ -3,7 +3,7 @@ using Zenject;
 
 namespace PachowStudios.BadTummyBunny
 {
-  [AddComponentMenu("Bad Tummy Bunny/Environment/Carrot")]
+  [AddComponentMenu("Bad Tummy Bunny/Collectibles/Carrot")]
   public class Carrot : BaseView
   {
     [Inject] private ExplodeEffect ExplodeEffect { get; set; }

@@ -8,7 +8,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9059b9a4838654a4d9372fbed4edeabf, type: 3}
+  m_Script: {fileID: 11500000, guid: 3d4d58f50b70e77489bfaf407034464b, type: 3}
   m_Name: ExplodeEffectSettings
-  m_EditorClassIdentifier: 
-  ExplosionPrefab: {fileID: 0}
+  m_EditorClassIdentifier: Assembly-CSharp:PachowStudios.BadTummyBunny:ExplodeEffectSettings
+  ExplosionPrefab: {fileID: 11464602, guid: a442fa48ef80c9344a02b65f00598e47, type: 2}
+  Duration: 5
+  ParticleLifetime: 1
+  SortingLayer: Effects
+  SortingOrder: 1

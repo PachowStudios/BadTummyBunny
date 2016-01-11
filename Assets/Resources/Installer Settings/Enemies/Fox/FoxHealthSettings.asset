@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44064b5088f70b54e9d5b229c0d8966b, type: 3}
+  m_Name: FoxHealthSettings
+  m_EditorClassIdentifier: Assembly-CSharp:PachowStudios.BadTummyBunny:EnemyHealthSettings
+  MaxHealth: 4
+  FlashColor: {r: 1, g: 0.47, b: 0.47, a: 1}
+  FlashLength: 0.25

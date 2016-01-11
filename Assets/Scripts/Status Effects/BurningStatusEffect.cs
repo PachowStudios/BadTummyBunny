@@ -5,20 +5,11 @@ namespace PachowStudios.BadTummyBunny
 {
   public class BurningStatusEffect : BaseStatusEffect
   {
-    [InstallerSettings]
-    public class Settings : BaseSettings
-    {
-      public int Damage = 1;
-      public float TimePerDamage = 0.5f;
-      public float MinDuration = 2f;
-      public float MaxDuration = 4f;
-    }
-
     private float damageTimer;
     private float durationTimer;
     private float duration;
 
-    [Inject] private Settings Config { get; set; }
+    [Inject] private BurningStatusEffectSettings Config { get; set; }
     [Inject] private IStatusEffectView View { get; set; }
 
     public override void Attach(IStatusEffectable affectectedCharacter)

@@ -6,18 +6,8 @@ namespace UnityEngine
 {
   public static class UnityExtensions
   {
-    [CanBeNull]
-    public static T GetComponentInParentIfNull<T>([NotNull] this Component component, [CanBeNull] ref T target)
-      where T : class
-      => component.gameObject.GetComponentInParentIfNull(ref target);
-
-    [CanBeNull]
-    public static T GetComponentInParentIfNull<T>([NotNull] this GameObject gameObject, [CanBeNull] ref T target)
-      where T : class
-      // ReSharper disable once ConvertConditionalTernaryToNullCoalescing
-      // The ?? operator doesn't use Unity's overloaded null check
-      => target == null ? (target = gameObject.GetComponentInParent<T>()) : target;
-
+    // ReSharper disable ConvertConditionalTernaryToNullCoalescing
+    // The ?? operator doesn't use Unity's overloaded null check
     [CanBeNull]
     public static T GetComponentIfNull<T>([NotNull] this Component component, [CanBeNull] ref T target)
       where T : class
@@ -26,9 +16,28 @@ namespace UnityEngine
     [CanBeNull]
     public static T GetComponentIfNull<T>([NotNull] this GameObject gameObject, [CanBeNull] ref T target)
       where T : class
-      // ReSharper disable once ConvertConditionalTernaryToNullCoalescing
-      // The ?? operator doesn't use Unity's overloaded null check
       => target == null ? (target = gameObject.GetComponent<T>()) : target;
+
+    [CanBeNull]
+    public static T GetComponentInParentIfNull<T>([NotNull] this Component component, [CanBeNull] ref T target)
+      where T : class
+      => component.gameObject.GetComponentInParentIfNull(ref target);
+
+    [CanBeNull]
+    public static T GetComponentInParentIfNull<T>([NotNull] this GameObject gameObject, [CanBeNull] ref T target)
+      where T : class
+      => target == null ? (target = gameObject.GetComponentInParent<T>()) : target;
+
+    [CanBeNull]
+    public static T GetComponentInChildrenIfNull<T>([NotNull] this Component component, [CanBeNull] ref T target)
+      where T : class
+      => component.gameObject.GetComponentInChildrenIfNull(ref target);
+
+    [CanBeNull]
+    public static T GetComponentInChildrenIfNull<T>([NotNull] this GameObject gameObject, [CanBeNull] ref T target)
+      where T : class
+      => target == null ? (target = gameObject.GetComponentInChildren<T>()) : target;
+    // ReSharper restore ConvertConditionalTernaryToNullCoalescing
 
     [NotNull]
     public static TModel GetViewModel<TModel>([NotNull] this Component component)

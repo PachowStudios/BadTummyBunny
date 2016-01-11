@@ -10,8 +10,8 @@ namespace PachowStudios.BadTummyBunny
 
     public override void InstallBindings()
     {
-      Container.BindSingle<ExplodeEffect>();
       Container.BindInstance(this.explodeEffetSettings);
+      Container.BindSingle<ExplodeEffect>();
     }
   }
 }

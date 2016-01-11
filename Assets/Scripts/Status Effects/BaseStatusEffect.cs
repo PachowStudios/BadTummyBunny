@@ -3,17 +3,17 @@ using Zenject;
 
 namespace PachowStudios.BadTummyBunny
 {
+  [InstallerSettings]
+  public abstract class BaseStatusEffectSettings : ScriptableObject
+  {
+    public StatusEffectType Type;
+    public string Name = "New Status Effect";
+    public GameObject Prefab;
+  }
+
   public abstract class BaseStatusEffect : IStatusEffect
   {
-    [InstallerSettings]
-    public abstract class BaseSettings : ScriptableObject
-    {
-      public StatusEffectType Type;
-      public string Name = "New Status Effect";
-      public GameObject Prefab;
-    }
-
-    [Inject] private BaseSettings Config { get; set; }
+    [Inject] private BaseStatusEffectSettings Config { get; set; }
 
     public IStatusEffectable AffectedCharacter { get; private set; }
 

@@ -7,17 +7,9 @@ namespace PachowStudios.BadTummyBunny
   public class EnemyHealth : BaseHasHealth, IDisposable,
     IHandles<CharacterKillzoneTriggeredMessage>
   {
-    [InstallerSettings]
-    public class Settings : ScriptableObject
-    {
-      public int MaxHealth = 4;
-      public Color FlashColor = new Color(1f, 0.47f, 0.47f, 1f);
-      public float FlashLength = 0.25f;
-    }
-
     private int health;
 
-    [InjectLocal] private Settings Config { get; set; }
+    [InjectLocal] private EnemyHealthSettings Config { get; set; }
     [InjectLocal] private EnemyView View { get; set; }
     [InjectLocal] private IMovable Movement { get; set; }
     [InjectLocal] private IEventAggregator LocalEventAggregator { get; set; }

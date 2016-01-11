@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Extensions;
 using UnityEngine;
 using Zenject;
 
@@ -8,15 +9,17 @@ namespace PachowStudios.BadTummyBunny
   [AddComponentMenu("Bad Tummy Bunny/Installers/Status Effect Installer")]
   public class StatusEffectInstaller : MonoInstaller
   {
-    [SerializeField] private List<BaseStatusEffect.BaseSettings> statusEffectSettings = null;
+    [SerializeField] private List<BaseStatusEffectSettings> statusEffectSettings = null;
 
     public override void InstallBindings()
     {
+      Container.BindIFactory<StatusEffectType, IStatusEffect>().ToCustomFactory<StatusEffectFactory>();
+
       foreach (var config in this.statusEffectSettings)
       {
         var type = config.Type.GetTypeMapping();
 
-        Container.BindInstance(config).WhenInjectedInto(type);
+        Container.BindAbstractInstance(config).ForEach(c => c.WhenInjectedInto(type));
 
         if (config.Prefab != null)
           Container

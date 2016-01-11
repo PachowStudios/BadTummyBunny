@@ -8,6 +8,7 @@ using Touch = InControl.Touch;
 
 namespace PachowStudios.BadTummyBunny
 {
+  [AddComponentMenu("Pachow Studios/Input/Touch Detector")]
   [RequireComponent(typeof(Collider2D))]
   public class TouchDetector : MonoBehaviour
   {

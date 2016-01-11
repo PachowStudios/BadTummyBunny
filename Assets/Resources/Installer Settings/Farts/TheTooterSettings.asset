@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e96ceb6b0e90cd74e8cd7e13ba12f835, type: 3}
+  m_Name: TheTooterSettings
+  m_EditorClassIdentifier: Assembly-CSharp:PachowStudios.BadTummyBunny:FartSettings
+  Name: The Tooter
+  Type: 0
+  Prefab: {fileID: 11488686, guid: 198d66b0ac4749840888819b3691debd, type: 2}
+  SpeedRange: {x: 12, y: 25}
+  Damage: 2
+  DamageDelay: 0.1
+  Knockback: {x: 4, y: 1}
+  SoundEffects: []
+  TrajectoryPreviewTime: 0.5
+  TrajectoryStartDistance: 1
+  TrajectoryWidth: 0.25
+  TrajectorySegments: 32
+  TrajectoryGradient:
+    key0:
+      serializedVersion: 2
+      rgba: 938240
+    key1:
+      serializedVersion: 2
+      rgba: 1678659840
+    key2:
+      serializedVersion: 2
+      rgba: 4278190080
+    key3:
+      serializedVersion: 2
+      rgba: 0
+    key4:
+      serializedVersion: 2
+      rgba: 0
+    key5:
+      serializedVersion: 2
+      rgba: 0
+    key6:
+      serializedVersion: 2
+      rgba: 0
+    key7:
+      serializedVersion: 2
+      rgba: 0
+    ctime0: 0
+    ctime1: 65535
+    ctime2: 0
+    ctime3: 0
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 6554
+    atime2: 65535
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_NumColorKeys: 2
+    m_NumAlphaKeys: 3
+  TrajectoryMaterial: {fileID: 2100000, guid: 91b58a56418d81840aa51975b28d80e3, type: 2}
+  TrajectorySortingLayer: UI
+  TrajectorySortingOrder: -1

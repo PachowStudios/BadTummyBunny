@@ -9,15 +9,6 @@ namespace PachowStudios.BadTummyBunny
     IHandles<PlayerEnemyTriggeredMessage>,
     IHandles<PlayerRespawnPointTriggeredMessage>
   {
-    [InstallerSettings]
-    public class Settings : ScriptableObject
-    {
-      public int HealthContainers = 3;
-      public int CarrotHealthRecharge = 1;
-      public int FalloutDamage = 1;
-      public float InvincibilityPeriod = 2f;
-    }
-
     private const float FlashTime = 0.25f;
 
     private int health;
@@ -29,7 +20,7 @@ namespace PachowStudios.BadTummyBunny
 
     private RespawnPoint respawnPoint;
 
-    [InjectLocal] private Settings Config { get; set; }
+    [InjectLocal] private PlayerHealthSettings Config { get; set; }
     [InjectLocal] private PlayerView View { get; set; }
     [InjectLocal] private IMovable Movement { get; set; }
     [InjectLocal] private IEventAggregator LocalEventAggregator { get; set; }
@@ -75,16 +66,15 @@ namespace PachowStudios.BadTummyBunny
 
     private bool IsInvincible => this.lastHitTime + Config.InvincibilityPeriod >= Time.time;
 
-    public PlayerHealth()
+    [PostInject]
+    private void Initialize()
     {
       this.healthContainers = Config.HealthContainers;
       this.health = MaxHealth;
       this.lastHitTime = Time.time - Config.InvincibilityPeriod;
-    }
 
-    [PostInject]
-    private void Initialize()
-      => LocalEventAggregator.Subscribe(this);
+      LocalEventAggregator.Subscribe(this);
+    }
 
     public void Tick()
     {

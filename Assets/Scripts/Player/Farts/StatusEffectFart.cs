@@ -4,13 +4,7 @@ namespace PachowStudios.BadTummyBunny
 {
   public class StatusEffectFart : Fart
   {
-    [InstallerSettings]
-    public class StatusEffectSettings : Settings
-    {
-      public StatusEffectType StatusEffectType;
-    }
-
-    [Inject] private StatusEffectSettings Config { get; set; }
+    [Inject] private StatusEffectFartSettings Config { get; set; }
 
     public void AttachStatusEffect(IStatusEffectable target)
       => target.AddStatusEffect(Config.StatusEffectType);

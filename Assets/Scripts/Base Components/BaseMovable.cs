@@ -3,18 +3,18 @@ using Zenject;
 
 namespace PachowStudios.BadTummyBunny
 {
+  [InstallerSettings]
+  public abstract class BaseMovebaleSettings : ScriptableObject
+  {
+    public float Gravity = -35f;
+    public float MoveSpeed = 5f;
+    public float GroundDamping = 10f;
+    public float AirDamping = 5f;
+  }
+
   public abstract class BaseMovable : IMovable
   {
-    [InstallerSettings]
-    public abstract class BaseSettings : ScriptableObject
-    {
-      public float Gravity = -35f;
-      public float MoveSpeed = 5f;
-      public float GroundDamping = 10f;
-      public float AirDamping = 5f;
-    }
-
-    [Inject] private BaseSettings Config { get; set; }
+    [Inject] private BaseMovebaleSettings Config { get; set; }
 
     public float Gravity => Config.Gravity;
     public float MoveSpeed => Config.MoveSpeed;

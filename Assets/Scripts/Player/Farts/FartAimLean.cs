@@ -5,16 +5,7 @@ namespace PachowStudios.BadTummyBunny
 {
   public sealed class FartAimLean : ICameraEffector, ITickable
   {
-    [InstallerSettings]
-    public class Settings
-    {
-      public float EffectorWeight = 5f;
-      public float LeanDistance = 3f;
-      public float MinimumPower = 0.2f;
-      public AnimationCurve EffectorFalloff = AnimationCurve.Linear(0f, 0f, 1f, 1f);
-    }
-
-    [InjectLocal] private Settings Config { get; set; }
+    [InjectLocal] private FartAimLeanSettings Config { get; set; }
     [InjectLocal] private IFartInfoProvider FartInfo { get; set; }
     [InjectLocal] private IMovable Movement { get; set; }
 

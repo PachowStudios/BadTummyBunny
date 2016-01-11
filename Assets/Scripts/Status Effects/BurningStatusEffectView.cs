@@ -7,7 +7,7 @@ namespace PachowStudios.BadTummyBunny
   {
     private ParticleSystem particleSystemComponent;
 
-    private ParticleSystem ParticleSystem => this.GetComponentIfNull(ref this.particleSystemComponent);
+    private ParticleSystem ParticleSystem => this.GetComponentInChildrenIfNull(ref this.particleSystemComponent);
 
     public void Attach(IStatusEffectable affectedCharacter)
     {

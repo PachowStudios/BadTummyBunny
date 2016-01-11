@@ -3,15 +3,15 @@ using Zenject;
 
 namespace PachowStudios.BadTummyBunny
 {
+  [InstallerSettings]
+  public class BaseEnemyAISettings : EnemyMovementSettings
+  {
+    public LayerMask BlockVisibilityLayers = default(LayerMask);
+  }
+
   public abstract class BaseEnemyAI : EnemyMovement
   {
-    [InstallerSettings]
-    public class BaseAISettings : MovementSettings
-    {
-      public LayerMask BlockVisibilityLayers = default(LayerMask);
-    }
-
-    [InjectLocal] private BaseAISettings Config { get; set; }
+    [InjectLocal] private BaseEnemyAISettings Config { get; set; }
 
     [Inject] private Player Player { get; set; }
 

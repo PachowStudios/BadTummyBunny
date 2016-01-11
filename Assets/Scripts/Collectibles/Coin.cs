@@ -4,6 +4,7 @@ using Zenject;
 
 namespace PachowStudios.BadTummyBunny
 {
+  [AddComponentMenu("Bad Tummy Bunny/Collectibles/Coin")]
   public class Coin : BaseView
   {
     [UsedImplicitly]

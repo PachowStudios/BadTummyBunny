@@ -2,7 +2,7 @@
 
 namespace PachowStudios
 {
-  [AddComponentMenu("Bad Tummy Bunny/Utilities/Particle System Sorting")]
+  [AddComponentMenu("Pachow Studios/Utilities/Particle System Sorting")]
   [ExecuteInEditMode]
   public sealed class ParticleSystemSorting : MonoBehaviour
   {

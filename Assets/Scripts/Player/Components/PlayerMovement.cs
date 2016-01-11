@@ -9,21 +9,6 @@ namespace PachowStudios.BadTummyBunny
     IHandles<PlayerCarrotTriggeredMessage>,
     IHandles<PlayerFlagpoleTriggeredMessage>
   {
-    [InstallerSettings]
-    public class Settings : BaseSettings
-    {
-      [Header("Movement")]
-      public float JumpHeight = 5f;
-
-      [Header("Farting")]
-      public FartType StartingFartType = FartType.Basic;
-      public float MaxAvailableFart = 10f;
-      public float FartRechargePerSecond = 1f;
-      [Range(0f, 1f)] public float CarrotFartRechargePercent = 0.25f;
-      public float FartDeadZone = 0.2f;
-      public Vector2 FartUsageRange = default(Vector2);
-    }
-
     private float horizontalMovement;
     private bool willJump;
 
@@ -32,7 +17,7 @@ namespace PachowStudios.BadTummyBunny
     private float availableFart;
     private float fartingTime;
 
-    [InjectLocal] private Settings Config { get; set; }
+    [InjectLocal] private PlayerMovementSettings Config { get; set; }
     [InjectLocal] private PlayerInput PlayerInput { get; set; }
     [InjectLocal] private PlayerView PlayerView { get; set; }
     [InjectLocal] private IHasHealth Health { get; set; }
@@ -57,14 +42,11 @@ namespace PachowStudios.BadTummyBunny
     private bool IsMovingLeft => this.horizontalMovement < 0f;
     private bool CanFart => this.isFartingEnabled && (this.availableFart >= Config.FartUsageRange.y);
 
-    public PlayerMovement()
-    {
-      this.availableFart = Config.MaxAvailableFart;
-    }
-
     [PostInject]
     private void Initialize()
     {
+      this.availableFart = Config.MaxAvailableFart;
+
       LocalEventAggregator.Subscribe(this);
       SetFart(Config.StartingFartType);
     }

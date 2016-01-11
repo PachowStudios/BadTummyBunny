@@ -301,7 +301,7 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 		SFXObject.transform.parent = transform;
 		SFXObject.name += "(" + SFXObject.GetInstanceID() + ")";
 		SFXObject.GetComponent<AudioSource>().playOnAwake = false;
-		GameObject.DontDestroyOnLoad(SFXObject);
+		//GameObject.DontDestroyOnLoad(SFXObject);
 		
 		if(ownedPools.ContainsKey(clip))
 		{

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Extensions;
 using UnityEngine;
@@ -11,47 +10,13 @@ namespace PachowStudios.BadTummyBunny
   public class Fart : IFart,
     IHandles<FartEnemyTriggeredMessage>
   {
-    [InstallerSettings]
-    public class Settings : ScriptableObject
-    {
-      [Serializable, InstallerSettings]
-      public struct SfxPowerMapping
-      {
-        public SfxGroup SfxGroup;
-        public float Power;
-      }
-
-      [Header("Definition")]
-      public string Name = "Basic Fart";
-      public FartType Type;
-      public GameObject Prefab;
-
-      [Header("Options")]
-      public Vector2 SpeedRange = default(Vector2);
-      public int Damage = 4;
-      public float DamageDelay = 0.1f;
-      public Vector2 Knockback = new Vector2(1f, 1f);
-      public List<SfxPowerMapping> SoundEffects = new List<SfxPowerMapping>();
-
-      [Header("Trajectory")]
-      public float TrajectoryPreviewTime = 1f;
-      public float TrajectoryStartDistance = 1f;
-      public float TrajectoryWidth = 0.3f;
-      [Range(8, 64)] public int TrajectorySegments = 16;
-      public Gradient TrajectoryGradient = null;
-      public Material TrajectoryMaterial = null;
-      public string TrajectorySortingLayer = "UI";
-      public int TrajectorySortingOrder = -1;
-    }
-
     private readonly HashSet<ICharacter> pendingTargets = new HashSet<ICharacter>();
     private readonly HashSet<ICharacter> damagedEnemies = new HashSet<ICharacter>();
 
     private VectorLine trajectoryLine;
 
-    [InjectLocal] private Settings Config { get; set; }
-    [InjectLocal] private FartView View { get; set; }
-
+    [Inject] private FartSettings Config { get; set; }
+    [Inject] private FartView View { get; set; }
     [Inject] private Player Player { get; set; }
     [Inject] private CameraController CameraController { get; set; }
     [Inject] private IEventAggregator EventAggregator { get; set; }

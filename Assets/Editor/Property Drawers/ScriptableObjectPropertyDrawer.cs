@@ -67,7 +67,6 @@ namespace PachowStudios.BadTummyBunny.Editor
       AssetDatabase.Refresh();
       EditorUtility.FocusProjectWindow();
       Selection.activeObject = asset;
-      fieldInfo.SetValue(Property.serializedObject.targetObject, asset);
     }
   }
 }

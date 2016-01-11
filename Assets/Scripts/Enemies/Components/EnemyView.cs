@@ -10,9 +10,8 @@ namespace PachowStudios.BadTummyBunny
     [SerializeField] private Transform frontCheck = null;
     [SerializeField] private Transform ledgeCheck = null;
 
-    [InjectLocal] private IEventAggregator EventAggregator { get; set; }
-
     [InjectLocal] public override Enemy Model { get; protected set; }
+    [InjectLocal] private IEventAggregator EventAggregator { get; set; }
 
     public EnemyType Type => this.type;
     public Transform FrontCheck => this.frontCheck;

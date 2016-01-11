@@ -8,12 +8,13 @@ namespace PachowStudios.BadTummyBunny
   public class FartView : BaseView, IAttachable<PlayerView>
   {
     [SerializeField] private List<ParticleSystem> particles = new List<ParticleSystem>();
-    [SerializeField] private PolygonCollider2D fartCollider = null;
+
+    private PolygonCollider2D fartColliderComponent = null;
 
     [Inject] private IEventAggregator EventAggregator { get; set; }
 
     public List<ParticleSystem> Particles => this.particles;
-    public PolygonCollider2D FartCollider => this.fartCollider;
+    public PolygonCollider2D FartCollider => this.GetComponentIfNull(ref this.fartColliderComponent);
 
     public void Attach(PlayerView playerView)
     {

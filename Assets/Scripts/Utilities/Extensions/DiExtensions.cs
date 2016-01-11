@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -6,10 +7,10 @@ namespace Zenject
 {
   public static class DiExtensions
   {
-    public static void BindSingle<TConcrete>([NotNull] this DiContainer container)
+    public static BindingConditionSetter BindSingle<TConcrete>([NotNull] this DiContainer container)
       => container.BindSingle(typeof(TConcrete));
 
-    public static void BindSingle([NotNull] this DiContainer container, Type type)
+    public static BindingConditionSetter BindSingle([NotNull] this DiContainer container, Type type)
       => container.Bind(type).ToSingle();
 
     public static void BindSingleWithInterfaces<TConcrete>([NotNull] this DiContainer container)
@@ -30,6 +31,23 @@ namespace Zenject
       container.BindAllInterfacesToInstance(type, @object);
     }
 
+    public static IEnumerable<BindingConditionSetter> BindAbstractInstance<T>([NotNull] this DiContainer container, T @object)
+    {
+      var type = @object.GetType();
+      var conditions = new List<BindingConditionSetter>
+      {
+        container.Bind(type).ToInstance(@object)
+      };
+
+      while (type.BaseType != null && type.BaseType != typeof(T))
+      {
+        conditions.Add(container.Bind(type.BaseType).ToInstance(@object));
+        type = type.BaseType;
+      }
+
+      return conditions;
+    }
+
     public static BindingConditionSetter ToIFactory<T>([NotNull] this GenericBinder<T> binder)
       => binder.ToMethod(c => c.Container.Resolve<IFactory<T>>().Create());
 
@@ -42,6 +60,9 @@ namespace Zenject
 
     public static BindingConditionSetter ToSinglePrefab([NotNull] this TypeBinder binder, [NotNull] MonoBehaviour prefab)
       => binder.ToSinglePrefab(prefab.gameObject);
+
+    public static BindingConditionSetter ToTransientPrefab([NotNull] this TypeBinder binder, [NotNull] MonoBehaviour prefab)
+      => binder.ToTransientPrefab(prefab.gameObject);
 
     public static T InstantiatePrefab<T>([NotNull] this IInstantiator instantiator, [NotNull] T prefab)
       where T : MonoBehaviour

@@ -1,17 +1,9 @@
-﻿using System;
-using Zenject;
+﻿using Zenject;
 
 namespace PachowStudios.BadTummyBunny
 {
   public sealed class Player : StatusEffectableCharacter
   {
-    [Serializable, InstallerSettings]
-    public class Settings
-    {
-      public PlayerMovement.Settings Movement;
-      public PlayerHealth.Settings Health;
-    }
-
     [InjectLocal] private FartAimLean FartAimLean { get; set; }
 
     [InjectLocal] public override IMovable Movement { get; protected set; }

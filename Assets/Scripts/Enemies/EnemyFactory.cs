@@ -4,24 +4,24 @@ using Zenject;
 
 namespace PachowStudios.BadTummyBunny
 {
-  public class EnemyFacadeFactory : FacadeFactory<Enemy.Settings, EnemyView, Enemy> { }
+  public class EnemyFacadeFactory : FacadeFactory<EnemySettings, EnemyView, Enemy> { }
 
   public class EnemyFactory : IFactory<EnemyType, Enemy>, IFactory<EnemyView, Enemy>
   {
     [Inject] private EnemyFacadeFactory EnemyFacadeFactory { get; set; }
     [Inject] private IInstantiator Instantiator { get; set; }
 
-    private Dictionary<EnemyType, Enemy.Settings> MappedEnemies { get; }
+    private Dictionary<EnemyType, EnemySettings> MappedSettings { get; }
 
-    public EnemyFactory(IEnumerable<Enemy.Settings> enemySettings)
+    public EnemyFactory(List<EnemySettings> enemySettings)
     {
-      MappedEnemies = enemySettings.ToDictionary(s => s.Prefab.Type);
+      MappedSettings = enemySettings.ToDictionary(s => s.Prefab.Type);
     }
 
     public Enemy Create(EnemyType type)
-      => Instantiator.InstantiatePrefab(MappedEnemies[type].Prefab).Model;
+      => Instantiator.InstantiatePrefab(MappedSettings[type].Prefab).Model;
 
     public Enemy Create(EnemyView view)
-      => EnemyFacadeFactory.Create(MappedEnemies[view.Type], view);
+      => EnemyFacadeFactory.Create(MappedSettings[view.Type], view);
   }
 }

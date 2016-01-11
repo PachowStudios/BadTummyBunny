@@ -12,7 +12,7 @@ namespace PachowStudios.BadTummyBunny
     public override void InstallBindings()
     {
       Container.BindInstance(this.cameraControllerInstance);
-      Container.BindInstance(this.gameMenuInstance);
+      Container.BindInstanceWithInterfaces(this.gameMenuInstance);
     }
   }
 }

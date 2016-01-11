@@ -2,6 +2,7 @@
 
 namespace PachowStudios.BadTummyBunny
 {
+  [AddComponentMenu("Bad Tummy Bunny/UI/Menu/Game Menu")]
   public class GameMenu : MonoBehaviour, IGameMenu
   {
     private CanvasGroup canvasGroupComponent;

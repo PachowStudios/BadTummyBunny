@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd78ffef130f56141b8a415bded23774, type: 3}
+  m_Name: FoxAISettings
+  m_EditorClassIdentifier: Assembly-CSharp:PachowStudios.BadTummyBunny.AI.Patrol:PatrolAISettings
+  Gravity: -35
+  MoveSpeed: 1.5
+  GroundDamping: 10
+  AirDamping: 15
+  DeactivatedOutsideCamera: 1
+  BlockVisibilityLayers:
+    serializedVersion: 2
+    m_Bits: 4352
+  FollowSpeedRange: {x: 2.5, y: 3.5}
+  VisibilityAngle: 45
+  FollowRange: 5
+  AttackRange: 0.85
+  AttackJumpHeight: 1
+  CooldownTime: 1
+  SightLostWaitTimeRange: {x: 1, y: 2.5}
