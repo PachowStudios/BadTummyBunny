@@ -9,18 +9,17 @@ namespace PachowStudios.BadTummyBunny
     public LayerMask BlockVisibilityLayers = default(LayerMask);
   }
 
-  public abstract class BaseEnemyAI : EnemyMovement
+  public abstract class BaseEnemyAI<TConfig> : EnemyMovement<TConfig>
+    where TConfig : BaseEnemyAISettings
   {
-    [InjectLocal] private BaseEnemyAISettings Config { get; set; }
-
     [Inject] private Player Player { get; set; }
 
     public bool IsAtWall
-      => Physics2D.OverlapPoint(EnemyView.FrontCheck.position, CollisionLayers) != null;
+      => Physics2D.OverlapPoint(View.FrontCheck.position, CollisionLayers) != null;
 
     public bool IsAtLedge
       => IsGrounded
-      && Physics2D.OverlapPoint(EnemyView.LedgeCheck.position, CollisionLayers) == null;
+      && Physics2D.OverlapPoint(View.LedgeCheck.position, CollisionLayers) == null;
 
     public bool IsPlayerOnRight => Player.Movement.Position.x > Position.x;
     public float RelativePlayerHeight => Position.y - Player.Movement.Position.y;

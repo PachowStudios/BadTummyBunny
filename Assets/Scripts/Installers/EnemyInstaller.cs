@@ -31,7 +31,7 @@ namespace PachowStudios.BadTummyBunny
     {
       subContainer.Bind<IEventAggregator>().ToSingle<EventAggregator>();
 
-      subContainer.BindInstance(settings);
+      subContainer.BindAbstractInstance(settings);
       subContainer.BindAbstractInstance(settings.Movement);
       subContainer.BindAbstractInstance(settings.Health);
 

@@ -9,8 +9,8 @@ namespace PachowStudios.BadTummyBunny
   {
     private int coins;
 
-    [Inject] private IEventAggregator EventAggregator { get; set; }
-    [InjectLocal] private IEventAggregator LocalEventAggregator { get; set; }
+    [Inject(BindingIds.Global)] private IEventAggregator EventAggregator { get; set; }
+    [Inject] private IEventAggregator LocalEventAggregator { get; set; }
 
     public int Coins
     {

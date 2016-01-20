@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq.Extensions;
 using UnityEngine;
 using Zenject;
 
@@ -19,7 +18,7 @@ namespace PachowStudios.BadTummyBunny
       {
         var type = config.Type.GetTypeMapping();
 
-        Container.BindAbstractInstance(config).ForEach(c => c.WhenInjectedInto(type));
+        Container.BindAbstractInstance(config).WhenInjectedInto(type);
 
         if (config.Prefab != null)
           Container

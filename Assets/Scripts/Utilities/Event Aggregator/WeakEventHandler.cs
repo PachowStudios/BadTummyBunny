@@ -8,21 +8,17 @@ namespace PachowStudios
 {
   public partial class EventAggregator
   {
-    private static readonly Dictionary<Type, MethodInfo> HandlerMethods = new Dictionary<Type, MethodInfo>();
-
     private class WeakEventHandler<THandler> : IWeakEventHandler
       where THandler : IHandles
     {
-      private readonly WeakReference reference;
+      private WeakReference Target { get; }
+      private Dictionary<Type, MethodInfo> HandlerMethods { get; } = new Dictionary<Type, MethodInfo>();
 
-      public bool IsAlive => this.reference.IsAlive;
+      public bool IsAlive => Target.IsAlive;
 
       public WeakEventHandler([NotNull] THandler handler)
       {
-        this.reference = new WeakReference(handler);
-
-        if (HandlerMethods.ContainsKey(typeof(THandler)))
-          return;
+        Target = new WeakReference(handler);
 
         foreach (var messageType in
           typeof(THandler).GetInterfaces()
@@ -41,7 +37,7 @@ namespace PachowStudios
           return false;
 
         foreach (var handler in HandlerMethods.Where(h => h.Key.IsAssignableFrom<TMessage>()))
-          handler.Value.Invoke(this.reference.Target, new object[] { message });
+          handler.Value.Invoke(Target.Target, new object[] { message });
 
         return true;
       }
@@ -53,7 +49,7 @@ namespace PachowStudios
 
       [Pure]
       public bool ReferenceEquals(object instance)
-        => ReferenceEquals(this.reference.Target, instance);
+        => ReferenceEquals(Target.Target, instance);
     }
   }
 }

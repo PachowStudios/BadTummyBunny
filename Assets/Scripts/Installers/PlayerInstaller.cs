@@ -10,20 +10,25 @@ namespace PachowStudios.BadTummyBunny
     [SerializeField] private PlayerSettings playerSettings = null;
 
     public override void InstallBindings()
-      => Container.BindFacade<Player>(InstallFacade).ToSingle();
+    {
+      var facadeContainer = Container.BindPublicFacade<Player>(InstallFacade).ToSingle();
+
+      Container.Bind<IEventAggregator>().ToSubContainer(facadeContainer).WhenInjectedInto<PlayerView>();
+    }
 
     private void InstallFacade(DiContainer subContainer)
     {
       subContainer.Bind<IEventAggregator>().ToSingle<EventAggregator>();
 
-      subContainer.BindAbstractInstance(this.playerSettings.Movement);
+      subContainer.BindInstanceWithInterfaces(this.playerInstance);
+      subContainer.BindInstance(this.playerSettings.Movement);
       subContainer.BindInstance(this.playerSettings.Health);
       subContainer.BindInstance(this.playerSettings.FartAimLean);
-      subContainer.BindInstanceWithInterfaces(this.playerInstance);
 
       subContainer.BindSingle<PlayerInput>();
       subContainer.BindSingleWithInterfaces<PlayerMovement>();
       subContainer.BindSingleWithInterfaces<PlayerHealth>();
+      subContainer.BindSingleWithInterfaces<PlayerScore>();
       subContainer.BindSingleWithInterfaces<FartAimLean>();
     }
   }

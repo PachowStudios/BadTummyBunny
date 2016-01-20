@@ -3,7 +3,7 @@ using UnityEngine;
 namespace PachowStudios.BadTummyBunny
 {
   [InstallerSettings, CreateAssetMenu(menuName = "Bad Tummy Bunny/Player/Player Movement Settings")]
-  public class PlayerMovementSettings : BaseMovebaleSettings
+  public class PlayerMovementSettings : BaseMovableSettings
   {
     [Header("Movement")]
     public float JumpHeight = 5f;

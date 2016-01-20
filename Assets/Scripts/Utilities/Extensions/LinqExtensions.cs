@@ -112,10 +112,14 @@ namespace System.Linq.Extensions
     }
 
     [NotNull]
-    public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> source, TKey key, Func<TValue> factory)
+    public static TValue GetOrAdd<TKey, TValue>([NotNull] this IDictionary<TKey, TValue> source, TKey key, Func<TValue> factory)
+      => source.GetOrAdd(key, k => factory());
+
+    [NotNull]
+    public static TValue GetOrAdd<TKey, TValue>([NotNull] this IDictionary<TKey, TValue> source, TKey key, Func<TKey, TValue> factory)
     {
       if (!source.ContainsKey(key) || source[key] == null)
-        source[key] = factory.Invoke();
+        source[key] = factory.Invoke(key);
 
       return source[key];
     }

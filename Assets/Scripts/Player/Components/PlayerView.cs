@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using JetBrains.Annotations;
+using UnityEngine;
 using Zenject;
 
 namespace PachowStudios.BadTummyBunny
@@ -11,10 +12,14 @@ namespace PachowStudios.BadTummyBunny
 
     [InjectLocal] private IEventAggregator EventAggregator { get; set; }
 
-    [InjectLocal] public override Player Model { get; protected set; }
+    [Inject] public override Player Model { get; set; }
 
     public Transform Body => this.body;
     public Transform FartPoint => this.fartPoint;
+
+    [AnimationEvent]
+    public void PlayWalkingSound(int rightStep)
+      => Model.Movement.PlayWalkingSound(rightStep == 1);
 
     private void OnTriggerEnter2D(Collider2D other)
     {

@@ -11,9 +11,10 @@ namespace PachowStudios.BadTummyBunny
     public GameObject Prefab;
   }
 
-  public abstract class BaseStatusEffect : IStatusEffect
+  public abstract class BaseStatusEffect<TConfig> : IStatusEffect
+    where TConfig : BaseStatusEffectSettings
   {
-    [Inject] private BaseStatusEffectSettings Config { get; set; }
+    protected abstract TConfig Config { get; set; }
 
     public IStatusEffectable AffectedCharacter { get; private set; }
 

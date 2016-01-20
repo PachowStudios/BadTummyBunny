@@ -2,7 +2,7 @@
 {
   public enum FartType
   {
-    [TypeMapping(typeof(Fart))]
+    [TypeMapping(typeof(BasicFart))]
     Basic,
     [TypeMapping(typeof(StatusEffectFart))]
     Flaming

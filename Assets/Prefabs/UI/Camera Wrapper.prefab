@@ -419,8 +419,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultFOV: 256
-  useWorldSpaceUI: 1
-  worldSpaceUI: {fileID: 22400000}
+  useWorldSpaceUI: 0
+  worldSpaceUI: {fileID: 0}
 --- !u!114 &11400004
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -688,13 +688,13 @@ MonoBehaviour:
   targetCollider: {fileID: 0}
   horizontalOffset: 0
   verticalOffset: 0
-  enablePlatformSnap: 1
+  enablePlatformSnap: 0
   isPlatformSnapExclusiveWhenEnabled: 0
-  platformSnapVerticalOffset: -2
+  platformSnapVerticalOffset: 0
   cameraSmoothingType: 1
-  smoothDampTime: 0.1
-  springDampingRatio: 0.8
-  springAngularFrequency: 30
+  smoothDampTime: 0.08
+  springDampingRatio: 0.7
+  springAngularFrequency: 20
   lerpTowardsFactor: 0.002
 --- !u!114 &11445180
 MonoBehaviour:
@@ -788,14 +788,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ada637011e40b4c4d9160dd583bfd929, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  snapToBottom: 1
-  snapToTop: 1
-  snapToRight: 1
-  snapToLeft: 1
-  bottomConstraint: -4.5
-  topConstraint: 17.5
-  rightConstraint: 212
-  leftConstraint: -18
+  snapToBottom: 0
+  snapToTop: 0
+  snapToRight: 0
+  snapToLeft: 0
+  bottomConstraint: 0
+  topConstraint: 0
+  rightConstraint: 0
+  leftConstraint: 0
 --- !u!114 &11448258
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -873,8 +873,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   width: 3
-  height: 4.1
-  axis: 3
+  height: 3
+  axis: 1
 --- !u!114 &11481830
 MonoBehaviour:
   m_ObjectHideFlags: 1

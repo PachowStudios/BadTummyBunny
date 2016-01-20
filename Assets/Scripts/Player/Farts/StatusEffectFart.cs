@@ -2,9 +2,9 @@
 
 namespace PachowStudios.BadTummyBunny
 {
-  public class StatusEffectFart : Fart
+  public class StatusEffectFart : BaseFart<StatusEffectFartSettings>
   {
-    [Inject] private StatusEffectFartSettings Config { get; set; }
+    [Inject] protected override StatusEffectFartSettings Config { get; set; }
 
     public void AttachStatusEffect(IStatusEffectable target)
       => target.AddStatusEffect(Config.StatusEffectType);

@@ -18,7 +18,13 @@ MonoBehaviour:
   Damage: 2
   DamageDelay: 0.1
   Knockback: {x: 4, y: 1}
-  SoundEffects: []
+  SoundEffects:
+  - SfxGroup: 0
+    Power: 0
+  - SfxGroup: 1
+    Power: 35
+  - SfxGroup: 2
+    Power: 75
   TrajectoryPreviewTime: 0.5
   TrajectoryStartDistance: 1
   TrajectoryWidth: 0.25

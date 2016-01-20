@@ -4,9 +4,9 @@ using Zenject;
 
 namespace PachowStudios.BadTummyBunny.AI.Patrol
 {
-  public sealed class PatrolAI : BaseEnemyAI
+  public sealed class PatrolAI : BaseEnemyAI<PatrolAISettings>
   {
-    [InjectLocal] private PatrolAISettings Config { get; set; }
+    [InjectLocal] protected override PatrolAISettings Config { get; set; }
 
     public Vector2 FollowSpeedRange => Config.FollowSpeedRange;
     public float AttackRange => Config.AttackRange;

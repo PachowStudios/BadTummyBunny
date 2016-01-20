@@ -16,6 +16,7 @@ namespace PachowStudios.BadTummyBunny
     private void InstallServiceBindings()
     {
       Container.Bind<IEventAggregator>().ToSingle<EventAggregator>();
+      Container.Bind<IEventAggregator>(BindingIds.Global).ToSingle<EventAggregator>();
       Container.BindSingleWithInterfaces<SceneService>();
       Container.BindSingle<SaveService>();
       Container.BindSingle<PlayerStatsService>();

@@ -5,7 +5,9 @@ using Zenject;
 
 namespace PachowStudios.BadTummyBunny
 {
-  public abstract class StatusEffectableCharacter : Facade, IStatusEffectable
+  public abstract class StatusEffectableCharacter<TMovement, THealth> : Facade, IStatusEffectable
+    where TMovement : IMovable
+    where THealth : IHasHealth
   {
     private readonly List<IStatusEffect> statusEffects = new List<IStatusEffect>();
 
@@ -13,8 +15,11 @@ namespace PachowStudios.BadTummyBunny
 
     [Inject] public IView View { get; private set; }
 
-    public abstract IMovable Movement { get; protected set; }
-    public abstract IHasHealth Health { get; protected set; }
+    public abstract TMovement Movement { get; protected set; }
+    public abstract THealth Health { get; protected set; }
+
+    IMovable ICharacter.Movement => Movement;
+    IHasHealth ICharacter.Health => Health;
 
     public IEnumerable<IStatusEffect> StatusEffects => this.statusEffects;
 

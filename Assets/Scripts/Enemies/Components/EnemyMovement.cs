@@ -4,20 +4,17 @@ using Zenject;
 namespace PachowStudios.BadTummyBunny
 {
   [InstallerSettings]
-  public abstract class EnemyMovementSettings : BaseMovebaleSettings
+  public abstract class EnemyMovementSettings : BaseMovableSettings
   {
     public bool DeactivatedOutsideCamera = true;
   }
 
-  public abstract class EnemyMovement : BaseMovable, IActivatable, ITickable, ILateTickable
+  public abstract class EnemyMovement<TConfig> : BaseMovable<TConfig, EnemyView>, IActivatable, ITickable, ILateTickable
+    where TConfig : EnemyMovementSettings
   {
     private bool isActivated;
 
-    [InjectLocal] private EnemyMovementSettings Config { get; set; }
-
-    [InjectLocal] protected EnemyView EnemyView { get; private set; }
-
-    protected override IView View => EnemyView;
+    [InjectLocal] protected override EnemyView View { get; set; }
 
     public bool IsActivated
     {

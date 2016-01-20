@@ -1,10 +1,9 @@
 ﻿using UnityEngine;
-using Zenject;
 
 namespace PachowStudios.BadTummyBunny
 {
   [InstallerSettings]
-  public abstract class BaseMovebaleSettings : ScriptableObject
+  public abstract class BaseMovableSettings : ScriptableObject
   {
     public float Gravity = -35f;
     public float MoveSpeed = 5f;
@@ -12,18 +11,19 @@ namespace PachowStudios.BadTummyBunny
     public float AirDamping = 5f;
   }
 
-  public abstract class BaseMovable : IMovable
+  public abstract class BaseMovable<TConfig, TView> : IMovable
+    where TConfig : BaseMovableSettings
+    where TView : IView
   {
-    [Inject] private BaseMovebaleSettings Config { get; set; }
-
-    public float Gravity => Config.Gravity;
-    public float MoveSpeed => Config.MoveSpeed;
-
-    protected abstract IView View { get; }
+    protected abstract TConfig Config { get; set; }
+    protected abstract TView View { get; set; }
 
     public virtual Vector3 Velocity { get; protected set; }
     public virtual Vector3 LastGroundedPosition { get; protected set; }
     public virtual float? MoveSpeedOverride { get; set; }
+
+    public float Gravity => Config.Gravity;
+    public float MoveSpeed => Config.MoveSpeed;
 
     public virtual Collider2D Collider => View.Collider;
     public virtual Vector3 Position => View.Transform.position;

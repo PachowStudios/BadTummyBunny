@@ -3,7 +3,7 @@ using Zenject;
 
 namespace PachowStudios.BadTummyBunny
 {
-  public class Enemy : StatusEffectableCharacter, IEnemy
+  public class Enemy : StatusEffectableCharacter<IMovable, IHasHealth>, IEnemy
   {
     [InjectLocal] private EnemySettings Config { get; set; }
 

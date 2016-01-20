@@ -3,14 +3,15 @@ using Zenject;
 
 namespace PachowStudios.BadTummyBunny
 {
-  public class BurningStatusEffect : BaseStatusEffect
+  public class BurningStatusEffect : BaseStatusEffect<BurningStatusEffectSettings>
   {
     private float damageTimer;
     private float durationTimer;
     private float duration;
 
-    [Inject] private BurningStatusEffectSettings Config { get; set; }
     [Inject] private IStatusEffectView View { get; set; }
+
+    [Inject] protected override BurningStatusEffectSettings Config { get; set; }
 
     public override void Attach(IStatusEffectable affectectedCharacter)
     {
@@ -31,7 +32,7 @@ namespace PachowStudios.BadTummyBunny
 
       if (this.damageTimer >= Config.TimePerDamage)
       {
-        AffectedCharacter?.Health.Damage(Config.Damage);
+        AffectedCharacter.Health.Damage(Config.Damage);
         this.damageTimer = 0f;
       }
 
