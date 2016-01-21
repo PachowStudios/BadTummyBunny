@@ -7,36 +7,37 @@ using Zenject;
 namespace PachowStudios.BadTummyBunny
 {
   [AddComponentMenu("Bad Tummy Bunny/Installers/Enemy Installer")]
-  public class EnemyInstaller : MonoInstaller
+  public class EnemyInstaller : ExtendedFacadeMonoInstaller<EnemyView, Enemy>
   {
     [SerializeField] private List<EnemySettings> enemySettings = null;
 
+    private Dictionary<EnemyType, EnemySettings> MappedSettings { get; set; }
+
     public override void InstallBindings()
     {
-      Container.BindInstance(this.enemySettings).WhenInjectedInto<EnemyFactory>();
+      MappedSettings = this.enemySettings.ToDictionary(s => s.Prefab.Type);
 
-      Container.BindFacadeFactory<EnemySettings, EnemyView, Enemy, EnemyFacadeFactory>(InstallFacade);
-
+      Container.BindInstance(MappedSettings).WhenInjectedInto<EnemyFactory>();
       Container.BindIFactory<EnemyType, Enemy>().ToCustomFactory<EnemyFactory>();
-      Container.BindIFactory<EnemyView, Enemy>().ToCustomFactory<EnemyFactory>();
 
-      Container.Bind<Enemy>().ToIFactoryWithContext<EnemyView, Enemy>();
-
-      var test = Container.InstantiatePrefab(this.enemySettings.First().Prefab);
-
-      Debug.Log(test.Model.Name);
+      BindToSubContainer<Enemy>();
+      BindToSubContainer<IEventAggregator>();
     }
 
-    private static void InstallFacade(DiContainer subContainer, EnemySettings settings, EnemyView view)
+    protected override void InstallSubContainerBindings(DiContainer subContainer, EnemyView instance)
     {
+      var settings = MappedSettings[instance.Type];
+
+      subContainer.BindInstanceWithInterfaces(instance);
+
+      subContainer.BindBaseInstance(settings);
+      subContainer.BindBaseInstance(settings.Movement);
+      subContainer.BindBaseInstance(settings.Health);
+
+      subContainer.BindSingleWithInterfaces(instance.Type.GetTypeMapping());
+      subContainer.BindSingleWithInterfaces<EnemyHealth>();
+
       subContainer.Bind<IEventAggregator>().ToSingle<EventAggregator>();
-
-      subContainer.BindAbstractInstance(settings);
-      subContainer.BindAbstractInstance(settings.Movement);
-      subContainer.BindAbstractInstance(settings.Health);
-
-      subContainer.BindSingleWithInterfaces(view.Type.GetTypeMapping());
-      subContainer.BindInstance(view);
     }
   }
 }

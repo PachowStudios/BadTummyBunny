@@ -27,7 +27,8 @@ namespace PachowStudios.BadTummyBunny
   }
 
   public abstract class BaseView<TModel> : BaseView, IView<TModel>
+    where TModel : class
   {
-    public abstract TModel Model { get; set; }
+    public abstract TModel Model { get; protected set; }
   }
 }

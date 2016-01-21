@@ -18,7 +18,7 @@ namespace PachowStudios.BadTummyBunny
       {
         var type = config.Type.GetTypeMapping();
 
-        Container.BindAbstractInstance(config).WhenInjectedInto(type);
+        Container.BindBaseInstance(config).WhenInjectedInto(type);
         Container
           .Bind<FartView>()
           .ToTransientPrefab(config.Prefab)

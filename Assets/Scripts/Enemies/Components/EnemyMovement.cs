@@ -9,14 +9,14 @@ namespace PachowStudios.BadTummyBunny
     public bool DeactivatedOutsideCamera = true;
   }
 
-  public abstract class EnemyMovement<TConfig> : BaseMovable<TConfig, EnemyView>, IActivatable, ITickable, ILateTickable
+  public abstract class EnemyMovement<TConfig> : BaseMovable<TConfig, EnemyView>, ITickable, ILateTickable
     where TConfig : EnemyMovementSettings
   {
     private bool isActivated;
 
     [InjectLocal] protected override EnemyView View { get; set; }
 
-    public bool IsActivated
+    public override bool IsActivated
     {
       get { return this.isActivated || !Config.DeactivatedOutsideCamera; }
       set { this.isActivated = value; }

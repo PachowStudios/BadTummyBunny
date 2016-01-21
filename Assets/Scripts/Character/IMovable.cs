@@ -2,7 +2,7 @@
 
 namespace PachowStudios.BadTummyBunny
 {
-  public interface IMovable
+  public interface IMovable : IActivatable
   {
     float Gravity { get; }
     float MoveSpeed { get; }

@@ -15,9 +15,21 @@ namespace Zenject
     {
       Container = container;
       Installer = installer;
+
+      CreateSubContainer();
     }
 
-    public DiContainer ToSingle()
+    public PublicFacadeBinder<TFacade> WithExternal<TContract, TTarget>()
+    {
+      Container
+        .Bind<TContract>()
+        .ToSubContainer(FacadeContainer)
+        .WhenInjectedInto<TTarget>();
+
+      return this;
+    }
+
+    private void CreateSubContainer()
     {
       AddValidator();
 
@@ -28,7 +40,7 @@ namespace Zenject
       Container.Bind<IFixedTickable>().ToLookup<TFacade>();
       Container.Bind<TFacade>().ToSingleMethod(c => FacadeContainer.Resolve<TFacade>());
 
-      return FacadeContainer = FacadeFactory<TFacade>.CreateSubContainer(Container, Installer);
+      FacadeContainer = FacadeFactory<TFacade>.CreateSubContainer(Container, Installer);
     }
 
     private void AddValidator()

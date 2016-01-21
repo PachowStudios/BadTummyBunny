@@ -22,7 +22,8 @@ namespace PachowStudios.BadTummyBunny.AI.Patrol
 
     private FiniteStateMachine<PatrolAI> StateMachine { get; set; }
 
-    private void Awake()
+    [PostInject]
+    private void Initialize()
       => StateMachine = new FiniteStateMachine<PatrolAI>(this)
         .Add<PatrolState>()
         .Add<FollowState>()

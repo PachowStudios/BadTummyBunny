@@ -4,5 +4,4 @@
   {
     bool IsActivated { get; set; }
   }
-
 }

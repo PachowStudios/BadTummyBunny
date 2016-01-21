@@ -30,25 +30,19 @@ namespace Zenject
       container.BindAllInterfacesToInstance(type, @object);
     }
 
-    public static BindingConditionSetter BindAbstractInstance([NotNull] this DiContainer container, object @object)
+    public static BindingConditionSetter BindBaseInstance([NotNull] this DiContainer container, object @object)
       => container.Bind(@object.GetType()).ToInstance(@object);
 
     public static PublicFacadeBinder<TFacade> BindPublicFacade<TFacade>([NotNull] this DiContainer container, Action<DiContainer> installer)
       where TFacade : IFacade
       => new PublicFacadeBinder<TFacade>(container, installer);
 
-    public static BindingConditionSetter ToSubContainer<TContract>([NotNull] this GenericBinder<TContract> binder, DiContainer subContainer)
+    public static BindingConditionSetter ToSubContainer<TContract>([NotNull] this GenericBinder<TContract> binder, [NotNull] DiContainer subContainer)
       => binder.ToMethod(subContainer.Resolve<TContract>);
 
-    public static BindingConditionSetter ToIFactory<T>([NotNull] this GenericBinder<T> binder)
-      => binder.ToMethod(c => c.Container.Resolve<IFactory<T>>().Create());
-
-    public static void ToIFactoryWithContext<TParam, T>([NotNull] this GenericBinder<T> binder)
-      => binder
-        .ToMethod(c => c.Container
-          .Resolve<IFactory<TParam, T>>()
-          .Create((TParam)c.ObjectInstance))
-        .WhenInjectedInto<TParam>();
+    public static BindingConditionSetter ToSubContainer<TContract, TConcrete>([NotNull] this GenericBinder<TContract> binder, [NotNull] DiContainer subContainer)
+      where TConcrete : TContract
+      => binder.ToMethod(c => subContainer.Resolve<TConcrete>());
 
     public static BindingConditionSetter ToSinglePrefab([NotNull] this TypeBinder binder, [NotNull] MonoBehaviour prefab)
       => binder.ToSinglePrefab(prefab.gameObject);

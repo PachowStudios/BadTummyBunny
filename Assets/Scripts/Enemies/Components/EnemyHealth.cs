@@ -21,21 +21,19 @@ namespace PachowStudios.BadTummyBunny
       get { return this.health; }
       protected set
       {
-        this.health = Mathf.Clamp(value, 0, MaxHealth);
+        this.health = value.Clamp(0, MaxHealth);
         CheckDeath();
       }
     }
 
     public sealed override int MaxHealth => Config.MaxHealth;
 
-    public EnemyHealth()
-    {
-      this.health = MaxHealth;
-    }
-
     [PostInject]
     private void Initialize()
-      => LocalEventAggregator.Subscribe(this);
+    {
+      Health = MaxHealth;
+      LocalEventAggregator.Subscribe(this);
+    }
 
     public void Dispose()
       => View.Dispose();

@@ -22,6 +22,8 @@ namespace PachowStudios.BadTummyBunny
     public virtual Vector3 LastGroundedPosition { get; protected set; }
     public virtual float? MoveSpeedOverride { get; set; }
 
+    public virtual bool IsActivated { get; set; } = true;
+
     public float Gravity => Config.Gravity;
     public float MoveSpeed => Config.MoveSpeed;
 

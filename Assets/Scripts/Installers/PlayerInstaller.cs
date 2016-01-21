@@ -11,16 +11,15 @@ namespace PachowStudios.BadTummyBunny
 
     public override void InstallBindings()
     {
-      var facadeContainer = Container.BindPublicFacade<Player>(InstallFacade).ToSingle();
-
-      Container.Bind<IEventAggregator>().ToSubContainer(facadeContainer).WhenInjectedInto<PlayerView>();
+      Container
+        .BindPublicFacade<Player>(InstallFacade)
+        .WithExternal<IEventAggregator, PlayerView>();
     }
 
     private void InstallFacade(DiContainer subContainer)
     {
-      subContainer.Bind<IEventAggregator>().ToSingle<EventAggregator>();
-
       subContainer.BindInstanceWithInterfaces(this.playerInstance);
+
       subContainer.BindInstance(this.playerSettings.Movement);
       subContainer.BindInstance(this.playerSettings.Health);
       subContainer.BindInstance(this.playerSettings.FartAimLean);
@@ -30,6 +29,8 @@ namespace PachowStudios.BadTummyBunny
       subContainer.BindSingleWithInterfaces<PlayerHealth>();
       subContainer.BindSingleWithInterfaces<PlayerScore>();
       subContainer.BindSingleWithInterfaces<FartAimLean>();
+
+      subContainer.Bind<IEventAggregator>().ToSingle<EventAggregator>();
     }
   }
 }

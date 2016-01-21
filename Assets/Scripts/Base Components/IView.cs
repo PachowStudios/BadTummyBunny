@@ -13,6 +13,7 @@ namespace PachowStudios
   }
 
   public interface IView<out TModel> : IView
+    where TModel : class
   {
     TModel Model { get; }
   }

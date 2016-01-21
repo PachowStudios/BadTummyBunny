@@ -12,7 +12,7 @@ namespace PachowStudios.BadTummyBunny
 
     [InjectLocal] private IEventAggregator EventAggregator { get; set; }
 
-    [Inject] public override Player Model { get; set; }
+    [Inject] public override Player Model { get; protected set; }
 
     public Transform Body => this.body;
     public Transform FartPoint => this.fartPoint;

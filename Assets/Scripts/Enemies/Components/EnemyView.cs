@@ -4,14 +4,23 @@ using Zenject;
 namespace PachowStudios.BadTummyBunny
 {
   [AddComponentMenu("Bad Tummy Bunny/Enemies/Enemy View")]
-  public class EnemyView : BaseView<Enemy>
+  public class EnemyView : BaseView<Enemy>, IView<IEnemy>, IActivatable
   {
     [SerializeField] private EnemyType type = EnemyType.Fox;
     [SerializeField] private Transform frontCheck = null;
     [SerializeField] private Transform ledgeCheck = null;
 
-    [InjectLocal] public override Enemy Model { get; set; }
     [InjectLocal] private IEventAggregator EventAggregator { get; set; }
+
+    [Inject] public override Enemy Model { get; protected set; }
+
+    IEnemy IView<IEnemy>.Model => Model;
+
+    public bool IsActivated
+    {
+      get { return Model.Movement.IsActivated; }
+      set { Model.Movement.IsActivated = value; }
+    }
 
     public EnemyType Type => this.type;
     public Transform FrontCheck => this.frontCheck;

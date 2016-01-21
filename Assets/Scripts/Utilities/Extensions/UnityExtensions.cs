@@ -47,7 +47,14 @@ namespace UnityEngine
     [NotNull]
     public static TModel GetViewModel<TModel>([NotNull] this GameObject gameObject)
       where TModel : class
-      => gameObject.GetComponent<IView<TModel>>().Model;
+    {
+      var view = gameObject.GetComponent<IView<TModel>>();
+
+      if (view == null)
+        throw new InvalidOperationException($"GetViewModel failed to get model of type {typeof(TModel)}");
+
+      return view.Model;
+    }
 
     public static void Destroy([NotNull] this MonoBehaviour monoBehaviour)
       => monoBehaviour.gameObject.Destroy();

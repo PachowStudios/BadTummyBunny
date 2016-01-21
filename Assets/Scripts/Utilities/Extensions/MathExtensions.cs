@@ -6,37 +6,43 @@ namespace UnityEngine
   {
     private const float FloatingPointTolerance = 0.0001f;
 
-    public static bool IsZero(this float number)
-      => number.Abs() <= FloatingPointTolerance;
+    public static bool IsZero(this float value)
+      => value.Abs() <= FloatingPointTolerance;
 
-    public static bool Is(this float number, float value)
-      => Math.Abs(number - value) < FloatingPointTolerance;
+    public static bool Is(this float value, float otherValue)
+      => Math.Abs(value - otherValue) < FloatingPointTolerance;
 
-    public static int Sign(this float number)
-      => (int)Mathf.Sign(number);
+    public static int Sign(this float value)
+      => (int)Mathf.Sign(value);
 
-    public static float Abs(this float number)
-      => Mathf.Abs(number);
+    public static float Abs(this float value)
+      => Mathf.Abs(value);
 
-    public static float Sqr(this float number)
-      => Mathf.Pow(number, 2);
+    public static float Sqr(this float value)
+      => Mathf.Pow(value, 2);
 
-    public static int RoundToInt(this float number)
-      => Mathf.RoundToInt(number);
+    public static int RoundToInt(this float value)
+      => Mathf.RoundToInt(value);
 
-    public static float RoundToFraction(this float number, int denominator)
-      => Mathf.RoundToInt(number * denominator) / (float)denominator;
+    public static float RoundToFraction(this float value, int denominator)
+      => Mathf.RoundToInt(value * denominator) / (float)denominator;
 
-    public static float Clamp01(this float number)
-      => Mathf.Clamp01(number);
+    public static int Clamp(this int value, int min, int max)
+      => Mathf.Clamp(value, min, max);
 
-    public static float GetDecimal(this float number)
+    public static float Clamp(this float value, float min, float max)
+      => Mathf.Clamp(value, min, max);
+
+    public static float Clamp01(this float value)
+      => Mathf.Clamp01(value);
+
+    public static float GetDecimal(this float value)
     {
       var resultString = "0";
       float result;
 
-      if (number.ToString().Split('.').Length == 2)
-        resultString = "0." + number.ToString().Split('.')[1];
+      if (value.ToString().Split('.').Length == 2)
+        resultString = "0." + value.ToString().Split('.')[1];
 
       float.TryParse(resultString, out result);
 
