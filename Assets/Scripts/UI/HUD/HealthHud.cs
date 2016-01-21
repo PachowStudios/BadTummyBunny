@@ -17,12 +17,10 @@ namespace PachowStudios.BadTummyBunny
     [Tooltip("Order is empty to full")]
     [SerializeField] private Sprite[] heartImages = new Sprite[5];
 
-    [Inject] private Player Player { get; set; }
     [Inject] private IEventAggregator EventAggregator { get; set; }
 
     private List<Image> HealthContainers { get; set; }
-
-    private int HealthPerContainer => Player.HealthContainers.HealthPerContainer;
+    private int HealthPerContainer { get; set; }
 
     [PostInject]
     private void PostInject()
@@ -37,6 +35,8 @@ namespace PachowStudios.BadTummyBunny
     public void Handle(PlayerHealthContainersChangedMessage message)
     {
       var newHealthContainers = message.HealthContainers;
+
+      HealthPerContainer = message.HealthPerContainer;
 
       while (HealthContainers.HasLessThan(newHealthContainers))
       {

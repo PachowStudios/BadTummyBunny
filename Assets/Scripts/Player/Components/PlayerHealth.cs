@@ -3,7 +3,7 @@ using Zenject;
 
 namespace PachowStudios.BadTummyBunny
 {
-  public sealed class PlayerHealth : BaseHasHealth, IHasHealthContainers, ITickable,
+  public sealed class PlayerHealth : BaseHasHealth, IHasHealthContainers, IInitializable, ITickable,
     IHandles<CharacterKillzoneTriggeredMessage>,
     IHandles<PlayerCarrotTriggeredMessage>,
     IHandles<PlayerEnemyTriggeredMessage>,
@@ -25,7 +25,7 @@ namespace PachowStudios.BadTummyBunny
     [InjectLocal] private IMovable Movement { get; set; }
     [InjectLocal] private IEventAggregator LocalEventAggregator { get; set; }
 
-    [Inject] private IEventAggregator EventAggregator { set; get; }
+    [Inject(BindingIds.Global)] private IEventAggregator EventAggregator { set; get; }
     [Inject] private IGameMenu GameMenu { get; set; }
     [Inject] private ExplodeEffect ExplodeEffect { get; set; }
 
@@ -67,7 +67,7 @@ namespace PachowStudios.BadTummyBunny
     private bool IsInvincible => this.lastHitTime + Config.InvincibilityPeriod >= Time.time;
 
     [PostInject]
-    private void Initialize()
+    private void PostInject()
     {
       this.healthContainers = Config.HealthContainers;
       this.health = MaxHealth;
@@ -75,6 +75,9 @@ namespace PachowStudios.BadTummyBunny
 
       LocalEventAggregator.Subscribe(this);
     }
+
+    public void Initialize()
+      => RaiseHealthContainersChanged();
 
     public void Tick()
     {
@@ -167,7 +170,7 @@ namespace PachowStudios.BadTummyBunny
 
     private void RaiseHealthContainersChanged()
     {
-      EventAggregator.Publish(new PlayerHealthContainersChangedMessage(HealthContainers));
+      EventAggregator.Publish(new PlayerHealthContainersChangedMessage(HealthContainers, HealthPerContainer));
       RaiseHealthChanged();
     }
 

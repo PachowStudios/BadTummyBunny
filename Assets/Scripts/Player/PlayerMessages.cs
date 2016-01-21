@@ -25,10 +25,12 @@ namespace PachowStudios.BadTummyBunny
   public class PlayerHealthContainersChangedMessage : IMessage
   {
     public int HealthContainers { get; }
+    public int HealthPerContainer { get; }
 
-    public PlayerHealthContainersChangedMessage(int healthContainers)
+    public PlayerHealthContainersChangedMessage(int healthContainers, int healthPerContainer)
     {
       HealthContainers = healthContainers;
+      HealthPerContainer = healthPerContainer;
     }
   }
 
