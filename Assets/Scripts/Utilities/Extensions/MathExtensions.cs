@@ -36,6 +36,9 @@ namespace UnityEngine
     public static float Clamp01(this float value)
       => Mathf.Clamp01(value);
 
+    public static float Vary(this float value, float variance)
+      => Random.Range(value - variance, value + variance);
+
     public static float GetDecimal(this float value)
     {
       var resultString = "0";

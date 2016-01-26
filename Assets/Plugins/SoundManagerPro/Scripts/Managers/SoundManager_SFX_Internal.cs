@@ -357,7 +357,7 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
         aSource.Stop();
 		string clipName = clip.name;
 		if(pitchVariations.ContainsKey(clipName))
-			aSource.pitch = pitch.Vary(pitchVariations[clipName]);
+			aSource.pitch = SoundManagerTools.Vary(pitch, pitchVariations[clipName]);
 		else
         	aSource.pitch = pitch;
 		
@@ -409,7 +409,7 @@ public partial class SoundManager : antilunchbox.Singleton<SoundManager> {
 		source.clip = clip;
 		string clipName = clip.name;
 		if(pitchVariations.ContainsKey(clipName))
-			source.pitch = pitch.Vary(pitchVariations[clipName]);
+			source.pitch = SoundManagerTools.Vary(pitch, pitchVariations[clipName]);
 		else
         	source.pitch = pitch;
 		if(baseVolumes.ContainsKey(clipName))
