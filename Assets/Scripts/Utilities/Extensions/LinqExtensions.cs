@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using JetBrains.Annotations;
 
 // Needs to be in a sub-namespace so we don't conflict with plugins that have the same extensions
@@ -43,27 +42,24 @@ namespace System.Linq.Extensions
     public static bool HasMultiple<T>([NotNull] this IEnumerable<T> source)
       => source.HasAtLeast(2);
 
-    [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
-    public static IEnumerable<T> ForEach<T>([NotNull] this IEnumerable<T> source, [CanBeNull] Action<T> action)
+    public static void ForEach<T>([NotNull] this IEnumerable<T> source, [CanBeNull] Action<T> action)
     {
       foreach (var item in source)
         action?.Invoke(item);
-
-      return source;
     }
 
-    [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
-    public static IEnumerable<T> ForEach<T>([NotNull] this IEnumerable<T> source, [CanBeNull] Action action)
+    [NotNull]
+    public static IEnumerable<T> Do<T>([NotNull] this IEnumerable<T> source, [CanBeNull] Action<T> action)
     {
-      using (var enumerator = source.GetEnumerator())
-        while (enumerator.MoveNext())
-          action?.Invoke();
-
-      return source;
+      foreach (var item in source)
+      {
+        action?.Invoke(item);
+        yield return item;
+      }
     }
 
     [Pure, CanBeNull]
-    public static TSource Loest<TSource, TKey>([NotNull] this IEnumerable<TSource> source, [NotNull] Func<TSource, TKey> selector)
+    public static TSource Lowest<TSource, TKey>([NotNull] this IEnumerable<TSource> source, [NotNull] Func<TSource, TKey> selector)
       => source.Lowest(selector, Comparer<TKey>.Default);
 
     [Pure, CanBeNull]

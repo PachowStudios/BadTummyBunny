@@ -21,26 +21,26 @@ namespace PachowStudios.BadTummyBunny.AI.Patrol
       && !IsAtWall;
 
     private FiniteStateMachine<PatrolAI> StateMachine { get; set; }
+    private AnimationController AnimationController { get; set; }
 
     [PostInject]
     private void Initialize()
-      => StateMachine = new FiniteStateMachine<PatrolAI>(this)
+    {
+      StateMachine = new FiniteStateMachine<PatrolAI>(this)
         .Add<PatrolState>()
         .Add<FollowState>()
         .Add<SightLostState>()
         .Add<AttackState>();
+      AnimationController = new AnimationController(View.Animator,
+        new AnimationCondition("Walking", () => HorizontalMovement != 0),
+        new AnimationCondition("Grounded", () => IsGrounded),
+        new AnimationCondition("Falling", () => Velocity.y < 0f));
+    }
 
     protected override void InternalTick()
     {
       StateMachine.Tick(Time.deltaTime);
-      ApplyAnimation();
-    }
-
-    private void ApplyAnimation()
-    {
-      View.Animator.SetBool("Walking", HorizontalMovement != 0);
-      View.Animator.SetBool("Grounded", IsGrounded);
-      View.Animator.SetBool("Falling", Velocity.y < 0f);
+      AnimationController.Tick();
     }
   }
 }

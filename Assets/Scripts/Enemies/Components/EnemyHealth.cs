@@ -1,10 +1,9 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using Zenject;
 
 namespace PachowStudios.BadTummyBunny
 {
-  public class EnemyHealth : BaseHasHealth, IDisposable,
+  public class EnemyHealth : BaseHasHealth,
     IHandles<CharacterKillzoneTriggeredMessage>
   {
     private int health;
@@ -35,9 +34,6 @@ namespace PachowStudios.BadTummyBunny
       LocalEventAggregator.Subscribe(this);
     }
 
-    public void Dispose()
-      => View.Dispose();
-
     public override void Damage(int damage, Vector2 knockback, Vector2 knockbackDirection)
     {
       if (IsDead || damage <= 0f)
@@ -56,7 +52,7 @@ namespace PachowStudios.BadTummyBunny
     {
       IsDead = true;
       ExplodeEffect.Explode(View.Transform, Movement.Velocity, View.SpriteRenderer.sprite);
-      Dispose();
+      View.Dispose();
     }
 
     protected virtual void CheckDeath()

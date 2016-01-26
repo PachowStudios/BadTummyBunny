@@ -4,13 +4,13 @@ namespace PachowStudios.BadTummyBunny
 {
   public class PlayerInput : PlayerActionSet
   {
-    private readonly PlayerAction moveLeft;
-    private readonly PlayerAction moveRight;
+    private PlayerAction MoveLeft { get; }
+    private PlayerAction MoveRight { get; }
 
-    private readonly PlayerAction fartLeft;
-    private readonly PlayerAction fartRight;
-    private readonly PlayerAction fartDown;
-    private readonly PlayerAction fartUp;
+    private PlayerAction FartLeft { get; }
+    private PlayerAction FartRight { get; }
+    private PlayerAction FartDown { get; }
+    private PlayerAction FartUp { get; }
 
     public PlayerOneAxisAction Move { get; }
     public PlayerTwoAxisAction Fart { get; }
@@ -19,16 +19,16 @@ namespace PachowStudios.BadTummyBunny
 
     public PlayerInput()
     {
-      this.moveLeft = CreatePlayerAction("Move Left");
-      this.moveRight = CreatePlayerAction("Move Right");
+      MoveLeft = CreatePlayerAction("Move Left");
+      MoveRight = CreatePlayerAction("Move Right");
 
-      this.fartLeft = CreatePlayerAction("Fart Aim Left");
-      this.fartRight = CreatePlayerAction("Fart Aim Right");
-      this.fartDown = CreatePlayerAction("Fart Aim Down");
-      this.fartUp = CreatePlayerAction("Fart Aim Up");
+      FartLeft = CreatePlayerAction("Fart Aim Left");
+      FartRight = CreatePlayerAction("Fart Aim Right");
+      FartDown = CreatePlayerAction("Fart Aim Down");
+      FartUp = CreatePlayerAction("Fart Aim Up");
 
-      Move = CreateOneAxisPlayerAction(this.moveLeft, this.moveRight);
-      Fart = CreateTwoAxisPlayerAction(this.fartLeft, this.fartRight, this.fartDown, this.fartUp);
+      Move = CreateOneAxisPlayerAction(MoveLeft, MoveRight);
+      Fart = CreateTwoAxisPlayerAction(FartLeft, FartRight, FartDown, FartUp);
 
       Jump = CreatePlayerAction("Jump");
 
@@ -37,18 +37,18 @@ namespace PachowStudios.BadTummyBunny
 
     private void AssignDefaultBindings()
     {
-      this.moveLeft.AddDefaultBinding(Key.A);
-      this.moveLeft.AddDefaultBinding(InputControlType.LeftStickLeft);
-      this.moveLeft.AddDefaultBinding(InputControlType.DPadLeft);
+      MoveLeft.AddDefaultBinding(Key.A);
+      MoveLeft.AddDefaultBinding(InputControlType.LeftStickLeft);
+      MoveLeft.AddDefaultBinding(InputControlType.DPadLeft);
 
-      this.moveRight.AddDefaultBinding(Key.D);
-      this.moveRight.AddDefaultBinding(InputControlType.LeftStickRight);
-      this.moveRight.AddDefaultBinding(InputControlType.DPadRight);
+      MoveRight.AddDefaultBinding(Key.D);
+      MoveRight.AddDefaultBinding(InputControlType.LeftStickRight);
+      MoveRight.AddDefaultBinding(InputControlType.DPadRight);
 
-      this.fartLeft.AddDefaultBinding(InputControlType.RightStickLeft);
-      this.fartRight.AddDefaultBinding(InputControlType.RightStickRight);
-      this.fartDown.AddDefaultBinding(InputControlType.RightStickDown);
-      this.fartUp.AddDefaultBinding(InputControlType.RightStickUp);
+      FartLeft.AddDefaultBinding(InputControlType.RightStickLeft);
+      FartRight.AddDefaultBinding(InputControlType.RightStickRight);
+      FartDown.AddDefaultBinding(InputControlType.RightStickDown);
+      FartUp.AddDefaultBinding(InputControlType.RightStickUp);
 
       Jump.AddDefaultBinding(Key.Space);
       Jump.AddDefaultBinding(InputControlType.Action1);

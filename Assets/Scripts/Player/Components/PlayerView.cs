@@ -1,16 +1,15 @@
-﻿using JetBrains.Annotations;
-using UnityEngine;
+﻿using UnityEngine;
 using Zenject;
 
 namespace PachowStudios.BadTummyBunny
 {
   [AddComponentMenu("Bad Tummy Bunny/Player/Player View")]
-  public class PlayerView : BaseView<Player>
+  public class PlayerView : FacadeView<Player>
   {
     [SerializeField] private Transform body = null;
     [SerializeField] private Transform fartPoint = null;
 
-    [InjectLocal] private IEventAggregator EventAggregator { get; set; }
+    [InjectLocal] private IEventAggregator LocalEventAggregator { get; set; }
 
     [Inject] public override Player Model { get; protected set; }
 
@@ -23,27 +22,27 @@ namespace PachowStudios.BadTummyBunny
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-      EventAggregator.Publish(new PlayerCollidedMessage(other));
+      LocalEventAggregator.Publish(new PlayerCollidedMessage(other));
 
       switch (other.tag)
       {
         case Tags.Enemy:
-          EventAggregator.Publish(new PlayerEnemyTriggeredMessage(other.GetViewModel<IEnemy>()));
+          LocalEventAggregator.Publish(new PlayerEnemyTriggeredMessage(other.GetViewModel<IEnemy>()));
           break;
         case Tags.Coin:
-          EventAggregator.Publish(new PlayerCoinTriggeredMessage(other.GetComponent<Coin>()));
+          LocalEventAggregator.Publish(new PlayerCoinTriggeredMessage(other.GetComponent<Coin>()));
           break;
         case Tags.Carrot:
-          EventAggregator.Publish(new PlayerCarrotTriggeredMessage(other.GetComponent<Carrot>()));
+          LocalEventAggregator.Publish(new PlayerCarrotTriggeredMessage(other.GetComponent<Carrot>()));
           break;
         case Tags.Flagpole:
-          EventAggregator.Publish(new PlayerFlagpoleTriggeredMessage(other.GetComponent<Flagpole>()));
+          LocalEventAggregator.Publish(new PlayerFlagpoleTriggeredMessage(other.GetComponent<Flagpole>()));
           break;
         case Tags.RespawnPoint:
-          EventAggregator.Publish(new PlayerRespawnPointTriggeredMessage(other.GetComponent<RespawnPoint>()));
+          LocalEventAggregator.Publish(new PlayerRespawnPointTriggeredMessage(other.GetComponent<RespawnPoint>()));
           break;
         case Tags.Killzone:
-          EventAggregator.Publish(new CharacterKillzoneTriggeredMessage());
+          LocalEventAggregator.Publish(new CharacterKillzoneTriggeredMessage());
           break;
       }
     }

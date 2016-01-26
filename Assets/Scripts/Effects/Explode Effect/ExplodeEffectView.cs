@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine;
 using Zenject;
@@ -19,27 +18,32 @@ namespace PachowStudios.BadTummyBunny
 
     [Inject] private ExplodeEffectSettings Config { get; set; }
 
+    [PostInject]
+    private void PostInject()
+    {
+      ParticleRenderer.sortingLayerName = Config.SortingLayer;
+      ParticleRenderer.sortingOrder = Config.SortingOrder;
+    }
+
     public void Explode([NotNull] Transform target, Vector3 velocity, [NotNull] Sprite sprite, Material material = null)
     {
       Transform.AlignWith(target);
-      StartCoroutine(ExplodeCoroutine(velocity, sprite, material));
-    }
 
-    private IEnumerator ExplodeCoroutine(Vector3 velocity, [NotNull] Sprite sprite, Material material = null)
-    {
       var spriteWidth = (int)(sprite.bounds.size.x * sprite.pixelsPerUnit);
       var spriteHeight = (int)(sprite.bounds.size.y * sprite.pixelsPerUnit);
       var particles = new List<ParticleSystem.Particle>(spriteWidth * spriteHeight);
-      var particle = new ParticleSystem.Particle() { startSize = 1f / sprite.pixelsPerUnit };
+      var particle = new ParticleSystem.Particle()
+      {
+        startSize = 1f / sprite.pixelsPerUnit,
+        lifetime = Config.ParticleLifetime,
+        startLifetime = Config.ParticleLifetime
+      };
       var positionOffset = new Vector2(
         sprite.bounds.extents.x - sprite.bounds.center.x - 0.05f,
         sprite.bounds.extents.y - sprite.bounds.center.y - 0.05f);
 
       velocity = velocity.Vary(0.5f);
-
-      ParticleRenderer.sortingLayerName = Config.SortingLayer;
-      ParticleRenderer.sortingOrder = Config.SortingOrder;
-
+      
       if (material != null)
         ParticleRenderer.material = material;
 
@@ -50,6 +54,7 @@ namespace PachowStudios.BadTummyBunny
             (int)sprite.rect.x + widthIndex,
             (int)sprite.rect.y + heightIndex);
 
+          // Ignore the pixel if it's transparent
           if (color.a.Abs() <= 0.01f)
             continue;
 
@@ -57,7 +62,6 @@ namespace PachowStudios.BadTummyBunny
             (widthIndex / sprite.pixelsPerUnit) - positionOffset.x,
             (heightIndex / sprite.pixelsPerUnit) - positionOffset.y);
           particle.startColor = color;
-          particle.startLifetime = particle.lifetime = Config.ParticleLifetime;
           particle.velocity = velocity.Vary(3f);
 
           particles.Add(particle);
@@ -65,8 +69,6 @@ namespace PachowStudios.BadTummyBunny
 
       ParticleSystem.SetParticles(particles.ToArray(), particles.Count);
       this.Destroy(Config.Duration);
-
-      yield return null;
     }
   }
 }

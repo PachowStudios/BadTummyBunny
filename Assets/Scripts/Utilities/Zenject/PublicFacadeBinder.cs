@@ -32,14 +32,7 @@ namespace Zenject
     private void CreateSubContainer()
     {
       AddValidator();
-
-      Container.Bind<IInitializable>().ToLookup<TFacade>();
-      Container.Bind<IDisposable>().ToLookup<TFacade>();
-      Container.Bind<ITickable>().ToLookup<TFacade>();
-      Container.Bind<ILateTickable>().ToLookup<TFacade>();
-      Container.Bind<IFixedTickable>().ToLookup<TFacade>();
       Container.Bind<TFacade>().ToSingleMethod(c => FacadeContainer.Resolve<TFacade>());
-
       FacadeContainer = FacadeFactory<TFacade>.CreateSubContainer(Container, Installer);
     }
 

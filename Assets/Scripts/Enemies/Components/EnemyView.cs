@@ -4,7 +4,7 @@ using Zenject;
 namespace PachowStudios.BadTummyBunny
 {
   [AddComponentMenu("Bad Tummy Bunny/Enemies/Enemy View")]
-  public class EnemyView : BaseView<Enemy>, IView<IEnemy>, IActivatable
+  public class EnemyView : FacadeView<Enemy>, IView<IEnemy>, IActivatable
   {
     [SerializeField] private EnemyType type = EnemyType.Fox;
     [SerializeField] private Transform frontCheck = null;
@@ -27,7 +27,7 @@ namespace PachowStudios.BadTummyBunny
     public Transform LedgeCheck => this.ledgeCheck;
 
     [PostInject]
-    private void Initialize()
+    private void PostInject()
       => name = Model.Name;
 
     private void OnTriggerEnter2D(Collider2D other)

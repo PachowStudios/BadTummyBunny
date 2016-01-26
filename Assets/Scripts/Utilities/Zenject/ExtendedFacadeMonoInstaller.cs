@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Zenject;
 
 namespace PachowStudios
@@ -25,27 +24,13 @@ namespace PachowStudios
 
       if (!SubContainers.TryGetValue(instance, out subContainer))
       {
-        subContainer = CreateSubContainer(context);
+        subContainer = context.Container.CreateSubContainer();
+        subContainer.Install<StandardInstaller<TFacade>>();
         InstallSubContainerBindings(subContainer, instance);
         SubContainers.Add(instance, subContainer);
       }
 
       return subContainer.Resolve<TContract>(context);
-    }
-
-    private DiContainer CreateSubContainer(InjectContext context)
-    {
-      var subContainer = context.Container.CreateSubContainer();
-
-      subContainer.Install<StandardInstaller<TFacade>>();
-
-      Container.Bind<IInitializable>().ToSubContainer<IInitializable, TFacade>(subContainer);
-      Container.Bind<IDisposable>().ToSubContainer<IDisposable, TFacade>(subContainer);
-      Container.Bind<ITickable>().ToSubContainer<ITickable, TFacade>(subContainer);
-      Container.Bind<ILateTickable>().ToSubContainer<ILateTickable, TFacade>(subContainer);
-      Container.Bind<IFixedTickable>().ToSubContainer<IFixedTickable, TFacade>(subContainer);
-
-      return subContainer;
     }
   }
 }

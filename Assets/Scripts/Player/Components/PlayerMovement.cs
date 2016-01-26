@@ -9,13 +9,6 @@ namespace PachowStudios.BadTummyBunny
     IHandles<PlayerCarrotTriggeredMessage>,
     IHandles<PlayerFlagpoleTriggeredMessage>
   {
-    private float horizontalMovement;
-    private bool willJump;
-
-    private bool isFartingEnabled = true;
-    private float availableFart;
-    private float fartingTime;
-
     [InjectLocal] private PlayerInput PlayerInput { get; set; }
     [InjectLocal] private IHasHealth Health { get; set; }
     [InjectLocal] private IEventAggregator LocalEventAggregator { get; set; }
@@ -26,6 +19,15 @@ namespace PachowStudios.BadTummyBunny
     [Inject] private IFactory<FartType, IFart> FartFactory { get; set; }
     [Inject] private IGameMenu GameMenu { get; set; }
 
+    private AnimationController AnimationController { get; set; }
+
+    private float HorizontalMovement { get; set; }
+    private bool WillJump { get; set; }
+
+    private bool IsFartingEnabled { get; set; } = true;
+    private float AvailableFart { get; set; }
+    private float FartingTime { get; set; }
+
     private IFart CurrentFart { get; set; }
     private bool IsInputEnabled { get; set; } = true;
 
@@ -35,18 +37,22 @@ namespace PachowStudios.BadTummyBunny
     public Vector2 FartDirection { get; private set; }
     public float FartPower { get; private set; }
 
-    private bool IsMovingRight => this.horizontalMovement > 0f;
-    private bool IsMovingLeft => this.horizontalMovement < 0f;
-    private bool CanFart => this.isFartingEnabled && (this.availableFart >= Config.FartUsageRange.y);
+    private bool IsMovingRight => HorizontalMovement > 0f;
+    private bool IsMovingLeft => HorizontalMovement < 0f;
+    private bool CanFart => IsFartingEnabled && (AvailableFart >= Config.FartUsageRange.y);
 
     public override Vector2 FacingDirection => new Vector2(View.Body.localScale.x, 0f);
 
     [PostInject]
     private void PostInject()
     {
-      this.availableFart = Config.MaxAvailableFart;
+      AvailableFart = Config.MaxAvailableFart;
 
       LocalEventAggregator.Subscribe(this);
+      AnimationController = new AnimationController(View.Animator,
+        new AnimationCondition("Walking", () => HorizontalMovement.Abs() > 0.01f && !IsFarting),
+        new AnimationCondition("Grounded", () => IsGrounded),
+        new AnimationCondition("Falling", () => Velocity.y < 0f));
     }
 
     public void Initialize()
@@ -55,7 +61,7 @@ namespace PachowStudios.BadTummyBunny
     public void Tick()
     {
       GetInput();
-      ApplyAnimation();
+      AnimationController.Tick();
 
       if (IsGrounded && !WasGrounded)
         PlayLandingSound();
@@ -110,8 +116,8 @@ namespace PachowStudios.BadTummyBunny
       if (!IsInputEnabled)
         return;
 
-      this.horizontalMovement = PlayerInput.Move.Value;
-      this.willJump = PlayerInput.Jump.WasPressed && IsGrounded;
+      HorizontalMovement = PlayerInput.Move.Value;
+      WillJump = PlayerInput.Jump.WasPressed && IsGrounded;
 
       IsFartCharging = PlayerInput.Fart.IsPressed && CanFart;
 
@@ -150,13 +156,6 @@ namespace PachowStudios.BadTummyBunny
         CurrentFart.ClearTrajectory();
     }
 
-    private void ApplyAnimation()
-    {
-      View.Animator.SetBool("Walking", Math.Abs(this.horizontalMovement) > 0.01f && !IsFarting);
-      View.Animator.SetBool("Grounded", IsGrounded);
-      View.Animator.SetBool("Falling", Velocity.y < 0f);
-    }
-
     private void GetMovement()
     {
       if (WillFart)
@@ -165,17 +164,17 @@ namespace PachowStudios.BadTummyBunny
       if (IsFarting)
         return;
 
-      if (IsMovingRight && !IsFacingRight ||
+      if ((IsMovingRight && !IsFacingRight) ||
           (IsMovingLeft && IsFacingRight))
         Flip();
 
-      if (this.willJump)
+      if (WillJump)
         Jump(Config.JumpHeight);
 
-      if (!this.isFartingEnabled && IsGrounded)
-        this.isFartingEnabled = true;
+      if (!IsFartingEnabled && IsGrounded)
+        IsFartingEnabled = true;
 
-      this.availableFart = Mathf.Min(this.availableFart + (Time.deltaTime * Config.FartRechargePerSecond), Config.MaxAvailableFart);
+      AvailableFart = Mathf.Min(AvailableFart + (Time.deltaTime * Config.FartRechargePerSecond), Config.MaxAvailableFart);
     }
 
     private void ApplyMovement()
@@ -183,7 +182,7 @@ namespace PachowStudios.BadTummyBunny
       if (IsFarting)
       {
         View.Body.CorrectScaleForRotation(Velocity.DirectionToRotation2D());
-        this.fartingTime += Time.deltaTime;
+        FartingTime += Time.deltaTime;
       }
       else
       {
@@ -192,7 +191,7 @@ namespace PachowStudios.BadTummyBunny
         Velocity = Velocity.SetX(
           Mathf.Lerp(
             Velocity.x,
-            this.horizontalMovement * MoveSpeed,
+            HorizontalMovement * MoveSpeed,
             smoothedMovement * Time.deltaTime));
       }
 
@@ -222,10 +221,10 @@ namespace PachowStudios.BadTummyBunny
         return;
 
       IsFarting = true;
-      this.isFartingEnabled = false;
+      IsFartingEnabled = false;
 
-      this.fartingTime = 0f;
-      this.availableFart = Mathf.Max(0f, this.availableFart - CalculateFartUsage(fartPower));
+      FartingTime = 0f;
+      AvailableFart = Mathf.Max(0f, AvailableFart - CalculateFartUsage(fartPower));
       Velocity = fartDirection * CurrentFart.CalculateSpeed(FartPower);
 
       CurrentFart.StartFart(FartPower, FartDirection);
@@ -255,8 +254,8 @@ namespace PachowStudios.BadTummyBunny
         return;
 
       carrot.Collect();
-      this.availableFart = Mathf.Min(
-        this.availableFart + (Config.MaxAvailableFart * Config.CarrotFartRechargePercent),
+      AvailableFart = Mathf.Min(
+        AvailableFart + (Config.MaxAvailableFart * Config.CarrotFartRechargePercent),
         Config.MaxAvailableFart);
     }
 
@@ -280,8 +279,8 @@ namespace PachowStudios.BadTummyBunny
 
     private void ResetInput()
     {
-      this.horizontalMovement = 0f;
-      this.willJump = false;
+      HorizontalMovement = 0f;
+      WillJump = false;
       IsFartCharging = false;
       StopFart();
       UpdateFartTrajectory();
@@ -290,7 +289,7 @@ namespace PachowStudios.BadTummyBunny
     public void Handle(PlayerCollidedMessage message)
     {
       if (IsFarting
-          && this.fartingTime > 0.05f
+          && FartingTime > 0.05f
           && CollisionLayers.HasLayer(message.Collider))
         StopFart(!IsGrounded);
     }

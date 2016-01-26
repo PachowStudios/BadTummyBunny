@@ -5,19 +5,19 @@ namespace PachowStudios.BadTummyBunny
 {
   public class BurningStatusEffect : BaseStatusEffect<BurningStatusEffectSettings>
   {
-    private float damageTimer;
-    private float durationTimer;
-    private float duration;
-
     [Inject] private IStatusEffectView View { get; set; }
 
     [Inject] protected override BurningStatusEffectSettings Config { get; set; }
+
+    private float DamageTimer { get; set; }
+    private float DurationTimer { get; set; }
+    private float Duration { get; set; }
 
     public override void Attach(IStatusEffectable affectectedCharacter)
     {
       base.Attach(affectectedCharacter);
 
-      this.duration = Random.Range(Config.MinDuration, Config.MaxDuration);
+      Duration = Random.Range(Config.MinDuration, Config.MaxDuration);
       View.Attach(affectectedCharacter);
     }
 
@@ -28,17 +28,17 @@ namespace PachowStudios.BadTummyBunny
     {
       base.Tick();
 
-      this.damageTimer += Time.deltaTime;
+      DamageTimer += Time.deltaTime;
 
-      if (this.damageTimer >= Config.TimePerDamage)
+      if (DamageTimer >= Config.TimePerDamage)
       {
         AffectedCharacter.Health.Damage(Config.Damage);
-        this.damageTimer = 0f;
+        DamageTimer = 0f;
       }
 
-      this.durationTimer += Time.deltaTime;
+      DurationTimer += Time.deltaTime;
 
-      if (this.durationTimer >= this.duration)
+      if (DurationTimer >= Duration)
         Detach();
     }
   }

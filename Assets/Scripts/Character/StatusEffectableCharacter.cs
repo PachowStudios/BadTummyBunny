@@ -41,5 +41,13 @@ namespace PachowStudios.BadTummyBunny
       => this.statusEffects
         .Remove(e => e.Type == type)
         .Detach();
+
+    public override void Tick()
+    {
+      base.Tick();
+
+      foreach (var statusEffect in this.statusEffects)
+        statusEffect.Tick();
+    }
   }
 }

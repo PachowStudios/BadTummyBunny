@@ -874,7 +874,8 @@ namespace Zenject
 
             // It could be an interface so this may fail in valid cases so you may want to comment out
             // Leaving it in for now to catch the more likely scenario of it being a mistake
-            Assert.That(componentType.DerivesFrom<Component>(), "Expected type '{0}' to derive from UnityEngine.Component", componentType.Name());
+            // Yup commenting this out...
+            // Assert.That(componentType.DerivesFrom<Component>(), "Expected type '{0}' to derive from UnityEngine.Component", componentType.Name());
 
             var gameObj = (GameObject)GameObject.Instantiate(prefab);
 
