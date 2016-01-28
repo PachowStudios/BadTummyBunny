@@ -21,33 +21,29 @@ namespace PachowStudios.BadTummyBunny
 
     private AnimationController AnimationController { get; set; }
 
+    private bool IsInputEnabled { get; set; } = true;
     private float HorizontalMovement { get; set; }
     private bool WillJump { get; set; }
 
-    private bool IsFartingEnabled { get; set; } = true;
-    private float AvailableFart { get; set; }
-    private float FartingTime { get; set; }
-
     private IFart CurrentFart { get; set; }
-    private bool IsInputEnabled { get; set; } = true;
+    private bool IsFartingEnabled { get; set; } = true;
+    private float TimeFarting { get; set; }
 
     public bool IsFarting { get; private set; }
-    public bool IsFartCharging { get; private set; }
+    public bool IsFartAiming { get; private set; }
     public bool WillFart { get; private set; }
     public Vector2 FartDirection { get; private set; }
     public float FartPower { get; private set; }
 
     private bool IsMovingRight => HorizontalMovement > 0f;
     private bool IsMovingLeft => HorizontalMovement < 0f;
-    private bool CanFart => IsFartingEnabled && (AvailableFart >= Config.FartUsageRange.y);
+    private bool CanFart => IsFartingEnabled;
 
     public override Vector2 FacingDirection => new Vector2(View.Body.localScale.x, 0f);
 
     [PostInject]
     private void PostInject()
     {
-      AvailableFart = Config.MaxAvailableFart;
-
       LocalEventAggregator.Subscribe(this);
       AnimationController = new AnimationController(View.Animator,
         new AnimationCondition("Walking", () => HorizontalMovement.Abs() > 0.01f && !IsFarting),
@@ -119,15 +115,15 @@ namespace PachowStudios.BadTummyBunny
       HorizontalMovement = PlayerInput.Move.Value;
       WillJump = PlayerInput.Jump.WasPressed && IsGrounded;
 
-      IsFartCharging = PlayerInput.Fart.IsPressed && CanFart;
+      IsFartAiming = PlayerInput.Fart.IsPressed && CanFart;
 
-      if (IsFartCharging)
+      if (IsFartAiming)
       {
         var rawFartMagnitude = PlayerInput.Fart.Value.magnitude;
 
         if (rawFartMagnitude <= Config.FartDeadZone)
         {
-          IsFartCharging = false;
+          IsFartAiming = false;
           FartDirection = Vector2.zero;
           FartPower = 0f;
         }
@@ -138,7 +134,7 @@ namespace PachowStudios.BadTummyBunny
         }
       }
 
-      if (!IsFartCharging)
+      if (!IsFartAiming)
         WillFart = PlayerInput.Fart.WasReleased && CanFart;
     }
 
@@ -150,7 +146,7 @@ namespace PachowStudios.BadTummyBunny
 
     private void UpdateFartTrajectory()
     {
-      if (IsFartCharging)
+      if (IsFartAiming)
         CurrentFart.DrawTrajectory(FartPower, FartDirection, Gravity, CenterPoint);
       else
         CurrentFart.ClearTrajectory();
@@ -159,7 +155,7 @@ namespace PachowStudios.BadTummyBunny
     private void GetMovement()
     {
       if (WillFart)
-        Fart(FartDirection, FartPower);
+        Fart(FartDirection);
 
       if (IsFarting)
         return;
@@ -173,27 +169,18 @@ namespace PachowStudios.BadTummyBunny
 
       if (!IsFartingEnabled && IsGrounded)
         IsFartingEnabled = true;
-
-      AvailableFart = Mathf.Min(AvailableFart + (Time.deltaTime * Config.FartRechargePerSecond), Config.MaxAvailableFart);
     }
 
     private void ApplyMovement()
     {
       if (IsFarting)
-      {
-        View.Body.CorrectScaleForRotation(Velocity.DirectionToRotation2D());
-        FartingTime += Time.deltaTime;
-      }
+        TimeFarting += Time.deltaTime;
       else
-      {
-        var smoothedMovement = IsGrounded ? Config.GroundDamping : Config.AirDamping;
-
         Velocity = Velocity.SetX(
           Mathf.Lerp(
             Velocity.x,
             HorizontalMovement * MoveSpeed,
-            smoothedMovement * Time.deltaTime));
-      }
+            (IsGrounded ? Config.GroundDamping : Config.AirDamping) * Time.deltaTime));
 
       Velocity = Velocity.AddY(Gravity * Time.deltaTime);
       View.CharacterController.Move(Velocity * Time.deltaTime);
@@ -215,7 +202,7 @@ namespace PachowStudios.BadTummyBunny
       CurrentFart = fart;
     }
 
-    private void Fart(Vector2 fartDirection, float fartPower)
+    private void Fart(Vector2 fartDirection)
     {
       if (IsFarting || FartDirection == Vector2.zero || FartPower <= 0)
         return;
@@ -223,8 +210,7 @@ namespace PachowStudios.BadTummyBunny
       IsFarting = true;
       IsFartingEnabled = false;
 
-      FartingTime = 0f;
-      AvailableFart = Mathf.Max(0f, AvailableFart - CalculateFartUsage(fartPower));
+      TimeFarting = 0f;
       Velocity = fartDirection * CurrentFart.CalculateSpeed(FartPower);
 
       CurrentFart.StartFart(FartPower, FartDirection);
@@ -244,19 +230,6 @@ namespace PachowStudios.BadTummyBunny
         Velocity = Velocity.SetX(0f);
 
       Velocity = Velocity.SetY(0f);
-    }
-
-    private float CalculateFartUsage(float fartPower) => MathHelper.ConvertRange(fartPower, 0f, 1f, Config.FartUsageRange.x, Config.FartUsageRange.y);
-
-    private void CollectCarrot(Carrot carrot)
-    {
-      if (carrot == null)
-        return;
-
-      carrot.Collect();
-      AvailableFart = Mathf.Min(
-        AvailableFart + (Config.MaxAvailableFart * Config.CarrotFartRechargePercent),
-        Config.MaxAvailableFart);
     }
 
     private void ActivateLevelFlagpole(Flagpole flagpole)
@@ -281,7 +254,7 @@ namespace PachowStudios.BadTummyBunny
     {
       HorizontalMovement = 0f;
       WillJump = false;
-      IsFartCharging = false;
+      IsFartAiming = false;
       StopFart();
       UpdateFartTrajectory();
     }
@@ -289,13 +262,13 @@ namespace PachowStudios.BadTummyBunny
     public void Handle(PlayerCollidedMessage message)
     {
       if (IsFarting
-          && FartingTime > 0.05f
+          && TimeFarting > 0.05f
           && CollisionLayers.HasLayer(message.Collider))
         StopFart(!IsGrounded);
     }
 
     public void Handle(PlayerCarrotTriggeredMessage message)
-      => CollectCarrot(message.Carrot);
+      => message.Carrot?.Collect();
 
     public void Handle(PlayerFlagpoleTriggeredMessage message)
       => ActivateLevelFlagpole(message.Flagpole);

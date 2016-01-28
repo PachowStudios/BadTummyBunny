@@ -15,9 +15,9 @@ namespace PachowStudios.BadTummyBunny
 
     public void Tick()
     {
-      if (FartInfo.IsFartCharging && !IsEnabled)
+      if (FartInfo.IsFartAiming && !IsEnabled)
         Activate();
-      else if (!FartInfo.IsFartCharging && IsEnabled)
+      else if (!FartInfo.IsFartAiming && IsEnabled)
         Deactivate();
     }
 

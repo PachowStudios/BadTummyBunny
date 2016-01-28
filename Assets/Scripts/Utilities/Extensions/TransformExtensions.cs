@@ -12,14 +12,13 @@
     {
       var flipY = target.z > 90f && target.z < 270f;
 
-      target.y = correctY && flipY ? 180f : 0f;
+      parent.localScale = new Vector3(
+        1f,
+        flipY ? -1f : 1f,
+        parent.localScale.z);
 
-      var newScale = parent.localScale;
-
-      newScale.x = 1f;
-      newScale.y = flipY ? -1f : 1f;
-      parent.localScale = newScale;
-      parent.rotation = Quaternion.Euler(target);
+      parent.rotation = Quaternion.Euler(
+        target.SetY(correctY && flipY ? 180f : 0f));
     }
   }
 }

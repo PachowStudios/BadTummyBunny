@@ -36,10 +36,13 @@ CircleCollider2D:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 133150}
   m_Enabled: 1
+  m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
   m_Radius: 2
-  m_Center: {x: 0, y: 0}
 --- !u!114 &11433150
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -54,6 +57,7 @@ MonoBehaviour:
   effectorTrigger: {fileID: 5833150}
   axis: 3
   effectorWeight: 50
+  onlyTriggerWhenGrounded: 1
   enableInnerRing: 0
   innerRingRadius: 2
   innerEffectorWeight: 5
@@ -63,10 +67,10 @@ MonoBehaviour:
     m_Curve:
     - time: 0
       value: 0
-      inSlope: 14.0228539
-      outSlope: 14.0228539
+      inSlope: 14.022854
+      outSlope: 14.022854
       tangentMode: 0
-    - time: .200000003
+    - time: 0.2
       value: 1
       inSlope: 0
       outSlope: 0
@@ -78,7 +82,7 @@ MonoBehaviour:
       tangentMode: 10
     m_PreInfinity: 2
     m_PostInfinity: 2
-  onlyTriggerWhenGrounded: 1
+    m_RotationOrder: 4
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -90,4 +94,3 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 133150}
   m_IsPrefabParent: 1
-  m_IsExploded: 1

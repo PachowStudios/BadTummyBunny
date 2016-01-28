@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
   public static class VectorExtensions
   {
@@ -10,27 +8,30 @@ namespace UnityEngine
     public static Vector3 ToVector3(this Vector2 vector, float z)
       => new Vector3(vector.x, vector.y, z);
 
+    public static Quaternion ToQuaternion(this Vector3 vector)
+      => Quaternion.Euler(vector);
+
     public static bool IsZero(this Vector2 vector)
-      => Math.Abs(vector.x) < 0.0001f
-      && Math.Abs(vector.y) < 0.0001f;
+      => vector.x.Abs() < 0.0001f
+      && vector.y.Abs() < 0.0001f;
 
     public static Vector3 SetX(this Vector3 vector, float x)
     {
-      vector.Set(x, vector.y, vector.z);
+      vector.x = x;
 
       return vector;
     }
 
     public static Vector3 SetY(this Vector3 vector, float y)
     {
-      vector.Set(vector.x, y, vector.z);
+      vector.y = y;
 
       return vector;
     }
 
     public static Vector3 SetZ(this Vector3 vector, float z)
     {
-      vector.Set(vector.x, vector.y, z);
+      vector.z = z;
 
       return vector;
     }
@@ -64,24 +65,18 @@ namespace UnityEngine
     public static float RandomRange(this Vector2 parent)
       => Random.Range(parent.x, parent.y);
 
-    public static Quaternion LookAt2D(this Vector3 parent, Vector3 target)
-    {
-      var targetPosition = target - parent;
+    public static Quaternion LookAt2D(this Vector3 vector, Vector3 target)
+      => Vector3.zero
+        .SetZ((target - vector).DirectionToRotation2D().z)
+        .ToQuaternion();
 
-      return Quaternion.Euler(
-        Vector3.zero.SetZ(
-          Quaternion.AngleAxis(
-            Mathf.Atan2(targetPosition.y, targetPosition.x) * Mathf.Rad2Deg,
-            Vector3.forward).eulerAngles.z));
-    }
+    public static float AngleDegrees(this Vector3 vector)
+      => Mathf.Atan2(vector.y, vector.x) * Mathf.Rad2Deg;
 
     public static Vector3 DirectionToRotation2D(this Vector3 vector)
-      => Quaternion.AngleAxis(
-        Mathf.Atan2(vector.y, vector.x) * Mathf.Rad2Deg,
-        Vector3.forward)
-        .eulerAngles;
+      => Quaternion.AngleAxis(vector.AngleDegrees(), Vector3.forward).eulerAngles;
 
     public static float DistanceTo(this Vector3 vector, Vector3 target)
-      => Mathf.Sqrt((vector.x - target.x).Sqr() + (vector.y - target.y).Sqr());
+      => Mathf.Sqrt((vector.x - target.x).Square() + (vector.y - target.y).Square());
   }
 }

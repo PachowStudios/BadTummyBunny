@@ -142,14 +142,13 @@ namespace PachowStudios.BadTummyBunny
           ? startPosition + bufferDelta
           : startPosition + currentDelta;
 
-        if (i <= 0)
+        if (i == 0)
           continue;
 
-        var linecast =
-          Physics2D.Linecast(
-            points[i - 1],
-            points[i],
-            PlayerMovement.CollisionLayers);
+        var linecast = Physics2D.Linecast(
+          points[i - 1],
+          points[i],
+          PlayerMovement.CollisionLayers);
 
         if (linecast.collider == null)
           continue;

@@ -5,19 +5,19 @@ namespace PachowStudios.BadTummyBunny
   public abstract class FacadeView<TModel> : BaseView<TModel>
     where TModel : class, IFacade
   {
-    private void Start()
+    protected virtual void Start()
       => Model.Initialize();
 
-    private void Update()
+    protected virtual void Update()
       => Model.Tick();
 
-    private void LateUpdate()
+    protected virtual void LateUpdate()
       => Model.LateTick();
 
-    private void FixedUpdate()
+    protected virtual void FixedUpdate()
       => Model.FixedTick();
 
-    private void OnDestroy()
+    protected virtual void OnDestroy()
       => Model.Dispose();
   }
 }

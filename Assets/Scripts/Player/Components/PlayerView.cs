@@ -16,9 +16,13 @@ namespace PachowStudios.BadTummyBunny
     public Transform Body => this.body;
     public Transform FartPoint => this.fartPoint;
 
-    [AnimationEvent]
-    public void PlayWalkingSound(int rightStep)
-      => Model.Movement.PlayWalkingSound(rightStep == 1);
+    protected override void LateUpdate()
+    {
+      base.LateUpdate();
+      
+      if (Model.FartInfo.IsFarting)
+        Body.CorrectScaleForRotation(Model.Movement.Velocity.DirectionToRotation2D());
+    }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -49,5 +53,9 @@ namespace PachowStudios.BadTummyBunny
 
     private void OnTriggerStay2D(Collider2D other)
       => OnTriggerEnter2D(other);
+
+    [AnimationEvent]
+    public void PlayWalkingSound(int rightStep)
+      => Model.Movement.PlayWalkingSound(rightStep == 1);
   }
 }

@@ -18,8 +18,11 @@ namespace UnityEngine
     public static float Abs(this float value)
       => Mathf.Abs(value);
 
-    public static float Sqr(this float value)
+    public static float Square(this float value)
       => Mathf.Pow(value, 2);
+
+    public static float SquareRoot(this float value)
+      => Mathf.Sqrt(value);
 
     public static int RoundToInt(this float value)
       => Mathf.RoundToInt(value);

@@ -65,7 +65,7 @@ namespace PachowStudios.BadTummyBunny
       if (knockback.IsZero())
         return;
 
-      knockback.x += Mathf.Sqrt(Mathf.Abs(knockback.x.Sqr() * -Gravity));
+      knockback.x += Mathf.Sqrt(Mathf.Abs(knockback.x.Square() * -Gravity));
 
       if (IsGrounded)
         Velocity = Velocity.SetY(Mathf.Sqrt(Mathf.Abs(knockback.y * -Gravity)));
