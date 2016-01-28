@@ -11,7 +11,7 @@ MonoBehaviour:
   m_Script: {fileID: -727921233, guid: ca8d1606cd5c9cf4680b1ed766df048c, type: 3}
   m_Name: World
   m_EditorClassIdentifier: 
-  _systemName: Enemies
+  _systemName: World Objects
   _tileWidth: 1
   _tileHeight: 1
   _tileDepth: 1
@@ -29,16 +29,16 @@ MonoBehaviour:
   _combineChunkHeight: 30
   _combineIntoSubmeshes: 1
   _staticVertexSnapping: 1
-  _vertexSnapThreshold: .00100000005
+  _vertexSnapThreshold: 0.001
   _generateSecondUVs: 0
   _2ndUV_hardAngle: 88
-  _2ndUV_packMargin: .00390625
-  _2ndUV_angleError: .0799999982
-  _2ndUV_areaError: .150000006
+  _2ndUV_packMargin: 0.00390625
+  _2ndUV_angleError: 0.08
+  _2ndUV_areaError: 0.15
   _pregenerateProcedural: 1
   _reduceColliders:
     _active: 1
-    _snapThreshold: .00999999978
+    _snapThreshold: 0.01
     _keepSeparate: 3
     _includeSolidTiles: 1
     _solidTileColliderType: 0
@@ -47,5 +47,5 @@ MonoBehaviour:
   _updateProceduralAtStart: 1
   _markProceduralDynamic: 0
   _addProceduralNormals: 0
-  _sortingLayerID: 7
+  _sortingLayerID: 0
   _sortingOrder: 0

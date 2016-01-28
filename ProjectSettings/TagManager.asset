@@ -27,7 +27,7 @@ TagManager:
   - Enemies
   - Block Visibility
   - Touch UI
-  - Powerups
+  - Collectibles
   - Killzone
   - 
   - 
@@ -51,6 +51,9 @@ TagManager:
     locked: 0
   - name: Background
     uniqueID: 1155055469
+    locked: 0
+  - name: Background Effects
+    uniqueID: 3722205717
     locked: 0
   - name: Behind Player
     uniqueID: 4048179209

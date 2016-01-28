@@ -18,13 +18,6 @@ namespace PachowStudios.BadTummyBunny
 
     [Inject] private ExplodeEffectSettings Config { get; set; }
 
-    [PostInject]
-    private void PostInject()
-    {
-      ParticleRenderer.sortingLayerName = Config.SortingLayer;
-      ParticleRenderer.sortingOrder = Config.SortingOrder;
-    }
-
     public void Explode([NotNull] Transform target, Vector3 velocity, [NotNull] Sprite sprite, Material material = null)
     {
       Transform.AlignWith(target);
