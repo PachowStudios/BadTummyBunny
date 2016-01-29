@@ -11,20 +11,29 @@ namespace PachowStudios.BadTummyBunny
     IHandles<FartEnemyTriggeredMessage>
       where TConfig : FartSettings
   {
-    private readonly HashSet<ICharacter> pendingTargets = new HashSet<ICharacter>();
-    private readonly HashSet<ICharacter> damagedEnemies = new HashSet<ICharacter>();
-
     private VectorLine trajectoryLine;
-
-    private IMovable PlayerMovement { get; set; }
 
     [Inject] private FartView View { get; set; }
     [Inject] private CameraController CameraController { get; set; }
     [Inject] private IEventAggregator EventAggregator { get; set; }
 
+    private IMovable PlayerMovement { get; set; }
+
     protected abstract TConfig Config { get; set; }
 
+    protected HashSet<ICharacter> PendingTargets { get; } = new HashSet<ICharacter>();
+    protected HashSet<ICharacter> DamagedEnemies { get; } = new HashSet<ICharacter>();
+
     public bool IsFarting { get; protected set; }
+
+    public bool ShowTrajectory
+    {
+      get { return TrajectoryLine.active; }
+      set { TrajectoryLine.active = value; }
+    }
+
+    protected VectorLine TrajectoryLine => this.trajectoryLine;
+    protected List<Vector2> TrajectoryPoints => TrajectoryLine.points2;
 
     public string Name => Config.Name;
     public FartType Type => Config.Type;
@@ -66,8 +75,8 @@ namespace PachowStudios.BadTummyBunny
 
       IsFarting = false;
 
-      this.pendingTargets.Clear();
-      this.damagedEnemies.Clear();
+      PendingTargets.Clear();
+      DamagedEnemies.Clear();
       View.Particles.ForEach(p => p.Stop());
     }
 
@@ -76,27 +85,17 @@ namespace PachowStudios.BadTummyBunny
 
     public virtual void DrawTrajectory(float power, Vector3 direction, float gravity, Vector3 startPosition)
     {
-      var points = CalculateTrajectory(power, direction, gravity, startPosition);
+      if (!ShowTrajectory)
+        return;
 
-      if (points != null)
-      {
-        this.trajectoryLine.SetColor(Config.TrajectoryGradient.Evaluate(power));
-        this.trajectoryLine.MakeSpline(points);
-        this.trajectoryLine.Draw();
-      }
-      else
-        ClearTrajectory();
-    }
-
-    public virtual void ClearTrajectory()
-    {
-      this.trajectoryLine.SetColor(Color.clear);
-      this.trajectoryLine.Draw();
+      UpdateTrajectoryPoints(power, direction, gravity, startPosition);
+      TrajectoryLine.SetColor(Config.TrajectoryGradient.Evaluate(power));
+      TrajectoryLine.Draw();
     }
 
     protected virtual void TryDamageEnemy(IEnemy enemy)
     {
-      if (this.damagedEnemies.Contains(enemy))
+      if (DamagedEnemies.Contains(enemy))
         return;
 
       var origin = View.FartCollider.transform.position;
@@ -104,7 +103,7 @@ namespace PachowStudios.BadTummyBunny
       if (View.FartCollider.OverlapPoint(enemy.Movement.CenterPoint)
           && Physics2D.Linecast(origin, enemy.Movement.CenterPoint, PlayerMovement.CollisionLayers).collider == null)
       {
-        this.damagedEnemies.Add(enemy);
+        DamagedEnemies.Add(enemy);
         DamageEnemy(enemy);
       }
     }
@@ -115,19 +114,17 @@ namespace PachowStudios.BadTummyBunny
         Config.Knockback,
         PlayerMovement.MovementDirection.Dot(-1f, 1f));
 
-    protected virtual Vector3[] CalculateTrajectory(float power, Vector3 direction, float gravity, Vector3 startPosition)
+    protected virtual void UpdateTrajectoryPoints(float power, Vector3 direction, float gravity, Vector3 startPosition)
     {
-      if (power <= 0f)
-        return null;
+      TrajectoryPoints.Clear();
 
-      var points = new Vector3[Config.TrajectorySegments];
       var speed = CalculateSpeed(power);
       var velocity = direction * speed;
       var timeStep = Config.TrajectoryPreviewTime / Config.TrajectorySegments;
       var bufferDelta = direction * Config.TrajectoryStartDistance;
 
       gravity *= timeStep * 0.5f;
-      bufferDelta.y += gravity * Mathf.Pow(Config.TrajectoryStartDistance / speed, 2) * 0.5f;
+      bufferDelta.y += gravity * (Config.TrajectoryStartDistance / speed).Square() * 0.5f;
 
       var bufferSqrMagnitude = bufferDelta.sqrMagnitude;
 
@@ -138,28 +135,18 @@ namespace PachowStudios.BadTummyBunny
         currentDelta.y += gravity * i;
         currentDelta *= timeStep * i;
 
-        points[i] = bufferSqrMagnitude > currentDelta.sqrMagnitude
-          ? startPosition + bufferDelta
-          : startPosition + currentDelta;
-
-        if (i == 0)
+        if (bufferSqrMagnitude > currentDelta.sqrMagnitude)
           continue;
 
-        var linecast = Physics2D.Linecast(
-          points[i - 1],
-          points[i],
-          PlayerMovement.CollisionLayers);
+        TrajectoryPoints.Add(startPosition + currentDelta);
 
-        if (linecast.collider == null)
-          continue;
-
-        for (var j = i - 1; j < Config.TrajectorySegments; j++)
-          points[j] = linecast.point;
-
-        break;
+        if (TrajectoryPoints.HasMultiple()
+            && Physics2D.Linecast(TrajectoryPoints.ElementsBeforeLast(1), TrajectoryPoints.Last(), PlayerMovement.CollisionLayers).collider != null)
+          break;
       }
 
-      return points;
+      for (var i = 0; i < TrajectoryPoints.Count; i++)
+        TrajectoryPoints[i] = CameraController.Camera.WorldToScreenPoint(TrajectoryPoints[i]);
     }
 
     protected void PlaySound(float powerPercentage)
@@ -174,7 +161,6 @@ namespace PachowStudios.BadTummyBunny
 
     protected void InitializeTrajectoryLine()
     {
-      VectorLine.SetCanvasCamera(CameraController.Camera);
       VectorLine.canvas.planeDistance = 9;
       VectorLine.canvas.sortingLayerName = Config.TrajectorySortingLayer;
       VectorLine.canvas.sortingOrder = Config.TrajectorySortingOrder;
@@ -182,13 +168,12 @@ namespace PachowStudios.BadTummyBunny
       this.trajectoryLine =
         new VectorLine(
           "Trajectory",
-          new List<Vector3>(Config.TrajectorySegments),
+          new List<Vector2>(Config.TrajectorySegments),
           CameraController.Camera.UnitsToPixels(Config.TrajectoryWidth),
-          LineType.Continuous,
-          Joins.Fill)
+          LineType.Points)
         {
-          material = Config.TrajectoryMaterial,
-          textureScale = 1f
+          //material = Config.TrajectoryMaterial,
+          //textureScale = 1f
         };
     }
 
@@ -197,16 +182,16 @@ namespace PachowStudios.BadTummyBunny
       var enemy = message.Enemy;
 
       if (!IsFarting
-          || this.pendingTargets.Contains(enemy)
-          || this.damagedEnemies.Contains(enemy))
+          || PendingTargets.Contains(enemy)
+          || DamagedEnemies.Contains(enemy))
         return;
 
-      this.pendingTargets.Add(enemy);
+      PendingTargets.Add(enemy);
       Wait.ForSeconds(
         Config.DamageDelay,
         () =>
         {
-          this.pendingTargets.Remove(enemy);
+          PendingTargets.Remove(enemy);
           TryDamageEnemy(enemy);
         });
     }

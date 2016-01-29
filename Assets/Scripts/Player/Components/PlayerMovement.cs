@@ -69,8 +69,7 @@ namespace PachowStudios.BadTummyBunny
         return;
 
       GetMovement();
-      // Disabled due to strange Vectrosity performance
-      //UpdateFartTrajectory();
+      UpdateFartTrajectory();
       ApplyMovement();
     }
 
@@ -146,10 +145,10 @@ namespace PachowStudios.BadTummyBunny
 
     private void UpdateFartTrajectory()
     {
+      CurrentFart.ShowTrajectory = IsFartAiming;
+
       if (IsFartAiming)
         CurrentFart.DrawTrajectory(FartPower, FartDirection, Gravity, CenterPoint);
-      else
-        CurrentFart.ClearTrajectory();
     }
 
     private void GetMovement()
@@ -253,8 +252,7 @@ namespace PachowStudios.BadTummyBunny
     private void ResetInput()
     {
       HorizontalMovement = 0f;
-      WillJump = false;
-      IsFartAiming = false;
+      WillJump = IsFartAiming = false;
       StopFart();
       UpdateFartTrajectory();
     }

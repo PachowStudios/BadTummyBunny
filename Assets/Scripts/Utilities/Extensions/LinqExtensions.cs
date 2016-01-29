@@ -82,11 +82,15 @@ namespace System.Linq.Extensions
     public static IEnumerable<T> Shuffle<T>([NotNull] this IEnumerable<T> source)
       => source.OrderBy(x => Guid.NewGuid());
 
-    [Pure, NotNull]
+    [Pure, CanBeNull]
+    public static T ElementsBeforeLast<T>([NotNull] this IList<T> source, int itemsBeforeLast)
+      => source[source.Count - itemsBeforeLast - 1];
+
+    [Pure, CanBeNull]
     public static T GetRandom<T>([NotNull] this IList<T> source)
       => source[UnityEngine.Random.Range(0, source.Count)];
 
-    [NotNull]
+    [CanBeNull]
     public static T Remove<T>([NotNull] this IList<T> source, [NotNull] Func<T, bool> predicate)
     {
       var item = source.Single(predicate);
@@ -96,7 +100,7 @@ namespace System.Linq.Extensions
       return item;
     }
 
-    [NotNull]
+    [CanBeNull]
     public static T Pop<T>([NotNull] this IList<T> source)
     {
       var lastIndex = source.Count - 1;
