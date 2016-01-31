@@ -23,7 +23,7 @@ namespace PachowStudios
         foreach (var messageType in
           typeof(THandler).GetInterfaces()
             .Where(i => i.IsAssignableFrom<IHandles<IMessage>>() && i.IsGenericType)
-            .Select(i => i.GetGenericArguments().First()))
+            .Select(i => i.GetGenericArguments().Single()))
           HandlerMethods[messageType] =
             typeof(THandler).GetMethod(
               nameof(IHandles<IMessage>.Handle),

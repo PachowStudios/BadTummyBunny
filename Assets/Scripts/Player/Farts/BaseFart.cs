@@ -88,8 +88,12 @@ namespace PachowStudios.BadTummyBunny
       if (!ShowTrajectory)
         return;
 
-      UpdateTrajectoryPoints(power, direction, gravity, startPosition);
-      TrajectoryLine.SetColor(Config.TrajectoryGradient.Evaluate(power));
+      TrajectoryPoints.ReplaceAll(
+        TranslateTrajectoryPoints(
+          CalculateTrajectoryPoints(
+            power, direction, gravity, startPosition)));
+
+      TrajectoryLine.SetColor(CalculateTrajectoryColor(power));
       TrajectoryLine.Draw();
     }
 
@@ -114,41 +118,6 @@ namespace PachowStudios.BadTummyBunny
         Config.Knockback,
         PlayerMovement.MovementDirection.Dot(-1f, 1f));
 
-    protected virtual void UpdateTrajectoryPoints(float power, Vector3 direction, float gravity, Vector3 startPosition)
-    {
-      TrajectoryPoints.Clear();
-
-      var speed = CalculateSpeed(power);
-      var velocity = direction * speed;
-      var timeStep = Config.TrajectoryPreviewTime / Config.TrajectorySegments;
-      var bufferDelta = direction * Config.TrajectoryStartDistance;
-
-      gravity *= timeStep * 0.5f;
-      bufferDelta.y += gravity * (Config.TrajectoryStartDistance / speed).Square() * 0.5f;
-
-      var bufferSqrMagnitude = bufferDelta.sqrMagnitude;
-
-      for (var i = 0; i < Config.TrajectorySegments; i++)
-      {
-        var currentDelta = velocity;
-
-        currentDelta.y += gravity * i;
-        currentDelta *= timeStep * i;
-
-        if (bufferSqrMagnitude > currentDelta.sqrMagnitude)
-          continue;
-
-        TrajectoryPoints.Add(startPosition + currentDelta);
-
-        if (TrajectoryPoints.HasMultiple()
-            && Physics2D.Linecast(TrajectoryPoints.ElementsBeforeLast(1), TrajectoryPoints.Last(), PlayerMovement.CollisionLayers).collider != null)
-          break;
-      }
-
-      for (var i = 0; i < TrajectoryPoints.Count; i++)
-        TrajectoryPoints[i] = CameraController.Camera.WorldToScreenPoint(TrajectoryPoints[i]);
-    }
-
     protected void PlaySound(float powerPercentage)
       => SoundManager.PlayCappedSFXFromGroup(
         Config.SoundEffects
@@ -156,10 +125,7 @@ namespace PachowStudios.BadTummyBunny
           .Highest(e => e.Power)
           .SfxGroup);
 
-    protected void StartParticles()
-      => View.Particles.ForEach(p => p.Play());
-
-    protected void InitializeTrajectoryLine()
+    private void InitializeTrajectoryLine()
     {
       VectorLine.canvas.planeDistance = 9;
       VectorLine.canvas.sortingLayerName = Config.TrajectorySortingLayer;
@@ -169,13 +135,78 @@ namespace PachowStudios.BadTummyBunny
         new VectorLine(
           "Trajectory",
           new List<Vector2>(Config.TrajectorySegments),
-          CameraController.Camera.UnitsToPixels(Config.TrajectoryWidth),
-          LineType.Points)
-        {
-          //material = Config.TrajectoryMaterial,
-          //textureScale = 1f
-        };
+          CameraController.Camera.UnitsToPixels(Config.TrajectoryPointSize),
+          LineType.Points);
     }
+
+    private IEnumerable<Vector2> CalculateTrajectoryPoints(float power, Vector2 direction, float gravity, Vector2 startPosition)
+    {
+      var points = new List<Vector2>(Config.TrajectorySegments);
+      var speed = CalculateSpeed(power);
+      var velocity = direction * speed;
+      var timeStep = Config.TrajectoryPreviewTime / Config.TrajectorySegments;
+      var buffer = direction * Config.TrajectoryStartDistance;
+      var hasPastBuffer = false;
+
+      gravity *= timeStep * 0.5f;
+      buffer.y += gravity * (Config.TrajectoryStartDistance / speed).Square() * 0.5f;
+
+      var bufferSqrMagnitude = buffer.sqrMagnitude;
+
+      for (var i = 0; i < Config.TrajectorySegments; i++)
+      {
+        var currentDelta = velocity;
+
+        currentDelta.y += gravity * i;
+        currentDelta *= timeStep * i;
+
+        hasPastBuffer |= currentDelta.sqrMagnitude >= bufferSqrMagnitude;
+
+        if (!hasPastBuffer)
+          continue;
+
+        var previous = points.Any() ? points.Last() : startPosition;
+        var current = startPosition + currentDelta;
+
+        if (Physics2D.Linecast(previous, current, PlayerMovement.CollisionLayers).collider != null)
+          break;
+
+        points.Add(current);
+      }
+
+      return points;
+    }
+
+    private IEnumerable<Vector2> TranslateTrajectoryPoints(IEnumerable<Vector2> points)
+    {
+      using (var enumerator = points.GetEnumerator())
+      {
+        if (!enumerator.MoveNext())
+          yield break;
+
+        var previous = enumerator.Current;
+
+        yield return CameraController.Camera.WorldToScreenPoint(previous);
+
+        while (enumerator.MoveNext())
+        {
+          var distance = previous.DistanceTo(enumerator.Current);
+
+          if (distance < Config.TrajectoryPointSeparation)
+            continue;
+
+          previous = previous.LerpTo(enumerator.Current, Config.TrajectoryPointSeparation / distance);
+
+          yield return CameraController.Camera.WorldToScreenPoint(previous);
+        }
+      }
+    }
+
+    private Color CalculateTrajectoryColor(float power)
+      => Config.TrajectoryGradient.Evaluate(power);
+
+    private void StartParticles()
+      => View.Particles.ForEach(p => p.Play());
 
     public void Handle(FartEnemyTriggeredMessage message)
     {

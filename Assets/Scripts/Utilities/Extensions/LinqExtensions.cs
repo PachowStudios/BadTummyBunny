@@ -7,11 +7,11 @@ namespace System.Linq.Extensions
   public static class LinqExtensions
   {
     [Pure]
-    public static bool IsEmpty<T>([NotNull] this IEnumerable<T> source)
+    public static bool IsEmpty<T>([NotNull, NoEnumeration] this IEnumerable<T> source)
       => !source.Any();
 
     [Pure]
-    public static bool IsNullOrEmpty<T>([CanBeNull] this IEnumerable<T> source)
+    public static bool IsNullOrEmpty<T>([CanBeNull, NoEnumeration] this IEnumerable<T> source)
       => source == null || source.IsEmpty();
 
     [Pure]
@@ -83,21 +83,31 @@ namespace System.Linq.Extensions
       => source.OrderBy(x => Guid.NewGuid());
 
     [Pure, CanBeNull]
-    public static T ElementsBeforeLast<T>([NotNull] this IList<T> source, int itemsBeforeLast)
+    public static T ElementBeforeLast<T>([NotNull] this IList<T> source, int itemsBeforeLast)
       => source[source.Count - itemsBeforeLast - 1];
 
     [Pure, CanBeNull]
     public static T GetRandom<T>([NotNull] this IList<T> source)
       => source[UnityEngine.Random.Range(0, source.Count)];
 
-    [CanBeNull]
-    public static T Remove<T>([NotNull] this IList<T> source, [NotNull] Func<T, bool> predicate)
-    {
-      var item = source.Single(predicate);
+    public static void Add<T>([NotNull] this IList<T> source, [NotNull] IEnumerable<T> items)
+      => items.ForEach(source.Add);
 
-      source.Remove(item);
+    [CanBeNull]
+    public static T RemoveSingle<T>([NotNull] this IList<T> source, [NotNull] Func<T, bool> predicate)
+    {
+      var item = source.SingleOrDefault(predicate);
+
+      if (Equals(item, default(T)))
+        source.Remove(item);
 
       return item;
+    }
+
+    public static void ReplaceAll<T>([NotNull] this IList<T> source, [NotNull] IEnumerable<T> items)
+    {
+      source.Clear();
+      source.Add(items);
     }
 
     [CanBeNull]

@@ -29,11 +29,11 @@ namespace PachowStudios.BadTummyBunny
     [Header("Trajectory")]
     public float TrajectoryPreviewTime = 1f;
     public float TrajectoryStartDistance = 1f;
-    public float TrajectoryWidth = 0.3f;
+    public float TrajectoryPointSeparation = 0.5f;
+    public float TrajectoryPointSize = 0.125f;
     [Range(8, 64)]
     public int TrajectorySegments = 16;
     public Gradient TrajectoryGradient = null;
-    public Material TrajectoryMaterial = null;
     public string TrajectorySortingLayer = "UI";
     public int TrajectorySortingOrder = -1;
   }

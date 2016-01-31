@@ -51,6 +51,12 @@
     public static Vector2 Dot(this Vector2 vector, float x, float y)
       => new Vector2(vector.x * x, vector.y * y);
 
+    public static float DistanceTo(this Vector2 vector, Vector2 other)
+      => Vector2.Distance(vector, other);
+
+    public static Vector2 LerpTo(this Vector2 vector, Vector2 other, float t)
+      => Vector2.Lerp(vector, other, t);
+
     public static Vector2 Vary(this Vector2 vector, float variance)
       => new Vector2(
         vector.x.Vary(variance),
