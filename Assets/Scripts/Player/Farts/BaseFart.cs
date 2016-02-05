@@ -143,30 +143,35 @@ namespace PachowStudios.BadTummyBunny
     {
       var points = new List<Vector2>(Config.TrajectorySegments);
       var speed = CalculateSpeed(power);
-      var velocity = direction * speed;
+      var initialVelocity = direction * speed;
       var timeStep = Config.TrajectoryPreviewTime / Config.TrajectorySegments;
       var buffer = direction * Config.TrajectoryStartDistance;
       var hasPastBuffer = false;
 
-      gravity *= timeStep * 0.5f;
+      gravity *= timeStep / 2f;
       buffer.y += gravity * (Config.TrajectoryStartDistance / speed).Square() * 0.5f;
 
       var bufferSqrMagnitude = buffer.sqrMagnitude;
 
       for (var i = 0; i < Config.TrajectorySegments; i++)
       {
-        var currentDelta = velocity;
+        var delta = initialVelocity;
 
-        currentDelta.y += gravity * i;
-        currentDelta *= timeStep * i;
-
-        hasPastBuffer |= currentDelta.sqrMagnitude >= bufferSqrMagnitude;
+        delta.y += gravity * i;
+        delta *= timeStep * i;
 
         if (!hasPastBuffer)
-          continue;
+        {
+          hasPastBuffer = delta.sqrMagnitude >= bufferSqrMagnitude;
+
+          if (hasPastBuffer)
+            delta = buffer;
+          else
+            continue;
+        }
 
         var previous = points.Any() ? points.Last() : startPosition;
-        var current = startPosition + currentDelta;
+        var current = startPosition + delta;
 
         if (Physics2D.Linecast(previous, current, PlayerMovement.CollisionLayers).collider != null)
           break;
