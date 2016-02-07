@@ -3,7 +3,7 @@
 namespace PachowStudios.BadTummyBunny
 {
   [InstallerSettings]
-  public class LevelStarConfig : ScriptableObject
+  public class LevelStarSettings : ScriptableObject
   {
     public string StarId;
     public string StarName;

@@ -18,6 +18,12 @@ namespace PachowStudios.BadTummyBunny.UI
     [DataBound, ChangeHandler(nameof(UpdateLayout))]
     public List<Field<bool>> Stars = new List<Field<bool>>();
 
+    public void Show()
+      => this.ShowAnimation.StartAnimation();
+
+    public void Hide()
+      => this.HideAnimation.StartAnimation();
+
     public void SetLevel(WorldMapLevel level)
     {
       SetValue(() => this.LevelName, level.LevelName);

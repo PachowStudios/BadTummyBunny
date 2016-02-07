@@ -18,12 +18,10 @@ namespace PachowStudios.BadTummyBunny.UI
     public void Handle(LevelSelectedMessage message)
     {
       this.LevelPopup.SetLevel(message.Level);
-      this.LevelPopup.ShowAnimation.StartAnimation();
+      this.LevelPopup.Show();
     }
 
     public void Handle(LevelDeselectedMessage message)
-    {
-      this.LevelPopup.HideAnimation.StartAnimation();
-    }
+      => this.LevelPopup.Hide();
   }
 }

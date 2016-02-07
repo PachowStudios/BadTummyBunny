@@ -65,7 +65,7 @@ namespace PachowStudios.BadTummyBunny
       IsFarting = true;
 
       PlaySound(power.Clamp01());
-      Wait.ForFixedUpdate(StartParticles);
+      Wait.ForFixedUpdate(View.StartParticles);
     }
 
     public virtual void StopFart()
@@ -77,7 +77,7 @@ namespace PachowStudios.BadTummyBunny
 
       PendingTargets.Clear();
       DamagedEnemies.Clear();
-      View.Particles.ForEach(p => p.Stop());
+      View.StopParticles();
     }
 
     public virtual float CalculateSpeed(float power)
@@ -141,7 +141,7 @@ namespace PachowStudios.BadTummyBunny
 
     private IEnumerable<Vector2> CalculateTrajectoryPoints(float power, Vector2 direction, float gravity, Vector2 startPosition)
     {
-      var points = new List<Vector2>(Config.TrajectorySegments);
+      var previous = startPosition;
       var speed = CalculateSpeed(power);
       var initialVelocity = direction * speed;
       var timeStep = Config.TrajectoryPreviewTime / Config.TrajectorySegments;
@@ -170,16 +170,13 @@ namespace PachowStudios.BadTummyBunny
             continue;
         }
 
-        var previous = points.Any() ? points.Last() : startPosition;
         var current = startPosition + delta;
 
         if (Physics2D.Linecast(previous, current, PlayerMovement.CollisionLayers).collider != null)
           break;
 
-        points.Add(current);
+        yield return previous = current;
       }
-
-      return points;
     }
 
     private IEnumerable<Vector2> TranslateTrajectoryPoints(IEnumerable<Vector2> points)
@@ -209,9 +206,6 @@ namespace PachowStudios.BadTummyBunny
 
     private Color CalculateTrajectoryColor(float power)
       => Config.TrajectoryGradient.Evaluate(power);
-
-    private void StartParticles()
-      => View.Particles.ForEach(p => p.Play());
 
     public void Handle(FartEnemyTriggeredMessage message)
     {

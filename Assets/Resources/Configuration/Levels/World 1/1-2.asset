@@ -11,8 +11,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1f000168ac853743967a306d4304d01, type: 3}
   m_Name: 1-2
   m_EditorClassIdentifier: 
-  LevelId: 1-2
-  LevelScene: Level 2
-  LevelName: Level 2
+  Name: Level 2
+  Scene: 1
   RequiredStars: 0
-  Stars: []
+  Stars:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}

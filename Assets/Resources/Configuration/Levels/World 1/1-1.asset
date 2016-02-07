@@ -14,4 +14,7 @@ MonoBehaviour:
   Name: Level 1
   Scene: 1
   RequiredStars: 0
-  Stars: []
+  Stars:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}

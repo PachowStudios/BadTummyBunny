@@ -4,13 +4,13 @@ using UnityEngine;
 namespace PachowStudios.BadTummyBunny
 {
   [InstallerSettings]
-  public class LevelConfig : ScriptableObject
+  public class LevelSettings : ScriptableObject
   {
     public string Name;
     public Scene Scene;
 
     public int RequiredStars;
 
-    public List<LevelStarConfig> Stars;
+    public List<LevelStarSettings> Stars;
   }
 }

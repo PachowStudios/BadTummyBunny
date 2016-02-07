@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Extensions;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Assertions;
 using Zenject;
@@ -11,23 +12,21 @@ namespace PachowStudios.BadTummyBunny
   [AddComponentMenu("Bad Tummy Bunny/World Map/Level")]
   public class WorldMapLevel : MonoBehaviour
   {
-    [SerializeField] private LevelConfig levelConfig = null;
+    [SerializeField] private LevelSettings config = null;
     [SerializeField] private int collectedStars = 0;
-    [SerializeField] private int possibleStars = 3;
     [SerializeField] private List<WorldMapConnection> connections = new List<WorldMapConnection>();
 
     public bool IsSelected => ReferenceEquals(this, WorldMap.SelectedLevel);
 
-    public string LevelName => this.levelConfig.Name;
+    public string LevelName => this.config.Name;
     public int CollectedStars => this.collectedStars;
-    public int PossibleStars => this.possibleStars;
+    public int PossibleStars => this.config.Stars.Count;
     public IEnumerable<WorldMapConnection> Connections => this.connections;
     public IEnumerable<WorldMapConnection> EnabledConnections => Connections.Where(c => c.IsEnabled);
-    public bool HasEnabledConnections => Connections.Any(c => c.IsEnabled);
     public Vector3 Position => transform.position;
 
     [Inject] private WorldMap WorldMap { get; set; }
-    [Inject] private ISceneLoader SceneLoader { get; }
+    [Inject] private ISceneLoader SceneLoader { get; set; }
 
     private void Awake()
     {
@@ -45,16 +44,17 @@ namespace PachowStudios.BadTummyBunny
     }
 
     public void LoadScene()
-      => SceneLoader.LoadScene(this.levelConfig.Scene);
+      => SceneLoader.LoadScene(this.config.Scene);
 
     public bool HasNeighbor(WorldMapLevel level)
       => this.connections.Any(c => c.ConnectsToLevel(level));
 
-    public void OnSelected() { }
+    public virtual void OnSelected() { }
 
-    public void OnDeselected() { }
+    public virtual void OnDeselected() { }
 
-    public void OnTouched(Touch touch)
+    [UsedImplicitly]
+    public virtual void OnTouched(Touch touch)
     {
       if (touch.phase == TouchPhase.Began)
         WorldMap.NavigateToLevel(this);
