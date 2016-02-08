@@ -6,16 +6,18 @@ namespace PachowStudios.BadTummyBunny
 {
   public sealed class PlayerMovement : BaseMovable<PlayerMovementSettings, PlayerView>, IFartInfoProvider, IInitializable, ITickable, ILateTickable, IDisposable,
     IHandles<PlayerCollidedMessage>,
-    IHandles<PlayerCarrotTriggeredMessage>,
-    IHandles<PlayerFlagpoleTriggeredMessage>
+    IHandles<PlayerCoinCollectedMessage>,
+    IHandles<PlayerCarrotCollectedMessage>,
+    IHandles<PlayerFlagpoleActivatedMessage>
   {
+    [InjectLocal] protected override PlayerMovementSettings Config { get; set; }
+    [InjectLocal] protected override PlayerView View { get; set; }
+
     [InjectLocal] private PlayerInput PlayerInput { get; set; }
     [InjectLocal] private IHasHealth Health { get; set; }
     [InjectLocal] private IEventAggregator LocalEventAggregator { get; set; }
 
-    [InjectLocal] protected override PlayerMovementSettings Config { get; set; }
-    [InjectLocal] protected override PlayerView View { get; set; }
-
+    [Inject(BindingIds.Global)] private IEventAggregator EventAggregator { get; set; }
     [Inject] private IFactory<FartType, IFart> FartFactory { get; set; }
     [Inject] private IGameMenu GameMenu { get; set; }
 
@@ -45,6 +47,7 @@ namespace PachowStudios.BadTummyBunny
     private void PostInject()
     {
       LocalEventAggregator.Subscribe(this);
+      EventAggregator.Subscribe(this);
       AnimationController = new AnimationController(View.Animator,
         new AnimationCondition("Walking", () => HorizontalMovement.Abs() > 0.01f && !IsFarting),
         new AnimationCondition("Grounded", () => IsGrounded),
@@ -265,10 +268,13 @@ namespace PachowStudios.BadTummyBunny
         StopFart(!IsGrounded);
     }
 
-    public void Handle(PlayerCarrotTriggeredMessage message)
-      => message.Carrot?.Collect();
+    public void Handle(PlayerCoinCollectedMessage message)
+      => message.Coin.Collect();
 
-    public void Handle(PlayerFlagpoleTriggeredMessage message)
+    public void Handle(PlayerCarrotCollectedMessage message)
+      => message.Carrot.Collect();
+
+    public void Handle(PlayerFlagpoleActivatedMessage message)
       => ActivateLevelFlagpole(message.Flagpole);
 
     private static void PlayLandingSound()

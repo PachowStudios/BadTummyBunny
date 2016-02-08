@@ -94,7 +94,7 @@ namespace PachowStudios.BadTummyBunny
             smallestNode = previousNodes[smallestNode];
           }
 
-          return path.ToList();
+          break;
         }
 
         if (distances[smallestNode] >= float.MaxValue)
@@ -102,9 +102,7 @@ namespace PachowStudios.BadTummyBunny
 
         foreach (var connection in smallestNode.EnabledConnections)
         {
-          var distance =
-            distances[smallestNode]
-            + smallestNode.Position.DistanceTo(connection.ConnectedLevel.Position);
+          var distance = distances[smallestNode] + smallestNode.Position.DistanceTo(connection.ConnectedLevel.Position);
           var connectedLevel = connection.ConnectedLevel;
 
           if (distance >= distances[connectedLevel])

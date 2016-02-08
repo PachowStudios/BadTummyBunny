@@ -6,5 +6,6 @@ namespace PachowStudios.BadTummyBunny
 
     void ReloadScene();
     void LoadScene(Scene scene);
+    void QuitGame();
   }
 }

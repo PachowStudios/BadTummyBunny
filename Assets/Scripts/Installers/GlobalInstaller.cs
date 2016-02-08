@@ -10,15 +10,22 @@ namespace PachowStudios.BadTummyBunny
     {
       Container.BindAllInterfacesToSingle<Bootystrapper>();
 
-      InstallServiceBindings();
+      InstallGeneralServiceBindings();
+      InstallPlayerServiceBindings();
     }
 
-    private void InstallServiceBindings()
+    private void InstallGeneralServiceBindings()
     {
-      Container.Bind<IEventAggregator>().ToSingle<EventAggregator>();
       Container.Bind<IEventAggregator>(BindingIds.Global).ToSingle<EventAggregator>();
+      Container.Bind<IEventAggregator>().ToLookup<IEventAggregator>(BindingIds.Global);
+
       Container.BindSingleWithInterfaces<SceneService>();
       Container.BindSingle<SaveService>();
+    }
+
+    private void InstallPlayerServiceBindings()
+    {
+      Container.BindSingleWithInterfaces<PlayerScoreService>();
       Container.BindSingle<PlayerStatsService>();
     }
   }

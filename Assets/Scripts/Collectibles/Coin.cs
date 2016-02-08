@@ -7,7 +7,7 @@ namespace PachowStudios.BadTummyBunny
   [AddComponentMenu("Bad Tummy Bunny/Collectibles/Coin")]
   public class Coin : BaseView
   {
-    [UsedImplicitly]
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public enum CoinValue
     {
       Copper = 1,

@@ -5,9 +5,9 @@ namespace PachowStudios.BadTummyBunny
 {
   public sealed class PlayerHealth : BaseHasHealth, IHasHealthContainers, IInitializable, ITickable,
     IHandles<CharacterKillzoneTriggeredMessage>,
-    IHandles<PlayerCarrotTriggeredMessage>,
-    IHandles<PlayerEnemyTriggeredMessage>,
-    IHandles<PlayerRespawnPointTriggeredMessage>
+    IHandles<PlayerCarrotCollectedMessage>,
+    IHandles<PlayerEnemyCollidedMessage>,
+    IHandles<PlayerRespawnPointActivatedMessage>
   {
     private const float FlashTime = 0.25f;
 
@@ -74,6 +74,7 @@ namespace PachowStudios.BadTummyBunny
       this.lastHitTime = Time.time - Config.InvincibilityPeriod;
 
       LocalEventAggregator.Subscribe(this);
+      EventAggregator.Subscribe(this);
     }
 
     public void Initialize()
@@ -177,13 +178,13 @@ namespace PachowStudios.BadTummyBunny
     public void Handle(CharacterKillzoneTriggeredMessage message)
       => Respawn();
 
-    public void Handle(PlayerCarrotTriggeredMessage message)
+    public void Handle(PlayerCarrotCollectedMessage message)
       => HealFromCarrot();
 
-    public void Handle(PlayerEnemyTriggeredMessage message)
+    public void Handle(PlayerEnemyCollidedMessage message)
       => Damage(message.Enemy);
 
-    public void Handle(PlayerRespawnPointTriggeredMessage message)
+    public void Handle(PlayerRespawnPointActivatedMessage message)
       => SetRespawnPoint(message.RespawnPoint);
   }
 }

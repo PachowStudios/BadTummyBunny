@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
@@ -18,7 +19,7 @@ namespace PachowStudios.BadTummyBunny
       => EventAggregator.Subscribe(this);
 
     private void Awake()
-      => this.coinsText.text = new string('0', this.coinsDigits);
+      => this.coinsText.text = '0'.Repeat(this.coinsDigits);
 
     public void Handle(PlayerCoinsChangedMessage message)
       => this.coinsText.text = message.Coins.ToString().PadLeft(this.coinsDigits, '0');

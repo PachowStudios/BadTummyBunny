@@ -11,6 +11,8 @@ namespace PachowStudios.BadTummyBunny
 
     [InjectLocal] private IEventAggregator LocalEventAggregator { get; set; }
 
+    [Inject(BindingIds.Global)] private IEventAggregator EventAggregator { get; set; }
+
     [Inject] public override Player Model { get; protected set; }
 
     public Transform Body => this.body;
@@ -31,19 +33,19 @@ namespace PachowStudios.BadTummyBunny
       switch (other.tag)
       {
         case Tags.Enemy:
-          LocalEventAggregator.Publish(new PlayerEnemyTriggeredMessage(other.GetViewModel<IEnemy>()));
+          EventAggregator.Publish(new PlayerEnemyCollidedMessage(other.GetViewModel<IEnemy>()));
           break;
         case Tags.Coin:
-          LocalEventAggregator.Publish(new PlayerCoinTriggeredMessage(other.GetComponent<Coin>()));
+          EventAggregator.Publish(new PlayerCoinCollectedMessage(other.GetComponent<Coin>()));
           break;
         case Tags.Carrot:
-          LocalEventAggregator.Publish(new PlayerCarrotTriggeredMessage(other.GetComponent<Carrot>()));
+          EventAggregator.Publish(new PlayerCarrotCollectedMessage(other.GetComponent<Carrot>()));
           break;
         case Tags.Flagpole:
-          LocalEventAggregator.Publish(new PlayerFlagpoleTriggeredMessage(other.GetComponent<Flagpole>()));
+          EventAggregator.Publish(new PlayerFlagpoleActivatedMessage(other.GetComponent<Flagpole>()));
           break;
         case Tags.RespawnPoint:
-          LocalEventAggregator.Publish(new PlayerRespawnPointTriggeredMessage(other.GetComponent<RespawnPoint>()));
+          EventAggregator.Publish(new PlayerRespawnPointActivatedMessage(other.GetComponent<RespawnPoint>()));
           break;
         case Tags.Killzone:
           LocalEventAggregator.Publish(new CharacterKillzoneTriggeredMessage());

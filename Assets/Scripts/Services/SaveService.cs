@@ -22,8 +22,6 @@ namespace PachowStudios.BadTummyBunny
     }
 
     public void Save()
-      => (CurrentSave ?? new SaveFile())
-        .SerializeToXml()
-        .Save(SaveFilePath);
+      => (CurrentSave ?? new SaveFile()).SerializeToXml().Save(SaveFilePath);
   }
 }

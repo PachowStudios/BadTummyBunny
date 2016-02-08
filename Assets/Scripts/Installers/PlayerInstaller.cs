@@ -27,7 +27,6 @@ namespace PachowStudios.BadTummyBunny
       subContainer.BindSingle<PlayerInput>();
       subContainer.BindSingleWithInterfaces<PlayerMovement>();
       subContainer.BindSingleWithInterfaces<PlayerHealth>();
-      subContainer.BindSingleWithInterfaces<PlayerScore>();
       subContainer.BindSingleWithInterfaces<FartAimLean>();
 
       subContainer.Bind<IEventAggregator>().ToSingle<EventAggregator>();
