@@ -11,7 +11,7 @@ namespace PachowStudios.BadTummyBunny
     public struct SfxPowerMapping
     {
       public SfxGroup SfxGroup;
-      public float Power;
+      [Range(0f, 1f)] public float Power;
     }
 
     [Header("Definition")]

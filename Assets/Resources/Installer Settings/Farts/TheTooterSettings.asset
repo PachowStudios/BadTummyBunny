@@ -22,9 +22,9 @@ MonoBehaviour:
   - SfxGroup: 0
     Power: 0
   - SfxGroup: 1
-    Power: 35
+    Power: 0.5
   - SfxGroup: 2
-    Power: 75
+    Power: 0.8
   TrajectoryPreviewTime: 0.5
   TrajectoryStartDistance: 1
   TrajectoryPointSeparation: 0.5

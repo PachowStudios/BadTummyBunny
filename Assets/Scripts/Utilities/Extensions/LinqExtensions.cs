@@ -65,8 +65,8 @@ namespace System.Linq.Extensions
     [Pure, CanBeNull]
     public static TSource Lowest<TSource, TKey>([NotNull] this IEnumerable<TSource> source, [NotNull] Func<TSource, TKey> selector, [NotNull] IComparer<TKey> comparer)
       => source.Aggregate((lowest, current)
-        => comparer.Compare(selector(current), selector(lowest)) < 0
-          ? current : lowest);
+        => comparer.Compare(selector(lowest), selector(current)) < 0
+          ? lowest : current);
 
     [Pure, CanBeNull]
     public static TSource Highest<TSource, TKey>([NotNull] this IEnumerable<TSource> source, [NotNull] Func<TSource, TKey> selector)
@@ -75,8 +75,8 @@ namespace System.Linq.Extensions
     [Pure, CanBeNull]
     public static TSource Highest<TSource, TKey>([NotNull] this IEnumerable<TSource> source, [NotNull] Func<TSource, TKey> selector, [NotNull] IComparer<TKey> comparer)
       => source.Aggregate((highest, current)
-        => comparer.Compare(selector(current), selector(highest)) > 0
-          ? current : highest);
+        => comparer.Compare(selector(highest), selector(current)) > 0
+          ? highest : current);
 
     [NotNull]
     public static IEnumerable<T> Shuffle<T>([NotNull] this IEnumerable<T> source)
