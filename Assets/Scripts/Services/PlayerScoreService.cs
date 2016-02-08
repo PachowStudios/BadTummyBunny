@@ -1,4 +1,4 @@
-﻿using UnityEngine.Assertions;
+﻿using PachowStudios.Assertions;
 using Zenject;
 
 namespace PachowStudios.BadTummyBunny
@@ -29,15 +29,15 @@ namespace PachowStudios.BadTummyBunny
 
     public void AddCoins(int coinsToAdd)
     {
-      Assert.IsTrue(coinsToAdd > 0);
+      coinsToAdd.Should().BeGreaterThan(0);
 
       Coins += coinsToAdd;
     }
 
     public void RemoveCoins(int coinsToRemove)
     {
-      Assert.IsTrue(coinsToRemove > 0);
-      Assert.IsTrue(Coins - coinsToRemove >= 0);
+      coinsToRemove.Should().BeGreaterThan(0);
+      Coins.Should().BeAtLeast(coinsToRemove, "because the player cannot have fewer than 0 coins.");
 
       Coins -= coinsToRemove;
     }

@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using UnityEngine.Assertions;
+﻿using PachowStudios.Assertions;
+using UnityEngine;
 
 namespace PachowStudios.BadTummyBunny
 {
@@ -12,7 +12,7 @@ namespace PachowStudios.BadTummyBunny
 
     public virtual void Heal(int amountToHeal)
     {
-      Assert.IsTrue(amountToHeal > 0);
+      amountToHeal.Should().BeGreaterThan(0);
 
       Health += amountToHeal;
     }

@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Linq.Extensions;
 using JetBrains.Annotations;
+using PachowStudios.Assertions;
 using UnityEngine;
-using UnityEngine.Assertions;
 using Zenject;
 using Touch = InControl.Touch;
 
@@ -30,8 +30,8 @@ namespace PachowStudios.BadTummyBunny
 
     private void Awake()
     {
-      Assert.IsFalse(Connections.IsEmpty(), $"{name} doesn't have any connections!");
-      Assert.IsFalse(Connections.Any(c => c.ConnectedLevel == null), $"{name} has an uninitialized connection!");
+      Connections.IsEmpty().Should().BeFalse($"because {name} must connect to other levels.");
+      Connections.None(c => c.ConnectedLevel == null).Should().BeTrue($"because no connections to {name} can be null");
     }
 
     private void OnDrawGizmosSelected()

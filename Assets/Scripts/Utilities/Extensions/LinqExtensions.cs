@@ -10,7 +10,7 @@ namespace System.Linq.Extensions
     public static bool IsEmpty<T>([NotNull, NoEnumeration] this IEnumerable<T> source)
       => !source.Any();
 
-    [Pure]
+    [Pure, ContractAnnotation("null => true")]
     public static bool IsNullOrEmpty<T>([CanBeNull, NoEnumeration] this IEnumerable<T> source)
       => source == null || source.IsEmpty();
 
