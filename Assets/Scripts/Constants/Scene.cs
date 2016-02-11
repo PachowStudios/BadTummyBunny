@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel;
+using JetBrains.Annotations;
 
 namespace PachowStudios.BadTummyBunny
 {
+  [UsedImplicitly(ImplicitUseTargetFlags.Members)]
   public enum Scene
   {
     [Description("World Map")]

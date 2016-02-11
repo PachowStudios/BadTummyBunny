@@ -11,6 +11,6 @@ namespace PachowStudios.BadTummyBunny
 
     public int RequiredStars;
 
-    public List<LevelStarSettings> Stars;
+    public List<StarSettings> Stars;
   }
 }

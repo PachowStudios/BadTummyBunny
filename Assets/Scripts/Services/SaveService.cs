@@ -6,7 +6,9 @@ namespace PachowStudios.BadTummyBunny
 {
   public class SaveService
   {
-    private static string SaveFilePath { get; } = Path.Combine(Application.persistentDataPath, "BadTummyBunny.save.xml");
+    private const string SaveFileName = "BadTummyBunny.save.xml";
+
+    private static string SaveFilePath { get; } = Path.Combine(Application.persistentDataPath, SaveFileName);
 
     public SaveFile CurrentSave { get; private set; }
 

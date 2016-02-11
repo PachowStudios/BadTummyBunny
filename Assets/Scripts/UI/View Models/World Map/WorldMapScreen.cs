@@ -17,7 +17,7 @@ namespace PachowStudios.BadTummyBunny.UI
 
     public void Handle(LevelSelectedMessage message)
     {
-      this.LevelPopup.SetLevel(message.Level);
+      this.LevelPopup.Level = message.Level;
       this.LevelPopup.Show();
     }
 
