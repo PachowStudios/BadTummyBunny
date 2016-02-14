@@ -7,6 +7,6 @@
 
     StarRequirement Requirement { get; }
 
-    bool Completed { get; }
+    CompletionState CompletionState { get; }
   }
 }

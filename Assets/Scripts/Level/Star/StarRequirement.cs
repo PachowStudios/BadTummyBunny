@@ -7,7 +7,9 @@ namespace PachowStudios.BadTummyBunny
   {
     [TypeMapping(typeof(CollectCoinsStar))]
     CollectCoins,
+    [TypeMapping(typeof(KillEnemiesStar))]
     KillEnemies,
+    [TypeMapping(typeof(CompletionTimeStar))]
     CompletionTime
   }
 }

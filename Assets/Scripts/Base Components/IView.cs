@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace PachowStudios
+namespace PachowStudios.BadTummyBunny
 {
   public interface IView : IDisposable
   {

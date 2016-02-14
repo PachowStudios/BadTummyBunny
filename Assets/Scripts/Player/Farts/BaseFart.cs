@@ -97,6 +97,23 @@ namespace PachowStudios.BadTummyBunny
       TrajectoryLine.Draw();
     }
 
+    protected virtual void TargetEnemy(IEnemy enemy)
+    {
+      if (!IsFarting
+          || PendingTargets.Contains(enemy)
+          || DamagedEnemies.Contains(enemy))
+        return;
+
+      PendingTargets.Add(enemy);
+      Wait.ForSeconds(
+        Config.DamageDelay,
+        () =>
+        {
+          PendingTargets.Remove(enemy);
+          TryDamageEnemy(enemy);
+        });
+    }
+
     protected virtual void TryDamageEnemy(IEnemy enemy)
     {
       if (DamagedEnemies.Contains(enemy))
@@ -113,10 +130,15 @@ namespace PachowStudios.BadTummyBunny
     }
 
     protected virtual void DamageEnemy(IEnemy enemy)
-      => enemy.Health.Damage(
+    {
+      enemy.Health.TakeDamage(
         Config.Damage,
         Config.Knockback,
         PlayerMovement.MovementDirection.Dot(-1f, 1f));
+
+      if (enemy.Health.IsDead)
+        EventAggregator.Publish(new PlayerKilledEnemyMessage(enemy));
+    }
 
     protected void PlaySound(float powerPercentage)
       => SoundManager.PlayCappedSFXFromGroup(
@@ -208,22 +230,6 @@ namespace PachowStudios.BadTummyBunny
       => Config.TrajectoryGradient.Evaluate(power);
 
     public void Handle(FartEnemyTriggeredMessage message)
-    {
-      var enemy = message.Enemy;
-
-      if (!IsFarting
-          || PendingTargets.Contains(enemy)
-          || DamagedEnemies.Contains(enemy))
-        return;
-
-      PendingTargets.Add(enemy);
-      Wait.ForSeconds(
-        Config.DamageDelay,
-        () =>
-        {
-          PendingTargets.Remove(enemy);
-          TryDamageEnemy(enemy);
-        });
-    }
+      => TargetEnemy(message.Enemy);
   }
 }

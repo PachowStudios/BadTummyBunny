@@ -3,8 +3,8 @@ using Zenject;
 
 namespace PachowStudios.BadTummyBunny
 {
-  [AddComponentMenu("Bad Tummy Bunny/Installers/Global Installer")]
-  public class GlobalInstaller : MonoInstaller
+  [AddComponentMenu("Bad Tummy Bunny/Installers/Global/Service Installer")]
+  public class GlobalServiceInstaller : MonoInstaller
   {
     public override void InstallBindings()
     {
@@ -25,7 +25,7 @@ namespace PachowStudios.BadTummyBunny
 
     private void InstallPlayerServiceBindings()
     {
-      Container.BindSingleWithInterfaces<PlayerScoreService>();
+      Container.Bind<IScoreKeeper>().ToSingle<PlayerScoreService>();
       Container.BindSingle<PlayerStatsService>();
     }
   }

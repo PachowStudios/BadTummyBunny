@@ -8,7 +8,8 @@ namespace PachowStudios.BadTummyBunny
     IHandles<PlayerCollidedMessage>,
     IHandles<PlayerCoinCollectedMessage>,
     IHandles<PlayerCarrotCollectedMessage>,
-    IHandles<PlayerFlagpoleActivatedMessage>
+    IHandles<PlayerFlagpoleActivatedMessage>,
+    IHandles<LevelCompletedMessage>
   {
     [InjectLocal] protected override PlayerMovementSettings Config { get; set; }
     [InjectLocal] protected override PlayerView View { get; set; }
@@ -20,6 +21,7 @@ namespace PachowStudios.BadTummyBunny
     [Inject(BindingIds.Global)] private IEventAggregator EventAggregator { get; set; }
     [Inject] private IFactory<FartType, IFart> FartFactory { get; set; }
     [Inject] private IGameMenu GameMenu { get; set; }
+    [Inject] private ILevelCompletionHandler LevelCompletionHandler { get; set; }
 
     private AnimationController AnimationController { get; set; }
 
@@ -236,12 +238,8 @@ namespace PachowStudios.BadTummyBunny
 
     private void ActivateLevelFlagpole(Flagpole flagpole)
     {
-      if (flagpole.Activated)
-        return;
-
-      flagpole.Activate();
-      DisableInput();
-      Wait.ForSeconds(1.2f, () => GameMenu.ShowGameOverScreen = true);
+      if (!flagpole.IsActivated)
+        flagpole.Activate();
     }
 
     private void ResetOrientation()
@@ -279,5 +277,11 @@ namespace PachowStudios.BadTummyBunny
 
     private static void PlayLandingSound()
       => SoundManager.PlayCappedSFXFromGroup(SfxGroup.LandingGrass);
+
+    public void Handle(LevelCompletedMessage message)
+    {
+      DisableInput();
+      Wait.ForSeconds(1.2f, () => GameMenu.ShowGameOverScreen = true);
+    }
   }
 }

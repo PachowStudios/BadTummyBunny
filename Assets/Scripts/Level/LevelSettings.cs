@@ -1,16 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace PachowStudios.BadTummyBunny
 {
-  [InstallerSettings]
+  [InstallerSettings, CreateAssetMenu(menuName = "Bad Tummy Bunny/Level/Level Settings")]
   public class LevelSettings : ScriptableObject
   {
-    public string Name;
     public Scene Scene;
-
     public int RequiredStars;
+    public List<BaseStarSettings> Stars;
 
-    public List<StarSettings> Stars;
+    public string Name => this.Scene.GetDescription();
   }
 }

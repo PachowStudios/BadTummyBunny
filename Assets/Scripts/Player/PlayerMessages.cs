@@ -44,6 +44,16 @@ namespace PachowStudios.BadTummyBunny
     }
   }
 
+  public class PlayerKilledEnemyMessage : IMessage
+  {
+    public IEnemy Enemy { get; }
+
+    public PlayerKilledEnemyMessage(IEnemy enemy)
+    {
+      Enemy = enemy;
+    }
+  }
+
   public class PlayerCoinsChangedMessage : IMessage
   {
     public int Coins { get; }

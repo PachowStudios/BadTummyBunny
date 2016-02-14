@@ -50,6 +50,7 @@ namespace Zenject
     public static BindingConditionSetter ToTransientPrefab([NotNull] this TypeBinder binder, [NotNull] MonoBehaviour prefab)
       => binder.ToTransientPrefab(prefab.gameObject);
 
+    [NotNull]
     public static T InstantiatePrefab<T>([NotNull] this IInstantiator instantiator, [NotNull] T prefab)
       where T : MonoBehaviour
       => instantiator.InstantiatePrefabForComponent<T>(prefab.gameObject);

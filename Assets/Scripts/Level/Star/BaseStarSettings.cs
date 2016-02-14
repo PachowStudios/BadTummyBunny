@@ -3,11 +3,11 @@
 namespace PachowStudios.BadTummyBunny
 {
   [InstallerSettings]
-  public abstract class StarSettings : ScriptableObject
+  public abstract class BaseStarSettings : ScriptableObject
   {
     public string Id;
     public string Name;
 
-    public StarRequirement Requirement;
+    public abstract StarRequirement Requirement { get; }
   }
 }

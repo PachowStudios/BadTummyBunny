@@ -10,17 +10,17 @@ namespace PachowStudios.BadTummyBunny
 
     public virtual bool IsDead { get; protected set; }
 
+    public abstract void TakeDamage(int damage, Vector2 knockback, Vector2 knockbackDirection);
+    public abstract void Kill();
+
+    public virtual void TakeDamage(int damage)
+      => TakeDamage(damage, Vector2.zero, Vector2.zero);
+
     public virtual void Heal(int amountToHeal)
     {
-      amountToHeal.Should().BeGreaterThan(0);
+      amountToHeal.Should().BeGreaterThan(0, "because a character can't lose health by healing");
 
       Health += amountToHeal;
     }
-
-    public virtual void Damage(int damage)
-      => Damage(damage, Vector2.zero, Vector2.zero);
-
-    public abstract void Damage(int damage, Vector2 knockback, Vector2 knockbackDirection);
-    public abstract void Kill();
   }
 }

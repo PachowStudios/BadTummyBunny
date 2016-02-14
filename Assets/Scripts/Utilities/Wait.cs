@@ -9,7 +9,7 @@ namespace PachowStudios
     private static WaitInternal instance;
 
     private static WaitInternal Instance 
-      => instance ?? (instance = CreateInstance());
+      => instance == null ? (instance = CreateInstance()) : instance;
 
     public static void ForSeconds(float waitTime, Action callback)
       => Instance.StartCoroutine(WaitInternal.ForSecondsCoroutine(waitTime, callback));

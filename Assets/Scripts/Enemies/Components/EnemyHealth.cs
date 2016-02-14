@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using PachowStudios.Assertions;
+using UnityEngine;
 using Zenject;
 
 namespace PachowStudios.BadTummyBunny
@@ -21,22 +22,26 @@ namespace PachowStudios.BadTummyBunny
       protected set
       {
         this.health = value.Clamp(0, MaxHealth);
-        CheckDeath();
+
+        if (Health <= 0f)
+          Kill();
       }
     }
 
     public sealed override int MaxHealth => Config.MaxHealth;
 
     [PostInject]
-    private void Initialize()
+    private void PostInject()
     {
       Health = MaxHealth;
       LocalEventAggregator.Subscribe(this);
     }
 
-    public override void Damage(int damage, Vector2 knockback, Vector2 knockbackDirection)
+    public override void TakeDamage(int damage, Vector2 knockback, Vector2 knockbackDirection)
     {
-      if (IsDead || damage <= 0f)
+      damage.Should().BeGreaterThan(0, "because an enemy cannot take negative damage");
+
+      if (IsDead)
         return;
 
       Health -= damage;
@@ -50,15 +55,12 @@ namespace PachowStudios.BadTummyBunny
 
     public override void Kill()
     {
+      if (IsDead)
+        return;
+
       IsDead = true;
       ExplodeEffect.Explode(View.Transform, Movement.Velocity, View.SpriteRenderer.sprite);
       View.Dispose();
-    }
-
-    protected virtual void CheckDeath()
-    {
-      if (Health <= 0f)
-        Kill();
     }
 
     public void Handle(CharacterKillzoneTriggeredMessage message)

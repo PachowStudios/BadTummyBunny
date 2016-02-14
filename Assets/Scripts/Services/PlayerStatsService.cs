@@ -4,10 +4,12 @@ namespace PachowStudios.BadTummyBunny
 {
   public class PlayerStatsService :
     IHandles<PlayerCoinCollectedMessage>,
-    IHandles<PlayerCarrotCollectedMessage>
+    IHandles<PlayerCarrotCollectedMessage>,
+    IHandles<PlayerKilledEnemyMessage>
   {
     public int CoinsCollected { get; private set; }
     public int CarrotsCollected { get; private set; }
+    public int EnemiesKilled { get; private set; }
 
     [Inject] private IEventAggregator EventAggregator { get; set; }
 
@@ -20,5 +22,8 @@ namespace PachowStudios.BadTummyBunny
 
     public void Handle(PlayerCarrotCollectedMessage message)
       => CarrotsCollected++;
+
+    public void Handle(PlayerKilledEnemyMessage message)
+      => EnemiesKilled++;
   }
 }

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using PachowStudios.Assertions;
+using UnityEngine;
 using Zenject;
 
 namespace PachowStudios.BadTummyBunny
@@ -19,15 +20,6 @@ namespace PachowStudios.BadTummyBunny
     private float smoothFlashTime;
 
     private RespawnPoint respawnPoint;
-
-    [InjectLocal] private PlayerHealthSettings Config { get; set; }
-    [InjectLocal] private PlayerView View { get; set; }
-    [InjectLocal] private IMovable Movement { get; set; }
-    [InjectLocal] private IEventAggregator LocalEventAggregator { get; set; }
-
-    [Inject(BindingIds.Global)] private IEventAggregator EventAggregator { set; get; }
-    [Inject] private IGameMenu GameMenu { get; set; }
-    [Inject] private ExplodeEffect ExplodeEffect { get; set; }
 
     public int HealthContainers
     {
@@ -57,12 +49,23 @@ namespace PachowStudios.BadTummyBunny
 
         this.health = Mathf.Clamp(value, 0, MaxHealth);
         RaiseHealthChanged();
-        CheckDeath();
+
+        if (Health <= 0)
+          Kill();
       }
     }
 
     public int HealthPerContainer => 4;
     public override int MaxHealth => HealthContainers * HealthPerContainer;
+
+    [InjectLocal] private PlayerHealthSettings Config { get; set; }
+    [InjectLocal] private PlayerView View { get; set; }
+    [InjectLocal] private IMovable Movement { get; set; }
+    [InjectLocal] private IEventAggregator LocalEventAggregator { get; set; }
+
+    [Inject(BindingIds.Global)] private IEventAggregator EventAggregator { set; get; }
+    [Inject] private IGameMenu GameMenu { get; set; }
+    [Inject] private ExplodeEffect ExplodeEffect { get; set; }
 
     private bool IsInvincible => this.lastHitTime + Config.InvincibilityPeriod >= Time.time;
 
@@ -86,9 +89,11 @@ namespace PachowStudios.BadTummyBunny
         UpdateInvincibilityFlash();
     }
 
-    public override void Damage(int damage, Vector2 knockback, Vector2 knockbackDirection)
+    public override void TakeDamage(int damage, Vector2 knockback, Vector2 knockbackDirection)
     {
-      if (IsInvincible || IsDead || damage <= 0f)
+      damage.Should().BeGreaterThan(0, "because the player cannot take negative damage");
+
+      if (IsInvincible || IsDead)
         return;
 
       Health -= damage;
@@ -97,34 +102,9 @@ namespace PachowStudios.BadTummyBunny
         Wait.ForSeconds(0.1f, () => Movement.ApplyKnockback(knockback, knockbackDirection));
     }
 
-    public override void Kill() { }
-
-    private void UpdateInvincibilityFlash()
+    public override void Kill()
     {
-      if (IsInvincible)
-      {
-        this.flashTimer += Time.deltaTime;
-        this.smoothFlashTime = Mathf.Lerp(this.smoothFlashTime, 0.05f, 0.025f);
-
-        if (this.flashTimer > this.smoothFlashTime)
-        {
-          View.AlternateRenderersEnabled();
-          this.flashTimer = 0f;
-        }
-      }
-      else
-      {
-        View.SetRenderersEnabled(true);
-        this.smoothFlashTime = FlashTime;
-      }
-    }
-
-    private void HealFromCarrot()
-      => Heal(Config.CarrotHealthRecharge);
-
-    private void CheckDeath()
-    {
-      if (Health > 0 || IsDead)
+      if (IsDead)
         return;
 
       IsDead = true;
@@ -134,6 +114,32 @@ namespace PachowStudios.BadTummyBunny
       View.SetRenderersEnabled(false);
       Movement.Disable();
     }
+
+    private void TakeDamage(IEnemy enemy)
+      => TakeDamage(enemy.ContactDamage, enemy.ContactKnockback, enemy.Movement.MovementDirection);
+
+    private void UpdateInvincibilityFlash()
+    {
+      if (!IsInvincible)
+      {
+        View.SetRenderersEnabled(true);
+        this.smoothFlashTime = FlashTime;
+
+        return;
+      }
+
+      this.flashTimer += Time.deltaTime;
+      this.smoothFlashTime = this.smoothFlashTime.LerpTo(0.05f, 0.025f);
+
+      if (this.flashTimer > this.smoothFlashTime)
+      {
+        View.AlternateRenderersEnabled();
+        this.flashTimer = 0f;
+      }
+    }
+
+    private void HealFromCarrot()
+      => Heal(Config.CarrotHealthRecharge);
 
     private void Respawn()
     {
@@ -163,9 +169,6 @@ namespace PachowStudios.BadTummyBunny
       this.respawnPoint = newRespawnPoint;
     }
 
-    private void Damage(IEnemy enemy)
-      => Damage(enemy.ContactDamage, enemy.ContactKnockback, enemy.Movement.MovementDirection);
-
     private void RaiseHealthChanged()
       => EventAggregator.Publish(new PlayerHealthChangedMessage(Health));
 
@@ -182,7 +185,7 @@ namespace PachowStudios.BadTummyBunny
       => HealFromCarrot();
 
     public void Handle(PlayerEnemyCollidedMessage message)
-      => Damage(message.Enemy);
+      => TakeDamage(message.Enemy);
 
     public void Handle(PlayerRespawnPointActivatedMessage message)
       => SetRespawnPoint(message.RespawnPoint);

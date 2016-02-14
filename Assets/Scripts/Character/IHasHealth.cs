@@ -9,8 +9,8 @@ namespace PachowStudios.BadTummyBunny
     bool IsDead { get; }
 
     void Heal(int amountToHeal);
-    void Damage(int damage);
-    void Damage(int damage, Vector2 knockback, Vector2 knockbackDirection);
+    void TakeDamage(int damage);
+    void TakeDamage(int damage, Vector2 knockback, Vector2 knockbackDirection);
     void Kill();
   }
 }
