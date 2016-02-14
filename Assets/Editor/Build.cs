@@ -11,7 +11,7 @@ namespace PachowStudios.BadTummyBunny.Editor
   {
     private static string OutputFile { get; }
     private static string VersionNumber { get; }
-    private static string BuildNumber { get; }
+    private static string VersionCode { get; }
 
     static Build()
     {
@@ -19,7 +19,7 @@ namespace PachowStudios.BadTummyBunny.Editor
 
       OutputFile = Environment.GetEnvironmentVariable("OUTPUT_FILE");
       VersionNumber = Environment.GetEnvironmentVariable("VERSION_NUMBER");
-      BuildNumber = Environment.GetEnvironmentVariable("BUILD_NUMBER");
+      VersionCode = Environment.GetEnvironmentVariable("VERSION_CODE");
 
       if (OutputFile == null)
         throw new ArgumentNullException(nameof(OutputFile));
@@ -31,10 +31,10 @@ namespace PachowStudios.BadTummyBunny.Editor
 
       Log($"{nameof(VersionNumber)}: {VersionNumber}");
 
-      if (BuildNumber == null)
-        throw new ArgumentNullException(nameof(BuildNumber));
+      if (VersionCode == null)
+        throw new ArgumentNullException(nameof(VersionCode));
 
-      Log($"{nameof(BuildNumber)}: {BuildNumber}");
+      Log($"{nameof(VersionCode)}: {VersionCode}");
 
       UnityPlayerSettings.bundleVersion = VersionNumber;
     }
@@ -42,7 +42,7 @@ namespace PachowStudios.BadTummyBunny.Editor
     [UsedImplicitly]
     public static void Android()
     {
-      UnityPlayerSettings.Android.bundleVersionCode = int.Parse(BuildNumber);
+      UnityPlayerSettings.Android.bundleVersionCode = int.Parse(VersionCode);
 
       BuildPipeline.BuildPlayer(
         EditorBuildSettings.scenes
