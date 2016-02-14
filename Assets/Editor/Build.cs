@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using JetBrains.Annotations;
 using UnityEditor;
 using UnityPlayerSettings = UnityEditor.PlayerSettings;
 
@@ -7,18 +8,18 @@ namespace PachowStudios.BadTummyBunny.Editor
 {
   public class Build
   {
-    private static string BuildPath { get; }
+    private static string OutputFile { get; }
     private static string VersionNumber { get; }
     private static string BuildNumber { get; }
 
     static Build()
     {
-      BuildPath = Environment.GetEnvironmentVariable("BUILD_PATH");
+      OutputFile = Environment.GetEnvironmentVariable("OUTPUT_FILE");
       VersionNumber = Environment.GetEnvironmentVariable("VERSION_NUMBER");
       BuildNumber = Environment.GetEnvironmentVariable("BUILD_NUMBER");
 
-      if (BuildPath == null)
-        throw new ArgumentNullException(nameof(BuildPath));
+      if (OutputFile == null)
+        throw new ArgumentNullException(nameof(OutputFile));
 
       if (VersionNumber == null)
         throw new ArgumentNullException(nameof(VersionNumber));
@@ -29,6 +30,7 @@ namespace PachowStudios.BadTummyBunny.Editor
       UnityPlayerSettings.bundleVersion = VersionNumber;
     }
 
+    [UsedImplicitly]
     public static void Android()
     {
       UnityPlayerSettings.Android.bundleVersionCode = int.Parse(BuildNumber);
@@ -38,7 +40,7 @@ namespace PachowStudios.BadTummyBunny.Editor
           .Where(s => s.enabled)
           .Select(s => s.path)
           .ToArray(),
-        $@"{BuildPath}\BadTummyBunny-{VersionNumber}.apk",
+        OutputFile,
         BuildTarget.Android,
         BuildOptions.None);
     }
