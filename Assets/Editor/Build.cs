@@ -2,6 +2,7 @@
 using System.Linq;
 using JetBrains.Annotations;
 using UnityEditor;
+using static UnityEngine.Debug;
 using UnityPlayerSettings = UnityEditor.PlayerSettings;
 
 namespace PachowStudios.BadTummyBunny.Editor
@@ -14,6 +15,8 @@ namespace PachowStudios.BadTummyBunny.Editor
 
     static Build()
     {
+      Log("Reading build environment settings...");
+
       OutputFile = Environment.GetEnvironmentVariable("OUTPUT_FILE");
       VersionNumber = Environment.GetEnvironmentVariable("VERSION_NUMBER");
       BuildNumber = Environment.GetEnvironmentVariable("BUILD_NUMBER");
@@ -21,11 +24,17 @@ namespace PachowStudios.BadTummyBunny.Editor
       if (OutputFile == null)
         throw new ArgumentNullException(nameof(OutputFile));
 
+      Log($"{nameof(OutputFile)}: {OutputFile}");
+
       if (VersionNumber == null)
         throw new ArgumentNullException(nameof(VersionNumber));
 
+      Log($"{nameof(VersionNumber)}: {VersionNumber}");
+
       if (BuildNumber == null)
         throw new ArgumentNullException(nameof(BuildNumber));
+
+      Log($"{nameof(BuildNumber)}: {BuildNumber}");
 
       UnityPlayerSettings.bundleVersion = VersionNumber;
     }
