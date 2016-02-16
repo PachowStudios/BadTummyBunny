@@ -15,14 +15,23 @@ namespace PachowStudios.BadTummyBunny
 
     public SaveFile SaveFile
     {
-      get { return this.saveFile ?? (this.saveFile = new SaveFile()); }
+      get
+      {
+        if (this.saveFile == null)
+          Load();
+
+        return this.saveFile;
+      }
       private set { this.saveFile = value; }
     }
 
     public void Load()
     {
       if (!File.Exists(SaveFilePath))
+      {
+        SaveFile = new SaveFile();
         return;
+      }
 
       var xmlDoc = new XmlDocument();
 

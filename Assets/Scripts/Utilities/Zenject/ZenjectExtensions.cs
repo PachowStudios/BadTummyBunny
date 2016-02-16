@@ -6,6 +6,9 @@ namespace Zenject
 {
   public static class ZenjectExtensions
   {
+    public static void BindPriority<T>([NotNull] this DiContainer container, int priority)
+      => ExecutionOrderInstaller.BindPriority<T>(container, priority);
+
     public static BindingConditionSetter BindSingle<TConcrete>([NotNull] this DiContainer container)
       => container.BindSingle(typeof(TConcrete));
 

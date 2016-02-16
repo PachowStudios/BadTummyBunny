@@ -34,21 +34,18 @@ namespace PachowStudios.BadTummyBunny
 
     [PostInject]
     private void PostInject()
-      => LevelConfig = LevelSettings[this.scene];
+    {
+      LevelConfig = LevelSettings[this.scene];
+
+      var levelProgress = SaveContainer.SaveFile.GetLevel(this.scene);
+
+      CompletedStars = Stars.Where(s => levelProgress.GetStar(s.Id).IsCompleted).ToList();
+    }
 
     private void Awake()
     {
       Connections.IsEmpty().Should().BeFalse($"because {name} must connect to other levels.");
       Connections.None(c => c.ConnectedLevel == null).Should().BeTrue($"because no connections to {name} can be null");
-    }
-
-    // Save related initialization must occurr during the Start phase
-    // because the save file won't be loaded yet during the PostInject phase.
-    private void Start()
-    {
-      var levelProgress = SaveContainer.SaveFile.GetLevel(this.scene);
-
-      CompletedStars = Stars.Where(s => levelProgress.GetStar(s.Id).IsCompleted).ToList();
     }
 
     private void OnDrawGizmosSelected()

@@ -9,6 +9,7 @@ namespace PachowStudios.BadTummyBunny
     public override void InstallBindings()
     {
       Container.BindAllInterfacesToSingle<Bootystrapper>();
+      Container.BindPriority<Bootystrapper>(-100);
 
       InstallGeneralServiceBindings();
       InstallPlayerServiceBindings();

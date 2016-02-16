@@ -10,10 +10,13 @@
     }
 
     protected void Assert(bool condition, string requirement, T value, string reason = null)
+      => Assert(condition, requirement, value?.ToString(), reason);
+
+    protected void Assert(bool condition, string requirement, string value, string reason = null)
     {
       if (!condition)
         throw new AssertionFailedException(
-          $"{Subject} should {requirement} {value}", reason);
+          $"{Subject?.ToString() ?? "Object"} should {requirement} {value}", reason);
     }
   }
 }

@@ -9,10 +9,10 @@ namespace PachowStudios.Assertions
       : base(subject) { }
 
     public void BeNull(string reason = null)
-      => Assert(Subject == null, "be", null, reason);
+      => Assert(Subject == null, "be", "null", reason);
 
     public void NotBeNull(string reason = null)
-      => Assert(Subject != null, "not be", null, reason);
+      => Assert(Subject != null, "not be", "null", reason);
 
     public void ReferTo(T @object, string reason = null)
       => Assert(Subject.RefersTo(@object), "refer to", @object, reason);
