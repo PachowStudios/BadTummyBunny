@@ -3,12 +3,6 @@ using Zenject;
 
 namespace PachowStudios.BadTummyBunny
 {
-  [InstallerSettings]
-  public class BaseEnemyAISettings : EnemyMovementSettings
-  {
-    public LayerMask BlockVisibilityLayers = default(LayerMask);
-  }
-
   public abstract class BaseEnemyAI<TConfig> : EnemyMovement<TConfig>
     where TConfig : BaseEnemyAISettings
   {

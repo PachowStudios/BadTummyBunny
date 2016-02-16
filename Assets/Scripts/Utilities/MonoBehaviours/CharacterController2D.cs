@@ -29,8 +29,6 @@ namespace PachowStudios
       public bool IsMovingDownSlope { get; set; }
       public float SlopeAngle { get; set; }
 
-      public bool HasCollision => Below || Right || Left || Above;
-
       public void Reset()
       {
         Right = Left = Above = Below = BecameGroundedThisFrame = IsMovingDownSlope = false;

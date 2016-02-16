@@ -2,30 +2,14 @@
 
 namespace PachowStudios.BadTummyBunny
 {
-  [InstallerSettings]
-  public abstract class BaseMovableSettings : ScriptableObject
-  {
-    public float Gravity = -35f;
-    public float MoveSpeed = 5f;
-    public float GroundDamping = 10f;
-    public float AirDamping = 5f;
-  }
-
   public abstract class BaseMovable<TConfig, TView> : IMovable
     where TConfig : BaseMovableSettings
     where TView : IView
   {
-    protected abstract TConfig Config { get; set; }
-    protected abstract TView View { get; set; }
-
     public virtual Vector3 Velocity { get; protected set; }
     public virtual Vector3 LastGroundedPosition { get; protected set; }
-    public virtual float? MoveSpeedOverride { get; set; }
 
     public virtual bool IsActivated { get; set; } = true;
-
-    public float Gravity => Config.Gravity;
-    public float MoveSpeed => Config.MoveSpeed;
 
     public virtual Collider2D Collider => View.Collider;
     public virtual Vector3 Position => View.Transform.position;
@@ -37,6 +21,16 @@ namespace PachowStudios.BadTummyBunny
     public virtual bool IsGrounded => View.CharacterController.IsGrounded;
     public virtual bool WasGrounded => View.CharacterController.WasGroundedLastFrame;
     public virtual LayerMask CollisionLayers => View.CharacterController.PlatformMask;
+
+    public float? MoveSpeedOverride { get; set; }
+
+    public float Gravity => Config.Gravity;
+    public float MoveSpeed => MoveSpeedOverride ?? Config.MoveSpeed;
+
+    protected abstract TConfig Config { get; set; }
+    protected abstract TView View { get; set; }
+
+    protected float MovementDamping => IsGrounded ? Config.GroundDamping : Config.AirDamping;
 
     public virtual void SetPosition(Vector3 position)
       => View.Transform.position = position;

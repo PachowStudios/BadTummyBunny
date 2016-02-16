@@ -54,7 +54,7 @@ namespace PachowStudios.BadTummyBunny
       }
 
       while (HealthContainers.HasMoreThan(newHealthContainers))
-        HealthContainers.Pop().Destroy();
+        HealthContainers.Pop()?.Destroy();
     }
 
     public void Handle(PlayerHealthChangedMessage message)

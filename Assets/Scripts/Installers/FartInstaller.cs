@@ -1,5 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
+using PachowStudios.Collections;
 using UnityEngine;
 using Zenject;
 
@@ -9,21 +10,15 @@ namespace PachowStudios.BadTummyBunny
   public class FartInstaller : MonoInstaller
   {
     [SerializeField] private List<FartSettings> fartSettings = null;
+
+    private IReadOnlyDictionary<FartType, FartSettings> MappedSettings { get; set; }
     
     public override void InstallBindings()
     {
+      MappedSettings = this.fartSettings.ToDictionary(s => s.Type).AsReadOnly();
+
+      Container.BindInstance(MappedSettings);
       Container.BindIFactory<FartType, IFart>().ToCustomFactory<FartFactory>();
-
-      foreach (var config in this.fartSettings)
-      {
-        var type = config.Type.GetTypeMapping();
-
-        Container.BindBaseInstance(config).WhenInjectedInto(type);
-        Container
-          .Bind<FartView>()
-          .ToTransientPrefab(config.Prefab)
-          .WhenInjectedInto(type);
-      }
     }
   }
 }

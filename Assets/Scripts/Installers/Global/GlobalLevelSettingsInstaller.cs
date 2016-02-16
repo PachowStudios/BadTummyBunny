@@ -11,11 +11,13 @@ namespace PachowStudios.BadTummyBunny
   {
     [SerializeField] private List<LevelSettings> levelSettings = null;
 
+    private IReadOnlyDictionary<Scene, LevelSettings> MappedSettings { get; set; }
+
     public override void InstallBindings()
     {
-      Container.Bind<IReadOnlyDictionary<Scene, LevelSettings>>().ToInstance(
-        this.levelSettings.ToDictionary(s => s.Scene).AsReadOnly());
+      MappedSettings = this.levelSettings.ToDictionary(s => s.Scene).AsReadOnly();
 
+      Container.BindInstance(MappedSettings);
       Container.BindIFactory<BaseStarSettings, IStar>().ToCustomFactory<StarFactory>();
     }
   }

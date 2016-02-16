@@ -2,6 +2,12 @@
 {
   public static class TransformExtensions
   {
+    public static float DistanceTo(this Transform transform, Transform target)
+      => transform.DistanceTo(target.position);
+
+    public static float DistanceTo(this Transform transform, Vector3 target)
+      => transform.position.DistanceTo(target);
+
     public static void Flip(this Transform parent)
     => parent.localScale = new Vector3(-parent.localScale.x, parent.localScale.y, parent.localScale.z);
 

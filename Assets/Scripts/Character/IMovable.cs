@@ -19,8 +19,6 @@ namespace PachowStudios.BadTummyBunny
     bool WasGrounded { get; }
     LayerMask CollisionLayers { get; }
 
-    float? MoveSpeedOverride { get; set; }
-
     void SetPosition(Vector3 position);
     void Move(Vector3 moveVelocity);
     void Flip();

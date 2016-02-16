@@ -18,22 +18,17 @@ namespace PachowStudios.BadTummyBunny
     [Tooltip("The curve should go from 0 to 1 being the normalized distance from center to radius. It's value will be multiplied by the effectorWeight to get the final weight used.")]
     [SerializeField] private AnimationCurve effectorFalloff = AnimationCurve.Linear(0f, 0f, 1f, 1f);
 
-    private new CircleCollider2D EffectorTrigger => (CircleCollider2D)base.EffectorTrigger;
+    private CircleCollider2D CircleTrigger => (CircleCollider2D)EffectorTrigger;
+    private Vector3 EffectorPosition => transform.TransformPoint(CircleTrigger.offset);
 
-    private Vector3 EffectorPosition
-    {
-      get { return transform.TransformPoint(EffectorTrigger.offset); }
-      set { EffectorTrigger.offset = transform.InverseTransformPoint(value); }
-    }
-
-    private float OuterRingRadius => EffectorTrigger.radius;
+    private float OuterRingRadius => CircleTrigger.radius;
 
     #if UNITY_EDITOR
     private void OnDrawGizmosSelected()
     {
       Handles.color = Color.green;
 
-      if (EffectorTrigger == null)
+      if (CircleTrigger == null)
         return;
 
       if (this.enableInnerRing)
@@ -45,13 +40,13 @@ namespace PachowStudios.BadTummyBunny
 
     public override float GetEffectorWeight()
     {
-      var distanceToEffector = Vector3.Distance(EffectorPosition, TrackedTarget.position);
+      var effectorDistance = EffectorPosition.DistanceTo(TrackedTarget);
 
-      if (this.enableInnerRing && distanceToEffector <= this.innerRingRadius)
+      if (this.enableInnerRing && effectorDistance <= this.innerRingRadius)
         return this.innerEffectorWeight;
 
       if (this.enableEffectorFalloff)
-        return this.effectorFalloff.Evaluate(1f - (distanceToEffector / OuterRingRadius)) * EffectorWeight;
+        return this.effectorFalloff.Evaluate(1f - (effectorDistance / OuterRingRadius)) * EffectorWeight;
 
       return EffectorWeight;
     }

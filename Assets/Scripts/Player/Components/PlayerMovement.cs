@@ -11,6 +11,14 @@ namespace PachowStudios.BadTummyBunny
     IHandles<PlayerFlagpoleActivatedMessage>,
     IHandles<LevelCompletedMessage>
   {
+    public bool IsFarting { get; private set; }
+    public bool IsFartAiming { get; private set; }
+    public bool WillFart { get; private set; }
+    public Vector2 FartDirection { get; private set; }
+    public float FartPower { get; private set; }
+
+    public override Vector2 FacingDirection => new Vector2(View.Body.localScale.x, 0f);
+
     [InjectLocal] protected override PlayerMovementSettings Config { get; set; }
     [InjectLocal] protected override PlayerView View { get; set; }
 
@@ -33,17 +41,9 @@ namespace PachowStudios.BadTummyBunny
     private bool IsFartingEnabled { get; set; } = true;
     private float TimeFarting { get; set; }
 
-    public bool IsFarting { get; private set; }
-    public bool IsFartAiming { get; private set; }
-    public bool WillFart { get; private set; }
-    public Vector2 FartDirection { get; private set; }
-    public float FartPower { get; private set; }
-
     private bool IsMovingRight => HorizontalMovement > 0f;
     private bool IsMovingLeft => HorizontalMovement < 0f;
     private bool CanFart => IsFartingEnabled;
-
-    public override Vector2 FacingDirection => new Vector2(View.Body.localScale.x, 0f);
 
     [PostInject]
     private void PostInject()
@@ -180,11 +180,9 @@ namespace PachowStudios.BadTummyBunny
       if (IsFarting)
         TimeFarting += Time.deltaTime;
       else
-        Velocity = Velocity.SetX(
-          Mathf.Lerp(
-            Velocity.x,
-            HorizontalMovement * MoveSpeed,
-            (IsGrounded ? Config.GroundDamping : Config.AirDamping) * Time.deltaTime));
+        Velocity = Velocity.SetX(Velocity.x.LerpTo(
+          HorizontalMovement * MoveSpeed,
+          MovementDamping * Time.deltaTime));
 
       Velocity = Velocity.AddY(Gravity * Time.deltaTime);
       View.CharacterController.Move(Velocity * Time.deltaTime);
@@ -217,7 +215,7 @@ namespace PachowStudios.BadTummyBunny
       TimeFarting = 0f;
       Velocity = fartDirection * CurrentFart.CalculateSpeed(FartPower);
 
-      CurrentFart.StartFart(FartPower, FartDirection);
+      CurrentFart.StartFart(FartPower);
     }
 
     private void StopFart(bool killXVelocity = true)
@@ -234,12 +232,6 @@ namespace PachowStudios.BadTummyBunny
         Velocity = Velocity.SetX(0f);
 
       Velocity = Velocity.SetY(0f);
-    }
-
-    private void ActivateLevelFlagpole(Flagpole flagpole)
-    {
-      if (!flagpole.IsActivated)
-        flagpole.Activate();
     }
 
     private void ResetOrientation()
@@ -273,7 +265,7 @@ namespace PachowStudios.BadTummyBunny
       => message.Carrot.Collect();
 
     public void Handle(PlayerFlagpoleActivatedMessage message)
-      => ActivateLevelFlagpole(message.Flagpole);
+      => message.Flagpole.Activate();
 
     private static void PlayLandingSound()
       => SoundManager.PlayCappedSFXFromGroup(SfxGroup.LandingGrass);

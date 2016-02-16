@@ -10,6 +10,7 @@ namespace ModestTree.Util
     public static bool IsGenericList(Type type)
     {
       return type.IsGenericType
+          && type.GetGenericArguments().Length == 1
           && type.GetInterfaces()
             .Concat(new [] { type.GetGenericTypeDefinition() })
             .Any(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IEnumerable<>));

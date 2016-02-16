@@ -5,8 +5,8 @@ namespace PachowStudios.BadTummyBunny
 {
   public class LevelProgress
   {
-    [XmlAttribute(nameof(LevelId))]
-    public string LevelId { get; set; }
+    [XmlAttribute(nameof(Scene))]
+    public Scene Scene { get; set; }
 
     [XmlAttribute(nameof(IsUnlocked))]
     public bool IsUnlocked { get; set; }

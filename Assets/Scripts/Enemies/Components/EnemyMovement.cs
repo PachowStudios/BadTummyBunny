@@ -3,18 +3,10 @@ using Zenject;
 
 namespace PachowStudios.BadTummyBunny
 {
-  [InstallerSettings]
-  public abstract class EnemyMovementSettings : BaseMovableSettings
-  {
-    public bool DeactivatedOutsideCamera = true;
-  }
-
   public abstract class EnemyMovement<TConfig> : BaseMovable<TConfig, EnemyView>, ITickable, ILateTickable
-    where TConfig : EnemyMovementSettings
+    where TConfig : BaseEnemyMovementSettings
   {
     private bool isActivated;
-
-    [InjectLocal] protected override EnemyView View { get; set; }
 
     public override bool IsActivated
     {
@@ -23,6 +15,8 @@ namespace PachowStudios.BadTummyBunny
     }
 
     public int HorizontalMovement { get; set; }
+
+    [InjectLocal] protected override EnemyView View { get; set; }
 
     protected bool IsMovingRight => HorizontalMovement > 0;
     protected bool IsMovingLeft => HorizontalMovement < 0;
@@ -53,13 +47,9 @@ namespace PachowStudios.BadTummyBunny
 
     protected virtual void ApplyMovement()
     {
-      var smoothedMovement = IsGrounded ? Config.GroundDamping : Config.AirDamping;
-
-      Velocity = Velocity.SetX(
-        Mathf.Lerp(
-          Velocity.x,
-          HorizontalMovement * (MoveSpeedOverride ?? MoveSpeed),
-          smoothedMovement * Time.deltaTime));
+      Velocity = Velocity.SetX(Velocity.x.LerpTo(
+        HorizontalMovement * MoveSpeed,
+        MovementDamping * Time.deltaTime));
 
       Velocity = Velocity.AddY(Gravity * Time.deltaTime);
       View.CharacterController.Move(Velocity * Time.deltaTime);

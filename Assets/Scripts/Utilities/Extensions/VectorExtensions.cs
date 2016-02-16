@@ -45,17 +45,23 @@
     public static Vector3 AddZ(this Vector3 vector, float z)
       => vector.SetZ(vector.z + z);
 
-    public static Vector2 Dot(this Vector2 vector, Vector2 other)
-      => vector.Dot(other.x, other.y);
+    public static Vector2 Dot(this Vector2 a, Vector2 b)
+      => a.Dot(b.x, b.y);
 
     public static Vector2 Dot(this Vector2 vector, float x, float y)
       => new Vector2(vector.x * x, vector.y * y);
 
-    public static float DistanceTo(this Vector2 vector, Vector2 other)
-      => Vector2.Distance(vector, other);
+    public static float DistanceTo(this Vector3 vector, Transform transform)
+      => vector.DistanceTo(transform.position);
 
-    public static Vector2 LerpTo(this Vector2 vector, Vector2 other, float t)
-      => Vector2.Lerp(vector, other, t);
+    public static float DistanceTo(this Vector2 a, Vector2 b)
+      => Vector2.Distance(a, b);
+
+    public static float DistanceTo(this Vector3 a, Vector3 b)
+      => Vector3.Distance(a, b);
+
+    public static Vector2 LerpTo(this Vector2 a, Vector2 b, float t)
+      => Vector2.Lerp(a, b, t);
 
     public static Vector2 Vary(this Vector2 vector, float variance)
       => new Vector2(
@@ -81,8 +87,5 @@
 
     public static Vector3 DirectionToRotation2D(this Vector3 vector)
       => Quaternion.AngleAxis(vector.AngleDegrees(), Vector3.forward).eulerAngles;
-
-    public static float DistanceTo(this Vector3 vector, Vector3 target)
-      => Mathf.Sqrt((vector.x - target.x).Square() + (vector.y - target.y).Square());
   }
 }

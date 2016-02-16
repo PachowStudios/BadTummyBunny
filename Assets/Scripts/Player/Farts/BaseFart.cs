@@ -13,17 +13,6 @@ namespace PachowStudios.BadTummyBunny
   {
     private VectorLine trajectoryLine;
 
-    [Inject] private FartView View { get; set; }
-    [Inject] private CameraController CameraController { get; set; }
-    [Inject] private IEventAggregator EventAggregator { get; set; }
-
-    private IMovable PlayerMovement { get; set; }
-
-    protected abstract TConfig Config { get; set; }
-
-    protected HashSet<ICharacter> PendingTargets { get; } = new HashSet<ICharacter>();
-    protected HashSet<ICharacter> DamagedEnemies { get; } = new HashSet<ICharacter>();
-
     public bool IsFarting { get; protected set; }
 
     public bool ShowTrajectory
@@ -32,11 +21,22 @@ namespace PachowStudios.BadTummyBunny
       set { TrajectoryLine.active = value; }
     }
 
+    public string Name => Config.Name;
+    public FartType Type => Config.Type;
+
+    protected abstract TConfig Config { get; set; }
+
+    protected HashSet<ICharacter> PendingTargets { get; } = new HashSet<ICharacter>();
+    protected HashSet<ICharacter> DamagedEnemies { get; } = new HashSet<ICharacter>();
+
     protected VectorLine TrajectoryLine => this.trajectoryLine;
     protected List<Vector2> TrajectoryPoints => TrajectoryLine.points2;
 
-    public string Name => Config.Name;
-    public FartType Type => Config.Type;
+    [Inject] private FartView View { get; set; }
+    [Inject] private CameraController CameraController { get; set; }
+    [Inject] private IEventAggregator EventAggregator { get; set; }
+
+    private IMovable PlayerMovement { get; set; }
 
     [PostInject]
     private void Initialize()
@@ -57,7 +57,7 @@ namespace PachowStudios.BadTummyBunny
       View.Detach();
     }
 
-    public virtual void StartFart(float power, Vector2 direction)
+    public virtual void StartFart(float power)
     {
       if (IsFarting)
         return;
