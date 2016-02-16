@@ -53,11 +53,11 @@ namespace PachowStudios.BadTummyBunny
     {
       IList<WorldMapLevel> path;
 
-      if (TryGetPathToLevel(SelectedLevel, targetLevel, out path))
-      {
-        DeselectLevel();
-        Player.NavigatePath(path, onCompleted: SelectLevel);
-      }
+      if (!TryGetPathToLevel(SelectedLevel, targetLevel, out path))
+        return;
+
+      DeselectLevel();
+      Player.NavigatePath(path, onCompleted: SelectLevel);
     }
 
     public bool TryGetPathToLevel(WorldMapLevel startLevel, WorldMapLevel endLevel, out IList<WorldMapLevel> path)

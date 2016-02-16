@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using MarkUX;
 using MarkUX.Views;
 
@@ -26,7 +27,7 @@ namespace PachowStudios.BadTummyBunny.UI
         this.level = value;
 
         SetValue(() => this.LevelName, Level.LevelName);
-        UpdateStars(Level.CollectedStars, Level.PossibleStars);
+        UpdateStars();
       }
     }
 
@@ -40,12 +41,12 @@ namespace PachowStudios.BadTummyBunny.UI
     public void Hide()
       => this.HideAnimation.StartAnimation();
 
-    private void UpdateStars(int collected, int possible)
+    private void UpdateStars()
     {
       this.Stars.Clear();
 
-      for (var i = 0; i < possible; i++)
-        this.Stars.Add(i < collected);
+      foreach (var star in Level.Stars)
+        this.Stars.Add(Level.CompletedStars.Contains(star));
 
       SetChanged(() => this.Stars);
     }

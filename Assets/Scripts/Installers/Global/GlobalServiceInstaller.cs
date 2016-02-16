@@ -20,7 +20,7 @@ namespace PachowStudios.BadTummyBunny
       Container.Bind<IEventAggregator>().ToLookup<IEventAggregator>(BindingIds.Global);
 
       Container.BindSingleWithInterfaces<SceneService>();
-      Container.BindSingle<SaveService>();
+      Container.BindSingleWithInterfaces<SaveService>();
     }
 
     private void InstallPlayerServiceBindings()

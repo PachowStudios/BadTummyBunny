@@ -1,16 +1,23 @@
 ﻿using System.IO;
 using System.Xml;
+using PachowStudios.BadTummyBunny.UserData;
 using UnityEngine;
 
 namespace PachowStudios.BadTummyBunny
 {
-  public class SaveService
+  public class SaveService : ISaveContainer
   {
     private const string SaveFileName = "BadTummyBunny.save.xml";
 
     private static string SaveFilePath { get; } = Path.Combine(Application.persistentDataPath, SaveFileName);
 
-    public SaveFile CurrentSave { get; private set; }
+    private SaveFile saveFile;
+
+    public SaveFile SaveFile
+    {
+      get { return this.saveFile ?? (this.saveFile = new SaveFile()); }
+      private set { this.saveFile = value; }
+    }
 
     public void Load()
     {
@@ -20,10 +27,10 @@ namespace PachowStudios.BadTummyBunny
       var xmlDoc = new XmlDocument();
 
       xmlDoc.Load(SaveFilePath);
-      CurrentSave = xmlDoc.DeserializeToObject<SaveFile>();
+      SaveFile = xmlDoc.DeserializeToObject<SaveFile>();
     }
 
     public void Save()
-      => (CurrentSave ?? new SaveFile()).SerializeToXml().Save(SaveFilePath);
+      => SaveFile.SerializeToXml().Save(SaveFilePath);
   }
 }

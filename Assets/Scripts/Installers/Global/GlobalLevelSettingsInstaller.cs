@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using PachowStudios.BadTummyBunny.UserData;
 using PachowStudios.Collections;
 using UnityEngine;
 using Zenject;
@@ -18,7 +19,7 @@ namespace PachowStudios.BadTummyBunny
       MappedSettings = this.levelSettings.ToDictionary(s => s.Scene).AsReadOnly();
 
       Container.BindInstance(MappedSettings);
-      Container.BindIFactory<BaseStarSettings, IStar>().ToCustomFactory<StarFactory>();
+      Container.BindIFactory<BaseStarSettings, StarProgress, IStar>().ToCustomFactory<StarFactory>();
     }
   }
 }

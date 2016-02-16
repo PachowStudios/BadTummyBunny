@@ -14,28 +14,41 @@ namespace PachowStudios.BadTummyBunny
   public class WorldMapLevel : MonoBehaviour
   {
     [SerializeField] private Scene scene = Scene.Level1;
-    [SerializeField] private int collectedStars = 0;
     [SerializeField] private List<WorldMapConnection> connections = new List<WorldMapConnection>();
 
-    public bool IsSelected => ReferenceEquals(this, WorldMap.SelectedLevel);
-
     public string LevelName => LevelConfig.Name;
-    public int CollectedStars => this.collectedStars;
-    public int PossibleStars => LevelConfig.Stars.Count;
     public IEnumerable<WorldMapConnection> Connections => this.connections;
     public IEnumerable<WorldMapConnection> EnabledConnections => Connections.Where(c => c.IsEnabled);
+    public bool IsSelected => ReferenceEquals(this, WorldMap.SelectedLevel);
     public Vector3 Position => transform.position;
+
+    public IEnumerable<BaseStarSettings> Stars => LevelConfig.Stars;
+    public IEnumerable<BaseStarSettings> CompletedStars { get; private set; }
 
     [Inject] private IReadOnlyDictionary<Scene, LevelSettings> LevelSettings { get; set; }
     [Inject] private WorldMap WorldMap { get; set; }
     [Inject] private ISceneLoader SceneLoader { get; set; }
+    [Inject] private ISaveContainer SaveContainer { get; set; }
 
-    private LevelSettings LevelConfig => LevelSettings[this.scene];
+    private LevelSettings LevelConfig { get; set; }
+
+    [PostInject]
+    private void PostInject()
+      => LevelConfig = LevelSettings[this.scene];
 
     private void Awake()
     {
       Connections.IsEmpty().Should().BeFalse($"because {name} must connect to other levels.");
       Connections.None(c => c.ConnectedLevel == null).Should().BeTrue($"because no connections to {name} can be null");
+    }
+
+    // Save related initialization must occurr during the Start phase
+    // because the save file won't be loaded yet during the PostInject phase.
+    private void Start()
+    {
+      var levelProgress = SaveContainer.SaveFile.GetLevel(this.scene);
+
+      CompletedStars = Stars.Where(s => levelProgress.GetStar(s.Id).IsCompleted).ToList();
     }
 
     private void OnDrawGizmosSelected()

@@ -1,4 +1,6 @@
-﻿namespace PachowStudios.BadTummyBunny
+﻿using PachowStudios.BadTummyBunny.UserData;
+
+namespace PachowStudios.BadTummyBunny
 {
   public interface IStar
   {
@@ -6,7 +8,6 @@
     string Name { get; }
 
     StarRequirement Requirement { get; }
-
     CompletionState CompletionState { get; }
   }
 }

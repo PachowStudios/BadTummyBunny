@@ -13,11 +13,13 @@ namespace PachowStudios.BadTummyBunny.UI
     [ChangeHandler(nameof(UpdateLayout))]
     public bool IsCollected = false;
 
+    private Image StarImage => this.IsCollected ? this.FilledStar : this.EmptyStar;
+
     public override void UpdateLayout()
     {
       base.UpdateLayout();
 
-      this.StarSelector.SwitchTo(this.IsCollected ? this.FilledStar : this.EmptyStar);
+      this.StarSelector.SwitchTo(StarImage);
     }
   }
 }
