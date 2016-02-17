@@ -3,7 +3,7 @@ using Zenject;
 
 namespace PachowStudios.BadTummyBunny
 {
-  public sealed class CompletionTimeStar : BaseStar<CompletionTimeStarSettings>, ITickable,
+  public sealed class CompletionTimeStar : StarController<CompletionTimeStarSettings>, ITickable,
     IHandles<LevelCompletedMessage>
   {
     [Inject] protected override CompletionTimeStarSettings Config { get; set; }

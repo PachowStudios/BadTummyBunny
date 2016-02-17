@@ -4,7 +4,7 @@ using Zenject;
 
 namespace PachowStudios.BadTummyBunny
 {
-  public abstract class BaseStar<TConfig> : IStar
+  public abstract class StarController<TConfig> : IStar
     where TConfig : BaseStarSettings
   {
     private CompletionState completionState = CompletionState.InProgress;
@@ -15,7 +15,7 @@ namespace PachowStudios.BadTummyBunny
 
     public CompletionState CompletionState
     {
-      get { return this.completionState; }
+      get { return Progress.IsCompleted ? CompletionState.Completed : this.completionState; }
       private set
       {
         this.completionState = value;

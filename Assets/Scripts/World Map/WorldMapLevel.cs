@@ -22,13 +22,12 @@ namespace PachowStudios.BadTummyBunny
     public bool IsSelected => ReferenceEquals(this, WorldMap.SelectedLevel);
     public Vector3 Position => transform.position;
 
-    public IEnumerable<BaseStarSettings> Stars => LevelConfig.Stars;
-    public IEnumerable<BaseStarSettings> CompletedStars { get; private set; }
+    public IEnumerable<IStar> Stars { get; private set; }
 
     [Inject] private IReadOnlyDictionary<Scene, LevelSettings> LevelSettings { get; set; }
     [Inject] private WorldMap WorldMap { get; set; }
     [Inject] private ISceneLoader SceneLoader { get; set; }
-    [Inject] private ISaveContainer SaveContainer { get; set; }
+    [Inject] private StarInfoFactory StarInfoFactory { get; set; }
 
     private LevelSettings LevelConfig { get; set; }
 
@@ -36,10 +35,7 @@ namespace PachowStudios.BadTummyBunny
     private void PostInject()
     {
       LevelConfig = LevelSettings[this.scene];
-
-      var levelProgress = SaveContainer.SaveFile.GetLevel(this.scene);
-
-      CompletedStars = Stars.Where(s => levelProgress.GetStar(s.Id).IsCompleted).ToList();
+      Stars = StarInfoFactory.Create(this.scene);
     }
 
     private void Awake()

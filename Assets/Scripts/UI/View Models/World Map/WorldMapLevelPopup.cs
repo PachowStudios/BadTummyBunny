@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using MarkUX;
 using MarkUX.Views;
 
@@ -46,7 +45,7 @@ namespace PachowStudios.BadTummyBunny.UI
       this.Stars.Clear();
 
       foreach (var star in Level.Stars)
-        this.Stars.Add(Level.CompletedStars.Contains(star));
+        this.Stars.Add(star.CompletionState == CompletionState.Completed);
 
       SetChanged(() => this.Stars);
     }

@@ -1,7 +1,4 @@
-﻿using System.Linq;
-using System.Linq.Extensions;
-using PachowStudios.BadTummyBunny.UserData;
-using PachowStudios.Collections;
+﻿using PachowStudios.Collections;
 using UnityEngine;
 using Zenject;
 
@@ -15,9 +12,8 @@ namespace PachowStudios.BadTummyBunny
     [SerializeField] private CameraController cameraControllerInstance = null;
     [SerializeField] private GameMenu gameMenuInstance = null;
 
-    [Inject] private ISaveContainer SaveContainer { get; set; }
     [Inject] private IReadOnlyDictionary<Scene, LevelSettings> LevelSettings { get; set; }
-    [Inject] private IFactory<BaseStarSettings, StarProgress, IStar> StarFactory { get; set; }
+    [Inject] private StarControllerFactory StarControllerFactory { get; set; }
 
     public override void InstallBindings()
     {
@@ -39,17 +35,8 @@ namespace PachowStudios.BadTummyBunny
 
       Container.BindBaseInstance(settings);
 
-      if (settings.Stars.IsNullOrEmpty())
-        return;
-
-      var levelProgress = SaveContainer.SaveFile.GetLevel(this.scene);
-
-      foreach (var star in
-        from starSettings in settings.Stars
-        let starProgress = levelProgress.GetStar(starSettings.Id)
-          where !starProgress.IsCompleted
-          select StarFactory.Create(starSettings, starProgress))
-            Container.BindInstanceWithInterfaces(star.GetType(), star);
+      foreach (var starController in StarControllerFactory.Create(this.scene))
+        Container.BindInstanceWithInterfaces(starController.GetType(), starController);
     }
 
     private void InstallLevelHandlers()
