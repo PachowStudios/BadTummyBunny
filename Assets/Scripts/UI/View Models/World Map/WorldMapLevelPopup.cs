@@ -45,7 +45,7 @@ namespace PachowStudios.BadTummyBunny.UI
       this.Stars.Clear();
 
       foreach (var star in Level.Stars)
-        this.Stars.Add(star.CompletionState == CompletionState.Completed);
+        this.Stars.Add(star.IsCompleted);
 
       SetChanged(() => this.Stars);
     }

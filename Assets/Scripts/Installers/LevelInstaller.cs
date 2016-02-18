@@ -1,4 +1,6 @@
-﻿using PachowStudios.Collections;
+﻿using System.Collections.Generic;
+using System.Linq.Extensions;
+using PachowStudios.Collections;
 using UnityEngine;
 using Zenject;
 
@@ -13,7 +15,7 @@ namespace PachowStudios.BadTummyBunny
     [SerializeField] private GameMenu gameMenuInstance = null;
 
     [Inject] private IReadOnlyDictionary<Scene, LevelSettings> LevelSettings { get; set; }
-    [Inject] private StarControllerFactory StarControllerFactory { get; set; }
+    [Inject] private IFactory<Scene, IEnumerable<IStarController>>  StarControllerFactory { get; set; }
 
     public override void InstallBindings()
     {
@@ -35,8 +37,7 @@ namespace PachowStudios.BadTummyBunny
 
       Container.BindBaseInstance(settings);
 
-      foreach (var starController in StarControllerFactory.Create(this.scene))
-        Container.BindInstanceWithInterfaces(starController.GetType(), starController);
+      StarControllerFactory.Create(this.scene).ForEach(Container.BindInstanceWithInterfaces);
     }
 
     private void InstallLevelHandlers()

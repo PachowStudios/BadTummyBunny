@@ -2,10 +2,10 @@
 
 namespace PachowStudios.BadTummyBunny
 {
-  public sealed class CollectCoinsStar : StarController<CollectCoinsStarSettings>,
+  public sealed class CollectCoinsStar : BaseStarController,
     IHandles<PlayerCoinCollectedMessage>
   {
-    [Inject] protected override CollectCoinsStarSettings Config { get; set; }
+    [Inject] private CollectCoinsStarSettings Config { get; set; }
 
     private int collectedCoins;
 

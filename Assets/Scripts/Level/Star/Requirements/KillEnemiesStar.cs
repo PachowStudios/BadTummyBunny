@@ -2,10 +2,10 @@
 
 namespace PachowStudios.BadTummyBunny
 {
-  public sealed class KillEnemiesStar : StarController<KillEnemiesStarSettings>,
+  public sealed class KillEnemiesStar : BaseStarController,
     IHandles<PlayerKilledEnemyMessage>
   {
-    [Inject] protected override KillEnemiesStarSettings Config { get; set; }
+    [Inject] private KillEnemiesStarSettings Config { get; set; }
 
     private int enemiesKilled;
 

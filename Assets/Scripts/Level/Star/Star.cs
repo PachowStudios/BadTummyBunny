@@ -2,17 +2,23 @@
 
 namespace PachowStudios.BadTummyBunny
 {
-  public class StarInfo : IStar
+  public class Star : IStar
   {
     public string Id => Config.Id;
     public string Name => Config.Name;
     public StarRequirement Requirement => Config.Requirement;
-    public CompletionState CompletionState => Progress.IsCompleted ? CompletionState.Completed : CompletionState.InProgress;
 
-    private BaseStarSettings Config { get; }
+    public bool IsCompleted
+    {
+      get { return Progress.IsCompleted; }
+      set { Progress.IsCompleted = value; }
+    }
+
+    public BaseStarSettings Config { get; }
+
     private StarProgress Progress { get; }
 
-    public StarInfo(BaseStarSettings config, StarProgress progress)
+    public Star(BaseStarSettings config, StarProgress progress)
     {
       Config = config;
       Progress = progress;

@@ -27,7 +27,7 @@ namespace PachowStudios.BadTummyBunny
     [Inject] private IReadOnlyDictionary<Scene, LevelSettings> LevelSettings { get; set; }
     [Inject] private WorldMap WorldMap { get; set; }
     [Inject] private ISceneLoader SceneLoader { get; set; }
-    [Inject] private StarInfoFactory StarInfoFactory { get; set; }
+    [Inject] private IFactory<Scene, IEnumerable<IStar>>  StarFactory { get; set; }
 
     private LevelSettings LevelConfig { get; set; }
 
@@ -35,7 +35,7 @@ namespace PachowStudios.BadTummyBunny
     private void PostInject()
     {
       LevelConfig = LevelSettings[this.scene];
-      Stars = StarInfoFactory.Create(this.scene);
+      Stars = StarFactory.Create(this.scene);
     }
 
     private void Awake()

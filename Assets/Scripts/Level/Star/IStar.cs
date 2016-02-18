@@ -5,6 +5,7 @@
     string Id { get; }
     string Name { get; }
     StarRequirement Requirement { get; }
-    CompletionState CompletionState { get; }
+
+    bool IsCompleted { get; set; }
   }
 }

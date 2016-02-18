@@ -1,33 +1,26 @@
 ﻿using PachowStudios.Assertions;
-using PachowStudios.BadTummyBunny.UserData;
 using Zenject;
 
 namespace PachowStudios.BadTummyBunny
 {
-  public abstract class StarController<TConfig> : IStar
-    where TConfig : BaseStarSettings
+  public abstract class BaseStarController : IStarController
   {
     private CompletionState completionState = CompletionState.InProgress;
 
-    public string Id => Config.Id;
-    public string Name => Config.Name;
-    public StarRequirement Requirement => Config.Requirement;
+    [Inject] public IStar Star { get; private set; }
 
     public CompletionState CompletionState
     {
-      get { return Progress.IsCompleted ? CompletionState.Completed : this.completionState; }
+      get { return Star.IsCompleted ? CompletionState.Completed : this.completionState; }
       private set
       {
         this.completionState = value;
 
         if (CompletionState == CompletionState.Completed)
-          Progress.IsCompleted = true;
+          Star.IsCompleted = true;
       }
     }
 
-    protected abstract TConfig Config { get; set; }
-
-    [Inject] protected StarProgress Progress { get; private set; }
     [Inject] protected IEventAggregator EventAggregator { get; private set; }
 
     protected virtual void OnCompleted() { }
@@ -42,7 +35,7 @@ namespace PachowStudios.BadTummyBunny
         return;
 
       CompletionState = CompletionState.Completed;
-      EventAggregator.Publish(new StarCompletedMessage(this));
+      EventAggregator.Publish(new StarCompletedMessage(Star));
       OnCompleted();
     }
 
@@ -54,7 +47,7 @@ namespace PachowStudios.BadTummyBunny
         return;
 
       CompletionState = CompletionState.Failed;
-      EventAggregator.Publish(new StarFailedMessage(this));
+      EventAggregator.Publish(new StarFailedMessage(Star));
       OnFailed();
     }
   }

@@ -18,8 +18,8 @@ namespace PachowStudios.BadTummyBunny
       MappedSettings = this.levelSettings.ToDictionary(s => s.Scene).AsReadOnly();
 
       Container.BindInstance(MappedSettings);
-      Container.BindSingle<StarInfoFactory>();
-      Container.BindSingle<StarControllerFactory>();
+      Container.BindIFactory<Scene, IEnumerable<IStar>>().ToCustomFactory<StarFactory>();
+      Container.BindIFactory<Scene, IEnumerable<IStarController>>().ToCustomFactory<StarControllerFactory>();
     }
   }
 }

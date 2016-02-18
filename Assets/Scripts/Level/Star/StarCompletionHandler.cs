@@ -9,8 +9,9 @@ namespace PachowStudios.BadTummyBunny
     IHandles<StarFailedMessage>
   {
     [Inject] private LevelSettings Config { get; set; }
-    [Inject] private IEnumerable<IStar> Stars { get; set; }
     [Inject] private IEventAggregator EventAggregator { get; set; }
+
+    [InjectOptional] private IEnumerable<IStarController> StarControllers { get; set; }
 
     public void Initialize()
       => EventAggregator.Subscribe(this);

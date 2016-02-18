@@ -3,10 +3,10 @@ using Zenject;
 
 namespace PachowStudios.BadTummyBunny
 {
-  public sealed class CompletionTimeStar : StarController<CompletionTimeStarSettings>, ITickable,
+  public sealed class CompletionTimeStar : BaseStarController, ITickable,
     IHandles<LevelCompletedMessage>
   {
-    [Inject] protected override CompletionTimeStarSettings Config { get; set; }
+    [Inject] private CompletionTimeStarSettings Config { get; set; }
 
     private float elapsedTime;
 

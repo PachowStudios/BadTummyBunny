@@ -24,8 +24,8 @@ namespace Zenject
       container.BindAllInterfacesToSingle(type);
     }
 
-    public static void BindInstanceWithInterfaces<TConcrete>([NotNull] this DiContainer container, TConcrete @object)
-      => container.BindInstanceWithInterfaces(typeof(TConcrete), @object);
+    public static void BindInstanceWithInterfaces([NotNull] this DiContainer container, object @object)
+      => container.BindInstanceWithInterfaces(@object.GetType(), @object);
 
     public static void BindInstanceWithInterfaces([NotNull] this DiContainer container, Type type, object @object)
     {
