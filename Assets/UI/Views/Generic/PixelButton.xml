@@ -1,0 +1,23 @@
+﻿<PixelButton MouseEnter="OnMouseEnter" MouseExit="OnMouseExit"
+             MouseDown="OnMouseDown" MouseUp="OnMouseUp">
+  <Label Text="{Text}"
+         Offset="{TextOffset}" />
+  <ContentContainer />
+
+  <ViewAnimation Id="HighlightImageAnimation">
+    <Animate Field="BackgroundImage" To="{HighlightedImage}" />
+  </ViewAnimation>
+  
+  <ViewAnimation Id="PressedImageAnimation">
+    <Animate Field="BackgroundImage" To="{PressedImage}" />
+  </ViewAnimation>
+  
+  <ViewAnimation Id="HighlightColorAnimation">
+    <Animate Field="BackgroundColor" To="{HighlightedColor}"
+             Duration="0.05" ReverseSpeed="0.5" />
+  </ViewAnimation>
+  
+  <ViewAnimation Id="PressedColorAnimation">
+    <Animate Field="BackgroundColor" To="{PressedColor}" />
+  </ViewAnimation>
+</PixelButton>

@@ -1,0 +1,15 @@
+﻿<View xmlns="http://www.markux.com/schema"
+      ViewName="HudHealthMeter">
+  <List Id="HeartList"
+        Items="{Hearts}"
+        CanSelect="False"
+        Orientation="Horizontal"
+        Spacing="2em"
+        ItemWidth="10em" ItemHeight="9em"
+        Alignment="TopLeft" ContentAlignment="Center">
+    <ListItem Id="Template"
+              ShowItemLabel="False">
+      <HealthMeterHeart Health="{Item.Value}" />
+    </ListItem>
+  </List>
+</View>

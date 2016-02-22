@@ -105,4 +105,6 @@ namespace PachowStudios.BadTummyBunny
       RespawnPoint = respawnPoint;
     }
   }
+
+  public class PlayerDiedMessage : IMessage { }
 }

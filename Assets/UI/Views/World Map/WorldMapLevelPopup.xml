@@ -2,9 +2,6 @@
       ViewName="WorldMapLevelPopup"
       Width="5" Height="2">
   <Button Click="OnClick"
-          BackgroundImage="Assets/Sprites/UI/Menu/Menu Frame.png:Normal"
-          PressedImage="Assets/Sprites/UI/Menu/Menu Frame.png:Pressed"
-          BackgroundImageType="Sliced"
           Width="5" Height="2">
 
     <Label Text="{LevelName}"

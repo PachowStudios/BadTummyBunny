@@ -7,14 +7,14 @@ namespace PachowStudios.BadTummyBunny.UI
   [InternalView]
   public class WorldMapLevelPopup : View
   {
-    [DataBound] public ViewAnimation ShowAnimation = null;
-    [DataBound] public ViewAnimation HideAnimation = null;
-
     [DataBound, ChangeHandler(nameof(UpdateLayout))]
     public string LevelName = "Level X";
 
     [DataBound, ChangeHandler(nameof(UpdateLayout))]
     public List<Field<bool>> Stars = new List<Field<bool>>(3);
+
+    [DataBound] public ViewAnimation ShowAnimation = null;
+    [DataBound] public ViewAnimation HideAnimation = null;
 
     private WorldMapLevel level;
 

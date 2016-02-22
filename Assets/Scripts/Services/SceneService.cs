@@ -6,23 +6,16 @@ namespace PachowStudios.BadTummyBunny
 {
   public class SceneService : ISceneLoader
   {
-    private AsyncOperation LoadingOperation { get; set; }
-
-    public bool IsLoadingScene => !LoadingOperation?.isDone ?? false;
-
     public void ReloadScene()
-      => LoadScene(SceneManager.GetActiveScene().name);
+      => LoadScene(SceneManager.GetActiveScene().name, LoadSceneMode.Single);
 
     public void LoadScene(Scene scene)
-      => LoadScene(scene.GetDescription());
+      => LoadScene(scene.GetDescription(), LoadSceneMode.Single);
 
     public void QuitGame()
       => Application.Quit();
 
-    private void LoadScene(string levelName)
-    {
-      if (!IsLoadingScene)
-        LoadingOperation = SceneManager.LoadSceneAsync(levelName, LoadSceneMode.Single);
-    }
+    private void LoadScene(string levelName, LoadSceneMode mode)
+      => SceneManager.LoadSceneAsync(levelName, mode);
   }
 }

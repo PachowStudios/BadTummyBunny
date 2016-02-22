@@ -1,0 +1,8 @@
+﻿<View xmlns="http://www.markux.com/schema"
+      ViewName="LevelScreen">
+  <LevelHud Id="LevelHud"
+            Alignment="TopLeft" Offset="10em,10em,0,0" />
+  
+  <GameOverMenu Id="GameOverMenu"
+                Alpha="0" />
+</View>

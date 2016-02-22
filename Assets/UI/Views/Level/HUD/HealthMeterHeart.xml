@@ -1,0 +1,13 @@
+﻿<View xmlns="http://www.markux.com/schema"
+      ViewName="HealthMeterHeart"
+      Width="10em" Height="9em">
+  <ViewSwitcher Id="HeartSelector"
+                StartView="100"
+                SwitchToDefault="True">
+    <Image Id="0" Path="Assets/Sprites/UI/HUD/Heart Container.png:0" />
+    <Image Id="25" Path="Assets/Sprites/UI/HUD/Heart Container.png:25" />
+    <Image Id="50" Path="Assets/Sprites/UI/HUD/Heart Container.png:50" />
+    <Image Id="75" Path="Assets/Sprites/UI/HUD/Heart Container.png:75" />
+    <Image Id="100" Path="Assets/Sprites/UI/HUD/Heart Container.png:100" />
+  </ViewSwitcher>
+</View>

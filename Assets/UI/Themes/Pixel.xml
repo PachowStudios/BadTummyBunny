@@ -4,5 +4,19 @@
          FontColor="White"
          FontSize="1" LineSpacing="2"
          Scale="0.5"
-         TextAlignment="Center" AdjustToText="WidthAndHeight"/>
+         TextAlignment="Center" AdjustToText="WidthAndHeight" />
+
+  <Button BackgroundImage="Assets/Sprites/UI/Menu/Menu Frame.png:Normal"
+          PressedImage="Assets/Sprites/UI/Menu/Menu Frame.png:Pressed"
+          BackgroundImageType="Sliced"
+          Font="Assets/Sprites/UI/Fonts/Pixel.fontsettings"
+          FontSize="1" FontColor="White"
+          TextAlignment="Bottom" />
+
+  <PixelButton BackgroundImage="Assets/Sprites/UI/Menu/Menu Frame.png:Normal"
+               PressedImage="Assets/Sprites/UI/Menu/Menu Frame.png:Pressed"
+               BackgroundImageType="Sliced"
+               Font="Assets/Sprites/UI/Fonts/Pixel.fontsettings"
+               FontSize="1" FontColor="White"
+               Width="4" Height="23em" />
 </Theme>

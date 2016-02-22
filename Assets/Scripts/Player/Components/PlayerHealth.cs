@@ -64,7 +64,6 @@ namespace PachowStudios.BadTummyBunny
     [InjectLocal] private IEventAggregator LocalEventAggregator { get; set; }
 
     [Inject(BindingIds.Global)] private IEventAggregator EventAggregator { set; get; }
-    [Inject] private IGameMenu GameMenu { get; set; }
     [Inject] private ExplodeEffect ExplodeEffect { get; set; }
 
     private bool IsInvincible => this.lastHitTime + Config.InvincibilityPeriod >= Time.time;
@@ -109,7 +108,7 @@ namespace PachowStudios.BadTummyBunny
 
       IsDead = true;
 
-      GameMenu.ShowGameOverScreen = true;
+      EventAggregator.Publish(new PlayerDiedMessage());
       ExplodeEffect.Explode(View.Transform, Movement.Velocity, View.SpriteRenderer.sprite);
       View.SetRenderersEnabled(false);
       Movement.Disable();

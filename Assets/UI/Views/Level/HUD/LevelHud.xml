@@ -1,0 +1,24 @@
+﻿<View xmlns="http://www.markux.com/schema"
+      ViewName="LevelHud">
+  <Frame ResizeToContent="True"
+         Alignment="TopLeft">
+    <HudHealthMeter Id="HealthMeter" />
+
+    <HudCoinCounter Id="CoinCounter"
+                    Offset="0,1,0,0" />
+  </Frame>
+
+  <ViewAnimation Id="ShowAnimation">
+    <Animate Field="Alpha"
+             From="0" To="1"
+             Duration="0.2s"
+             EasingFunction="QuadraticEaseIn" />
+  </ViewAnimation>
+
+  <ViewAnimation Id="HideAnimation">
+    <Animate Field="Alpha"
+             From="1" To="0"
+             Duration="0.2s"
+             EasingFunction="QuadraticEaseIn" />
+  </ViewAnimation>
+</View>

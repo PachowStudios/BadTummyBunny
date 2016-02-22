@@ -6,12 +6,12 @@ namespace PachowStudios.BadTummyBunny.UI
   [InternalView]
   public class WorldMapLevelStar : View
   {
+    [DataBound, ChangeHandler(nameof(UpdateLayout))]
+    public bool IsCollected = false;
+
     [DataBound] public ViewSwitcher StarSelector = null;
     [DataBound] public Image EmptyStar = null;
     [DataBound] public Image FilledStar = null;
-
-    [ChangeHandler(nameof(UpdateLayout))]
-    public bool IsCollected = false;
 
     private Image StarImage => this.IsCollected ? this.FilledStar : this.EmptyStar;
 

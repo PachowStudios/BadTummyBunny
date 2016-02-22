@@ -1,0 +1,11 @@
+﻿<View xmlns="http://www.markux.com/schema"
+      ViewName="HudCoinCounter">
+  <Image Path="Assets/Sprites/Powerups/Coins.png:Copper Coin"
+         Width="1" Height="1"
+         Alignment="Left"
+         Offset="0,0,3em,0"/>
+
+  <Label Text="{CoinsText}"
+         Alignment="Left"
+         Offset="24em,0,0,10em"/>
+</View>

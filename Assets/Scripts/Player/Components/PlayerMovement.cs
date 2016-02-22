@@ -28,7 +28,6 @@ namespace PachowStudios.BadTummyBunny
 
     [Inject(BindingIds.Global)] private IEventAggregator EventAggregator { get; set; }
     [Inject] private IFactory<FartType, IFart> FartFactory { get; set; }
-    [Inject] private IGameMenu GameMenu { get; set; }
     [Inject] private ILevelCompletionHandler LevelCompletionHandler { get; set; }
 
     private AnimationController AnimationController { get; set; }
@@ -271,9 +270,6 @@ namespace PachowStudios.BadTummyBunny
       => SoundManager.PlayCappedSFXFromGroup(SfxGroup.LandingGrass);
 
     public void Handle(LevelCompletedMessage message)
-    {
-      DisableInput();
-      Wait.ForSeconds(1.2f, () => GameMenu.ShowGameOverScreen = true);
-    }
+      => DisableInput();
   }
 }

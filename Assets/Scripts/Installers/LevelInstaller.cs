@@ -12,7 +12,6 @@ namespace PachowStudios.BadTummyBunny
     [SerializeField] private Scene scene = Scene.Level1;
 
     [SerializeField] private CameraController cameraControllerInstance = null;
-    [SerializeField] private GameMenu gameMenuInstance = null;
 
     [Inject] private IReadOnlyDictionary<Scene, LevelSettings> LevelSettings { get; set; }
     [Inject] private IFactory<Scene, IEnumerable<IStarController>>  StarControllerFactory { get; set; }
@@ -28,7 +27,6 @@ namespace PachowStudios.BadTummyBunny
     {
       Container.BindInstance(this.scene);
       Container.BindInstance(this.cameraControllerInstance);
-      Container.BindInstanceWithInterfaces(this.gameMenuInstance);
     }
 
     private void InstallLevelSettings()

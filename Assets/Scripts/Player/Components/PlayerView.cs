@@ -53,8 +53,9 @@ namespace PachowStudios.BadTummyBunny
       }
     }
 
-    private void OnTriggerStay2D(Collider2D other)
-      => OnTriggerEnter2D(other);
+    // This generates too much garbage every frame. We might not need it.
+    //private void OnTriggerStay2D(Collider2D other)
+    //  => OnTriggerEnter2D(other);
 
     [AnimationEvent]
     public void PlayWalkingSound(int rightStep)

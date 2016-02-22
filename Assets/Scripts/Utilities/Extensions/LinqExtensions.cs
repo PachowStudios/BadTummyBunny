@@ -36,11 +36,15 @@ namespace System.Linq.Extensions
 
     [Pure]
     public static bool HasSingle<T>([NotNull] this IEnumerable<T> source)
-      => source.HasAtMost(1);
+      => source.HasExactly(1);
 
     [Pure]
     public static bool HasMultiple<T>([NotNull] this IEnumerable<T> source)
       => source.HasAtLeast(2);
+
+    [Pure]
+    public static bool HasExactly<T>([NotNull] this IEnumerable<T> source, int amount)
+      => source.Take(amount + 1).Count() == amount;
 
     public static void ForEach<T>([NotNull] this IEnumerable<T> source, [CanBeNull] Action<T> action)
     {

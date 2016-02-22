@@ -723,5 +723,10 @@ namespace MarkUX.Views
         }
 
         #endregion
+
+        public void UpdateItemBindings()
+        {
+            this.ForEachChild<FlowListItem>(c => c.UpdateBindings());
+        }
     }
 }

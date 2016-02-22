@@ -3,8 +3,7 @@ using UnityEngine;
 
 namespace PachowStudios.BadTummyBunny
 {
-  [AddComponentMenu("Bad Tummy Bunny/Camera/Scale Width Camera")]
-  [ExecuteInEditMode]
+  [ExecuteInEditMode, AddComponentMenu("Bad Tummy Bunny/Camera/Scale Width Camera")]
   public sealed class ScaleWidthCamera : MonoBehaviour
   {
     [SerializeField] public int defaultFOV = 500;
