@@ -2,7 +2,7 @@
       ViewName="WorldMapLevelPopup"
       Width="5" Height="2">
   <Button Click="OnClick"
-          Width="5" Height="2">
+          Width="100%" Height="100%">
 
     <Label Text="{LevelName}"
            AdjustToText="Height"
@@ -18,7 +18,7 @@
           OffsetFromParent="0,0,0,6em">
       <ListItem Id="Template"
                 ShowItemLabel="False">
-        <WorldMapLevelStar IsCollected="{Item.Value}" />
+        <StarImage IsCollected="{Item.Value}" />
       </ListItem>
     </List>
 

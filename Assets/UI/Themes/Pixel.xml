@@ -1,5 +1,6 @@
 <Theme xmlns="http://www.markux.com/schema"
        Name="Pixel">
+  <!-- DEFAULT -->
   <Label Font="Assets/Sprites/UI/Fonts/Pixel.fontsettings"
          FontColor="White"
          FontSize="1" LineSpacing="2"
@@ -18,5 +19,11 @@
                BackgroundImageType="Sliced"
                Font="Assets/Sprites/UI/Fonts/Pixel.fontsettings"
                FontSize="1" FontColor="White"
-               Width="4" Height="23em" />
+               Width="4" Height="1.5" />
+  
+  <!-- GENERIC -->
+  <Frame Style="BluePopup"
+         BackgroundImage="Assets/Sprites/UI/Menu/Menu Frame.png:Normal"
+         BackgroundImageType="Sliced"
+         ContentMargin="5em,5em,5em,7em" ResizeToContent="False" />
 </Theme>

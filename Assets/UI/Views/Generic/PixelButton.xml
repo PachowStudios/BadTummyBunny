@@ -1,8 +1,11 @@
-﻿<PixelButton MouseEnter="OnMouseEnter" MouseExit="OnMouseExit"
-             MouseDown="OnMouseDown" MouseUp="OnMouseUp">
-  <Label Text="{Text}"
-         Offset="{TextOffset}" />
-  <ContentContainer />
+﻿<PixelButton MouseDown="ButtonMouseDown" MouseUp="ButtonMouseUp"
+             MouseEnter="ButtonMouseEnter" MouseExit="ButtonMouseExit">
+  <Region Offset="{TextOffset}">
+    <Label Id="TextLabel"
+           Text="{Text}"
+           Offset="0,0,0,14em" />
+    <ContentContainer />
+  </Region>
 
   <ViewAnimation Id="HighlightImageAnimation">
     <Animate Field="BackgroundImage" To="{HighlightedImage}" />
@@ -10,6 +13,7 @@
   
   <ViewAnimation Id="PressedImageAnimation">
     <Animate Field="BackgroundImage" To="{PressedImage}" />
+    <Animate Field="TextLabel.Offset" To="0,0,0,12em" />
   </ViewAnimation>
   
   <ViewAnimation Id="HighlightColorAnimation">

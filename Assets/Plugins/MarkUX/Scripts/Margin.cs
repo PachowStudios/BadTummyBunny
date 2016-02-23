@@ -78,36 +78,13 @@ namespace MarkUX
         /// <summary>
         /// Initializes a new instance of the class.
         /// </summary>
-        public Margin(ElementSize left, ElementSize top)
+        public Margin(ElementSize left = null, ElementSize top = null, ElementSize right = null, ElementSize bottom = null)
         {
-            _left = left;
-            _top = top;
-            _right = new ElementSize();
-            _bottom = new ElementSize();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the class.
-        /// </summary>
-        public Margin(ElementSize left, ElementSize top, ElementSize right)
-            : this()
-        {
-            _left = left;
-            _top = top;
-            _right = right;
-            _bottom = new ElementSize();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the class.
-        /// </summary>
-        public Margin(ElementSize left, ElementSize top, ElementSize right, ElementSize bottom)
-        {
-            _left = left;
-            _top = top;
-            _right = right;
-            _bottom = bottom;
-        }
+            _left = left ?? new ElementSize();
+            _top = top ?? new ElementSize();
+            _right = right ?? new ElementSize();
+            _bottom = bottom ?? new ElementSize();
+    }
 
         #endregion
 

@@ -11,7 +11,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a34101186e7deeb4bb393cd19bcfea64, type: 3}
   m_Name: PlayerHealthSettings
   m_EditorClassIdentifier: 
-  HealthContainers: 3
+  HealthContainers: 1
   CarrotHealthRecharge: 1
   FalloutDamage: 1
   InvincibilityPeriod: 2

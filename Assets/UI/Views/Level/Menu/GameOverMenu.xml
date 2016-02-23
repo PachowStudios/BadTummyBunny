@@ -5,21 +5,18 @@
                  Click="OnRetryClick" />
 
     <PixelButton Text="Quit"
-                 Click="OnQuitClick"
-                 VerticalTextOffset="-2em" />
+                 Click="OnQuitClick" />
   </Group>
   
   <ViewAnimation Id="ShowAnimation">
     <Animate Field="Alpha"
              From="0" To="1"
-             Duration="0.2s"
-             EasingFunction="QuadraticEaseIn" />
+             Duration="0.2s" EasingFunction="QuadraticEaseIn" />
   </ViewAnimation>
 
   <ViewAnimation Id="HideAnimation">
     <Animate Field="Alpha"
              From="1" To="0"
-             Duration="0.2s"
-             EasingFunction="QuadraticEaseIn" />
+             Duration="0.2s" EasingFunction="QuadraticEaseIn" />
   </ViewAnimation>
 </View>

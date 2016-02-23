@@ -5,4 +5,9 @@
   
   <GameOverMenu Id="GameOverMenu"
                 Alpha="0" />
+  
+  <StarCompletedPopup Id="StarCompletedPopup"
+                      Alpha="0"
+                      Alignment="TopRight"
+                      Offset="0,10em,10em,0" OffsetFromParent="0,0,0,2.5" />
 </View>
