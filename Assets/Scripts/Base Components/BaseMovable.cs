@@ -18,9 +18,9 @@ namespace PachowStudios.BadTummyBunny
     public virtual Vector2 FacingDirection => new Vector2(View.Transform.localScale.x, 0f);
     public virtual bool IsFacingRight => FacingDirection.x > 0f;
     public virtual bool IsFalling => Velocity.y < 0f;
-    public virtual bool IsGrounded => View.CharacterController.IsGrounded;
-    public virtual bool WasGrounded => View.CharacterController.WasGroundedLastFrame;
-    public virtual LayerMask CollisionLayers => View.CharacterController.PlatformMask;
+    public virtual bool IsGrounded => CharacterController.IsGrounded;
+    public virtual bool WasGrounded => CharacterController.WasGroundedLastFrame;
+    public virtual LayerMask CollisionLayers => CharacterController.PlatformMask;
 
     public float? MoveSpeedOverride { get; set; }
 
@@ -30,16 +30,14 @@ namespace PachowStudios.BadTummyBunny
     protected abstract TConfig Config { get; set; }
     protected abstract TView View { get; set; }
 
+    protected CharacterController2D CharacterController => View.CharacterController;
     protected float MovementDamping => IsGrounded ? Config.GroundDamping : Config.AirDamping;
+
+    public virtual Vector3 Move(Vector3 moveVelocity)
+      => Velocity = CharacterController.Move(moveVelocity * Time.deltaTime);
 
     public virtual void SetPosition(Vector3 position)
       => View.Transform.position = position;
-
-    public virtual void Move(Vector3 moveVelocity)
-    {
-      View.CharacterController.Move(moveVelocity * Time.deltaTime);
-      Velocity = View.CharacterController.Velocity;
-    }
 
     public virtual void Flip()
       => View.Transform.Flip();
@@ -66,12 +64,8 @@ namespace PachowStudios.BadTummyBunny
 
       knockback.Scale(direction);
 
-      if (knockback.IsZero())
-        return;
-
-      Velocity += knockback.ToVector3();
-      View.CharacterController.Move(Velocity * Time.deltaTime);
-      Velocity = View.CharacterController.Velocity;
+      if (!knockback.IsZero())
+        Velocity = Move(Velocity + knockback.ToVector3());
     }
 
     public virtual void Disable() { }

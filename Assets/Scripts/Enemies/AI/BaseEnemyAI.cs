@@ -8,12 +8,8 @@ namespace PachowStudios.BadTummyBunny
   {
     [Inject] private Player Player { get; set; }
 
-    public bool IsAtWall
-      => Physics2D.OverlapPoint(View.FrontCheck.position, CollisionLayers) != null;
-
-    public bool IsAtLedge
-      => IsGrounded
-      && Physics2D.OverlapPoint(View.LedgeCheck.position, CollisionLayers) == null;
+    public bool IsAtWall => Physics2D.OverlapPoint(View.FrontCheck.position, CollisionLayers) != null;
+    public bool IsAtLedge => IsGrounded && Physics2D.OverlapPoint(View.LedgeCheck.position, CollisionLayers) == null;
 
     public bool IsPlayerOnRight => Player.Movement.Position.x > Position.x;
     public float RelativePlayerHeight => Position.y - Player.Movement.Position.y;
@@ -37,7 +33,7 @@ namespace PachowStudios.BadTummyBunny
     public virtual void FacePlayer()
     {
       if (IsPlayerOnRight ^ IsFacingRight)
-        View.Transform.Flip();
+        Flip();
     }
 
     public virtual bool IsPlayerInRange(float min = 0f, float max = Mathf.Infinity)
@@ -49,20 +45,16 @@ namespace PachowStudios.BadTummyBunny
 
     public virtual bool IsPlayerInLineOfSight(float range = Mathf.Infinity, float maxAngle = 90f)
     {
-      if (IsFacingRight ^ IsPlayerOnRight)
+      if (IsFacingRight ^ IsPlayerOnRight
+          || FacingDirection.AngleTo(Player.Movement.CenterPoint - CenterPoint) > maxAngle)
         return false;
 
+      var linecast = Physics2D.Linecast(
+        Collider.bounds.center,
+        Player.Movement.CenterPoint,
+        Config.BlockVisibilityLayers);
 
-      if (Vector3.Angle(FacingDirection, Player.Movement.CenterPoint - CenterPoint) > maxAngle)
-        return false;
-
-      var linecast =
-        Physics2D.Linecast(
-          Collider.bounds.center,
-          Player.Movement.CenterPoint,
-          Config.BlockVisibilityLayers);
-
-      return linecast.collider == null && linecast.distance <= range;
+      return !linecast && linecast.distance <= range;
     }
   }
 }

@@ -5,12 +5,14 @@ using Zenject;
 namespace PachowStudios.BadTummyBunny
 {
   public sealed class PlayerMovement : BaseMovable<PlayerMovementSettings, PlayerView>, IFartInfoProvider, IInitializable, ITickable, ILateTickable, IDisposable,
-    IHandles<PlayerCollidedMessage>,
     IHandles<PlayerCoinCollectedMessage>,
     IHandles<PlayerCarrotCollectedMessage>,
     IHandles<PlayerFlagpoleActivatedMessage>,
     IHandles<LevelCompletedMessage>
   {
+    private const float MinimumTimeFarting = 0.05f;
+    private const float VerticalSlopeAngle = 10f;
+
     public bool IsFarting { get; private set; }
     public bool IsFartAiming { get; private set; }
     public bool WillFart { get; private set; }
@@ -33,16 +35,17 @@ namespace PachowStudios.BadTummyBunny
     private AnimationController AnimationController { get; set; }
 
     private bool IsInputEnabled { get; set; } = true;
+    private bool IsFartingEnabled { get; set; } = true;
+
     private float HorizontalMovement { get; set; }
     private bool WillJump { get; set; }
 
     private IFart CurrentFart { get; set; }
-    private bool IsFartingEnabled { get; set; } = true;
     private float TimeFarting { get; set; }
 
-    private bool IsMovingRight => HorizontalMovement > 0f;
-    private bool IsMovingLeft => HorizontalMovement < 0f;
-    private bool CanFart => IsFartingEnabled;
+    private bool IsFacingMovementDirection
+      => (HorizontalMovement >= 0f && IsFacingRight)
+      || (HorizontalMovement <= 0f && !IsFacingRight);
 
     [PostInject]
     private void PostInject()
@@ -60,7 +63,7 @@ namespace PachowStudios.BadTummyBunny
 
     public void Tick()
     {
-      GetInput();
+      UpdateInput();
       AnimationController.Tick();
 
       if (IsGrounded && !WasGrounded)
@@ -72,7 +75,7 @@ namespace PachowStudios.BadTummyBunny
       if (Health.IsDead)
         return;
 
-      GetMovement();
+      UpdateMovement();
       UpdateFartTrajectory();
       ApplyMovement();
     }
@@ -80,7 +83,23 @@ namespace PachowStudios.BadTummyBunny
     public void Dispose()
       => PlayerInput.Destroy();
 
-    public override void Flip() => View.Body.Flip();
+    public override Vector3 Move(Vector3 moveVelocity)
+    {
+      var newVelocity = CharacterController.Move(moveVelocity * Time.deltaTime);
+
+      if (IsFarting
+          && TimeFarting > MinimumTimeFarting
+          && Velocity.Angle() > VerticalSlopeAngle
+          && CharacterController.IsColliding)
+        StopFart(!IsGrounded);
+      else
+        Velocity = newVelocity;
+
+      return Velocity;
+    }
+
+    public override void Flip()
+      => View.Body.Flip();
 
     public override bool Jump(float height)
     {
@@ -110,7 +129,7 @@ namespace PachowStudios.BadTummyBunny
         SoundManager.PlayCappedSFXFromGroup(isRightStep ? SfxGroup.WalkingGrassRight : SfxGroup.WalkingGrassLeft);
     }
 
-    private void GetInput()
+    private void UpdateInput()
     {
       if (!IsInputEnabled)
         return;
@@ -118,7 +137,7 @@ namespace PachowStudios.BadTummyBunny
       HorizontalMovement = PlayerInput.Move.Value;
       WillJump = PlayerInput.Jump.WasPressed && IsGrounded;
 
-      IsFartAiming = PlayerInput.Fart.IsPressed && CanFart;
+      IsFartAiming = PlayerInput.Fart.IsPressed && IsFartingEnabled;
 
       if (IsFartAiming)
       {
@@ -138,7 +157,7 @@ namespace PachowStudios.BadTummyBunny
       }
 
       if (!IsFartAiming)
-        WillFart = PlayerInput.Fart.WasReleased && CanFart;
+        WillFart = PlayerInput.Fart.WasReleased && IsFartingEnabled;
     }
 
     private void DisableInput()
@@ -155,7 +174,7 @@ namespace PachowStudios.BadTummyBunny
         CurrentFart.DrawTrajectory(FartPower, FartDirection, Gravity, CenterPoint);
     }
 
-    private void GetMovement()
+    private void UpdateMovement()
     {
       if (WillFart)
         Fart(FartDirection);
@@ -163,8 +182,7 @@ namespace PachowStudios.BadTummyBunny
       if (IsFarting)
         return;
 
-      if ((IsMovingRight && !IsFacingRight) ||
-          (IsMovingLeft && IsFacingRight))
+      if (!IsFacingMovementDirection)
         Flip();
 
       if (WillJump)
@@ -184,13 +202,12 @@ namespace PachowStudios.BadTummyBunny
           MovementDamping * Time.deltaTime));
 
       Velocity = Velocity.AddY(Gravity * Time.deltaTime);
-      View.CharacterController.Move(Velocity * Time.deltaTime);
-      Velocity = View.CharacterController.Velocity;
+      Move(Velocity);
 
       if (IsGrounded)
       {
         Velocity = Velocity.SetY(0f);
-        LastGroundedPosition = View.Transform.position;
+        LastGroundedPosition = Position;
       }
     }
 
@@ -225,20 +242,12 @@ namespace PachowStudios.BadTummyBunny
       IsFarting = false;
 
       CurrentFart.StopFart();
-      ResetOrientation();
+      View.ResetOrientation();
 
       if (killXVelocity)
         Velocity = Velocity.SetX(0f);
 
       Velocity = Velocity.SetY(0f);
-    }
-
-    private void ResetOrientation()
-    {
-      var zRotation = View.Body.rotation.eulerAngles.z;
-      var flipX = zRotation > 90f && zRotation < 270f;
-      View.Body.localScale = new Vector3(flipX ? -1f : 1f, 1f, 1f);
-      View.Body.rotation = Quaternion.identity;
     }
 
     private void ResetInput()
@@ -247,14 +256,6 @@ namespace PachowStudios.BadTummyBunny
       WillJump = IsFartAiming = false;
       StopFart();
       UpdateFartTrajectory();
-    }
-
-    public void Handle(PlayerCollidedMessage message)
-    {
-      if (IsFarting
-          && TimeFarting > 0.05f
-          && CollisionLayers.HasLayer(message.Collider))
-        StopFart(!IsGrounded);
     }
 
     public void Handle(PlayerCoinCollectedMessage message)

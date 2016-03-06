@@ -63,6 +63,15 @@
     public static Vector2 LerpTo(this Vector2 a, Vector2 b, float t)
       => Vector2.Lerp(a, b, t);
 
+    public static float Angle(this Vector3 vector)
+      => Vector3.Angle(Vector3.up, vector);
+
+    public static float AngleTo(this Vector2 from, Vector2 to)
+      => Vector2.Angle(@from, to);
+
+    public static float AngleTo(this Vector3 from, Vector3 to)
+      => Vector3.Angle(from, to);
+
     public static Vector2 Vary(this Vector2 vector, float variance)
       => new Vector2(
         vector.x.Vary(variance),
@@ -82,10 +91,11 @@
         .SetZ((target - vector).DirectionToRotation2D().z)
         .ToQuaternion();
 
-    public static float AngleDegrees(this Vector3 vector)
-      => Mathf.Atan2(vector.y, vector.x) * Mathf.Rad2Deg;
-
     public static Vector3 DirectionToRotation2D(this Vector3 vector)
-      => Quaternion.AngleAxis(vector.AngleDegrees(), Vector3.forward).eulerAngles;
+    {
+      var angle = Mathf.Atan2(vector.y, vector.x) * Mathf.Rad2Deg;
+
+      return Quaternion.AngleAxis(angle, Vector3.forward).eulerAngles;
+    }
   }
 }

@@ -1,17 +1,5 @@
-﻿using UnityEngine;
-
-namespace PachowStudios.BadTummyBunny
+﻿namespace PachowStudios.BadTummyBunny
 {
-  public class PlayerCollidedMessage : IMessage
-  {
-    public Collider2D Collider { get; }
-
-    public PlayerCollidedMessage(Collider2D collider)
-    {
-      Collider = collider;
-    }
-  }
-
   public class PlayerHealthChangedMessage : IMessage
   {
     public int Health { get; }

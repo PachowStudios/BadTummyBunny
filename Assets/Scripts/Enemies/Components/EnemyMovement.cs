@@ -18,8 +18,9 @@ namespace PachowStudios.BadTummyBunny
 
     [InjectLocal] protected override EnemyView View { get; set; }
 
-    protected bool IsMovingRight => HorizontalMovement > 0;
-    protected bool IsMovingLeft => HorizontalMovement < 0;
+    private bool IsFacingMovementDirection
+      => (HorizontalMovement >= 0 && IsFacingRight)
+      || (HorizontalMovement <= 0 && !IsFacingRight);
 
     protected abstract void InternalTick();
 
@@ -34,32 +35,8 @@ namespace PachowStudios.BadTummyBunny
       if (!IsActivated)
         return;
 
-      GetMovement();
+      UpdateMovement();
       ApplyMovement();
-    }
-
-    protected virtual void GetMovement()
-    {
-      if ((IsMovingRight && !IsFacingRight) ||
-          (IsMovingLeft && IsFacingRight))
-        Flip();
-    }
-
-    protected virtual void ApplyMovement()
-    {
-      Velocity = Velocity.SetX(Velocity.x.LerpTo(
-        HorizontalMovement * MoveSpeed,
-        MovementDamping * Time.deltaTime));
-
-      Velocity = Velocity.AddY(Gravity * Time.deltaTime);
-      View.CharacterController.Move(Velocity * Time.deltaTime);
-      Velocity = View.CharacterController.Velocity;
-
-      if (IsGrounded)
-      {
-        Velocity = Velocity.SetY(0f);
-        LastGroundedPosition = Position;
-      }
     }
 
     public override bool Jump(float height)
@@ -70,6 +47,25 @@ namespace PachowStudios.BadTummyBunny
       View.Animator.SetTrigger("Jump");
 
       return true;
+    }
+
+    protected virtual void UpdateMovement()
+    {
+      if (!IsFacingMovementDirection)
+        Flip();
+    }
+
+    protected virtual void ApplyMovement()
+    {
+      Move(Velocity
+        .SetX(Velocity.x.LerpTo(HorizontalMovement * MoveSpeed, MovementDamping * Time.deltaTime))
+        .AddY(Gravity * Time.deltaTime));
+
+      if (IsGrounded)
+      {
+        Velocity = Velocity.SetY(0f);
+        LastGroundedPosition = Position;
+      }
     }
   }
 }

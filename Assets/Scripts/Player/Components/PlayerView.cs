@@ -28,8 +28,6 @@ namespace PachowStudios.BadTummyBunny
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-      LocalEventAggregator.Publish(new PlayerCollidedMessage(other));
-
       switch (other.tag)
       {
         case Tags.Enemy:
@@ -53,9 +51,14 @@ namespace PachowStudios.BadTummyBunny
       }
     }
 
-    // This generates too much garbage every frame. We might not need it.
-    //private void OnTriggerStay2D(Collider2D other)
-    //  => OnTriggerEnter2D(other);
+    public void ResetOrientation()
+    {
+      var zRotation = Body.rotation.eulerAngles.z;
+      var flipX = zRotation > 90f && zRotation < 270f;
+
+      Body.localScale = new Vector3(flipX ? -1f : 1f, 1f, 1f);
+      Body.rotation = Quaternion.identity;
+    }
 
     [AnimationEvent]
     public void PlayWalkingSound(int rightStep)

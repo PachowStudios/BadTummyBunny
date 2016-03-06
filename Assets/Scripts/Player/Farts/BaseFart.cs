@@ -194,7 +194,7 @@ namespace PachowStudios.BadTummyBunny
 
         var current = startPosition + delta;
 
-        if (Physics2D.Linecast(previous, current, PlayerMovement.CollisionLayers).collider != null)
+        if (Physics2D.Linecast(previous, current, PlayerMovement.CollisionLayers))
           break;
 
         yield return previous = current;

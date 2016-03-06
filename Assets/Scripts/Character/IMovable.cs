@@ -19,8 +19,8 @@ namespace PachowStudios.BadTummyBunny
     bool WasGrounded { get; }
     LayerMask CollisionLayers { get; }
 
+    Vector3 Move(Vector3 moveVelocity);
     void SetPosition(Vector3 position);
-    void Move(Vector3 moveVelocity);
     void Flip();
     bool Jump(float jumpHeight);
     void ApplyKnockback(Vector2 knockback, Vector2 direction);
