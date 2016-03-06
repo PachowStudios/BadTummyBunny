@@ -7,6 +7,7 @@
                 Alpha="0" />
   
   <StarCompletedPopup Id="StarCompletedPopup"
+                      PopupDuration="3"
                       Alpha="0"
                       Alignment="TopRight"
                       Offset="0,10em,10em,0" OffsetFromParent="0,0,0,2.5" />

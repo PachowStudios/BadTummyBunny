@@ -18,10 +18,7 @@ namespace PachowStudios.BadTummyBunny.UI
       => EventAggregator.Subscribe(this);
 
     public void Handle(StarCompletedMessage message)
-    {
-      this.StarCompletedPopup.Show();
-      Wait.ForSeconds(3f, () => this.StarCompletedPopup.Hide());
-    }
+      => this.StarCompletedPopup.Popup();
 
     public void Handle(PlayerDiedMessage message)
     {
