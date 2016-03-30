@@ -6,6 +6,9 @@ namespace Zenject
 {
   public static class ZenjectExtensions
   {
+    public static void BindPriority<T>([NotNull] this DiContainer container, int priority)
+      => ExecutionOrderInstaller.BindPriority<T>(container, priority);
+
     public static BindingConditionSetter BindSingle<TConcrete>([NotNull] this DiContainer container)
       => container.BindSingle(typeof(TConcrete));
 
@@ -21,8 +24,8 @@ namespace Zenject
       container.BindAllInterfacesToSingle(type);
     }
 
-    public static void BindInstanceWithInterfaces<TConcrete>([NotNull] this DiContainer container, TConcrete @object)
-      => container.BindInstanceWithInterfaces(typeof(TConcrete), @object);
+    public static void BindInstanceWithInterfaces([NotNull] this DiContainer container, object @object)
+      => container.BindInstanceWithInterfaces(@object.GetType(), @object);
 
     public static void BindInstanceWithInterfaces([NotNull] this DiContainer container, Type type, object @object)
     {
@@ -50,6 +53,7 @@ namespace Zenject
     public static BindingConditionSetter ToTransientPrefab([NotNull] this TypeBinder binder, [NotNull] MonoBehaviour prefab)
       => binder.ToTransientPrefab(prefab.gameObject);
 
+    [NotNull]
     public static T InstantiatePrefab<T>([NotNull] this IInstantiator instantiator, [NotNull] T prefab)
       where T : MonoBehaviour
       => instantiator.InstantiatePrefabForComponent<T>(prefab.gameObject);

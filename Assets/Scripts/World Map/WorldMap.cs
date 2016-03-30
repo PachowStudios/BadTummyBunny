@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
+using PachowStudios.Assertions;
 using UnityEngine;
-using UnityEngine.Assertions;
 using Zenject;
 
 namespace PachowStudios.BadTummyBunny
@@ -23,7 +23,7 @@ namespace PachowStudios.BadTummyBunny
 
     private void Awake()
     {
-      Assert.IsNotNull(this.startingLevel, nameof(this.startingLevel));
+      this.startingLevel.Should().NotBeNull("because a starting level must be set.");
 
       this.levels = new HashSet<WorldMapLevel>(GetComponentsInChildren<WorldMapLevel>());
     }
@@ -53,11 +53,11 @@ namespace PachowStudios.BadTummyBunny
     {
       IList<WorldMapLevel> path;
 
-      if (TryGetPathToLevel(SelectedLevel, targetLevel, out path))
-      {
-        DeselectLevel();
-        Player.NavigatePath(path, onCompleted: SelectLevel);
-      }
+      if (!TryGetPathToLevel(SelectedLevel, targetLevel, out path))
+        return;
+
+      DeselectLevel();
+      Player.NavigatePath(path, onCompleted: SelectLevel);
     }
 
     public bool TryGetPathToLevel(WorldMapLevel startLevel, WorldMapLevel endLevel, out IList<WorldMapLevel> path)
@@ -94,7 +94,7 @@ namespace PachowStudios.BadTummyBunny
             smallestNode = previousNodes[smallestNode];
           }
 
-          return path.ToList();
+          break;
         }
 
         if (distances[smallestNode] >= float.MaxValue)
@@ -102,9 +102,7 @@ namespace PachowStudios.BadTummyBunny
 
         foreach (var connection in smallestNode.EnabledConnections)
         {
-          var distance =
-            distances[smallestNode]
-            + smallestNode.Position.DistanceTo(connection.ConnectedLevel.Position);
+          var distance = distances[smallestNode] + smallestNode.Position.DistanceTo(connection.ConnectedLevel.Position);
           var connectedLevel = connection.ConnectedLevel;
 
           if (distance >= distances[connectedLevel])

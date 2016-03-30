@@ -38,9 +38,7 @@ namespace PachowStudios.BadTummyBunny
     }
 
     public void RemoveStatusEffect(StatusEffectType type)
-      => this.statusEffects
-        .RemoveSingle(e => e.Type == type)
-        ?.Detach();
+      => this.statusEffects.RemoveSingle(e => e.Type == type)?.Detach();
 
     public override void Tick()
     {

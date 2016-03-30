@@ -1,26 +1,30 @@
 ﻿using UnityEngine;
+using Zenject;
 
 namespace PachowStudios.BadTummyBunny
 {
   [AddComponentMenu("Bad Tummy Bunny/Environment/Flagpole")]
   public class Flagpole : BaseView
   {
-    public bool Activated { get; private set; }
+    public bool IsActivated { get; private set; }
+
+    [Inject] private ILevelCompletionHandler LevelCompletionHandler { get; set; }
 
     public void Activate()
     {
-      if (Activated)
+      if (IsActivated)
         return;
 
-      Activated = true;
+      IsActivated = true;
       PlayActivateAnimation();
       PlayActivateSound();
+      LevelCompletionHandler.CompleteLevel();
     }
 
     private void PlayActivateAnimation()
       => Animator.SetTrigger("Activate");
 
-    private static void PlayActivateSound() 
+    private static void PlayActivateSound()
       => SoundManager.PlaySFXFromGroup(SfxGroup.RespawnPoints);
   }
 }

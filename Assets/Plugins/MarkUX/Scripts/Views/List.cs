@@ -168,7 +168,7 @@ namespace MarkUX.Views
             }
 
             bool hasItemsChanged = false;
-            if (Application.isPlaying)
+            //if (Application.isPlaying)
             {
                 // do we have any new items to present?
                 if (Items != null && Items.Count > 0)
@@ -381,6 +381,9 @@ namespace MarkUX.Views
             {
                 ItemsChanged.Trigger();
             }
+
+            if (!Application.isPlaying)
+              this.ListMask.UpdateViews();
 
             base.UpdateLayout();
         }
@@ -614,5 +617,10 @@ namespace MarkUX.Views
         }
 
         #endregion
+
+        public void UpdateItemBindings()
+        {
+            this.ListMask.ForEachChild<ListItem>(c => c.UpdateBindings());
+        }
     }
 }

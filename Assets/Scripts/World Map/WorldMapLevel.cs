@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Extensions;
+using JetBrains.Annotations;
+using PachowStudios.Assertions;
+using PachowStudios.Collections;
 using UnityEngine;
-using UnityEngine.Assertions;
 using Zenject;
 using Touch = InControl.Touch;
 
@@ -11,28 +13,35 @@ namespace PachowStudios.BadTummyBunny
   [AddComponentMenu("Bad Tummy Bunny/World Map/Level")]
   public class WorldMapLevel : MonoBehaviour
   {
-    [SerializeField] private LevelConfig levelConfig = null;
-    [SerializeField] private int collectedStars = 0;
-    [SerializeField] private int possibleStars = 3;
+    [SerializeField] private Scene scene = Scene.Level1;
     [SerializeField] private List<WorldMapConnection> connections = new List<WorldMapConnection>();
 
-    public bool IsSelected => ReferenceEquals(this, WorldMap.SelectedLevel);
-
-    public string LevelName => this.levelConfig.Name;
-    public int CollectedStars => this.collectedStars;
-    public int PossibleStars => this.possibleStars;
+    public string LevelName => LevelConfig.Name;
     public IEnumerable<WorldMapConnection> Connections => this.connections;
     public IEnumerable<WorldMapConnection> EnabledConnections => Connections.Where(c => c.IsEnabled);
-    public bool HasEnabledConnections => Connections.Any(c => c.IsEnabled);
+    public bool IsSelected => ReferenceEquals(this, WorldMap.SelectedLevel);
     public Vector3 Position => transform.position;
 
+    public IEnumerable<IStar> Stars { get; private set; }
+
+    [Inject] private IReadOnlyDictionary<Scene, LevelSettings> LevelSettings { get; set; }
     [Inject] private WorldMap WorldMap { get; set; }
-    [Inject] private ISceneLoader SceneLoader { get; }
+    [Inject] private ISceneLoader SceneLoader { get; set; }
+    [Inject] private IFactory<Scene, IEnumerable<IStar>>  StarFactory { get; set; }
+
+    private LevelSettings LevelConfig { get; set; }
+
+    [PostInject]
+    private void PostInject()
+    {
+      LevelConfig = LevelSettings[this.scene];
+      Stars = StarFactory.Create(this.scene);
+    }
 
     private void Awake()
     {
-      Assert.IsFalse(Connections.IsEmpty(), $"{name} doesn't have any connections!");
-      Assert.IsFalse(Connections.Any(c => c.ConnectedLevel == null), $"{name} has an uninitialized connection!");
+      Connections.Should().NotBeEmpty($"because {name} must connect to other levels.");
+      Connections.None(c => c.ConnectedLevel == null).Should().BeTrue($"because no connections to {name} can be null");
     }
 
     private void OnDrawGizmosSelected()
@@ -45,16 +54,17 @@ namespace PachowStudios.BadTummyBunny
     }
 
     public void LoadScene()
-      => SceneLoader.LoadScene(this.levelConfig.Scene);
+      => SceneLoader.LoadScene(this.scene);
 
     public bool HasNeighbor(WorldMapLevel level)
       => this.connections.Any(c => c.ConnectsToLevel(level));
 
-    public void OnSelected() { }
+    public virtual void OnSelected() { }
 
-    public void OnDeselected() { }
+    public virtual void OnDeselected() { }
 
-    public void OnTouched(Touch touch)
+    [UsedImplicitly]
+    public virtual void OnTouched(Touch touch)
     {
       if (touch.phase == TouchPhase.Began)
         WorldMap.NavigateToLevel(this);

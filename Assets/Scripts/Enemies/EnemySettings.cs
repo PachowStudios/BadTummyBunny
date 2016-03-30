@@ -14,7 +14,7 @@ namespace PachowStudios.BadTummyBunny
     public Vector2 ContactKnockback = new Vector2(2f, 1f);
 
     [Header("Component Settings")]
-    public EnemyMovementSettings Movement;
+    public BaseEnemyMovementSettings Movement;
     public EnemyHealthSettings Health;
   }
 }

@@ -6,10 +6,9 @@ namespace PachowStudios
 {
   public class Wait
   {
-    private static WaitInternal instance;
+    private static readonly Lazy<WaitInternal> instance = Lazy.From(CreateInstance);
 
-    private static WaitInternal Instance 
-      => instance ?? (instance = CreateInstance());
+    private static WaitInternal Instance => instance.Value;
 
     public static void ForSeconds(float waitTime, Action callback)
       => Instance.StartCoroutine(WaitInternal.ForSecondsCoroutine(waitTime, callback));

@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq.Extensions;
 using System.Xml.Serialization;
 
-namespace PachowStudios.BadTummyBunny
+namespace PachowStudios.BadTummyBunny.UserData
 {
   [XmlRoot(nameof(SaveFile), Namespace = "http://schema.pachowstudios.com/badtummybunny/savefile")]
   public class SaveFile
@@ -11,6 +12,9 @@ namespace PachowStudios.BadTummyBunny
 
     [XmlArray(nameof(Levels))]
     [XmlArrayItem(nameof(LevelProgress))]
-    public List<LevelProgress> Levels { get; set; } 
+    public List<LevelProgress> Levels { get; set; } = new List<LevelProgress>();
+
+    public LevelProgress GetLevel(Scene scene)
+      => Levels.SingleOrAdd(l => l.Scene == scene, () => new LevelProgress(scene));
   }
 }

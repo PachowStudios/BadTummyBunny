@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Extensions;
+using PachowStudios.Assertions;
 using UnityEngine;
 using Vectrosity;
 using Zenject;
@@ -13,18 +14,9 @@ namespace PachowStudios.BadTummyBunny
   {
     private VectorLine trajectoryLine;
 
-    [Inject] private FartView View { get; set; }
-    [Inject] private CameraController CameraController { get; set; }
-    [Inject] private IEventAggregator EventAggregator { get; set; }
-
-    private IMovable PlayerMovement { get; set; }
-
-    protected abstract TConfig Config { get; set; }
-
-    protected HashSet<ICharacter> PendingTargets { get; } = new HashSet<ICharacter>();
-    protected HashSet<ICharacter> DamagedEnemies { get; } = new HashSet<ICharacter>();
-
-    public bool IsFarting { get; protected set; }
+    public bool IsFarting { get; private set; }
+    public bool IsSecondaryFarting { get; private set; }
+    public float TimeFarting { get; private set; }
 
     public bool ShowTrajectory
     {
@@ -32,17 +24,36 @@ namespace PachowStudios.BadTummyBunny
       set { TrajectoryLine.active = value; }
     }
 
+    public string Name => Config.Name;
+    public FartType Type => Config.Type;
+
+    public bool CanFart => !IsFarting && !IsSecondaryFarting;
+
+    protected abstract TConfig Config { get; set; }
+
+    protected HashSet<ICharacter> PendingTargets { get; } = new HashSet<ICharacter>();
+    protected HashSet<ICharacter> DamagedEnemies { get; } = new HashSet<ICharacter>();
+
     protected VectorLine TrajectoryLine => this.trajectoryLine;
     protected List<Vector2> TrajectoryPoints => TrajectoryLine.points2;
 
-    public string Name => Config.Name;
-    public FartType Type => Config.Type;
+    [Inject] private FartView View { get; set; }
+    [Inject] private Camera Camera { get; set; }
+    [Inject] private IEventAggregator EventAggregator { get; set; }
+
+    private IMovable PlayerMovement { get; set; }
 
     [PostInject]
     private void Initialize()
     {
       EventAggregator.Subscribe(this);
       InitializeTrajectoryLine();
+    }
+
+    public void Tick()
+    {
+      if (IsFarting)
+        TimeFarting += Time.deltaTime;
     }
 
     public void Attach(PlayerView playerView)
@@ -57,27 +68,39 @@ namespace PachowStudios.BadTummyBunny
       View.Detach();
     }
 
-    public virtual void StartFart(float power, Vector2 direction)
+    public virtual void StartFarting(float power)
     {
-      if (IsFarting)
+      if (!CanFart)
         return;
 
       IsFarting = true;
 
-      PlaySound(power.Clamp01());
-      Wait.ForFixedUpdate(StartParticles);
+      PlaySound(power);
+      Wait.ForFixedUpdate(View.StartParticles);
     }
 
-    public virtual void StopFart()
+    public virtual void SecondaryFart(float power)
     {
-      if (!IsFarting)
+      if (!CanFart)
         return;
 
-      IsFarting = false;
+      IsSecondaryFarting = true;
 
+      PlaySound(power);
+      Wait.ForFixedUpdate(View.StartParticles);
+      Wait.ForSeconds(CalculateSecondaryDuration(power), StopFarting);
+    }
+
+    public virtual void StopFarting()
+    {
+      if (CanFart)
+        return;
+
+      IsFarting = IsSecondaryFarting = false;
+      TimeFarting = 0f;
       PendingTargets.Clear();
       DamagedEnemies.Clear();
-      View.Particles.ForEach(p => p.Stop());
+      View.StopParticles();
     }
 
     public virtual float CalculateSpeed(float power)
@@ -97,15 +120,25 @@ namespace PachowStudios.BadTummyBunny
       TrajectoryLine.Draw();
     }
 
-    protected virtual void TryDamageEnemy(IEnemy enemy)
+    protected virtual void TargetEnemy(IEnemy enemy)
     {
-      if (DamagedEnemies.Contains(enemy))
+      if (!CanFart
+          || PendingTargets.Contains(enemy)
+          || DamagedEnemies.Contains(enemy))
         return;
 
-      var origin = View.FartCollider.transform.position;
+      PendingTargets.Add(enemy);
+      Wait.ForSeconds(Config.DamageDelay, () => TryDamageEnemy(enemy));
+    }
 
-      if (View.FartCollider.OverlapPoint(enemy.Movement.CenterPoint)
-          && Physics2D.Linecast(origin, enemy.Movement.CenterPoint, PlayerMovement.CollisionLayers).collider == null)
+    protected virtual void TryDamageEnemy(IEnemy enemy)
+    {
+      DamagedEnemies.Should().NotContain(enemy, "because enemies cannot be damaged twice in one fart");
+
+      PendingTargets.Remove(enemy);
+
+      if (View.FartCollider.OverlapPoint(enemy.View.CenterPoint)
+          && !Physics2D.Linecast(View.FartOrigin, enemy.View.CenterPoint, PlayerMovement.CollisionLayers))
       {
         DamagedEnemies.Add(enemy);
         DamageEnemy(enemy);
@@ -113,17 +146,21 @@ namespace PachowStudios.BadTummyBunny
     }
 
     protected virtual void DamageEnemy(IEnemy enemy)
-      => enemy.Health.Damage(
+    {
+      enemy.Health.TakeDamage(
         Config.Damage,
         Config.Knockback,
-        PlayerMovement.MovementDirection.Dot(-1f, 1f));
+        PlayerMovement.MovementDirection.Scale(x: -1f));
 
-    protected void PlaySound(float powerPercentage)
-      => SoundManager.PlayCappedSFXFromGroup(
-        Config.SoundEffects
-          .Where(e => e.Power <= powerPercentage)
-          .Highest(e => e.Power)
-          .SfxGroup);
+      if (enemy.Health.IsDead)
+        EventAggregator.Publish(new PlayerKilledEnemyMessage(enemy));
+    }
+
+    private void PlaySound(float powerPercentage)
+      => SoundManager.PlayCappedSFXFromGroup(Config.SoundEffects
+        .Where(e => e.Power <= powerPercentage)
+        .Highest(e => e.Power)
+        .SfxGroup);
 
     private void InitializeTrajectoryLine()
     {
@@ -131,17 +168,16 @@ namespace PachowStudios.BadTummyBunny
       VectorLine.canvas.sortingLayerName = Config.TrajectorySortingLayer;
       VectorLine.canvas.sortingOrder = Config.TrajectorySortingOrder;
 
-      this.trajectoryLine =
-        new VectorLine(
-          "Trajectory",
-          new List<Vector2>(Config.TrajectorySegments),
-          CameraController.Camera.UnitsToPixels(Config.TrajectoryPointSize),
-          LineType.Points);
+      this.trajectoryLine = new VectorLine(
+        "Trajectory",
+        new List<Vector2>(Config.TrajectorySegments),
+        Camera.UnitsToPixels(Config.TrajectoryPointSize),
+        LineType.Points);
     }
 
     private IEnumerable<Vector2> CalculateTrajectoryPoints(float power, Vector2 direction, float gravity, Vector2 startPosition)
     {
-      var points = new List<Vector2>(Config.TrajectorySegments);
+      var previous = startPosition;
       var speed = CalculateSpeed(power);
       var initialVelocity = direction * speed;
       var timeStep = Config.TrajectoryPreviewTime / Config.TrajectorySegments;
@@ -170,16 +206,13 @@ namespace PachowStudios.BadTummyBunny
             continue;
         }
 
-        var previous = points.Any() ? points.Last() : startPosition;
         var current = startPosition + delta;
 
-        if (Physics2D.Linecast(previous, current, PlayerMovement.CollisionLayers).collider != null)
+        if (Physics2D.Linecast(previous, current, PlayerMovement.CollisionLayers))
           break;
 
-        points.Add(current);
+        yield return previous = current;
       }
-
-      return points;
     }
 
     private IEnumerable<Vector2> TranslateTrajectoryPoints(IEnumerable<Vector2> points)
@@ -191,7 +224,7 @@ namespace PachowStudios.BadTummyBunny
 
         var previous = enumerator.Current;
 
-        yield return CameraController.Camera.WorldToScreenPoint(previous);
+        yield return Camera.WorldToScreenPoint(previous);
 
         while (enumerator.MoveNext())
         {
@@ -202,34 +235,18 @@ namespace PachowStudios.BadTummyBunny
 
           previous = previous.LerpTo(enumerator.Current, Config.TrajectoryPointSeparation / distance);
 
-          yield return CameraController.Camera.WorldToScreenPoint(previous);
+          yield return Camera.WorldToScreenPoint(previous);
         }
       }
     }
 
+    private float CalculateSecondaryDuration(float power)
+      => MathHelper.ConvertRange(power, 0f, 1f, Config.SecondaryDuration.x, Config.SecondaryDuration.y);
+
     private Color CalculateTrajectoryColor(float power)
       => Config.TrajectoryGradient.Evaluate(power);
 
-    private void StartParticles()
-      => View.Particles.ForEach(p => p.Play());
-
     public void Handle(FartEnemyTriggeredMessage message)
-    {
-      var enemy = message.Enemy;
-
-      if (!IsFarting
-          || PendingTargets.Contains(enemy)
-          || DamagedEnemies.Contains(enemy))
-        return;
-
-      PendingTargets.Add(enemy);
-      Wait.ForSeconds(
-        Config.DamageDelay,
-        () =>
-        {
-          PendingTargets.Remove(enemy);
-          TryDamageEnemy(enemy);
-        });
-    }
+      => TargetEnemy(message.Enemy);
   }
 }

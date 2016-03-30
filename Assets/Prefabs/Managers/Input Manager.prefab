@@ -10,7 +10,7 @@ GameObject:
   - 4: {fileID: 410484}
   - 20: {fileID: 2010484}
   m_Layer: 0
-  m_Name: TouchCamera
+  m_Name: Touch Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -26,7 +26,7 @@ GameObject:
   - 4: {fileID: 415942}
   - 114: {fileID: 11415942}
   m_Layer: 13
-  m_Name: FartAimControl
+  m_Name: Fart Aim Control
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -42,7 +42,7 @@ GameObject:
   - 4: {fileID: 431674}
   - 114: {fileID: 11431674}
   m_Layer: 13
-  m_Name: PlayerMoveControl
+  m_Name: Move Control
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -75,7 +75,23 @@ GameObject:
   - 4: {fileID: 464084}
   - 114: {fileID: 11464084}
   m_Layer: 13
-  m_Name: PlayerJumpControl
+  m_Name: Fart Stationary Control
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &180570
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 489674}
+  - 114: {fileID: 11477006}
+  m_Layer: 13
+  m_Name: Jump Control
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -88,7 +104,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 110484}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 442902}
@@ -100,7 +116,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 115942}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.8981638, y: -3, z: 0}
+  m_LocalPosition: {x: 6.8898163, y: -3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 442902}
@@ -129,8 +145,9 @@ Transform:
   m_Children:
   - {fileID: 410484}
   - {fileID: 431674}
-  - {fileID: 464084}
+  - {fileID: 489674}
   - {fileID: 415942}
+  - {fileID: 464084}
   m_Father: {fileID: 0}
   m_RootOrder: 0
 --- !u!4 &464084
@@ -140,7 +157,19 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 164084}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.89816427, y: -3.5, z: 0}
+  m_LocalPosition: {x: 7.3898163, y: -0.00000047683716, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 442902}
+  m_RootOrder: 4
+--- !u!4 &489674
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 180570}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 3.8898168, y: -3.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 442902}
@@ -153,20 +182,20 @@ Camera:
   m_GameObject: {fileID: 110484}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 4
-  m_BackGroundColor: {r: .192156866, g: .301960796, b: .474509805, a: .0196078438}
+  m_ClearFlags: 3
+  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0.019607844}
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
     y: 0
     width: 1
     height: 1
-  near clip plane: .300000012
-  far clip plane: 1000
+  near clip plane: 0
+  far clip plane: 1
   field of view: 60
   orthographic: 1
   orthographic size: 5
-  m_Depth: 100
+  m_Depth: 2
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 8192
@@ -177,7 +206,7 @@ Camera:
   m_HDR: 0
   m_OcclusionCulling: 0
   m_StereoConvergence: 10
-  m_StereoSeparation: .0219999999
+  m_StereoSeparation: 0.022
   m_StereoMirrorMode: 0
 --- !u!114 &11410484
 MonoBehaviour:
@@ -212,52 +241,53 @@ MonoBehaviour:
   areaUnitType: 0
   activeArea:
     serializedVersion: 2
-    x: 50
+    x: 67.65
     y: 22.5
-    width: 50
-    height: 27.5
+    width: 19.7
+    height: 35
   target: 2
   lowerDeadZone: 0
-  upperDeadZone: .899999976
+  upperDeadZone: 0.9
   inputCurve:
     serializedVersion: 2
     m_Curve:
     - time: 0
       value: 0
-      inSlope: 1
-      outSlope: 1
-      tangentMode: 10
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
     - time: 1
       value: 1
-      inSlope: 1
-      outSlope: 1
-      tangentMode: 10
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
+    m_RotationOrder: 0
   allowDragging: 0
   snapToInitialTouch: 1
   resetWhenDone: 1
-  resetDuration: .100000001
+  resetDuration: 0.1
   ring:
     idleSprite: {fileID: 21300000, guid: 15cfb81dd3615c5469e99b4acddd5b0f, type: 3}
     busySprite: {fileID: 21300000, guid: 15cfb81dd3615c5469e99b4acddd5b0f, type: 3}
-    idleColor: {r: 1, g: 1, b: 1, a: .5}
+    idleColor: {r: 1, g: 1, b: 1, a: 0.5}
     busyColor: {r: 1, g: 1, b: 1, a: 1}
     shape: 0
     sizeUnitType: 0
     size: {x: 30, y: 30}
     lockAspectRatio: 1
-    worldSize: {x: 2.99999976, y: 2.99999976}
+    worldSize: {x: 2.9999998, y: 2.9999998}
   knob:
     idleSprite: {fileID: 21300000, guid: 7a1c6ef2bc0ddcf41be79546f191c1c6, type: 3}
     busySprite: {fileID: 21300000, guid: 7a1c6ef2bc0ddcf41be79546f191c1c6, type: 3}
-    idleColor: {r: 1, g: 1, b: 1, a: .5}
+    idleColor: {r: 1, g: 1, b: 1, a: 0.5}
     busyColor: {r: 1, g: 1, b: 1, a: 1}
     shape: 0
     sizeUnitType: 0
     size: {x: 10, y: 10}
     lockAspectRatio: 1
-    worldSize: {x: .99999994, y: .99999994}
+    worldSize: {x: 0.99999994, y: 0.99999994}
   knobRange: 15
 --- !u!114 &11431674
 MonoBehaviour:
@@ -277,7 +307,7 @@ MonoBehaviour:
     y: 0
     width: 50
     height: 50
-  sensitivity: .5
+  sensitivity: 0.5
   target: 1
   snapAngles: 4
   upTarget: 0
@@ -318,6 +348,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   anchor: 8
   offsetUnitType: 0
+  offset: {x: -15, y: 50}
+  lockAspectRatio: 1
+  target: 16
+  allowSlideToggle: 0
+  toggleOnLeave: 0
+  button:
+    idleSprite: {fileID: 21300000, guid: e6cd22a3b90a3f14a9f92082fe451869, type: 3}
+    busySprite: {fileID: 21300000, guid: e6cd22a3b90a3f14a9f92082fe451869, type: 3}
+    idleColor: {r: 1, g: 1, b: 1, a: 0.5}
+    busyColor: {r: 1, g: 1, b: 1, a: 1}
+    shape: 0
+    sizeUnitType: 0
+    size: {x: 15, y: 15}
+    lockAspectRatio: 1
+    worldSize: {x: 1.4999999, y: 1.4999999}
+--- !u!114 &11477006
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 180570}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05c28010e244e4ca2ad9d7e8e71ecc50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  anchor: 8
+  offsetUnitType: 0
   offset: {x: -50, y: 15}
   lockAspectRatio: 1
   target: 15
@@ -326,13 +384,13 @@ MonoBehaviour:
   button:
     idleSprite: {fileID: 21300000, guid: 17c73994f571a1d42ad926961c5dafdb, type: 3}
     busySprite: {fileID: 21300000, guid: 17c73994f571a1d42ad926961c5dafdb, type: 3}
-    idleColor: {r: 1, g: 1, b: 1, a: .5}
+    idleColor: {r: 1, g: 1, b: 1, a: 0.5}
     busyColor: {r: 1, g: 1, b: 1, a: 1}
     shape: 0
     sizeUnitType: 0
     size: {x: 15, y: 15}
     lockAspectRatio: 1
-    worldSize: {x: 1.49999988, y: 1.49999988}
+    worldSize: {x: 1.4999999, y: 1.4999999}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

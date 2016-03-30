@@ -43,8 +43,7 @@ namespace PachowStudios.BadTummyBunny
 
     private Camera controlledCamera;
 
-    [Inject]
-    private Player Player { get; set; }
+    [InjectOptional] private Player Player { get; set; }
 
     private bool IsPlayerGrounded => Player?.Movement.IsGrounded ?? false;
 

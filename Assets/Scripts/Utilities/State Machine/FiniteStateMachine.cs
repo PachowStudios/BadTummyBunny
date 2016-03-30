@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEngine.Assertions;
+using PachowStudios.Assertions;
 
 namespace PachowStudios
 {
@@ -45,7 +45,7 @@ namespace PachowStudios
 
       CurrentState?.End();
 
-      Assert.IsTrue(this.states.ContainsKey(typeof(TState)), $"{GetType()} : state {typeof(TState)} doesn't exist!");
+      this.states.ContainsKey(typeof(TState)).Should().BeTrue($"because state {typeof(TState)} must exist.");
 
       PreviousState = CurrentState;
       CurrentState = this.states[typeof(TState)];

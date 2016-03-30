@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using PachowStudios.Collections;
 using UnityEngine;
 using Zenject;
 
@@ -11,13 +12,13 @@ namespace PachowStudios.BadTummyBunny
   {
     [SerializeField] private List<EnemySettings> enemySettings = null;
 
-    private Dictionary<EnemyType, EnemySettings> MappedSettings { get; set; }
+    private IReadOnlyDictionary<EnemyType, EnemySettings> MappedSettings { get; set; }
 
     public override void InstallBindings()
     {
-      MappedSettings = this.enemySettings.ToDictionary(s => s.Prefab.Type);
+      MappedSettings = this.enemySettings.ToDictionary(s => s.Prefab.Type).AsReadOnly();
 
-      Container.BindInstance(MappedSettings).WhenInjectedInto<EnemyFactory>();
+      Container.BindInstance(MappedSettings);
       Container.BindIFactory<EnemyType, Enemy>().ToCustomFactory<EnemyFactory>();
 
       BindToSubContainer<Enemy>();

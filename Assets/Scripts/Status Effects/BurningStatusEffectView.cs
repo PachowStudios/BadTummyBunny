@@ -11,7 +11,7 @@ namespace PachowStudios.BadTummyBunny
 
     public void Attach(IStatusEffectable affectedCharacter)
     {
-      Transform.position = affectedCharacter.Movement.CenterPoint;
+      Transform.position = affectedCharacter.View.CenterPoint;
       Transform.parent = affectedCharacter.View.Transform;
 
       ParticleSystem.Play();

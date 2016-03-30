@@ -71,7 +71,10 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 *.suo
-compilation log.txt
 
+!CSharp 6.0 Support/*.*
+!CSharp60Support/*.*
 ![Rr]oslyn/*.*
+
 Roslyn/desktop.ini
+compilation log.txt

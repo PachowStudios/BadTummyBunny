@@ -11,7 +11,7 @@ namespace PachowStudios.BadTummyBunny
     public struct SfxPowerMapping
     {
       public SfxGroup SfxGroup;
-      public float Power;
+      [Range(0f, 1f)] public float Power;
     }
 
     [Header("Definition")]
@@ -20,19 +20,21 @@ namespace PachowStudios.BadTummyBunny
     public FartView Prefab;
 
     [Header("Options")]
-    public Vector2 SpeedRange = default(Vector2);
+    public Vector2 SpeedRange;
     public int Damage = 4;
     public float DamageDelay = 0.1f;
     public Vector2 Knockback = new Vector2(1f, 1f);
     public List<SfxPowerMapping> SoundEffects = new List<SfxPowerMapping>();
+
+    [Header("Secondary Fart")]
+    public Vector2 SecondaryDuration;
 
     [Header("Trajectory")]
     public float TrajectoryPreviewTime = 1f;
     public float TrajectoryStartDistance = 1f;
     public float TrajectoryPointSeparation = 0.5f;
     public float TrajectoryPointSize = 0.125f;
-    [Range(8, 64)]
-    public int TrajectorySegments = 16;
+    [Range(8, 64)] public int TrajectorySegments = 16;
     public Gradient TrajectoryGradient = null;
     public string TrajectorySortingLayer = "UI";
     public int TrajectorySortingOrder = -1;

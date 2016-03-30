@@ -4,12 +4,12 @@ namespace UnityEngine
 {
   public static class MathExtensions
   {
-    private const float FloatingPointTolerance = 0.0001f;
+    public const float FloatingPointTolerance = 0.0001f;
 
     public static bool IsZero(this float value)
-      => value.Abs() <= FloatingPointTolerance;
+      => value.IsApproximately(0f);
 
-    public static bool Is(this float value, float otherValue)
+    public static bool IsApproximately(this float value, float otherValue)
       => Math.Abs(value - otherValue) < FloatingPointTolerance;
 
     public static int Sign(this float value)
@@ -39,20 +39,10 @@ namespace UnityEngine
     public static float Clamp01(this float value)
       => Mathf.Clamp01(value);
 
+    public static float LerpTo(this float a, float b, float t)
+      => Mathf.Lerp(a, b, t);
+
     public static float Vary(this float value, float variance)
       => Random.Range(value - variance, value + variance);
-
-    public static float GetDecimal(this float value)
-    {
-      var resultString = "0";
-      float result;
-
-      if (value.ToString().Split('.').Length == 2)
-        resultString = "0." + value.ToString().Split('.')[1];
-
-      float.TryParse(resultString, out result);
-
-      return result;
-    }
   }
 }

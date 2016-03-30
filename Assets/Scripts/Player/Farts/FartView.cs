@@ -11,10 +11,11 @@ namespace PachowStudios.BadTummyBunny
 
     private PolygonCollider2D fartColliderComponent = null;
 
-    [Inject] private IEventAggregator EventAggregator { get; set; }
-
-    public List<ParticleSystem> Particles => this.particles;
     public PolygonCollider2D FartCollider => this.GetComponentIfNull(ref this.fartColliderComponent);
+
+    public Vector3 FartOrigin => FartCollider.transform.position;
+
+    [Inject] private IEventAggregator EventAggregator { get; set; }
 
     public void Attach(PlayerView playerView)
     {
@@ -24,6 +25,12 @@ namespace PachowStudios.BadTummyBunny
 
     public void Detach()
       => Dispose();
+
+    public void StartParticles()
+      => this.particles.ForEach(p => p.Play());
+
+    public void StopParticles()
+      => this.particles.ForEach(p => p.Stop());
 
     private void OnTriggerEnter2D(Collider2D other)
     {

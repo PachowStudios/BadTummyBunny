@@ -1,4 +1,6 @@
-﻿namespace UnityEngine
+﻿using System;
+
+namespace UnityEngine
 {
   public static class VectorExtensions
   {
@@ -12,50 +14,64 @@
       => Quaternion.Euler(vector);
 
     public static bool IsZero(this Vector2 vector)
-      => vector.x.Abs() < 0.0001f
-      && vector.y.Abs() < 0.0001f;
+      => vector.x.IsZero() && vector.y.IsZero();
 
-    public static Vector3 SetX(this Vector3 vector, float x)
-    {
-      vector.x = x;
+    public static Vector2 Set(this Vector2 vector, float? x = null, float? y = null)
+      => new Vector2(x ?? vector.x, y ?? vector.y);
 
-      return vector;
-    }
+    public static Vector3 Set(this Vector3 vector, float? x = null, float? y = null, float? z = null)
+      => new Vector3(x ?? vector.x, y ?? vector.y, z ?? vector.z);
 
-    public static Vector3 SetY(this Vector3 vector, float y)
-    {
-      vector.y = y;
+    public static Vector2 Add(this Vector2 vector, float x = 0f, float y = 0f)
+      => new Vector2(vector.x + x, vector.y + y);
 
-      return vector;
-    }
+    public static Vector3 Add(this Vector3 vector, float x = 0f, float y = 0f, float z = 0f)
+      => new Vector3(vector.x + x, vector.y + y, vector.z + z);
 
-    public static Vector3 SetZ(this Vector3 vector, float z)
-    {
-      vector.z = z;
+    public static Vector2 Scale(this Vector2 vector, float x = 1f, float y = 1f)
+      => Vector2.Scale(vector, new Vector2(x, y));
 
-      return vector;
-    }
+    public static Vector3 Scale(this Vector3 vector, float x = 1f, float y = 1f, float z = 1f)
+      => Vector3.Scale(vector, new Vector3(x, y, z));
 
-    public static Vector3 AddX(this Vector3 vector, float x)
-      => vector.SetX(vector.x + x);
+    public static Vector2 Transform(
+      this Vector2 vector,
+      Func<float, float> x = null,
+      Func<float, float> y = null)
+      => new Vector2(
+        x?.Invoke(vector.x) ?? vector.x,
+        y?.Invoke(vector.y) ?? vector.y);
 
-    public static Vector3 AddY(this Vector3 vector, float y)
-      => vector.SetY(vector.y + y);
+    public static Vector3 Transform(
+      this Vector3 vector,
+      Func<float, float> x = null,
+      Func<float, float> y = null,
+      Func<float, float> z = null)
+      => new Vector3(
+        x?.Invoke(vector.x) ?? vector.x,
+        y?.Invoke(vector.y) ?? vector.y,
+        z?.Invoke(vector.z) ?? vector.z);
 
-    public static Vector3 AddZ(this Vector3 vector, float z)
-      => vector.SetZ(vector.z + z);
+    public static float DistanceTo(this Vector3 vector, Transform transform)
+      => vector.DistanceTo(transform.position);
 
-    public static Vector2 Dot(this Vector2 vector, Vector2 other)
-      => vector.Dot(other.x, other.y);
+    public static float DistanceTo(this Vector2 a, Vector2 b)
+      => Vector2.Distance(a, b);
 
-    public static Vector2 Dot(this Vector2 vector, float x, float y)
-      => new Vector2(vector.x * x, vector.y * y);
+    public static float DistanceTo(this Vector3 a, Vector3 b)
+      => Vector3.Distance(a, b);
 
-    public static float DistanceTo(this Vector2 vector, Vector2 other)
-      => Vector2.Distance(vector, other);
+    public static Vector2 LerpTo(this Vector2 a, Vector2 b, float t)
+      => Vector2.Lerp(a, b, t);
 
-    public static Vector2 LerpTo(this Vector2 vector, Vector2 other, float t)
-      => Vector2.Lerp(vector, other, t);
+    public static float Angle(this Vector3 vector)
+      => Vector3.Angle(Vector3.up, vector);
+
+    public static float AngleTo(this Vector2 from, Vector2 to)
+      => Vector2.Angle(@from, to);
+
+    public static float AngleTo(this Vector3 from, Vector3 to)
+      => Vector3.Angle(from, to);
 
     public static Vector2 Vary(this Vector2 vector, float variance)
       => new Vector2(
@@ -72,17 +88,13 @@
       => Random.Range(parent.x, parent.y);
 
     public static Quaternion LookAt2D(this Vector3 vector, Vector3 target)
-      => Vector3.zero
-        .SetZ((target - vector).DirectionToRotation2D().z)
-        .ToQuaternion();
-
-    public static float AngleDegrees(this Vector3 vector)
-      => Mathf.Atan2(vector.y, vector.x) * Mathf.Rad2Deg;
+      => new Vector3(0f, 0f, DirectionToRotation2D(target - vector).z).ToQuaternion();
 
     public static Vector3 DirectionToRotation2D(this Vector3 vector)
-      => Quaternion.AngleAxis(vector.AngleDegrees(), Vector3.forward).eulerAngles;
+    {
+      var angle = Mathf.Atan2(vector.y, vector.x) * Mathf.Rad2Deg;
 
-    public static float DistanceTo(this Vector3 vector, Vector3 target)
-      => Mathf.Sqrt((vector.x - target.x).Square() + (vector.y - target.y).Square());
+      return Quaternion.AngleAxis(angle, Vector3.forward).eulerAngles;
+    }
   }
 }

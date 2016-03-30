@@ -16,8 +16,14 @@ namespace PachowStudios.BadTummyBunny
     public CharacterController2D CharacterController => this.GetComponentIfNull(ref this.characterControllerComponent);
     public SpriteRenderer SpriteRenderer => this.GetComponentInChildrenIfNull(ref this.spriteRendererComponent);
 
+    public virtual Vector3 Position => Transform.position;
+    public virtual Vector3 CenterPoint => Collider.bounds.center;
+
     public virtual void Dispose()
       => this.Destroy();
+
+    public virtual void Flip()
+      => Transform.Flip();
 
     public void SetRenderersEnabled(bool enableRenderers)
       => SpriteRenderer.enabled = enableRenderers;

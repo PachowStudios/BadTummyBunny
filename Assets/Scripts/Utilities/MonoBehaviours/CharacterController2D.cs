@@ -29,7 +29,7 @@ namespace PachowStudios
       public bool IsMovingDownSlope { get; set; }
       public float SlopeAngle { get; set; }
 
-      public bool HasCollision => Below || Right || Left || Above;
+      public bool Any => Right || Left || Above || Below;
 
       public void Reset()
       {
@@ -67,6 +67,7 @@ namespace PachowStudios
 
     public bool IsGrounded => this.collisionState.Below;
     public bool WasGroundedLastFrame => this.collisionState.WasGroundedLastFrame;
+    public bool IsColliding => this.collisionState.Any;
     public LayerMask PlatformMask => this.platformMask;
 
     private BoxCollider2D BoxCollider => this.GetComponentIfNull(ref this.boxCollider);
@@ -81,10 +82,10 @@ namespace PachowStudios
     private static void DrawRay(Vector3 start, Vector3 dir, Color color)
       => Debug.DrawRay(start, dir, color);
 
-    public void Move(Vector3 deltaMovement)
+    public Vector3 Move(Vector3 deltaMovement)
     {
       if (Time.deltaTime <= 0f || Time.timeScale <= 0.01f)
-        return;
+        return Vector3.zero;
 
       this.collisionState.WasGroundedLastFrame = this.collisionState.Below;
       this.collisionState.Reset();
@@ -111,10 +112,12 @@ namespace PachowStudios
         this.collisionState.BecameGroundedThisFrame = true;
 
       if (this.isGoingUpSlope)
-        Velocity = Velocity.SetY(0f);
+        Velocity = Velocity.Set(y: 0f);
 
       if (ControllerCollided != null)
         this.raycastHitsThisFrame.ForEach(ControllerCollided.Invoke);
+
+      return Velocity;
     }
 
     public void WarpToGrounded()

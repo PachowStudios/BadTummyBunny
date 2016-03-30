@@ -7,7 +7,7 @@ namespace PachowStudios.BadTummyBunny
   {
     [InjectLocal] private FartAimLeanSettings Config { get; set; }
     [InjectLocal] private IFartInfoProvider FartInfo { get; set; }
-    [InjectLocal] private IMovable Movement { get; set; }
+    [InjectLocal] private IView View { get; set; }
 
     [Inject] private CameraController CameraController { get; set; }
 
@@ -23,7 +23,7 @@ namespace PachowStudios.BadTummyBunny
 
     public Vector3 GetDesiredPositionDelta(Bounds targetBounds, Vector3 basePosition, Vector3 targetAverageVelocity)
     {
-      var targetPosition = Movement.Position;
+      var targetPosition = View.Position;
 
       targetPosition += Config.LeanDistance * FartInfo.FartDirection.ToVector3();
 

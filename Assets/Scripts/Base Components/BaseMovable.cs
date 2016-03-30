@@ -2,60 +2,44 @@
 
 namespace PachowStudios.BadTummyBunny
 {
-  [InstallerSettings]
-  public abstract class BaseMovableSettings : ScriptableObject
-  {
-    public float Gravity = -35f;
-    public float MoveSpeed = 5f;
-    public float GroundDamping = 10f;
-    public float AirDamping = 5f;
-  }
-
   public abstract class BaseMovable<TConfig, TView> : IMovable
     where TConfig : BaseMovableSettings
     where TView : IView
   {
-    protected abstract TConfig Config { get; set; }
-    protected abstract TView View { get; set; }
-
     public virtual Vector3 Velocity { get; protected set; }
     public virtual Vector3 LastGroundedPosition { get; protected set; }
-    public virtual float? MoveSpeedOverride { get; set; }
 
     public virtual bool IsActivated { get; set; } = true;
 
-    public float Gravity => Config.Gravity;
-    public float MoveSpeed => Config.MoveSpeed;
-
-    public virtual Collider2D Collider => View.Collider;
-    public virtual Vector3 Position => View.Transform.position;
-    public virtual Vector3 CenterPoint => Collider.bounds.center;
     public virtual Vector2 MovementDirection => Velocity.normalized;
-    public virtual Vector2 FacingDirection => new Vector2(View.Transform.localScale.x, 0f);
-    public virtual bool IsFacingRight => FacingDirection.x > 0f;
     public virtual bool IsFalling => Velocity.y < 0f;
-    public virtual bool IsGrounded => View.CharacterController.IsGrounded;
-    public virtual bool WasGrounded => View.CharacterController.WasGroundedLastFrame;
-    public virtual LayerMask CollisionLayers => View.CharacterController.PlatformMask;
+    public virtual bool IsGrounded => CharacterController.IsGrounded;
+    public virtual bool WasGrounded => CharacterController.WasGroundedLastFrame;
+    public virtual LayerMask CollisionLayers => CharacterController.PlatformMask;
 
-    public virtual void SetPosition(Vector3 position)
-      => View.Transform.position = position;
+    public float? MoveSpeedOverride { get; set; }
+
+    public float Gravity => Config.Gravity;
+    public float MoveSpeed => MoveSpeedOverride ?? Config.MoveSpeed;
+
+    protected abstract TConfig Config { get; set; }
+    protected abstract TView View { get; set; }
+
+    protected CharacterController2D CharacterController => View.CharacterController;
+    protected float MovementDamping => IsGrounded ? Config.GroundDamping : Config.AirDamping;
 
     public virtual void Move(Vector3 moveVelocity)
-    {
-      View.CharacterController.Move(moveVelocity * Time.deltaTime);
-      Velocity = View.CharacterController.Velocity;
-    }
+      => Velocity = CharacterController.Move(moveVelocity * Time.deltaTime);
 
-    public virtual void Flip()
-      => View.Transform.Flip();
+    public void Flip()
+      => View.Flip();
 
     public virtual bool Jump(float height)
     {
       if (height <= 0f || !IsGrounded)
         return false;
 
-      Velocity = Velocity.SetY(Mathf.Sqrt(2f * height * -Gravity));
+      Velocity = Velocity.Set(y: Mathf.Sqrt(2f * height * -Gravity));
 
       return true;
     }
@@ -65,19 +49,17 @@ namespace PachowStudios.BadTummyBunny
       if (knockback.IsZero())
         return;
 
-      knockback.x += Mathf.Sqrt(Mathf.Abs(knockback.x.Square() * -Gravity));
+      knockback.x += Mathf.Abs(knockback.x.Square() * -Gravity).SquareRoot();
+
+      var newVelocity = Velocity;
 
       if (IsGrounded)
-        Velocity = Velocity.SetY(Mathf.Sqrt(Mathf.Abs(knockback.y * -Gravity)));
+        newVelocity.y = Mathf.Abs(knockback.y * -Gravity).SquareRoot();
 
       knockback.Scale(direction);
 
-      if (knockback.IsZero())
-        return;
-
-      Velocity += knockback.ToVector3();
-      View.CharacterController.Move(Velocity * Time.deltaTime);
-      Velocity = View.CharacterController.Velocity;
+      if (!knockback.IsZero())
+        Move(newVelocity + knockback.ToVector3());
     }
 
     public virtual void Disable() { }

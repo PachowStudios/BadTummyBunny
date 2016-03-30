@@ -9,6 +9,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 443146}
   - 114: {fileID: 11445570}
+  - 114: {fileID: 11472466}
   m_Layer: 0
   m_Name: Global Installer
   m_TagString: Untagged
@@ -39,13 +40,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8b3b719233cd7546a5ccd5dc9951bba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &11472466
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 171032}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6117608f81f6f0140a9f2ef4044abf4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levelSettings:
+  - {fileID: 11400000, guid: da1b8e89c88d8f64ca271aefeb46568d, type: 2}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: levelSettings.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: levelSettings.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: da1b8e89c88d8f64ca271aefeb46568d,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 171032}

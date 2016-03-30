@@ -1,0 +1,28 @@
+﻿<View xmlns="http://www.markux.com/schema"
+      ViewName="StarCompletedPopup"
+      Width="6" Height="1.5">
+  <Frame Style="BluePopup">
+    <StarImage IsCollected="True"
+               Alignment="Left" />
+    <Label Text="Completed!"
+           Alignment="Right" Offset="0,0,0,12em" />
+  </Frame>
+  
+  <ViewAnimation Id="ShowHideOffsetAnimation">
+    <Animate Field="OffsetFromParent" To="0"
+             Duration="0.5s"
+             EasingFunction="QuadraticEaseOut" />
+  </ViewAnimation>
+
+  <ViewAnimation Id="ShowAlphaAnimation">
+    <Animate Field="Alpha" From="0" To="1"
+             Duration="0.2s" StartOffset="0.3s"
+             EasingFunction="QuadraticEaseOut" />
+  </ViewAnimation>
+
+  <ViewAnimation Id="HideAlphaAnimation">
+    <Animate Field="Alpha" From="1" To="0"
+             Duration="0.2s"
+             EasingFunction="QuadraticEaseIn" />
+  </ViewAnimation>
+</View>

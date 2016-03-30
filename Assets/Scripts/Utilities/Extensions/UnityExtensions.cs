@@ -1,18 +1,18 @@
 ﻿using System;
 using JetBrains.Annotations;
 using PachowStudios;
+using PachowStudios.BadTummyBunny;
 
 namespace UnityEngine
 {
   public static class UnityExtensions
   {
-    // ReSharper disable ConvertConditionalTernaryToNullCoalescing
-    // The ?? operator doesn't use Unity's overloaded null check
     [CanBeNull]
     public static T GetComponentIfNull<T>([NotNull] this Component component, [CanBeNull] ref T target)
       where T : class
       => component.gameObject.GetComponentIfNull(ref target);
 
+    // The ?? operator doesn't use Unity's overloaded null check
     [CanBeNull]
     public static T GetComponentIfNull<T>([NotNull] this GameObject gameObject, [CanBeNull] ref T target)
       where T : class
@@ -37,7 +37,6 @@ namespace UnityEngine
     public static T GetComponentInChildrenIfNull<T>([NotNull] this GameObject gameObject, [CanBeNull] ref T target)
       where T : class
       => target == null ? (target = gameObject.GetComponentInChildren<T>()) : target;
-    // ReSharper restore ConvertConditionalTernaryToNullCoalescing
 
     [NotNull]
     public static TModel GetViewModel<TModel>([NotNull] this Component component)
@@ -145,6 +144,6 @@ namespace UnityEngine
       => mask.HasLayer(collider.gameObject.layer);
 
     public static float UnitsToPixels([NotNull] this Camera camera, float units)
-      => camera.WorldToScreenPoint(camera.ViewportToWorldPoint(Vector3.zero).AddX(units)).x;
+      => camera.WorldToScreenPoint(camera.ViewportToWorldPoint(Vector3.zero).Add(x: units)).x;
   }
 }

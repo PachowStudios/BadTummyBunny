@@ -4,7 +4,7 @@ using Zenject;
 namespace PachowStudios.BadTummyBunny
 {
   [AddComponentMenu("Bad Tummy Bunny/Enemies/Enemy View")]
-  public class EnemyView : FacadeView<Enemy>, IView<IEnemy>, IActivatable
+  public class EnemyView : CharacterView<Enemy>, IView<IEnemy>, IActivatable
   {
     [SerializeField] private EnemyType type = EnemyType.Fox;
     [SerializeField] private Transform frontCheck = null;

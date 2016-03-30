@@ -10,7 +10,7 @@ namespace System.Linq.Extensions
     public static bool IsEmpty<T>([NotNull, NoEnumeration] this IEnumerable<T> source)
       => !source.Any();
 
-    [Pure]
+    [Pure, ContractAnnotation("null => true")]
     public static bool IsNullOrEmpty<T>([CanBeNull, NoEnumeration] this IEnumerable<T> source)
       => source == null || source.IsEmpty();
 
@@ -36,11 +36,15 @@ namespace System.Linq.Extensions
 
     [Pure]
     public static bool HasSingle<T>([NotNull] this IEnumerable<T> source)
-      => source.HasAtMost(1);
+      => source.HasExactly(1);
 
     [Pure]
     public static bool HasMultiple<T>([NotNull] this IEnumerable<T> source)
       => source.HasAtLeast(2);
+
+    [Pure]
+    public static bool HasExactly<T>([NotNull] this IEnumerable<T> source, int amount)
+      => source.Take(amount + 1).Count() == amount;
 
     public static void ForEach<T>([NotNull] this IEnumerable<T> source, [CanBeNull] Action<T> action)
     {
@@ -65,8 +69,8 @@ namespace System.Linq.Extensions
     [Pure, CanBeNull]
     public static TSource Lowest<TSource, TKey>([NotNull] this IEnumerable<TSource> source, [NotNull] Func<TSource, TKey> selector, [NotNull] IComparer<TKey> comparer)
       => source.Aggregate((lowest, current)
-        => comparer.Compare(selector(current), selector(lowest)) < 0
-          ? current : lowest);
+        => comparer.Compare(selector(lowest), selector(current)) < 0
+          ? lowest : current);
 
     [Pure, CanBeNull]
     public static TSource Highest<TSource, TKey>([NotNull] this IEnumerable<TSource> source, [NotNull] Func<TSource, TKey> selector)
@@ -75,23 +79,32 @@ namespace System.Linq.Extensions
     [Pure, CanBeNull]
     public static TSource Highest<TSource, TKey>([NotNull] this IEnumerable<TSource> source, [NotNull] Func<TSource, TKey> selector, [NotNull] IComparer<TKey> comparer)
       => source.Aggregate((highest, current)
-        => comparer.Compare(selector(current), selector(highest)) > 0
-          ? current : highest);
+        => comparer.Compare(selector(highest), selector(current)) > 0
+          ? highest : current);
 
     [NotNull]
     public static IEnumerable<T> Shuffle<T>([NotNull] this IEnumerable<T> source)
       => source.OrderBy(x => Guid.NewGuid());
 
-    [Pure, CanBeNull]
-    public static T ElementBeforeLast<T>([NotNull] this IList<T> source, int itemsBeforeLast)
-      => source[source.Count - itemsBeforeLast - 1];
-
-    [Pure, CanBeNull]
-    public static T GetRandom<T>([NotNull] this IList<T> source)
-      => source[UnityEngine.Random.Range(0, source.Count)];
-
     public static void Add<T>([NotNull] this IList<T> source, [NotNull] IEnumerable<T> items)
       => items.ForEach(source.Add);
+
+    [NotNull]
+    public static T SingleOrAdd<T>([NotNull] this IList<T> source, [NotNull] Func<T, bool> predicate)
+      where T : class, new()
+      => source.SingleOrAdd(predicate, () => new T());
+
+    [NotNull]
+    public static T SingleOrAdd<T>([NotNull] this IList<T> source, [NotNull] Func<T, bool> predicate, [NotNull] Func<T> factory)
+      where T : class
+    {
+      var result = source.SingleOrDefault(predicate);
+
+      if (result == null)
+        source.Add(result = factory());
+
+      return result;
+    }
 
     [CanBeNull]
     public static T RemoveSingle<T>([NotNull] this IList<T> source, [NotNull] Func<T, bool> predicate)
@@ -110,6 +123,10 @@ namespace System.Linq.Extensions
       source.Add(items);
     }
 
+    [Pure, CanBeNull]
+    public static T GetRandom<T>([NotNull] this IList<T> source)
+      => source[UnityEngine.Random.Range(0, source.Count)];
+
     [CanBeNull]
     public static T Pop<T>([NotNull] this IList<T> source)
     {
@@ -122,12 +139,18 @@ namespace System.Linq.Extensions
     }
 
     [NotNull]
-    public static TValue GetOrAdd<TKey, TValue>([NotNull] this IDictionary<TKey, TValue> source, TKey key, Func<TValue> factory)
+    public static TValue GetOrAdd<TKey, TValue>(
+      [NotNull] this IDictionary<TKey, TValue> source,
+      [NotNull] TKey key,
+      [NotNull] Func<TValue> factory)
       where TValue : class
       => source.GetOrAdd(key, k => factory());
 
     [NotNull]
-    public static TValue GetOrAdd<TKey, TValue>([NotNull] this IDictionary<TKey, TValue> source, TKey key, Func<TKey, TValue> factory)
+    public static TValue GetOrAdd<TKey, TValue>(
+      [NotNull] this IDictionary<TKey, TValue> source,
+      [NotNull] TKey key,
+      [NotNull] Func<TKey, TValue> factory)
       where TValue : class
     {
       if (!source.ContainsKey(key) || source[key] == null)

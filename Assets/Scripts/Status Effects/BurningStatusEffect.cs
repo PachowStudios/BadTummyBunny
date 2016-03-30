@@ -32,7 +32,7 @@ namespace PachowStudios.BadTummyBunny
 
       if (DamageTimer >= Config.TimePerDamage)
       {
-        AffectedCharacter.Health.Damage(Config.Damage);
+        AffectedCharacter.Health.TakeDamage(Config.Damage);
         DamageTimer = 0f;
       }
 

@@ -1,17 +1,5 @@
-﻿using UnityEngine;
-
-namespace PachowStudios.BadTummyBunny
+﻿namespace PachowStudios.BadTummyBunny
 {
-  public class PlayerCollidedMessage : IMessage
-  {
-    public Collider2D Collider { get; }
-
-    public PlayerCollidedMessage(Collider2D collider)
-    {
-      Collider = collider;
-    }
-  }
-
   public class PlayerHealthChangedMessage : IMessage
   {
     public int Health { get; }
@@ -34,6 +22,26 @@ namespace PachowStudios.BadTummyBunny
     }
   }
 
+  public class PlayerEnemyCollidedMessage : IMessage
+  {
+    public IEnemy Enemy { get; }
+
+    public PlayerEnemyCollidedMessage(IEnemy enemy)
+    {
+      Enemy = enemy;
+    }
+  }
+
+  public class PlayerKilledEnemyMessage : IMessage
+  {
+    public IEnemy Enemy { get; }
+
+    public PlayerKilledEnemyMessage(IEnemy enemy)
+    {
+      Enemy = enemy;
+    }
+  }
+
   public class PlayerCoinsChangedMessage : IMessage
   {
     public int Coins { get; }
@@ -44,53 +52,47 @@ namespace PachowStudios.BadTummyBunny
     }
   }
 
-  public class PlayerEnemyTriggeredMessage : IMessage
-  {
-    public IEnemy Enemy { get; }
-
-    public PlayerEnemyTriggeredMessage(IEnemy enemy)
-    {
-      Enemy = enemy;
-    }
-  }
-
-  public class PlayerCoinTriggeredMessage : IMessage
+  public class PlayerCoinCollectedMessage : IMessage
   {
     public Coin Coin { get; }
+    public int Value { get; }
 
-    public PlayerCoinTriggeredMessage(Coin coin)
+    public PlayerCoinCollectedMessage(Coin coin)
     {
       Coin = coin;
+      Value = coin.Value;
     }
   }
 
-  public class PlayerCarrotTriggeredMessage : IMessage
+  public class PlayerCarrotCollectedMessage : IMessage
   {
     public Carrot Carrot { get; }
 
-    public PlayerCarrotTriggeredMessage(Carrot carrot)
+    public PlayerCarrotCollectedMessage(Carrot carrot)
     {
       Carrot = carrot;
     }
   }
 
-  public class PlayerFlagpoleTriggeredMessage : IMessage
+  public class PlayerFlagpoleActivatedMessage : IMessage
   {
     public Flagpole Flagpole { get; }
 
-    public PlayerFlagpoleTriggeredMessage(Flagpole flagpole)
+    public PlayerFlagpoleActivatedMessage(Flagpole flagpole)
     {
       Flagpole = flagpole;
     }
   }
 
-  public class PlayerRespawnPointTriggeredMessage : IMessage
+  public class PlayerRespawnPointActivatedMessage : IMessage
   {
     public RespawnPoint RespawnPoint { get; }
 
-    public PlayerRespawnPointTriggeredMessage(RespawnPoint respawnPoint)
+    public PlayerRespawnPointActivatedMessage(RespawnPoint respawnPoint)
     {
       RespawnPoint = respawnPoint;
     }
   }
+
+  public class PlayerDiedMessage : IMessage { }
 }

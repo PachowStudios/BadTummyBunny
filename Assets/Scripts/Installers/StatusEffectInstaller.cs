@@ -1,5 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
+using PachowStudios.Collections;
 using UnityEngine;
 using Zenject;
 
@@ -10,22 +11,14 @@ namespace PachowStudios.BadTummyBunny
   {
     [SerializeField] private List<BaseStatusEffectSettings> statusEffectSettings = null;
 
+    private IReadOnlyDictionary<StatusEffectType, BaseStatusEffectSettings> MappedSettings { get; set; } 
+
     public override void InstallBindings()
     {
+      MappedSettings = this.statusEffectSettings.ToDictionary(s => s.Type).AsReadOnly();
+
+      Container.BindInstance(MappedSettings);
       Container.BindIFactory<StatusEffectType, IStatusEffect>().ToCustomFactory<StatusEffectFactory>();
-
-      foreach (var config in this.statusEffectSettings)
-      {
-        var type = config.Type.GetTypeMapping();
-
-        Container.BindBaseInstance(config).WhenInjectedInto(type);
-
-        if (config.Prefab != null)
-          Container
-            .Bind<IStatusEffectView>()
-            .ToTransientPrefab(config.Prefab)
-            .WhenInjectedInto(type);
-      }
     }
   }
 }
