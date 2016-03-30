@@ -27,6 +27,7 @@ namespace PachowStudios.BadTummyBunny
     {
       Container.BindInstance(this.scene);
       Container.BindInstance(this.cameraControllerInstance);
+      Container.BindInstance(this.cameraControllerInstance.Camera);
     }
 
     private void InstallLevelSettings()

@@ -13,18 +13,24 @@ namespace PachowStudios.BadTummyBunny
     private const float MinimumTimeFarting = 0.05f;
     private const float VerticalSlopeAngle = 10f;
 
-    public bool IsFarting { get; private set; }
-    public bool IsFartAiming { get; private set; }
-    public bool WillFart { get; private set; }
-    public Vector2 FartDirection { get; private set; }
-    public float FartPower { get; private set; }
+    private float fartPower;
 
-    public override Vector2 FacingDirection => new Vector2(View.Body.localScale.x, 0f);
+    public bool IsFartAiming { get; private set; }
+    public Vector2 FartDirection { get; private set; }
+
+    public float FartPower
+    {
+      get { return this.fartPower; }
+      private set { this.fartPower = value.Clamp01(); }
+    }
+
+    public bool IsFarting => CurrentFart?.IsFarting ?? false;
+    public bool IsSecondaryFarting => CurrentFart?.IsSecondaryFarting ?? false;
 
     [InjectLocal] protected override PlayerMovementSettings Config { get; set; }
     [InjectLocal] protected override PlayerView View { get; set; }
 
-    [InjectLocal] private PlayerInput PlayerInput { get; set; }
+    [InjectLocal] private PlayerInput Input { get; set; }
     [InjectLocal] private IHasHealth Health { get; set; }
     [InjectLocal] private IEventAggregator LocalEventAggregator { get; set; }
 
@@ -39,13 +45,17 @@ namespace PachowStudios.BadTummyBunny
 
     private float HorizontalMovement { get; set; }
     private bool WillJump { get; set; }
+    private bool WillFart { get; set; }
+    private bool WillSecondaryFart { get; set; }
 
     private IFart CurrentFart { get; set; }
-    private float TimeFarting { get; set; }
+
+    private bool CanFart => IsFartingEnabled && (CurrentFart?.CanFart ?? false);
+    private float TimeFarting => CurrentFart?.TimeFarting ?? 0f;
 
     private bool IsFacingMovementDirection
-      => (HorizontalMovement >= 0f && IsFacingRight)
-      || (HorizontalMovement <= 0f && !IsFacingRight);
+      => (HorizontalMovement >= 0f && View.IsFacingRight)
+      || (HorizontalMovement <= 0f && !View.IsFacingRight);
 
     [PostInject]
     private void PostInject()
@@ -64,6 +74,7 @@ namespace PachowStudios.BadTummyBunny
     public void Tick()
     {
       UpdateInput();
+      CurrentFart?.Tick();
       AnimationController.Tick();
 
       if (IsGrounded && !WasGrounded)
@@ -81,9 +92,9 @@ namespace PachowStudios.BadTummyBunny
     }
 
     public void Dispose()
-      => PlayerInput.Destroy();
+      => Input.Destroy();
 
-    public override Vector3 Move(Vector3 moveVelocity)
+    public override void Move(Vector3 moveVelocity)
     {
       var newVelocity = CharacterController.Move(moveVelocity * Time.deltaTime);
 
@@ -91,15 +102,10 @@ namespace PachowStudios.BadTummyBunny
           && TimeFarting > MinimumTimeFarting
           && Velocity.Angle() > VerticalSlopeAngle
           && CharacterController.IsColliding)
-        StopFart(!IsGrounded);
+        StopFarting(!IsGrounded);
       else
         Velocity = newVelocity;
-
-      return Velocity;
     }
-
-    public override void Flip()
-      => View.Body.Flip();
 
     public override bool Jump(float height)
     {
@@ -119,7 +125,7 @@ namespace PachowStudios.BadTummyBunny
 
     public override void Disable()
     {
-      Collider.enabled = false;
+      View.Collider.enabled = false;
       DisableInput();
     }
 
@@ -134,14 +140,23 @@ namespace PachowStudios.BadTummyBunny
       if (!IsInputEnabled)
         return;
 
-      HorizontalMovement = PlayerInput.Move.Value;
-      WillJump = PlayerInput.Jump.WasPressed && IsGrounded;
+      HorizontalMovement = Input.Move.Value;
+      WillJump = Input.Jump.WasPressed && IsGrounded;
 
-      IsFartAiming = PlayerInput.Fart.IsPressed && IsFartingEnabled;
+      if (Input.SecondaryFart.IsPressed && CanFart)
+      {
+        if (Input.SecondaryFart.WasPressed)
+          FartPower = 0f;
+
+        FartPower += Time.deltaTime;
+      }
+
+      WillSecondaryFart = Input.SecondaryFart.WasReleased && CanFart;
+      IsFartAiming = Input.Fart.IsPressed && CanFart;
 
       if (IsFartAiming)
       {
-        var rawFartMagnitude = PlayerInput.Fart.Value.magnitude;
+        var rawFartMagnitude = Input.Fart.Value.magnitude;
 
         if (rawFartMagnitude <= Config.FartDeadZone)
         {
@@ -151,13 +166,13 @@ namespace PachowStudios.BadTummyBunny
         }
         else
         {
-          FartDirection = PlayerInput.Fart.Value.normalized;
+          FartDirection = Input.Fart.Value.normalized;
           FartPower = Mathf.InverseLerp(Config.FartDeadZone, 1f, rawFartMagnitude);
         }
       }
 
       if (!IsFartAiming)
-        WillFart = PlayerInput.Fart.WasReleased && IsFartingEnabled;
+        WillFart = Input.Fart.WasReleased && CanFart;
     }
 
     private void DisableInput()
@@ -171,19 +186,22 @@ namespace PachowStudios.BadTummyBunny
       CurrentFart.ShowTrajectory = IsFartAiming;
 
       if (IsFartAiming)
-        CurrentFart.DrawTrajectory(FartPower, FartDirection, Gravity, CenterPoint);
+        CurrentFart.DrawTrajectory(FartPower, FartDirection, Gravity, View.CenterPoint);
     }
 
     private void UpdateMovement()
     {
-      if (WillFart)
-        Fart(FartDirection);
-
       if (IsFarting)
         return;
 
+      if (WillFart)
+        StartFarting();
+
+      if (WillSecondaryFart)
+        SecondaryFart();
+
       if (!IsFacingMovementDirection)
-        Flip();
+        View.Flip();
 
       if (WillJump)
         Jump(Config.JumpHeight);
@@ -194,20 +212,17 @@ namespace PachowStudios.BadTummyBunny
 
     private void ApplyMovement()
     {
-      if (IsFarting)
-        TimeFarting += Time.deltaTime;
-      else
-        Velocity = Velocity.SetX(Velocity.x.LerpTo(
+      if (!IsFarting)
+        Velocity = Velocity.Set(x: Velocity.x.LerpTo(
           HorizontalMovement * MoveSpeed,
           MovementDamping * Time.deltaTime));
 
-      Velocity = Velocity.AddY(Gravity * Time.deltaTime);
-      Move(Velocity);
+      Move(Velocity.Add(y: Gravity * Time.deltaTime));
 
       if (IsGrounded)
       {
-        Velocity = Velocity.SetY(0f);
-        LastGroundedPosition = Position;
+        Velocity = Velocity.Set(y: 0f);
+        LastGroundedPosition = View.Position;
       }
     }
 
@@ -220,41 +235,44 @@ namespace PachowStudios.BadTummyBunny
       CurrentFart = fart;
     }
 
-    private void Fart(Vector2 fartDirection)
+    private void StartFarting()
     {
-      if (IsFarting || FartDirection == Vector2.zero || FartPower <= 0)
+      if (!CanFart || FartDirection == Vector2.zero || FartPower <= 0f)
         return;
 
-      IsFarting = true;
       IsFartingEnabled = false;
 
-      TimeFarting = 0f;
-      Velocity = fartDirection * CurrentFart.CalculateSpeed(FartPower);
-
-      CurrentFart.StartFart(FartPower);
+      Velocity = FartDirection * CurrentFart.CalculateSpeed(FartPower);
+      CurrentFart.StartFarting(FartPower);
     }
 
-    private void StopFart(bool killXVelocity = true)
+    private void SecondaryFart()
+    {
+      if (!CanFart || FartPower <= 0f)
+        return;
+
+      CurrentFart.SecondaryFart(FartPower);
+    }
+
+    private void StopFarting(bool killXVelocity = true)
     {
       if (!IsFarting)
         return;
 
-      IsFarting = false;
-
-      CurrentFart.StopFart();
+      CurrentFart.StopFarting();
       View.ResetOrientation();
 
       if (killXVelocity)
-        Velocity = Velocity.SetX(0f);
+        Velocity = Velocity.Set(x: 0f);
 
-      Velocity = Velocity.SetY(0f);
+      Velocity = Velocity.Set(y: 0f);
     }
 
     private void ResetInput()
     {
       HorizontalMovement = 0f;
       WillJump = IsFartAiming = false;
-      StopFart();
+      StopFarting();
       UpdateFartTrajectory();
     }
 

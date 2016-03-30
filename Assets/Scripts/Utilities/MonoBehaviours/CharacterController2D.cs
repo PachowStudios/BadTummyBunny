@@ -112,7 +112,7 @@ namespace PachowStudios
         this.collisionState.BecameGroundedThisFrame = true;
 
       if (this.isGoingUpSlope)
-        Velocity = Velocity.SetY(0f);
+        Velocity = Velocity.Set(y: 0f);
 
       if (ControllerCollided != null)
         this.raycastHitsThisFrame.ForEach(ControllerCollided.Invoke);

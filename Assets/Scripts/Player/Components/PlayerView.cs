@@ -4,7 +4,7 @@ using Zenject;
 namespace PachowStudios.BadTummyBunny
 {
   [AddComponentMenu("Bad Tummy Bunny/Player/Player View")]
-  public class PlayerView : FacadeView<Player>
+  public class PlayerView : CharacterView<Player>
   {
     [SerializeField] private Transform body = null;
     [SerializeField] private Transform fartPoint = null;
@@ -15,15 +15,36 @@ namespace PachowStudios.BadTummyBunny
 
     [Inject] public override Player Model { get; protected set; }
 
+    public override Vector2 FacingDirection => new Vector2(Body.localScale.y, 0f);
+
     public Transform Body => this.body;
     public Transform FartPoint => this.fartPoint;
+
+    public override void Flip()
+      => Body.FlipViaRotation();
+
+    public void ResetOrientation()
+    {
+      var zRotation = Body.localRotation.eulerAngles.z;
+      var isFacingRight = zRotation > 90f && zRotation < 270f;
+
+      Body.localScale = Vector3.one;
+      Body.localRotation = Quaternion.identity;
+
+      if (isFacingRight)
+        Flip();
+    }
+
+    [AnimationEvent]
+    public void PlayWalkingSound(int rightStep)
+      => Model.Movement.PlayWalkingSound(rightStep == 1);
 
     protected override void LateUpdate()
     {
       base.LateUpdate();
-      
+
       if (Model.FartInfo.IsFarting)
-        Body.CorrectScaleForRotation(Model.Movement.Velocity.DirectionToRotation2D());
+        CorrectRotationAndScale();
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -51,17 +72,13 @@ namespace PachowStudios.BadTummyBunny
       }
     }
 
-    public void ResetOrientation()
+    private void CorrectRotationAndScale()
     {
-      var zRotation = Body.rotation.eulerAngles.z;
-      var flipX = zRotation > 90f && zRotation < 270f;
+      var rotation = Model.Movement.Velocity.DirectionToRotation2D();
 
-      Body.localScale = new Vector3(flipX ? -1f : 1f, 1f, 1f);
-      Body.rotation = Quaternion.identity;
+      Body.localRotation = rotation.ToQuaternion();
+      Body.localScale = Body.localScale
+        .Set(y: rotation.z > 90f && rotation.z < 270f ? -1f : 1f);
     }
-
-    [AnimationEvent]
-    public void PlayWalkingSound(int rightStep)
-      => Model.Movement.PlayWalkingSound(rightStep == 1);
   }
 }

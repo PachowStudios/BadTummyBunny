@@ -124,10 +124,6 @@ namespace System.Linq.Extensions
     }
 
     [Pure, CanBeNull]
-    public static T ElementBeforeLast<T>([NotNull] this IList<T> source, int itemsBeforeLast)
-      => source[source.Count - itemsBeforeLast - 1];
-
-    [Pure, CanBeNull]
     public static T GetRandom<T>([NotNull] this IList<T> source)
       => source[UnityEngine.Random.Range(0, source.Count)];
 

@@ -8,20 +8,20 @@ namespace PachowStudios.BadTummyBunny
   {
     [Inject] private Player Player { get; set; }
 
+    public Vector2 FacingDirection => new Vector2(View.Transform.localScale.x, 0f);
     public bool IsAtWall => Physics2D.OverlapPoint(View.FrontCheck.position, CollisionLayers) != null;
     public bool IsAtLedge => IsGrounded && Physics2D.OverlapPoint(View.LedgeCheck.position, CollisionLayers) == null;
 
-    public bool IsPlayerOnRight => Player.Movement.Position.x > Position.x;
-    public float RelativePlayerHeight => Position.y - Player.Movement.Position.y;
-
-    public float RelativePlayerLastGrounded
+    private bool IsPlayerOnRight => Player.View.Position.x > View.Position.x;
+    protected float RelativePlayerHeight => View.Position.y - Player.View.Position.y;
+    protected float RelativePlayerLastGrounded
       => (LastGroundedPosition.y - Player.Movement.LastGroundedPosition.y).RoundToFraction(2);
 
     public virtual void FollowPlayer(float buffer = 1f)
     {
-      if (View.Transform.position.x + buffer < Player.Movement.Position.x)
+      if (View.Transform.position.x + buffer < Player.View.Position.x)
         HorizontalMovement = 1;
-      else if (View.Transform.position.x - buffer > Player.Movement.Position.x)
+      else if (View.Transform.position.x - buffer > Player.View.Position.x)
         HorizontalMovement = -1;
       else
       {
@@ -32,26 +32,26 @@ namespace PachowStudios.BadTummyBunny
 
     public virtual void FacePlayer()
     {
-      if (IsPlayerOnRight ^ IsFacingRight)
-        Flip();
+      if (IsPlayerOnRight ^ View.IsFacingRight)
+        View.Flip();
     }
 
     public virtual bool IsPlayerInRange(float min = 0f, float max = Mathf.Infinity)
     {
-      var distance = Mathf.Abs(Player.Movement.Position.x - Position.x);
+      var distance = Mathf.Abs(Player.View.Position.x - View.Position.x);
 
       return distance >= min && distance <= max;
     }
 
     public virtual bool IsPlayerInLineOfSight(float range = Mathf.Infinity, float maxAngle = 90f)
     {
-      if (IsFacingRight ^ IsPlayerOnRight
-          || FacingDirection.AngleTo(Player.Movement.CenterPoint - CenterPoint) > maxAngle)
+      if (View.IsFacingRight ^ IsPlayerOnRight
+          || FacingDirection.AngleTo(Player.View.CenterPoint - View.CenterPoint) > maxAngle)
         return false;
 
       var linecast = Physics2D.Linecast(
-        Collider.bounds.center,
-        Player.Movement.CenterPoint,
+        View.CenterPoint,
+        Player.View.CenterPoint,
         Config.BlockVisibilityLayers);
 
       return !linecast && linecast.distance <= range;

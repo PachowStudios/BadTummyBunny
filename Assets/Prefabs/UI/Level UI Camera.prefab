@@ -49,7 +49,7 @@ Camera:
   far clip plane: 1
   field of view: 60
   orthographic: 1
-  orthographic size: 4.5004706
+  orthographic size: 4.5
   m_Depth: 1
   m_CullingMask:
     serializedVersion: 2
@@ -74,8 +74,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42fb95ea72c229946a3b9c834b745a4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultFOV: 256
-  useWorldSpaceUI: 1
+  referenceWidth: 256
+  pixelsPerUnit: 16
   worldSpaceUI: {fileID: 0}
 --- !u!1001 &100100000
 Prefab:

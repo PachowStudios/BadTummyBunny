@@ -144,6 +144,6 @@ namespace UnityEngine
       => mask.HasLayer(collider.gameObject.layer);
 
     public static float UnitsToPixels([NotNull] this Camera camera, float units)
-      => camera.WorldToScreenPoint(camera.ViewportToWorldPoint(Vector3.zero).AddX(units)).x;
+      => camera.WorldToScreenPoint(camera.ViewportToWorldPoint(Vector3.zero).Add(x: units)).x;
   }
 }

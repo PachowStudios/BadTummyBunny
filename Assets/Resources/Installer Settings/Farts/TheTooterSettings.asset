@@ -25,6 +25,7 @@ MonoBehaviour:
     Power: 0.5
   - SfxGroup: 2
     Power: 0.8
+  SecondaryDuration: {x: 0.25, y: 1}
   TrajectoryPreviewTime: 0.5
   TrajectoryStartDistance: 1
   TrajectoryPointSeparation: 0.5

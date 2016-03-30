@@ -10,6 +10,11 @@ namespace PachowStudios.BadTummyBunny
     SpriteRenderer SpriteRenderer { get; }
     Animator Animator { get; }
     CharacterController2D CharacterController { get; }
+
+    Vector3 Position { get; }
+    Vector3 CenterPoint { get; }
+
+    void Flip();
   }
 
   public interface IView<out TModel> : IView

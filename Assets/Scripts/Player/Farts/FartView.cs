@@ -11,9 +11,11 @@ namespace PachowStudios.BadTummyBunny
 
     private PolygonCollider2D fartColliderComponent = null;
 
-    [Inject] private IEventAggregator EventAggregator { get; set; }
-
     public PolygonCollider2D FartCollider => this.GetComponentIfNull(ref this.fartColliderComponent);
+
+    public Vector3 FartOrigin => FartCollider.transform.position;
+
+    [Inject] private IEventAggregator EventAggregator { get; set; }
 
     public void Attach(PlayerView playerView)
     {

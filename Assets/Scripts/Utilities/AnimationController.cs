@@ -24,11 +24,11 @@ namespace PachowStudios
 
   public class AnimationCondition
   {
-    private Func<bool> Condition { get; }
-
     public string Name { get; }
 
     public bool IsConditionSatisfied => Condition();
+
+    private Func<bool> Condition { get; }
 
     public AnimationCondition(string name, Func<bool> condition)
     {

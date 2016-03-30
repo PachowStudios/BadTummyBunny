@@ -4,6 +4,8 @@ namespace PachowStudios.BadTummyBunny
 {
   public class PlayerInput : PlayerActionSet
   {
+    private static readonly KeyBindingSource CancelSetBindingKey = new KeyBindingSource(Key.Escape);
+
     private PlayerAction MoveLeft { get; }
     private PlayerAction MoveRight { get; }
 
@@ -16,21 +18,23 @@ namespace PachowStudios.BadTummyBunny
     public PlayerTwoAxisAction Fart { get; }
 
     public PlayerAction Jump { get; }
+    public PlayerAction SecondaryFart { get; }
 
     public PlayerInput()
     {
-      MoveLeft = CreatePlayerAction("Move Left");
-      MoveRight = CreatePlayerAction("Move Right");
+      MoveLeft = CreatePlayerAction(nameof(MoveLeft));
+      MoveRight = CreatePlayerAction(nameof(MoveRight));
 
-      FartLeft = CreatePlayerAction("Fart Aim Left");
-      FartRight = CreatePlayerAction("Fart Aim Right");
-      FartDown = CreatePlayerAction("Fart Aim Down");
-      FartUp = CreatePlayerAction("Fart Aim Up");
+      FartLeft = CreatePlayerAction(nameof(FartLeft));
+      FartRight = CreatePlayerAction(nameof(FartRight));
+      FartDown = CreatePlayerAction(nameof(FartDown));
+      FartUp = CreatePlayerAction(nameof(FartUp));
 
       Move = CreateOneAxisPlayerAction(MoveLeft, MoveRight);
       Fart = CreateTwoAxisPlayerAction(FartLeft, FartRight, FartDown, FartUp);
 
-      Jump = CreatePlayerAction("Jump");
+      Jump = CreatePlayerAction(nameof(Jump));
+      SecondaryFart = CreatePlayerAction(nameof(SecondaryFart));
 
       AssignDefaultBindings();
     }
@@ -53,6 +57,9 @@ namespace PachowStudios.BadTummyBunny
       Jump.AddDefaultBinding(Key.Space);
       Jump.AddDefaultBinding(InputControlType.Action1);
 
+      SecondaryFart.AddDefaultBinding(Key.F);
+      SecondaryFart.AddDefaultBinding(InputControlType.Action2);
+
       this.ListenOptions.IncludeUnknownControllers = false;
       this.ListenOptions.MaxAllowedBindings = 3;
       this.ListenOptions.OnBindingFound = OnBindingFound;
@@ -60,7 +67,7 @@ namespace PachowStudios.BadTummyBunny
 
     private static bool OnBindingFound(PlayerAction action, BindingSource binding)
     {
-      if (binding != new KeyBindingSource(Key.Escape))
+      if (binding != CancelSetBindingKey)
         return true;
 
       action.StopListeningForBinding();

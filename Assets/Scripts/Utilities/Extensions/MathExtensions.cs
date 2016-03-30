@@ -4,10 +4,10 @@ namespace UnityEngine
 {
   public static class MathExtensions
   {
-    private const float FloatingPointTolerance = 0.0001f;
+    public const float FloatingPointTolerance = 0.0001f;
 
     public static bool IsZero(this float value)
-      => value.Abs() <= FloatingPointTolerance;
+      => value.IsApproximately(0f);
 
     public static bool IsApproximately(this float value, float otherValue)
       => Math.Abs(value - otherValue) < FloatingPointTolerance;

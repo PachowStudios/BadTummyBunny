@@ -19,8 +19,8 @@ namespace PachowStudios.BadTummyBunny
     [InjectLocal] protected override EnemyView View { get; set; }
 
     private bool IsFacingMovementDirection
-      => (HorizontalMovement >= 0 && IsFacingRight)
-      || (HorizontalMovement <= 0 && !IsFacingRight);
+      => (HorizontalMovement >= 0 && View.IsFacingRight)
+      || (HorizontalMovement <= 0 && !View.IsFacingRight);
 
     protected abstract void InternalTick();
 
@@ -52,19 +52,21 @@ namespace PachowStudios.BadTummyBunny
     protected virtual void UpdateMovement()
     {
       if (!IsFacingMovementDirection)
-        Flip();
+        View.Flip();
     }
 
     protected virtual void ApplyMovement()
     {
       Move(Velocity
-        .SetX(Velocity.x.LerpTo(HorizontalMovement * MoveSpeed, MovementDamping * Time.deltaTime))
-        .AddY(Gravity * Time.deltaTime));
+        .Set(x: Velocity.x.LerpTo(
+          HorizontalMovement * MoveSpeed,
+          MovementDamping * Time.deltaTime))
+        .Add(y: Gravity * Time.deltaTime));
 
       if (IsGrounded)
       {
-        Velocity = Velocity.SetY(0f);
-        LastGroundedPosition = Position;
+        Velocity = Velocity.Set(y: 0f);
+        LastGroundedPosition = View.Position;
       }
     }
   }
