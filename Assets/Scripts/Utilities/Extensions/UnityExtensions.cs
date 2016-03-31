@@ -9,34 +9,34 @@ namespace UnityEngine
   {
     [CanBeNull]
     public static T GetComponentIfNull<T>([NotNull] this Component component, [CanBeNull] ref T target)
-      where T : class
+      where T : Component
       => component.gameObject.GetComponentIfNull(ref target);
 
     // The ?? operator doesn't use Unity's overloaded null check
     [CanBeNull]
     public static T GetComponentIfNull<T>([NotNull] this GameObject gameObject, [CanBeNull] ref T target)
-      where T : class
-      => target == null ? (target = gameObject.GetComponent<T>()) : target;
+      where T : Component
+      => target != null ? target : (target = gameObject.GetComponent<T>());
 
     [CanBeNull]
     public static T GetComponentInParentIfNull<T>([NotNull] this Component component, [CanBeNull] ref T target)
-      where T : class
+      where T : Component
       => component.gameObject.GetComponentInParentIfNull(ref target);
 
     [CanBeNull]
     public static T GetComponentInParentIfNull<T>([NotNull] this GameObject gameObject, [CanBeNull] ref T target)
-      where T : class
-      => target == null ? (target = gameObject.GetComponentInParent<T>()) : target;
+      where T : Component
+      => target != null ? target : (target = gameObject.GetComponentInParent<T>());
 
     [CanBeNull]
     public static T GetComponentInChildrenIfNull<T>([NotNull] this Component component, [CanBeNull] ref T target)
-      where T : class
+      where T : Component
       => component.gameObject.GetComponentInChildrenIfNull(ref target);
 
     [CanBeNull]
     public static T GetComponentInChildrenIfNull<T>([NotNull] this GameObject gameObject, [CanBeNull] ref T target)
-      where T : class
-      => target == null ? (target = gameObject.GetComponentInChildren<T>()) : target;
+      where T : Component
+      => target != null ? target : (target = gameObject.GetComponentInChildren<T>());
 
     [NotNull]
     public static TModel GetViewModel<TModel>([NotNull] this Component component)

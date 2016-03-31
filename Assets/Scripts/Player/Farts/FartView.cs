@@ -11,6 +11,12 @@ namespace PachowStudios.BadTummyBunny
 
     private PolygonCollider2D fartColliderComponent = null;
 
+    public bool CanHitEnemies
+    {
+      get { return FartCollider.enabled; }
+      set { FartCollider.enabled = value; }
+    }
+
     public PolygonCollider2D FartCollider => this.GetComponentIfNull(ref this.fartColliderComponent);
 
     public Vector3 FartOrigin => FartCollider.transform.position;
@@ -34,7 +40,7 @@ namespace PachowStudios.BadTummyBunny
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-      if (other.tag == Tags.Enemy)
+      if (CanHitEnemies && other.tag == Tags.Enemy)
         EventAggregator.Publish(new FartEnemyTriggeredMessage(other.GetViewModel<IEnemy>()));
     }
   }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace PachowStudios
 {
@@ -9,9 +10,12 @@ namespace PachowStudios
 
     private T value;
 
-    // We use the conditional operator instead of the null coalescing operator
-    // because MonoBehavior's custom null check doesn't work with it.
-    public T Value => this.value != null ? this.value : (this.value = CreateValue());
+    // This null check is done with EqualityComparer<T>
+    // because MonoBehavior's custom null check doesn't work
+    // with unconstrained generics...
+    public T Value => HasValue ? this.value : (this.value = CreateValue());
+
+    private bool HasValue => !EqualityComparer<T>.Default.Equals(this.value, default(T));
 
     public Lazy(Func<T> valueFactory = null)
     {

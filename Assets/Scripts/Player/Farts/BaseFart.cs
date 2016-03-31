@@ -13,9 +13,29 @@ namespace PachowStudios.BadTummyBunny
       where TConfig : FartSettings
   {
     private VectorLine trajectoryLine;
+    private bool isFarting;
+    private bool isSecondaryFarting;
 
-    public bool IsFarting { get; private set; }
-    public bool IsSecondaryFarting { get; private set; }
+    public bool IsFarting
+    {
+      get { return this.isFarting; }
+      private set
+      {
+        this.isFarting = value;
+        View.CanHitEnemies = value;
+      }
+    }
+
+    public bool IsSecondaryFarting
+    {
+      get { return this.isSecondaryFarting; }
+      private set
+      {
+        this.isSecondaryFarting = value;
+        View.CanHitEnemies = value;
+      }
+    }
+
     public float TimeFarting { get; private set; }
 
     public bool ShowTrajectory
@@ -122,9 +142,7 @@ namespace PachowStudios.BadTummyBunny
 
     protected virtual void TargetEnemy(IEnemy enemy)
     {
-      if (!CanFart
-          || PendingTargets.Contains(enemy)
-          || DamagedEnemies.Contains(enemy))
+      if (PendingTargets.Contains(enemy) || DamagedEnemies.Contains(enemy))
         return;
 
       PendingTargets.Add(enemy);
