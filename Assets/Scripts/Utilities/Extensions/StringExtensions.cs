@@ -21,5 +21,17 @@ namespace System
     public static string StartWith([NotNull] this string @string, string startingString)
       => @string.StartsWith(startingString, StringComparison.OrdinalIgnoreCase)
         ? @string : startingString + @string;
+
+    public static T ToEnum<T>([NotNull] this string @string, bool ignoreCase = true)
+    {
+      try
+      {
+        return (T)Enum.Parse(typeof(T), @string, ignoreCase);
+      }
+      catch
+      {
+        return default(T);
+      }
+    }
   }
 }

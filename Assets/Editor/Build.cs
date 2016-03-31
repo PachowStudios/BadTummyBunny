@@ -2,56 +2,55 @@
 using System.Linq;
 using JetBrains.Annotations;
 using UnityEditor;
+using static UnityEditor.BuildPipeline;
 using static UnityEngine.Debug;
 using UnityPlayerSettings = UnityEditor.PlayerSettings;
 
-namespace PachowStudios.BadTummyBunny.Editor
+namespace PachowStudios.BadTummyBunny.BuildPipeline
 {
   public class Build
   {
     private static string OutputFile { get; }
     private static string VersionNumber { get; }
-    private static string VersionCode { get; }
+    private static int VersionCode { get; }
+    private static BuildOptions BuildOptions { get; }
 
     static Build()
     {
       Log("Reading build environment settings...");
 
-      OutputFile = Environment.GetEnvironmentVariable("OUTPUT_FILE");
-      VersionNumber = Environment.GetEnvironmentVariable("VERSION_NUMBER");
-      VersionCode = Environment.GetEnvironmentVariable("VERSION_CODE");
-
-      if (OutputFile == null)
-        throw new ArgumentNullException(nameof(OutputFile));
-
-      Log($"{nameof(OutputFile)}: {OutputFile}");
-
-      if (VersionNumber == null)
-        throw new ArgumentNullException(nameof(VersionNumber));
-
-      Log($"{nameof(VersionNumber)}: {VersionNumber}");
-
-      if (VersionCode == null)
-        throw new ArgumentNullException(nameof(VersionCode));
-
-      Log($"{nameof(VersionCode)}: {VersionCode}");
-
-      UnityPlayerSettings.bundleVersion = VersionNumber;
+      OutputFile = GetBuildVariable("OUTPUT_FILE");
+      VersionNumber = GetBuildVariable("VERSION_NUMBER");
+      VersionCode = int.Parse(GetBuildVariable("VERSION_CODE"));
+      BuildOptions = GetBuildVariable("BUILD_OPTIONS").ToEnum<BuildOptions>();
     }
 
     [UsedImplicitly]
     public static void Android()
     {
-      UnityPlayerSettings.Android.bundleVersionCode = int.Parse(VersionCode);
+      UnityPlayerSettings.bundleVersion = VersionNumber;
+      UnityPlayerSettings.Android.bundleVersionCode = VersionCode;
 
-      BuildPipeline.BuildPlayer(
+      BuildPlayer(
         EditorBuildSettings.scenes
           .Where(s => s.enabled)
           .Select(s => s.path)
           .ToArray(),
         OutputFile,
         BuildTarget.Android,
-        BuildOptions.None);
+        BuildOptions);
+    }
+
+    private static string GetBuildVariable(string variable)
+    {
+      var value = Environment.GetEnvironmentVariable(variable);
+
+      if (value == null)
+        throw new ArgumentNullException(variable);
+
+      Log($"{variable}: {value}");
+
+      return value;
     }
   }
 }
