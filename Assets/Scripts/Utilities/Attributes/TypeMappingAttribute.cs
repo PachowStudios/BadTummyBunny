@@ -1,13 +1,14 @@
 ﻿using System;
+using JetBrains.Annotations;
 
 namespace PachowStudios
 {
   [AttributeUsage(AttributeTargets.Field)]
   public class TypeMappingAttribute : Attribute
   {
-    public Type Type { get; private set; }
+    [NotNull] public Type Type { get; }
 
-    public TypeMappingAttribute(Type type)
+    public TypeMappingAttribute([NotNull] Type type)
     {
       Type = type;
     }

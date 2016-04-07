@@ -1,12 +1,14 @@
 ﻿using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
+using JetBrains.Annotations;
 
 namespace PachowStudios
 {
   public static class XmlHelper
   {
-    public static XmlDocument SerializeToXml(object toSerialize)
+    [NotNull, Pure]
+    public static XmlDocument SerializeToXml([NotNull] object toSerialize)
     {
       var serializer = new XmlSerializer(toSerialize.GetType());
 
@@ -25,7 +27,8 @@ namespace PachowStudios
       }
     }
 
-    public static T DeserializeToObject<T>(XmlDocument xmlDoc)
+    [NotNull, Pure]
+    public static T DeserializeToObject<T>([NotNull] XmlDocument xmlDoc)
       where T : class
     {
       var serialzier = new XmlSerializer(typeof(T));
@@ -34,7 +37,8 @@ namespace PachowStudios
         return (T)serialzier.Deserialize(xmlReader);
     }
 
-    public static byte[] XmlToBytes(XmlDocument xmlDoc)
+    [NotNull, Pure]
+    public static byte[] XmlToBytes([NotNull] XmlDocument xmlDoc)
     {
       using (var memoryStream = new MemoryStream())
       {
@@ -44,7 +48,8 @@ namespace PachowStudios
       }
     }
 
-    public static XmlDocument BytesToXml(byte[] bytes)
+    [NotNull, Pure]
+    public static XmlDocument BytesToXml([NotNull] byte[] bytes)
     {
       var xmlDoc = new XmlDocument();
 
@@ -57,17 +62,21 @@ namespace PachowStudios
 
   public static class XmlHelperExtensions
   {
-    public static XmlDocument SerializeToXml(this object toSerialize)
+    [NotNull, Pure]
+    public static XmlDocument SerializeToXml([NotNull] this object toSerialize)
       => XmlHelper.SerializeToXml(toSerialize);
 
-    public static T DeserializeToObject<T>(this XmlDocument xmlDoc)
+    [NotNull, Pure]
+    public static T DeserializeToObject<T>([NotNull] this XmlDocument xmlDoc)
       where T : class 
       => XmlHelper.DeserializeToObject<T>(xmlDoc);
 
-    public static byte[] ToBytes(this XmlDocument xmlDoc)
+    [NotNull, Pure]
+    public static byte[] ToBytes([NotNull] this XmlDocument xmlDoc)
       => XmlHelper.XmlToBytes(xmlDoc);
 
-    public static XmlDocument ToXml(this byte[] bytes)
+    [NotNull, Pure]
+    public static XmlDocument ToXml([NotNull] this byte[] bytes)
       => XmlHelper.BytesToXml(bytes);
   }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 
 namespace PachowStudios
 {
@@ -13,7 +14,7 @@ namespace PachowStudios
     // This null check is done with EqualityComparer<T>
     // because MonoBehavior's custom null check doesn't work
     // with unconstrained generics...
-    public T Value => HasValue ? this.value : (this.value = CreateValue());
+    [NotNull] public T Value => HasValue ? this.value : (this.value = CreateValue());
 
     private bool HasValue => !EqualityComparer<T>.Default.Equals(this.value, default(T));
 
@@ -26,13 +27,14 @@ namespace PachowStudios
       => this.valueFactory?.Invoke()
       ?? Activator.CreateInstance<T>();
 
-    public static implicit operator T(Lazy<T> @this)
+    public static implicit operator T([NotNull] Lazy<T> @this)
       => @this.Value;
   }
 
   public static class Lazy
   {
-    public static Lazy<T> From<T>(Func<T> func)
+    [NotNull, Pure]
+    public static Lazy<T> From<T>([NotNull] Func<T> func)
       where T : class
       => new Lazy<T>(func);
   }

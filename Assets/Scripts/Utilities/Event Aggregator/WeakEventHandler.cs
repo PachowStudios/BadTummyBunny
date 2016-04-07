@@ -48,8 +48,9 @@ namespace PachowStudios
         => HandlerMethods.Any(h => h.Key.IsAssignableFrom<TMessage>());
 
       [Pure]
-      public bool ReferenceEquals(object instance)
-        => ReferenceEquals(Target.Target, instance);
+      public bool RefersTo<T>(T instance)
+        where T : class, IHandles
+        => Target.Target.RefersTo(instance);
     }
   }
 }

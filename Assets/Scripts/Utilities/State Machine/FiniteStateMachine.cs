@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using PachowStudios.Assertions;
 
 namespace PachowStudios
@@ -16,11 +17,12 @@ namespace PachowStudios
     private readonly Dictionary<Type, FiniteState<T>> states = new Dictionary<Type, FiniteState<T>>();
     private readonly T context;
 
-    public FiniteStateMachine(T context)
+    public FiniteStateMachine([NotNull] T context)
     {
       this.context = context;
     }
 
+    [NotNull]
     public FiniteStateMachine<T> Add<TState>()
       where TState : FiniteState<T>
     {
@@ -35,6 +37,7 @@ namespace PachowStudios
       return this;
     }
 
+    [NotNull]
     public TState GoTo<TState>()
       where TState : FiniteState<T>
     {
@@ -45,7 +48,7 @@ namespace PachowStudios
 
       CurrentState?.End();
 
-      this.states.ContainsKey(typeof(TState)).Should().BeTrue($"because state {typeof(TState)} must exist.");
+      this.states.Should().ContainKey(typeof(TState), $"because state {typeof(TState)} must exist.");
 
       PreviousState = CurrentState;
       CurrentState = this.states[typeof(TState)];
@@ -56,6 +59,7 @@ namespace PachowStudios
       return (TState)CurrentState;
     }
 
+    [Pure]
     public bool CameFrom<TState>()
       where TState : FiniteState<T>
       => PreviousState is TState;

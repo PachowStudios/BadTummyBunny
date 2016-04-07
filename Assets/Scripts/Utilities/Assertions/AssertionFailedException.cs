@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Annotations;
 
 namespace PachowStudios.Assertions
 {
@@ -6,7 +7,7 @@ namespace PachowStudios.Assertions
   {
     public override string Message { get; }
 
-    public AssertionFailedException(string assertion, string reason)
+    public AssertionFailedException([NotNull] string assertion, [CanBeNull] string reason)
     {
       Message = reason.IsNullOrEmpty()
         ? $"{assertion}"

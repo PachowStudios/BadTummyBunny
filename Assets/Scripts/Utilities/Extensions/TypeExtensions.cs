@@ -1,8 +1,11 @@
-﻿namespace System
+﻿using JetBrains.Annotations;
+
+namespace System
 {
   public static class TypeExtensions
   {
-    public static bool IsAssignableFrom<T>(this Type parent)
+    [Pure]
+    public static bool IsAssignableFrom<T>([NotNull] this Type parent)
       => parent.IsAssignableFrom(typeof(T));
   }
 }

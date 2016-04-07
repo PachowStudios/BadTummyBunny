@@ -5,23 +5,24 @@ namespace System
 {
   public static class StringExtensions
   {
-    [ContractAnnotation("null => true")]
+    [Pure, ContractAnnotation("null => true")]
     public static bool IsNullOrEmpty([CanBeNull] this string @string)
       => string.IsNullOrEmpty(@string);
 
-    [NotNull]
+    [NotNull, Pure]
     public static string Repeat(this char @char, int count)
       => new string(@char, count);
 
-    [NotNull]
+    [NotNull, Pure]
     public static string Repeat([NotNull] this string @string, int count)
       => new StringBuilder(@string.Length * count).Insert(0, @string, count).ToString();
 
-    [NotNull]
-    public static string StartWith([NotNull] this string @string, string startingString)
+    [NotNull, Pure]
+    public static string StartWith([NotNull] this string @string, [NotNull] string startingString)
       => @string.StartsWith(startingString, StringComparison.OrdinalIgnoreCase)
         ? @string : startingString + @string;
 
+    [Pure]
     public static T ToEnum<T>([NotNull] this string @string, bool ignoreCase = true)
     {
       try

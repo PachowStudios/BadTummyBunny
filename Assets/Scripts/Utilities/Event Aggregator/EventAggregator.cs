@@ -10,15 +10,15 @@ namespace PachowStudios
     private List<IWeakEventHandler> Handlers { get; } = new List<IWeakEventHandler>();
 
     public void Subscribe<THandler>(THandler subscriber)
-      where THandler : IHandles
+      where THandler : class, IHandles
     {
-      if (Handlers.None(h => h.ReferenceEquals(subscriber)))
+      if (Handlers.None(h => h.RefersTo(subscriber)))
         Handlers.Add(new WeakEventHandler<THandler>(subscriber));
     }
 
     public void Unsubscribe<THandler>(THandler subscriber)
-      where THandler : IHandles
-      => Handlers.RemoveSingle(h => h.ReferenceEquals(subscriber));
+      where THandler : class, IHandles
+      => Handlers.RemoveSingle(h => h.RefersTo(subscriber));
 
     public void Publish<TMessage>(TMessage message)
       where TMessage : IMessage

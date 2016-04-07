@@ -16,7 +16,8 @@ namespace PachowStudios
         where TMessage : IMessage;
 
       [Pure]
-      bool ReferenceEquals(object instance);
+      bool RefersTo<T>(T instance)
+        where T : class, IHandles;
     }
   }
 }

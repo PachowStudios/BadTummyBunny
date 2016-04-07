@@ -5,10 +5,10 @@ namespace PachowStudios
   public interface IEventAggregator
   {
     void Subscribe<THandler>([NotNull] THandler subscriber)
-      where THandler : IHandles;
+      where THandler : class, IHandles;
 
     void Unsubscribe<THandler>([NotNull] THandler subscriber)
-      where THandler : IHandles;
+      where THandler : class, IHandles;
 
     void Publish<TMessage>([NotNull] TMessage message)
       where TMessage : IMessage;

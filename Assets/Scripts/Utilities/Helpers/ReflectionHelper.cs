@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Reflection;
+using JetBrains.Annotations;
 
 namespace PachowStudios
 {
   public static class ReflectionHelper
   {
-    public static T Create<T>(params object[] args)
+    [NotNull, Pure]
+    public static T Create<T>([CanBeNull] params object[] args)
       => (T)Activator.CreateInstance(
         typeof(T),
         BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,

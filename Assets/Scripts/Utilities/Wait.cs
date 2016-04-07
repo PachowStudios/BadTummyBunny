@@ -1,25 +1,26 @@
 ﻿using System;
 using System.Collections;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace PachowStudios
 {
-  public class Wait
+  public static class Wait
   {
     private static readonly Lazy<WaitInternal> instance = Lazy.From(CreateInstance);
 
     private static WaitInternal Instance => instance.Value;
 
-    public static void ForSeconds(float waitTime, Action callback)
+    public static void ForSeconds(float waitTime, [NotNull] Action callback)
       => Instance.StartCoroutine(WaitInternal.ForSecondsCoroutine(waitTime, callback));
 
-    public static void ForRealSeconds(float waitTime, Action callback)
+    public static void ForRealSeconds(float waitTime, [NotNull] Action callback)
       => Instance.StartCoroutine(WaitInternal.ForRealSecondsCoroutine(waitTime, callback));
 
-    public static void ForFixedUpdate(Action callback)
+    public static void ForFixedUpdate([NotNull] Action callback)
       => Instance.StartCoroutine(WaitInternal.ForFixedUpdateCoroutine(callback));
 
-    public static void ForEndOfFrame(Action callback)
+    public static void ForEndOfFrame([NotNull] Action callback)
       => Instance.StartCoroutine(WaitInternal.ForEndOfFrameCoroutine(callback));
 
     private static WaitInternal CreateInstance()

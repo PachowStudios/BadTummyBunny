@@ -5,6 +5,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq.Extensions;
 using System.Xml.Serialization;
+using JetBrains.Annotations;
+using PachowStudios.Assertions;
 
 namespace PachowStudios
 {
@@ -32,17 +34,10 @@ namespace PachowStudios
 
     public VersionCode(int major, int minor, int build = 0, int revision = 0)
     {
-      if (major < 0)
-        throw new ArgumentOutOfRangeException(nameof(major), $"{nameof(major)} cannot be less than 0");
-
-      if (minor < 0)
-        throw new ArgumentOutOfRangeException(nameof(minor), $"{nameof(minor)} cannot be less than 0");
-
-      if (build < 0)
-        throw new ArgumentOutOfRangeException(nameof(build), $"{nameof(build)} cannot be less than 0");
-
-      if (revision < 0)
-        throw new ArgumentOutOfRangeException(nameof(revision), $"{nameof(revision)} cannot be less than 0");
+      major.Should().BeAtLeast(0);
+      minor.Should().BeAtLeast(0);
+      build.Should().BeAtLeast(0);
+      revision.Should().BeAtLeast(0);
 
       Major = major;
       Minor = minor;
@@ -50,7 +45,7 @@ namespace PachowStudios
       Revision = revision;
     }
 
-    public VersionCode(string version)
+    public VersionCode([NotNull] string version)
     {
       Parse(version);
     }
@@ -116,34 +111,27 @@ namespace PachowStudios
 
       var components = new Stack<string>(version.Split('.'));
 
-      if (components.Count < 2 || components.Count > 4)
-        throw new ArgumentException(nameof(version));
+      components.Should()
+        .HaveAtLeast(2, "because a major and minor version is required")
+        .And.HaveAtMost(4, "because there are only 4 possible version components");
 
       Major = int.Parse(components.Pop(), CultureInfo.InvariantCulture);
-
-      if (Major < 0)
-        throw new ArgumentOutOfRangeException(nameof(version), $"{nameof(Major)} cannot be less than 0");
+      Major.Should().BeAtLeast(0);
 
       Minor = int.Parse(components.Pop(), CultureInfo.InvariantCulture);
-
-      if (Minor < 0)
-        throw new ArgumentOutOfRangeException(nameof(version), $"{nameof(Minor)} cannot be less than 0");
+      Minor.Should().BeAtLeast(0);
 
       if (components.IsEmpty())
         return;
 
       Build = int.Parse(components.Pop(), CultureInfo.InvariantCulture);
-
-      if (Build < 0)
-        throw new ArgumentOutOfRangeException(nameof(version), $"{nameof(Build)} cannot be less than 0");
+      Build.Should().BeAtLeast(0);
 
       if (components.IsEmpty())
         return;
 
       Revision = int.Parse(components.Pop(), CultureInfo.InvariantCulture);
-
-      if (Revision < 0)
-        throw new ArgumentOutOfRangeException(nameof(version), $"{nameof(Revision)} cannot be less than 0");
+      Revision.Should().BeAtLeast(0);
     }
   }
 

@@ -15,7 +15,7 @@ namespace PachowStudios
       this.Value = value;
     }
 
-    public static implicit operator T(Field<T> @this)
+    public static implicit operator T([NotNull] Field<T> @this)
       => @this.Value;
 
     public static implicit operator Field<T>(T @value)

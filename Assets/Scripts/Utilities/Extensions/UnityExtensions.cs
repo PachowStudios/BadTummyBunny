@@ -38,12 +38,12 @@ namespace UnityEngine
       where T : Component
       => target != null ? target : (target = gameObject.GetComponentInChildren<T>());
 
-    [NotNull]
+    [NotNull, Pure]
     public static TModel GetViewModel<TModel>([NotNull] this Component component)
       where TModel : class
       => component.gameObject.GetViewModel<TModel>();
 
-    [NotNull]
+    [NotNull, Pure]
     public static TModel GetViewModel<TModel>([NotNull] this GameObject gameObject)
       where TModel : class
     {
@@ -89,19 +89,6 @@ namespace UnityEngine
       return gameObject;
     }
 
-    public static Vector3 TransformPoint([NotNull] this Transform transform, float x, float y)
-      => transform.TransformPoint(x, y, 0f);
-
-    /// <summary>
-    /// Sets the position, rotation, and localScale to that of the target transform.
-    /// </summary>
-    public static void AlignWith([NotNull] this Transform transform, Transform target)
-    {
-      transform.position = target.position;
-      transform.rotation = target.rotation;
-      transform.localScale = target.localScale;
-    }
-
     public static void Flash([NotNull] this SpriteRenderer spriteRenderer, Color color, float time)
     {
       spriteRenderer.color = color;
@@ -124,6 +111,7 @@ namespace UnityEngine
       emission.enabled = enabled;
     }
 
+    [Pure]
     public static bool IsVisible([NotNull] this CanvasGroup canvasGroup)
       => !canvasGroup.alpha.IsZero();
 
@@ -134,15 +122,19 @@ namespace UnityEngine
       canvasGroup.blocksRaycasts = visible;
     }
 
+    [Pure]
     public static bool HasLayer(this LayerMask mask, int layer)
       => (mask.value & (1 << layer)) > 0;
 
-    public static bool HasLayer(this LayerMask mask, [NotNull] GameObject obj)
-      => mask.HasLayer(obj.layer);
+    [Pure]
+    public static bool HasLayer(this LayerMask mask, [NotNull] GameObject gameObject)
+      => mask.HasLayer(gameObject.layer);
 
+    [Pure]
     public static bool HasLayer(this LayerMask mask, [NotNull] Collider2D collider)
       => mask.HasLayer(collider.gameObject.layer);
 
+    [Pure]
     public static float UnitsToPixels([NotNull] this Camera camera, float units)
       => camera.WorldToScreenPoint(camera.ViewportToWorldPoint(Vector3.zero).Add(x: units)).x;
   }

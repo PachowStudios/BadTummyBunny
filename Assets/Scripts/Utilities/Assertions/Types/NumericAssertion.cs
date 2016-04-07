@@ -2,7 +2,7 @@
 
 namespace PachowStudios.Assertions
 {
-  public class NumericAssertion<T> : BaseAssertion<IComparable<T>>
+  public class NumericAssertion<T> : BaseAssertion<IComparable<T>, NumericAssertion<T>>
     where T : struct, IComparable<T>
   {
     public NumericAssertion(IComparable<T> subject)

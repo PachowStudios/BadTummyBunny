@@ -33,7 +33,7 @@ namespace PachowStudios.Collections
 
   public static class ReadOnlyDictionaryExtensions
   {
-    [NotNull]
+    [NotNull, Pure]
     public static ReadOnlyDictionary<TKey, TValue> AsReadOnly<TKey, TValue>([NotNull] this IDictionary<TKey, TValue> dictionary)
       => new ReadOnlyDictionary<TKey, TValue>(dictionary);
   }

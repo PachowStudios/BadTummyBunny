@@ -40,8 +40,9 @@ namespace PachowStudios.BadTummyBunny
 
     private void Awake()
     {
-      Connections.Should().NotBeEmpty($"because {name} must connect to other levels.");
-      Connections.None(c => c.ConnectedLevel == null).Should().BeTrue($"because no connections to {name} can be null");
+      Connections.Should()
+        .NotBeEmpty($"because {name} must connect to other levels.")
+        .And.HaveNoneWhere(c => c.ConnectedLevel == null, $"because no connections to {name} can be null");
     }
 
     private void OnDrawGizmosSelected()
