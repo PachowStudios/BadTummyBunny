@@ -4,7 +4,7 @@ using Zenject;
 
 namespace PachowStudios.BadTummyBunny
 {
-  public sealed class PlayerHealth : BaseHasHealth, IHasHealthContainers, IInitializable, ITickable,
+  public sealed class PlayerHealth : BaseHasHealth, IInitializable, ITickable,
     IHandles<CharacterKillzoneTriggeredMessage>,
     IHandles<PlayerCarrotCollectedMessage>,
     IHandles<PlayerEnemyCollidedMessage>,

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace PachowStudios.BadTummyBunny.AI.Patrol
+namespace PachowStudios.BadTummyBunny.Enemies.AI
 {
   [InstallerSettings, CreateAssetMenu(menuName = "Bad Tummy Bunny/Enemies/AI/Patrol AI Settings")]
   public class PatrolAISettings : BaseEnemyAISettings

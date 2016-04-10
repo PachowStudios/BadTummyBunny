@@ -8,9 +8,8 @@ using Zenject;
 
 namespace PachowStudios.BadTummyBunny
 {
-  public abstract class BaseFart<TConfig> : IFart,
+  public abstract class BaseFart : IFart,
     IHandles<FartEnemyTriggeredMessage>
-      where TConfig : FartSettings
   {
     private VectorLine trajectoryLine;
     private bool isFarting;
@@ -49,19 +48,25 @@ namespace PachowStudios.BadTummyBunny
 
     public bool CanFart => !IsFarting && !IsSecondaryFarting;
 
-    protected abstract TConfig Config { get; set; }
-
     protected HashSet<ICharacter> PendingTargets { get; } = new HashSet<ICharacter>();
     protected HashSet<ICharacter> DamagedEnemies { get; } = new HashSet<ICharacter>();
 
     protected VectorLine TrajectoryLine => this.trajectoryLine;
     protected List<Vector2> TrajectoryPoints => TrajectoryLine.points2;
 
-    [Inject] private FartView View { get; set; }
+    private FartSettings Config { get; }
+    private FartView View { get; }
+
     [Inject] private Camera Camera { get; set; }
     [Inject] private IEventAggregator EventAggregator { get; set; }
 
     private IMovable PlayerMovement { get; set; }
+
+    protected BaseFart(FartSettings config, FartView view)
+    {
+      Config = config;
+      View = view;
+    }
 
     [PostInject]
     private void Initialize()

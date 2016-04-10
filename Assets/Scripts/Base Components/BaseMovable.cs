@@ -2,9 +2,7 @@
 
 namespace PachowStudios.BadTummyBunny
 {
-  public abstract class BaseMovable<TConfig, TView> : IMovable
-    where TConfig : BaseMovableSettings
-    where TView : IView
+  public abstract class BaseMovable : IMovable
   {
     public virtual Vector3 Velocity { get; protected set; }
     public virtual Vector3 LastGroundedPosition { get; protected set; }
@@ -22,11 +20,17 @@ namespace PachowStudios.BadTummyBunny
     public float Gravity => Config.Gravity;
     public float MoveSpeed => MoveSpeedOverride ?? Config.MoveSpeed;
 
-    protected abstract TConfig Config { get; set; }
-    protected abstract TView View { get; set; }
-
     protected CharacterController2D CharacterController => View.CharacterController;
     protected float MovementDamping => IsGrounded ? Config.GroundDamping : Config.AirDamping;
+
+    private BaseMovableSettings Config { get; }
+    private IView View { get; }
+
+    protected BaseMovable(BaseMovableSettings config, IView view)
+    {
+      Config = config;
+      View = view;
+    }
 
     public virtual void Move(Vector3 moveVelocity)
       => Velocity = CharacterController.Move(moveVelocity * Time.deltaTime);

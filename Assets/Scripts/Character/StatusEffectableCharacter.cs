@@ -5,23 +5,27 @@ using Zenject;
 
 namespace PachowStudios.BadTummyBunny
 {
-  public abstract class StatusEffectableCharacter<TMovement, THealth> : Facade, IStatusEffectable
-    where TMovement : IMovable
-    where THealth : IHasHealth
+  public abstract class StatusEffectableCharacter : Facade, IStatusEffectable
   {
     private readonly List<IStatusEffect> statusEffects = new List<IStatusEffect>();
-
-    [Inject] private IFactory<StatusEffectType, IStatusEffect> StatusEffectFactory { get; set; }
-
-    [Inject] public IView View { get; private set; }
-
-    public abstract TMovement Movement { get; protected set; }
-    public abstract THealth Health { get; protected set; }
 
     IMovable ICharacter.Movement => Movement;
     IHasHealth ICharacter.Health => Health;
 
+    public IView View { get; }
     public IEnumerable<IStatusEffect> StatusEffects => this.statusEffects;
+
+    private IMovable Movement { get; }
+    private IHasHealth Health { get; }
+
+    [Inject] private IFactory<StatusEffectType, IStatusEffect> StatusEffectFactory { get; set; }
+
+    protected StatusEffectableCharacter(IView view, IMovable movement, IHasHealth health)
+    {
+      View = view;
+      Movement = movement;
+      Health = health;
+    }
 
     public bool HasStatusEffect(StatusEffectType type)
       => this.statusEffects.Any(e => e.Type == type);

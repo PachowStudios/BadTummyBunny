@@ -1,15 +1,17 @@
-﻿using Zenject;
-
-namespace PachowStudios.BadTummyBunny
+﻿namespace PachowStudios.BadTummyBunny
 {
-  public sealed class Player : StatusEffectableCharacter<PlayerMovement, PlayerHealth>
+  public sealed class Player : StatusEffectableCharacter
   {
-    [InjectLocal] public override PlayerMovement Movement { get; protected set; }
-    [InjectLocal] public override PlayerHealth Health { get; protected set; }
+    public PlayerMovement Movement { get; }
+    public PlayerHealth Health { get; }
 
-    [InjectLocal] public IFartInfoProvider FartInfo { get; private set; }
-    [InjectLocal] public IHasHealthContainers HealthContainers { get; private set; }
+    public IFartInfoProvider FartInfo => Movement;
 
-    [InjectLocal] private FartAimLean FartAimLean { get; set; }
+    public Player(IView view, PlayerMovement movement, PlayerHealth health)
+      : base(view, movement, health)
+    {
+      Movement = movement;
+      Health = health;
+    }
   }
 }

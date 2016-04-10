@@ -5,13 +5,20 @@ namespace PachowStudios.BadTummyBunny
 {
   public sealed class FartAimLean : ICameraEffector, ITickable
   {
-    [InjectLocal] private FartAimLeanSettings Config { get; set; }
-    [InjectLocal] private IFartInfoProvider FartInfo { get; set; }
-    [InjectLocal] private IView View { get; set; }
+    private bool IsEnabled { get; set; }
 
-    [Inject] private CameraController CameraController { get; set; }
+    private FartAimLeanSettings Config { get; }
+    private IView View { get; }
+    private IFartInfoProvider FartInfo { get; }
+    private CameraController CameraController { get; }
 
-    public bool IsEnabled { get; private set; }
+    public FartAimLean(FartAimLeanSettings config, IView view, IFartInfoProvider fartInfo, CameraController cameraController)
+    {
+      Config = config;
+      View = view;
+      FartInfo = fartInfo;
+      CameraController = cameraController;
+    }
 
     public void Tick()
     {

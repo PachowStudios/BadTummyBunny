@@ -3,8 +3,7 @@ using Zenject;
 
 namespace PachowStudios.BadTummyBunny
 {
-  public abstract class EnemyMovement<TConfig> : BaseMovable<TConfig, EnemyView>, ITickable, ILateTickable
-    where TConfig : BaseEnemyMovementSettings
+  public abstract class EnemyMovement : BaseMovable, ITickable, ILateTickable
   {
     private bool isActivated;
 
@@ -14,13 +13,22 @@ namespace PachowStudios.BadTummyBunny
       set { this.isActivated = value; }
     }
 
-    public int HorizontalMovement { get; set; }
+    protected int HorizontalMovement { get; set; }
 
-    [InjectLocal] protected override EnemyView View { get; set; }
-
-    private bool IsFacingMovementDirection
+    protected bool IsWalking => HorizontalMovement != 0;
+    protected bool IsFacingMovementDirection
       => (HorizontalMovement >= 0 && View.IsFacingRight)
       || (HorizontalMovement <= 0 && !View.IsFacingRight);
+
+    private BaseEnemyMovementSettings Config { get; }
+    private EnemyView View { get; }
+
+    protected EnemyMovement(BaseEnemyMovementSettings config, EnemyView view)
+      : base(config, view)
+    {
+      Config = config;
+      View = view;
+    }
 
     protected abstract void InternalTick();
 

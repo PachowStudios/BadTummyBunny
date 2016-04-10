@@ -16,9 +16,5 @@ MonoBehaviour:
   GroundDamping: 10
   AirDamping: 5
   JumpHeight: 1.5
-  StartingFartType: 0
-  MaxAvailableFart: 10
-  FartRechargePerSecond: 0.5
-  CarrotFartRechargePercent: 0.25
+  StartingFartType: 1
   FartDeadZone: 0.2
-  FartUsageRange: {x: 0.5, y: 1}

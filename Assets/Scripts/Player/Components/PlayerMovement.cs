@@ -4,7 +4,7 @@ using Zenject;
 
 namespace PachowStudios.BadTummyBunny
 {
-  public sealed class PlayerMovement : BaseMovable<PlayerMovementSettings, PlayerView>, IFartInfoProvider, IInitializable, ITickable, ILateTickable, IDisposable,
+  public sealed class PlayerMovement : BaseMovable, IFartInfoProvider, IInitializable, ITickable, ILateTickable, IDisposable,
     IHandles<PlayerCoinCollectedMessage>,
     IHandles<PlayerCarrotCollectedMessage>,
     IHandles<PlayerFlagpoleActivatedMessage>,
@@ -27,8 +27,9 @@ namespace PachowStudios.BadTummyBunny
     public bool IsFarting => CurrentFart?.IsFarting ?? false;
     public bool IsSecondaryFarting => CurrentFart?.IsSecondaryFarting ?? false;
 
-    [InjectLocal] protected override PlayerMovementSettings Config { get; set; }
-    [InjectLocal] protected override PlayerView View { get; set; }
+    private PlayerMovementSettings Config { get; }
+    private PlayerView View { get; }
+    private AnimationController AnimationController { get; }
 
     [InjectLocal] private PlayerInput Input { get; set; }
     [InjectLocal] private IHasHealth Health { get; set; }
@@ -37,8 +38,6 @@ namespace PachowStudios.BadTummyBunny
     [Inject(BindingIds.Global)] private IEventAggregator EventAggregator { get; set; }
     [Inject] private IFactory<FartType, IFart> FartFactory { get; set; }
     [Inject] private ILevelCompletionHandler LevelCompletionHandler { get; set; }
-
-    private AnimationController AnimationController { get; set; }
 
     private bool IsInputEnabled { get; set; } = true;
     private bool IsFartingEnabled { get; set; } = true;
@@ -53,19 +52,27 @@ namespace PachowStudios.BadTummyBunny
     private bool CanFart => IsFartingEnabled && (CurrentFart?.CanFart ?? false);
     private float TimeFarting => CurrentFart?.TimeFarting ?? 0f;
 
+    private bool IsWalking => !HorizontalMovement.IsZero() && !IsFarting;
     private bool IsFacingMovementDirection
       => (HorizontalMovement >= 0f && View.IsFacingRight)
       || (HorizontalMovement <= 0f && !View.IsFacingRight);
+
+    public PlayerMovement(PlayerMovementSettings config, PlayerView view)
+      : base(config, view)
+    {
+      Config = config;
+      View = view;
+      AnimationController = new AnimationController(View.Animator,
+        new AnimationCondition("Walking", () => IsWalking),
+        new AnimationCondition("Grounded", () => IsGrounded),
+        new AnimationCondition("Falling", () => IsFalling));
+    }
 
     [PostInject]
     private void PostInject()
     {
       LocalEventAggregator.Subscribe(this);
       EventAggregator.Subscribe(this);
-      AnimationController = new AnimationController(View.Animator,
-        new AnimationCondition("Walking", () => HorizontalMovement.Abs() > 0.01f && !IsFarting),
-        new AnimationCondition("Grounded", () => IsGrounded),
-        new AnimationCondition("Falling", () => Velocity.y < 0f));
     }
 
     public void Initialize()

@@ -1,17 +1,20 @@
-﻿namespace PachowStudios.BadTummyBunny.AI.Patrol
+﻿namespace PachowStudios.BadTummyBunny.Enemies.AI
 {
-  public class AttackState : FiniteState<PatrolAI>
+  partial class PatrolAI
   {
-    public AttackState(FiniteStateMachine<PatrolAI> stateMachine, PatrolAI context)
-      : base(stateMachine, context) { }
-
-    public override void Begin()
-      => Context.Jump(Context.AttackJumpHeight);
-
-    public override void Reason()
+    private class AttackState : FiniteState<PatrolAI>
     {
-      if (Context.IsGrounded || Context.IsFalling)
-        StateMachine.GoTo<FollowState>();
+      public AttackState(FiniteStateMachine<PatrolAI> stateMachine, PatrolAI context)
+        : base(stateMachine, context) { }
+
+      public override void Enter()
+        => Context.Jump(Context.Config.AttackJumpHeight);
+
+      public override void Reason()
+      {
+        if (Context.IsGrounded || Context.IsFalling)
+          StateMachine.GoTo<FollowState>();
+      }
     }
   }
 }

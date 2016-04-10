@@ -35,7 +35,10 @@ namespace PachowStudios.BadTummyBunny
       subContainer.BindBaseInstance(settings.Movement);
       subContainer.BindBaseInstance(settings.Health);
 
-      subContainer.BindSingleWithInterfaces(instance.Type.GetTypeMapping());
+      var movementType = instance.Type.GetTypeMapping();
+      subContainer.BindSingleWithInterfaces(movementType);
+      subContainer.Bind<EnemyMovement>().ToSingle(movementType);
+
       subContainer.BindSingleWithInterfaces<EnemyHealth>();
 
       subContainer.Bind<IEventAggregator>().ToSingle<EventAggregator>();

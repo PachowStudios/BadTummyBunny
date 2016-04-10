@@ -6,8 +6,8 @@ namespace Zenject
   public class PublicFacadeBinder<TFacade>
     where TFacade : IFacade
   {
-    private Action<DiContainer> Installer { get; }
     private DiContainer Container { get; }
+    private Action<DiContainer> Installer { get; }
 
     private DiContainer FacadeContainer { get; set; }
 
@@ -37,22 +37,19 @@ namespace Zenject
     }
 
     private void AddValidator()
-      => Container.Bind<IValidatable>().ToInstance(
-        new Validator(Container, Installer));
+      => Container.Bind<IValidatable>().ToInstance(new Validator(this));
 
     private class Validator : IValidatable
     {
-      private DiContainer Container { get; }
-      private Action<DiContainer> InstallerFunc { get; }
+      private PublicFacadeBinder<TFacade> Binder { get; }
 
-      public Validator(DiContainer container, Action<DiContainer> installerFunc)
+      public Validator(PublicFacadeBinder<TFacade> binder)
       {
-        Container = container;
-        InstallerFunc = installerFunc;
+        Binder = binder;
       }
 
       public IEnumerable<ZenjectResolveException> Validate()
-        => FacadeFactory<TFacade>.Validate(Container, InstallerFunc);
+        => FacadeFactory<TFacade>.Validate(Binder.Container, Binder.Installer);
     }
   }
 }

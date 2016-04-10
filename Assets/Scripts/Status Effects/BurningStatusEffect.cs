@@ -1,17 +1,22 @@
 ﻿using UnityEngine;
-using Zenject;
 
 namespace PachowStudios.BadTummyBunny
 {
-  public class BurningStatusEffect : BaseStatusEffect<BurningStatusEffectSettings>
+  public class BurningStatusEffect : BaseStatusEffect
   {
-    [Inject] private IStatusEffectView View { get; set; }
-
-    [Inject] protected override BurningStatusEffectSettings Config { get; set; }
-
     private float DamageTimer { get; set; }
     private float DurationTimer { get; set; }
     private float Duration { get; set; }
+
+    private BurningStatusEffectSettings Config { get; }
+    private IStatusEffectView View { get; }
+
+    public BurningStatusEffect(BurningStatusEffectSettings config, IStatusEffectView view)
+      : base(config)
+    {
+      View = view;
+      Config = config;
+    }
 
     public override void Attach(IStatusEffectable affectectedCharacter)
     {

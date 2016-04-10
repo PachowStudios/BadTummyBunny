@@ -1,41 +1,41 @@
 ﻿using UnityEngine;
 
-namespace PachowStudios.BadTummyBunny.AI.Patrol
+namespace PachowStudios.BadTummyBunny.Enemies.AI
 {
-  public class FollowState : FiniteState<PatrolAI>
+  partial class PatrolAI
   {
-    private readonly float followSpeed;
-
-    private float cooldownTimer;
-
-    public FollowState(FiniteStateMachine<PatrolAI> stateMachine, PatrolAI context)
-      : base(stateMachine, context)
+    private class FollowState : FiniteState<PatrolAI>
     {
-      this.followSpeed = Context.FollowSpeedRange.RandomRange();
-    }
+      private readonly float followSpeed;
 
-    public override void Begin()
-    {
-      Context.MoveSpeedOverride = this.followSpeed;
-      this.cooldownTimer = StateMachine.CameFrom<AttackState>() ? Context.CooldownTime : 0f;
-    }
+      private float cooldownTimer;
 
-    public override void Reason()
-    {
-      if (Context.CanFollowPlayer)
+      public FollowState(FiniteStateMachine<PatrolAI> stateMachine, PatrolAI context)
+        : base(stateMachine, context)
       {
-        if (Context.IsPlayerInRange(max: Context.AttackRange)
-            && this.cooldownTimer <= 0f)
+        this.followSpeed = Context.Config.FollowSpeedRange.RandomRange();
+      }
+
+      public override void Enter()
+      {
+        Context.MoveSpeedOverride = this.followSpeed;
+        this.cooldownTimer = StateMachine.CameFrom<AttackState>() ? Context.Config.CooldownTime : 0f;
+      }
+
+      public override void Reason()
+      {
+        if (!Context.CanFollowPlayer)
+          StateMachine.GoTo<SightLostState>();
+        else if (Context.IsPlayerInRange(max: Context.Config.AttackRange)
+                 && this.cooldownTimer <= 0f)
           StateMachine.GoTo<AttackState>();
       }
-      else
-        StateMachine.GoTo<SightLostState>();
+
+      public override void Tick(float deltaTime)
+        => this.cooldownTimer -= deltaTime;
+
+      public override void Leave()
+        => Context.MoveSpeedOverride = null;
     }
-
-    public override void Tick(float deltaTime)
-      => this.cooldownTimer -= deltaTime;
-
-    public override void End()
-      => Context.MoveSpeedOverride = null;
   }
 }

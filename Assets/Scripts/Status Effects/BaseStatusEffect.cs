@@ -1,14 +1,18 @@
 ﻿namespace PachowStudios.BadTummyBunny
 {
-  public abstract class BaseStatusEffect<TConfig> : IStatusEffect
-    where TConfig : BaseStatusEffectSettings
+  public abstract class BaseStatusEffect : IStatusEffect
   {
-    protected abstract TConfig Config { get; set; }
-
     public IStatusEffectable AffectedCharacter { get; private set; }
 
     public string Name => Config.Name;
     public StatusEffectType Type => Config.Type;
+
+    private BaseStatusEffectSettings Config { get; }
+
+    protected BaseStatusEffect(BaseStatusEffectSettings config)
+    {
+      Config = config;
+    }
 
     public virtual void Attach(IStatusEffectable affectedCharacter)
       => AffectedCharacter = affectedCharacter;

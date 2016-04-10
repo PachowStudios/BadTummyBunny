@@ -1,51 +1,54 @@
 ﻿using UnityEngine;
 
-namespace PachowStudios.BadTummyBunny.AI.Patrol
+namespace PachowStudios.BadTummyBunny.Enemies.AI
 {
-  public class SightLostState : FiniteState<PatrolAI>
+  partial class PatrolAI
   {
-    private float waitTime;
-    private float waitTimer;
-    private bool flipped;
-
-    public SightLostState(FiniteStateMachine<PatrolAI> stateMachine, PatrolAI context)
-      : base(stateMachine, context) { }
-
-    public override void Begin()
+    private class SightLostState : FiniteState<PatrolAI>
     {
-      Context.HorizontalMovement = 0;
-      this.waitTime = Context.SightLostWaitTimeRange.RandomRange();
-      this.waitTimer = this.waitTime;
-      this.flipped = false;
+      private float waitTime;
+      private float waitTimer;
+      private bool flipped;
+
+      public SightLostState(FiniteStateMachine<PatrolAI> stateMachine, PatrolAI context)
+        : base(stateMachine, context) { }
+
+      public override void Enter()
+      {
+        Context.HorizontalMovement = 0;
+        this.waitTime = Context.Config.SightLostWaitTimeRange.RandomRange();
+        this.waitTimer = this.waitTime;
+        this.flipped = false;
+      }
+
+      public override void Reason()
+      {
+        if (Context.CanFollowPlayer)
+          StateMachine.GoTo<FollowState>();
+
+        if (this.waitTimer > 0f)
+          return;
+
+        Context.Flip();
+        StateMachine.GoTo<PatrolState>();
+      }
+
+      public override void Tick(float deltaTime)
+      {
+        this.waitTimer -= deltaTime;
+
+        if (this.waitTimer >= this.waitTime / 2f
+            || this.flipped
+            || Context.IsAtLedge
+            || Context.IsAtWall)
+          return;
+
+        Context.Flip();
+        this.flipped = true;
+      }
+
+      public override void Leave()
+        => Context.HorizontalMovement = Context.FacingDirection.x.RoundToInt();
     }
-
-    public override void Reason()
-    {
-      if (Context.CanFollowPlayer)
-        StateMachine.GoTo<FollowState>();
-
-      if (this.waitTimer > 0f)
-        return;
-
-      Context.Flip();
-      StateMachine.GoTo<PatrolState>();
-    }
-
-    public override void Tick(float deltaTime)
-    {
-      this.waitTimer -= deltaTime;
-
-      if (this.waitTimer >= this.waitTime / 2f
-          || this.flipped
-          || Context.IsAtLedge
-          || Context.IsAtWall)
-        return;
-
-      Context.Flip();
-      this.flipped = true;
-    }
-
-    public override void End()
-      => Context.HorizontalMovement = Context.FacingDirection.x.RoundToInt();
   }
 }

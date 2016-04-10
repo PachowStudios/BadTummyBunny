@@ -1,9 +1,8 @@
-﻿using Zenject;
-
-namespace PachowStudios.BadTummyBunny
+﻿namespace PachowStudios.BadTummyBunny
 {
-  public class BasicFart : BaseFart<FartSettings>
+  public class BasicFart : BaseFart
   {
-    [Inject] protected override FartSettings Config { get; set; }
+    public BasicFart(FartSettings config, FartView view)
+      : base(config, view) { }
   }
 }

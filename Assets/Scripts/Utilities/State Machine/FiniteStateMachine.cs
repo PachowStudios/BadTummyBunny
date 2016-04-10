@@ -31,7 +31,7 @@ namespace PachowStudios
       if (CurrentState == null)
       {
         CurrentState = this.states[typeof(TState)];
-        CurrentState.Begin();
+        CurrentState.Enter();
       }
 
       return this;
@@ -46,13 +46,13 @@ namespace PachowStudios
       if (matchedState != null)
         return matchedState;
 
-      CurrentState?.End();
+      CurrentState?.Leave();
 
       this.states.Should().ContainKey(typeof(TState), $"because state {typeof(TState)} must exist.");
 
       PreviousState = CurrentState;
       CurrentState = this.states[typeof(TState)];
-      CurrentState.Begin();
+      CurrentState.Enter();
       ElapsedTimeInState = 0f;
       StateChanged?.Invoke();
 

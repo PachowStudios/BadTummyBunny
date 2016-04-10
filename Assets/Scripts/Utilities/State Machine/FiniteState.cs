@@ -2,6 +2,7 @@
 
 namespace PachowStudios
 {
+  [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
   public abstract class FiniteState<T>
     where T : class
   {
@@ -14,9 +15,9 @@ namespace PachowStudios
       Context = context;
     }
 
-    public virtual void Begin() { }
+    public virtual void Enter() { }
     public virtual void Reason() { }
     public virtual void Tick(float deltaTime) { }
-    public virtual void End() { }
+    public virtual void Leave() { }
   }
 }

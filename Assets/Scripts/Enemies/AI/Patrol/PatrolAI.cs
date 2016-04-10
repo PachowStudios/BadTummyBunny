@@ -1,40 +1,35 @@
-﻿using System;
-using UnityEngine;
-using Zenject;
+﻿using UnityEngine;
 
-namespace PachowStudios.BadTummyBunny.AI.Patrol
+namespace PachowStudios.BadTummyBunny.Enemies.AI
 {
-  public sealed class PatrolAI : BaseEnemyAI<PatrolAISettings>
+  public sealed partial class PatrolAI : BaseEnemyAI
   {
-    [InjectLocal] protected override PatrolAISettings Config { get; set; }
+    private PatrolAISettings Config { get; }
+    private EnemyView View { get; }
 
-    public Vector2 FollowSpeedRange => Config.FollowSpeedRange;
-    public float AttackRange => Config.AttackRange;
-    public float AttackJumpHeight => Config.AttackJumpHeight;
-    public float CooldownTime => Config.CooldownTime;
-    public Vector2 SightLostWaitTimeRange => Config.SightLostWaitTimeRange;
+    private FiniteStateMachine<PatrolAI> StateMachine { get; }
+    private AnimationController AnimationController { get; }
 
-    public bool CanFollowPlayer
+    private bool CanFollowPlayer
       => IsPlayerInLineOfSight(Config.FollowRange, Config.VisibilityAngle)
-      && Math.Abs(RelativePlayerLastGrounded) < 0.025f
+      && RelativePlayerLastGrounded.Abs() < 0.025f
       && !IsAtLedge
       && !IsAtWall;
 
-    private FiniteStateMachine<PatrolAI> StateMachine { get; set; }
-    private AnimationController AnimationController { get; set; }
-
-    [PostInject]
-    private void Initialize()
+    public PatrolAI(PatrolAISettings config, EnemyView view)
+      : base(config, view)
     {
+      Config = config;
+      View = view;
       StateMachine = new FiniteStateMachine<PatrolAI>(this)
         .Add<PatrolState>()
         .Add<FollowState>()
         .Add<SightLostState>()
         .Add<AttackState>();
       AnimationController = new AnimationController(View.Animator,
-        new AnimationCondition("Walking", () => HorizontalMovement != 0),
+        new AnimationCondition("Walking", () => IsWalking),
         new AnimationCondition("Grounded", () => IsGrounded),
-        new AnimationCondition("Falling", () => Velocity.y < 0f));
+        new AnimationCondition("Falling", () => IsFalling));
     }
 
     protected override void InternalTick()

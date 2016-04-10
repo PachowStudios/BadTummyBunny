@@ -6,7 +6,7 @@ namespace PachowStudios.BadTummyBunny
   [AddComponentMenu("Bad Tummy Bunny/Enemies/Enemy View")]
   public class EnemyView : CharacterView<Enemy>, IView<IEnemy>, IActivatable
   {
-    [SerializeField] private EnemyType type = EnemyType.Fox;
+    [SerializeField] private EnemyType type = default(EnemyType);
     [SerializeField] private Transform frontCheck = null;
     [SerializeField] private Transform ledgeCheck = null;
 

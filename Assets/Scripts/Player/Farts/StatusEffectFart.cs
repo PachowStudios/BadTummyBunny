@@ -1,10 +1,14 @@
-﻿using Zenject;
-
-namespace PachowStudios.BadTummyBunny
+﻿namespace PachowStudios.BadTummyBunny
 {
-  public class StatusEffectFart : BaseFart<StatusEffectFartSettings>
+  public class StatusEffectFart : BaseFart
   {
-    [Inject] protected override StatusEffectFartSettings Config { get; set; }
+    private StatusEffectFartSettings Config { get; }
+
+    public StatusEffectFart(StatusEffectFartSettings config, FartView view)
+      : base(config, view)
+    {
+      Config = config;
+    }
 
     public void AttachStatusEffect(IStatusEffectable target)
       => target.AddStatusEffect(Config.StatusEffectType);

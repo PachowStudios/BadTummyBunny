@@ -1,5 +1,5 @@
 ﻿using JetBrains.Annotations;
-using PachowStudios.BadTummyBunny.AI.Patrol;
+using PachowStudios.BadTummyBunny.Enemies.AI;
 
 namespace PachowStudios.BadTummyBunny
 {
