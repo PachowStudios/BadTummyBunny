@@ -9,14 +9,15 @@ namespace PachowStudios.BadTummyBunny
   {
     private int health;
 
-    [InjectLocal] private EnemyHealthSettings Config { get; set; }
-    [InjectLocal] private EnemyView View { get; set; }
+    private EnemyHealthSettings Config { get; }
+    private EnemyView View { get; }
+
     [InjectLocal] private IMovable Movement { get; set; }
     [InjectLocal] private IEventAggregator LocalEventAggregator { get; set; }
 
     [Inject] private ExplodeEffect ExplodeEffect { get; set; }
 
-    public override int Health
+    public sealed override int Health
     {
       get { return this.health; }
       protected set
@@ -30,12 +31,17 @@ namespace PachowStudios.BadTummyBunny
 
     public sealed override int MaxHealth => Config.MaxHealth;
 
+    public EnemyHealth(EnemyHealthSettings config, EnemyView view)
+    {
+      Config = config;
+      View = view;
+
+      Health = MaxHealth;
+    }
+
     [PostInject]
     private void PostInject()
-    {
-      Health = MaxHealth;
-      LocalEventAggregator.Subscribe(this);
-    }
+      => LocalEventAggregator.Subscribe(this);
 
     public override void TakeDamage(int damage, Vector2 knockback, Vector2 knockbackDirection)
     {
@@ -45,6 +51,7 @@ namespace PachowStudios.BadTummyBunny
         return;
 
       Health -= damage;
+      LocalEventAggregator.Publish(new CharacterTookDamageMessage(damage));
 
       if (IsDead)
         return;

@@ -11,7 +11,7 @@ namespace PachowStudios.Assertions
     {
       Message = reason.IsNullOrEmpty()
         ? $"{assertion}"
-        : $"{assertion} {reason.StartWith("because ")}";
+        : $"{assertion} {reason.StartWith("because ").EndWith(".")}";
     }
   }
 }

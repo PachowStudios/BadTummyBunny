@@ -61,7 +61,7 @@ namespace PachowStudios.BadTummyBunny
         }
 
       ParticleSystem.SetParticles(particles.ToArray(), particles.Count);
-      this.Destroy(Config.Duration);
+      this.DestroyAfter(Config.Duration);
     }
   }
 }

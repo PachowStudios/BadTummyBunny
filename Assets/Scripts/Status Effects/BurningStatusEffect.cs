@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using PachowStudios.Assertions;
+using UnityEngine;
 
 namespace PachowStudios.BadTummyBunny
 {
@@ -21,16 +22,20 @@ namespace PachowStudios.BadTummyBunny
     public override void Attach(IStatusEffectable affectectedCharacter)
     {
       base.Attach(affectectedCharacter);
-
-      Duration = Random.Range(Config.MinDuration, Config.MaxDuration);
       View.Attach(affectectedCharacter);
+      Duration = Random.Range(Config.MinDuration, Config.MaxDuration);
     }
 
     public override void Detach()
-      => View.Detach();
+    {
+      base.Detach();
+      View.Detach();
+    }
 
     public override void Tick()
     {
+      AffectedCharacter.Should().NotBeNull("because a detatched status effect shouldn't be ticked");
+
       base.Tick();
 
       DamageTimer += Time.deltaTime;

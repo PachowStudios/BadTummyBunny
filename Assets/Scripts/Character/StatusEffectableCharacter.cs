@@ -44,12 +44,21 @@ namespace PachowStudios.BadTummyBunny
     public void RemoveStatusEffect(StatusEffectType type)
       => this.statusEffects.RemoveSingle(e => e.Type == type)?.Detach();
 
+    public void ClearStatusEffects()
+      => this.statusEffects.ForEach(e => e.Detach());
+
     public override void Tick()
     {
       base.Tick();
 
-      foreach (var statusEffect in this.statusEffects)
-        statusEffect.Tick();
+      this.statusEffects.ForEach(e => e.Tick());
+    }
+
+    public override void Dispose()
+    {
+      base.Dispose();
+
+      ClearStatusEffects();
     }
   }
 }

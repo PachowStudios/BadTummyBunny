@@ -58,13 +58,13 @@ namespace UnityEngine
     public static void Destroy([NotNull] this MonoBehaviour monoBehaviour)
       => monoBehaviour.gameObject.Destroy();
 
-    public static void Destroy([NotNull] this MonoBehaviour monoBehaviour, float delay)
-      => monoBehaviour.gameObject.Destroy(delay);
-
     public static void Destroy([NotNull] this GameObject gameObject)
       => Object.Destroy(gameObject);
 
-    public static void Destroy([NotNull] this GameObject gameObject, float delay)
+    public static void DestroyAfter([NotNull] this MonoBehaviour monoBehaviour, float delay)
+      => monoBehaviour.gameObject.DestroyAfter(delay);
+
+    public static void DestroyAfter([NotNull] this GameObject gameObject, float delay)
       => Object.Destroy(gameObject, delay);
 
     [NotNull]
@@ -102,7 +102,7 @@ namespace UnityEngine
     {
       particleSystem.transform.parent = null;
       particleSystem.SetEmissionEnabled(false);
-      particleSystem.gameObject.Destroy(particleSystem.startLifetime);
+      particleSystem.gameObject.DestroyAfter(particleSystem.startLifetime);
     }
 
     public static void SetEmissionEnabled([NotNull] this ParticleSystem particleSystem, bool enabled)

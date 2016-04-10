@@ -18,6 +18,7 @@ namespace PachowStudios.BadTummyBunny.Enemies.AI
 
       public override void Enter()
       {
+        Context.FacePlayer();
         Context.MoveSpeedOverride = this.followSpeed;
         this.cooldownTimer = StateMachine.CameFrom<AttackState>() ? Context.Config.CooldownTime : 0f;
       }

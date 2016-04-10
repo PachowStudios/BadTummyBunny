@@ -19,8 +19,6 @@ namespace PachowStudios.BadTummyBunny
     private float flashTimer;
     private float smoothFlashTime;
 
-    private RespawnPoint respawnPoint;
-
     public int HealthContainers
     {
       get { return this.healthContainers; }
@@ -58,23 +56,32 @@ namespace PachowStudios.BadTummyBunny
     public int HealthPerContainer => 4;
     public override int MaxHealth => HealthContainers * HealthPerContainer;
 
-    [InjectLocal] private PlayerHealthSettings Config { get; set; }
-    [InjectLocal] private PlayerView View { get; set; }
+    private PlayerHealthSettings Config { get; }
+    private PlayerView View { get; }
+
     [InjectLocal] private IMovable Movement { get; set; }
     [InjectLocal] private IEventAggregator LocalEventAggregator { get; set; }
 
     [Inject(BindingIds.Global)] private IEventAggregator EventAggregator { set; get; }
     [Inject] private ExplodeEffect ExplodeEffect { get; set; }
 
+    private RespawnPoint RespawnPoint { get; set; }
+
     private bool IsInvincible => this.lastHitTime + Config.InvincibilityPeriod >= Time.time;
+
+    public PlayerHealth(PlayerHealthSettings config, PlayerView view)
+    {
+      Config = config;
+      View = view;
+
+      this.healthContainers = Config.HealthContainers;
+      this.health = MaxHealth;
+      this.lastHitTime = Time.time - Config.InvincibilityPeriod;
+    }
 
     [PostInject]
     private void PostInject()
     {
-      this.healthContainers = Config.HealthContainers;
-      this.health = MaxHealth;
-      this.lastHitTime = Time.time - Config.InvincibilityPeriod;
-
       LocalEventAggregator.Subscribe(this);
       EventAggregator.Subscribe(this);
     }
@@ -148,24 +155,18 @@ namespace PachowStudios.BadTummyBunny
       Health -= Config.FalloutDamage;
 
       if (!IsDead)
-        View.Transform.position = this.respawnPoint?.Location ?? Vector3.zero;
+        View.Transform.position = this.RespawnPoint?.Location ?? Vector3.zero;
     }
 
     private void SetRespawnPoint(RespawnPoint newRespawnPoint)
     {
-      if (newRespawnPoint == null)
+      if (newRespawnPoint == null
+          || this.RespawnPoint == newRespawnPoint)
         return;
 
-      if (this.respawnPoint != null)
-      {
-        if (this.respawnPoint == newRespawnPoint)
-          return;
-
-        this.respawnPoint.Deactivate();
-      }
-
+      this.RespawnPoint?.Deactivate();
       newRespawnPoint.Activate();
-      this.respawnPoint = newRespawnPoint;
+      this.RespawnPoint = newRespawnPoint;
     }
 
     private void RaiseHealthChanged()

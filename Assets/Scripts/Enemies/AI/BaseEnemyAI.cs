@@ -7,7 +7,7 @@ namespace PachowStudios.BadTummyBunny
   {
     protected bool IsAtWall => Physics2D.OverlapPoint(View.FrontCheck.position, CollisionLayers) != null;
     protected bool IsAtLedge => IsGrounded && Physics2D.OverlapPoint(View.LedgeCheck.position, CollisionLayers) == null;
-    protected bool IsFacingPlayer => IsPlayerOnRight ^ View.IsFacingRight;
+    protected bool IsFacingPlayer => IsPlayerOnRight == View.IsFacingRight;
     protected Vector2 FacingDirection => new Vector2(View.Transform.localScale.x, 0f);
     protected float RelativePlayerHeight => View.Position.y - Player.View.Position.y;
     protected float RelativePlayerLastGrounded
@@ -42,7 +42,7 @@ namespace PachowStudios.BadTummyBunny
 
     protected virtual void FacePlayer()
     {
-      if (IsPlayerOnRight ^ View.IsFacingRight)
+      if (!IsFacingPlayer)
         View.Flip();
     }
 
@@ -55,7 +55,7 @@ namespace PachowStudios.BadTummyBunny
 
     protected virtual bool IsPlayerInLineOfSight(float range = Mathf.Infinity, float maxAngle = 90f)
     {
-      if (IsFacingPlayer
+      if (!IsFacingPlayer
           || FacingDirection.AngleTo(Player.View.CenterPoint - View.CenterPoint) > maxAngle)
         return false;
 

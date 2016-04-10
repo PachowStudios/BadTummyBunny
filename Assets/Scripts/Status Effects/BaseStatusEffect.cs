@@ -17,7 +17,8 @@
     public virtual void Attach(IStatusEffectable affectedCharacter)
       => AffectedCharacter = affectedCharacter;
 
-    public virtual void Detach() { }
+    public virtual void Detach()
+      => AffectedCharacter = null;
 
     public virtual void Tick() { }
   }

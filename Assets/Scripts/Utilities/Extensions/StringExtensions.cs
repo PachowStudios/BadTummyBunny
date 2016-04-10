@@ -22,6 +22,11 @@ namespace System
       => @string.StartsWith(startingString, StringComparison.OrdinalIgnoreCase)
         ? @string : startingString + @string;
 
+    [NotNull, Pure]
+    public static string EndWith([NotNull] this string @string, [NotNull] string endingString)
+      => @string.EndsWith(endingString, StringComparison.OrdinalIgnoreCase)
+        ? @string : @string + endingString;
+
     [Pure]
     public static T ToEnum<T>([NotNull] this string @string, bool ignoreCase = true)
     {
