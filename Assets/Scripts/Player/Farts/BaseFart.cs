@@ -160,7 +160,8 @@ namespace PachowStudios.BadTummyBunny
 
       PendingTargets.Remove(enemy);
 
-      if (View.FartCollider.OverlapPoint(enemy.View.CenterPoint)
+      if (!enemy.View.IsNull()
+          && View.FartCollider.OverlapPoint(enemy.View.CenterPoint)
           && !Physics2D.Linecast(View.FartOrigin, enemy.View.CenterPoint, PlayerMovement.CollisionLayers))
       {
         DamagedEnemies.Add(enemy);

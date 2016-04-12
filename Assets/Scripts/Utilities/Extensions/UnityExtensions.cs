@@ -7,6 +7,14 @@ namespace UnityEngine
 {
   public static class UnityExtensions
   {
+    /// <summary>
+    /// Checks if a IView is null using Unity's custom null check.
+    /// The view must be cast to a MonoBehavior as a hint to the compiler.
+    /// </summary>
+    [Pure, ContractAnnotation("null => true")]
+    public static bool IsNull([CanBeNull] this IView view)
+      => (MonoBehaviour)view == null;
+
     [CanBeNull]
     public static T GetComponentIfNull<T>([NotNull] this Component component, [CanBeNull] ref T target)
       where T : Component
@@ -92,7 +100,14 @@ namespace UnityEngine
     public static void Flash([NotNull] this SpriteRenderer spriteRenderer, Color color, float time)
     {
       spriteRenderer.color = color;
-      Wait.ForSeconds(time, spriteRenderer.ResetColor);
+
+      Wait.ForSeconds(time, () =>
+      {
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+        // The spriteRenderer could be null by the time this executes
+        if (spriteRenderer != null)
+          spriteRenderer.ResetColor();
+      });
     }
 
     public static void ResetColor([NotNull] this SpriteRenderer spriteRenderer)

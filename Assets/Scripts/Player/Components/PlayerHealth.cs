@@ -155,18 +155,18 @@ namespace PachowStudios.BadTummyBunny
       Health -= Config.FalloutDamage;
 
       if (!IsDead)
-        View.Transform.position = this.RespawnPoint?.Location ?? Vector3.zero;
+        View.Transform.position = RespawnPoint?.Location ?? Vector3.zero;
     }
 
     private void SetRespawnPoint(RespawnPoint newRespawnPoint)
     {
       if (newRespawnPoint == null
-          || this.RespawnPoint == newRespawnPoint)
+          || RespawnPoint == newRespawnPoint)
         return;
 
-      this.RespawnPoint?.Deactivate();
+      RespawnPoint?.Deactivate();
       newRespawnPoint.Activate();
-      this.RespawnPoint = newRespawnPoint;
+      RespawnPoint = newRespawnPoint;
     }
 
     private void RaiseHealthChanged()
