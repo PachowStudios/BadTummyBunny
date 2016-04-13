@@ -43,7 +43,7 @@ namespace PachowStudios.BadTummyBunny
         return 0f;
 
       return Config.EffectorWeight * Config.EffectorFalloff.Evaluate(
-        MathHelper.ConvertRange(
+        MathHelper.LerpRange(
           FartInfo.FartPower,
           0f, 1f,
           Config.MinimumPower, 1f));

@@ -111,15 +111,11 @@ namespace UnityEngine
       => Random.Range(parent.x, parent.y);
 
     [Pure]
-    public static Quaternion LookAt2D(this Vector3 vector, Vector3 target)
-      => new Vector3(0f, 0f, DirectionToRotation2D(target - vector).z).ToQuaternion();
-
-    [Pure]
-    public static Vector3 DirectionToRotation2D(this Vector3 vector)
+    public static Quaternion DirectionToRotation2D(this Vector3 vector)
     {
       var angle = Mathf.Atan2(vector.y, vector.x) * Mathf.Rad2Deg;
 
-      return Quaternion.AngleAxis(angle, Vector3.forward).eulerAngles;
+      return Quaternion.AngleAxis(angle, Vector3.forward);
     }
   }
 }

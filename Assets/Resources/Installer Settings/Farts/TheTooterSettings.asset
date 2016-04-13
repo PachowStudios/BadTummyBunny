@@ -14,7 +14,7 @@ MonoBehaviour:
   Name: The Tooter
   Type: 0
   Prefab: {fileID: 11488686, guid: 198d66b0ac4749840888819b3691debd, type: 2}
-  SpeedRange: {x: 15, y: 25}
+  SpeedRange: {x: 10, y: 25}
   Damage: 2
   DamageDelay: 0.1
   Knockback: {x: 4, y: 1}

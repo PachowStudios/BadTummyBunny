@@ -1,4 +1,5 @@
 ﻿using JetBrains.Annotations;
+using PachowStudios;
 
 namespace UnityEngine
 {
@@ -21,10 +22,7 @@ namespace UnityEngine
 
     public static void FlipViaRotation([NotNull] this Transform transform)
     {
-      transform.localRotation = transform.localRotation.eulerAngles
-        .Add(z: 180f)
-        .Transform(z: z => z.RoundToInt())
-        .ToQuaternion();
+      transform.localRotation *= Quaternion.Euler(0f, 0f, 180f);
       transform.localScale = transform.localScale.Scale(y: -1f);
     }
 
@@ -37,5 +35,11 @@ namespace UnityEngine
       transform.rotation = target.rotation;
       transform.localScale = target.localScale;
     }
+
+    /// <summary>
+    /// Determines if the rotation of a transform is between 90 and 270 degrees on the z-axis.
+    /// </summary>
+    public static bool IsFlippedOnZAxis([NotNull] this Transform transform)
+      => transform.localRotation.z.Abs() >= MathHelper.Cos45Deg;
   }
 }

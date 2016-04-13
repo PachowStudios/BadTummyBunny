@@ -129,7 +129,7 @@ namespace PachowStudios.BadTummyBunny
     }
 
     public virtual float CalculateSpeed(float power)
-      => MathHelper.ConvertRange(power, 0f, 1f, Config.SpeedRange.x, Config.SpeedRange.y);
+      => MathHelper.LerpRange(power, 0f, 1f, Config.SpeedRange.x, Config.SpeedRange.y);
 
     public virtual void DrawTrajectory(float power, Vector3 direction, float gravity, Vector3 startPosition)
     {
@@ -265,7 +265,7 @@ namespace PachowStudios.BadTummyBunny
     }
 
     private float CalculateSecondaryDuration(float power)
-      => MathHelper.ConvertRange(power, 0f, 1f, Config.SecondaryDuration.x, Config.SecondaryDuration.y);
+      => MathHelper.LerpRange(power, 0f, 1f, Config.SecondaryDuration.x, Config.SecondaryDuration.y);
 
     private Color CalculateTrajectoryColor(float power)
       => Config.TrajectoryGradient.Evaluate(power);

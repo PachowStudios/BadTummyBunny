@@ -25,8 +25,7 @@ namespace PachowStudios.BadTummyBunny
 
     public void ResetOrientation()
     {
-      var zRotation = Body.localRotation.eulerAngles.z;
-      var isFacingRight = zRotation > 90f && zRotation < 270f;
+      var isFacingRight = Body.IsFlippedOnZAxis();
 
       Body.localScale = Vector3.one;
       Body.localRotation = Quaternion.identity;
@@ -76,9 +75,9 @@ namespace PachowStudios.BadTummyBunny
     {
       var rotation = Model.Movement.Velocity.DirectionToRotation2D();
 
-      Body.localRotation = rotation.ToQuaternion();
+      Body.localRotation = rotation;
       Body.localScale = Body.localScale
-        .Set(y: rotation.z > 90f && rotation.z < 270f ? -1f : 1f);
+        .Set(y: Body.IsFlippedOnZAxis() ? -1f : 1f);
     }
   }
 }
