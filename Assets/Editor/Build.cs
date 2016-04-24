@@ -8,7 +8,7 @@ using UnityPlayerSettings = UnityEditor.PlayerSettings;
 
 namespace PachowStudios.BadTummyBunny.BuildPipeline
 {
-  public class Build
+  public static class Build
   {
     private static string OutputFile { get; }
     private static string VersionNumber { get; }
