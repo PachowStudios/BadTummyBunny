@@ -11,13 +11,24 @@ namespace PachowStudios.BadTummyBunny.BuildPipeline
   [InitializeOnLoad, UsedImplicitly]
   public static class ProjectFileGenerationPostProcessor
   {
+    private static readonly string[] referencesToRemove =
+    {
+      "Boo.Lang",
+      "UnityScript.Lang"
+    };
+
     static ProjectFileGenerationPostProcessor()
     {
       ProjectFilesGenerator.ProjectFileGeneration += (fileName, fileContent) =>
       {
         var project = XDocument.Parse(fileContent);
 
-        project.Descendants("LangVersion").FirstOrDefault()?.Remove();
+        project
+          .Descendants()
+          .Where(e => e.Name.LocalName == "LangVersion"
+                      || (e.Name.LocalName == "Reference"
+                          && e.Attributes().Select(a => a.Value).Intersect(referencesToRemove).Any()))
+          .Remove();
 
         using (var stringWriter = new Utf8StringWriter())
         {
