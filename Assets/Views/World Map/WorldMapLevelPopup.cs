@@ -16,7 +16,7 @@ namespace PachowStudios.BadTummyBunny.UI
     [DataBound] public _string LevelName;
 
     [DataBound] public ObservableList<Field<bool>> Stars { get; } =
-      Enumerable.Repeat(new Field<bool>(false), 3).ToObservableList();
+      EnumerableHelper.Repeat<Field<bool>>(() => false, 3).ToObservableList();
 
     [DataBound]
     public void OnClicked()

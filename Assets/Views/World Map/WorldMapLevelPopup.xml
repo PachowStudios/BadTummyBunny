@@ -16,7 +16,7 @@
           Offset="0,0,0,6ux">
       <ListItem IsTemplate="True"
                 Width="11ux" Height="10ux">
-        <StarImage IsCollected="{#Item.Value}" />
+        <StarImage IsCollected="{#=Item.Value}" />
       </ListItem>
     </List>
   </Button>

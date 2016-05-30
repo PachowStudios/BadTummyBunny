@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Linq.Extensions;
+﻿using System.Linq.Extensions;
 using MarkLight;
 using MarkLight.Views.UI;
 using Zenject;
@@ -12,7 +11,7 @@ namespace PachowStudios.BadTummyBunny.UI
     IHandles<PlayerHealthContainersChangedMessage>
   {
     [DataBound] public ObservableList<Field<int>> Hearts { get; set; } =
-      Enumerable.Repeat(new Field<int>(4), 3).ToObservableList();
+      EnumerableHelper.Repeat<Field<int>>(() => 4, 3).ToObservableList();
 
     [Inject] private IEventAggregator EventAggregator { get; set; }
 
