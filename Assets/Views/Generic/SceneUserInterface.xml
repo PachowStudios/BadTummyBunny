@@ -1,0 +1,8 @@
+﻿<SceneUserInterface xmlns="MarkLight"
+                    RenderMode="WorldSpace"
+                    SortingLayerName="UI"
+                    ReferencePixelsPerUnit="1"
+                    Alignment="Center"
+                    Width="16" Height="9">
+  <ContentPlaceholder />
+</SceneUserInterface>

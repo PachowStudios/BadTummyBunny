@@ -11,31 +11,19 @@ namespace PachowStudios.BadTummyBunny
   {
     [SerializeField] private Scene scene = Scene.Level1;
 
-    [SerializeField] private CameraController cameraControllerInstance = null;
-
     [Inject] private IReadOnlyDictionary<Scene, LevelSettings> LevelSettings { get; set; }
     [Inject] private IFactory<Scene, IEnumerable<IStarController>>  StarControllerFactory { get; set; }
 
     public override void InstallBindings()
     {
-      InstallSceneBindings();
       InstallLevelSettings();
       InstallLevelHandlers();
     }
 
-    private void InstallSceneBindings()
-    {
-      Container.BindInstance(this.scene);
-      Container.BindInstance(this.cameraControllerInstance);
-      Container.BindInstance(this.cameraControllerInstance.Camera);
-    }
-
     private void InstallLevelSettings()
     {
-      var settings = LevelSettings[this.scene];
-
-      Container.BindBaseInstance(settings);
-
+      Container.BindInstance(this.scene);
+      Container.BindBaseInstance(LevelSettings[this.scene]);
       StarControllerFactory.Create(this.scene).ForEach(Container.BindInstanceWithInterfaces);
     }
 

@@ -57,7 +57,7 @@ namespace PachowStudios.BadTummyBunny
     private FartSettings Config { get; }
     private FartView View { get; }
 
-    [Inject] private Camera Camera { get; set; }
+    [Inject(BindingIds.CameraMain)] private Camera Camera { get; set; }
     [Inject] private IEventAggregator EventAggregator { get; set; }
 
     private IMovable PlayerMovement { get; set; }

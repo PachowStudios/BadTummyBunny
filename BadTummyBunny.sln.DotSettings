@@ -61,4 +61,21 @@
 	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=B950DD266945A04FAE493EC2297ABFEC/Text/@EntryValue">&lt;View xmlns="http://www.markux.com/schema"&#xD;
       ViewName="$VIEW$"&gt;&#xD;
   $END$&#xD;
-&lt;/View&gt;</s:String></wpf:ResourceDictionary>
+&lt;/View&gt;</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=CA9CCD7E7748014DADDD55721160C173/@KeyIndexDefined">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=CA9CCD7E7748014DADDD55721160C173/Applicability/=Live/@EntryIndexedValue">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=CA9CCD7E7748014DADDD55721160C173/Description/@EntryValue">AddComponentMenu</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=CA9CCD7E7748014DADDD55721160C173/Field/=ACM/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=CA9CCD7E7748014DADDD55721160C173/Field/=ACM/Expression/@EntryValue">fixedTypeName("UnityEngine.AddComponentMenu")</s:String>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=CA9CCD7E7748014DADDD55721160C173/Field/=ACM/InitialRange/@EntryValue">-1</s:Int64>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=CA9CCD7E7748014DADDD55721160C173/Field/=ACM/Order/@EntryValue">0</s:Int64>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=CA9CCD7E7748014DADDD55721160C173/Field/=PATH/@KeyIndexDefined">True</s:Boolean>
+	
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=CA9CCD7E7748014DADDD55721160C173/Field/=PATH/Order/@EntryValue">1</s:Int64>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=CA9CCD7E7748014DADDD55721160C173/Reformat/@EntryValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=CA9CCD7E7748014DADDD55721160C173/Scope/=C3001E7C0DA78E4487072B7E050D86C5/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=CA9CCD7E7748014DADDD55721160C173/Scope/=C3001E7C0DA78E4487072B7E050D86C5/CustomProperties/=minimumLanguageVersion/@EntryIndexedValue">2.0</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=CA9CCD7E7748014DADDD55721160C173/Scope/=C3001E7C0DA78E4487072B7E050D86C5/Type/@EntryValue">InCSharpFile</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=CA9CCD7E7748014DADDD55721160C173/Shortcut/@EntryValue">acm</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=CA9CCD7E7748014DADDD55721160C173/ShortenQualifiedReferences/@EntryValue">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=CA9CCD7E7748014DADDD55721160C173/Text/@EntryValue">[$ACM$("Bad Tummy Bunny/$PATH$")]</s:String></wpf:ResourceDictionary>

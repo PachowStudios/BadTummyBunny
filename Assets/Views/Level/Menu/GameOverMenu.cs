@@ -13,11 +13,11 @@ namespace PachowStudios.BadTummyBunny.UI
     [Inject] private ISceneLoader SceneLoader { get; set; }
 
     [DataBound]
-    public void OnRetryClick()
+    public void OnRetryClicked()
       => SceneLoader.ReloadScene();
 
     [DataBound]
-    public void OnQuitClick()
+    public void OnQuitClicked()
       => SceneLoader.QuitGame();
 
     public void Show()

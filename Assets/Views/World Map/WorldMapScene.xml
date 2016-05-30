@@ -1,7 +1,7 @@
 <WorldMapScene xmlns="MarkLight">
-  <UserInterface>
+  <SceneUserInterface>
     <WorldMapLevelPopup Id="LevelPopup"
                         Alignment="BottomRight"
                         Offset="0,0,1,1" />
-  </UserInterface>
+  </SceneUserInterface>
 </WorldMapScene>

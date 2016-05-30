@@ -6,26 +6,13 @@ namespace PachowStudios.BadTummyBunny
   [AddComponentMenu("Bad Tummy Bunny/Installers/World Map Installer")]
   public class WorldMapInstaller : MonoInstaller
   {
-    [SerializeField] private CameraController cameraControllerInstance = null;
-
-    [SerializeField] private WorldMap worldMapInstance = null;
-    [SerializeField] private WorldMapPlayer playerInstance = null;
+    [SerializeField] private WorldMap worldMap = null;
+    [SerializeField] private WorldMapPlayer player = null;
 
     public override void InstallBindings()
     {
-      InstallSceneBindings();
-      InstallWorldMapBindings();
-    }
-
-    private void InstallSceneBindings()
-    {
-      Container.BindInstance(this.cameraControllerInstance);
-    }
-
-    private void InstallWorldMapBindings()
-    {
-      Container.BindInstance(this.worldMapInstance);
-      Container.BindInstance(this.playerInstance);
+      Container.BindInstance(this.worldMap);
+      Container.BindInstance(this.player);
     }
   }
 }

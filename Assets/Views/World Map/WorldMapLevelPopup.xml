@@ -3,7 +3,8 @@
                     Shown-Alpha="1"
                     Hidden-Alpha="0">
   <Button Click="OnClicked"
-          Width="100%" Height="100%">
+          Width="100%" Height="100%"
+          Style="PixelButton">
     <Label Text="{=LevelName}"
            AdjustToText="WidthAndHeight"
            Alignment="Top" />

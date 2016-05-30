@@ -10,6 +10,7 @@ GameObject:
   - 4: {fileID: 427064}
   - 114: {fileID: 11453422}
   - 114: {fileID: 11490920}
+  - 114: {fileID: 11472352}
   m_Layer: 0
   m_Name: World Map Composition Root
   m_TagString: Untagged
@@ -26,6 +27,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -43,6 +45,20 @@ MonoBehaviour:
   OnlyInjectWhenActive: 0
   Installers:
   - {fileID: 11490920}
+  - {fileID: 11472352}
+--- !u!114 &11472352
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 182800}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d9b61ffd2426a7489a432966f04a772, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraController: {fileID: 0}
+  uiCamera: {fileID: 0}
 --- !u!114 &11490920
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -54,9 +70,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14232be49bc88a0419fa24d0a8d44940, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cameraControllerInstance: {fileID: 0}
-  worldMapInstance: {fileID: 0}
-  playerInstance: {fileID: 0}
+  worldMap: {fileID: 0}
+  player: {fileID: 0}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

@@ -3,11 +3,11 @@
               Hidden-Alpha="0">
   <Group Spacing="1">
     <Button Text="Retry"
-            Click="OnRetryClick"
+            Click="OnRetryClicked"
             Style="PixelButton" />
 
     <Button Text="Quit"
-            Click="OnQuitClick"
+            Click="OnQuitClicked"
             Style="PixelButton" />
   </Group>
   
