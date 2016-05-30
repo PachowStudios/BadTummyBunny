@@ -7,9 +7,10 @@ namespace PachowStudios
   {
     /// <summary>
     /// Equivalent to <c>cos(45rad * (π / 180))</c>
-    /// <para />
-    /// Also represented as <c>1 / sqrt(2)</c>
     /// </summary>
+    /// <remarks>
+    /// Also represented as <c>1 / sqrt(2)</c>
+    /// </remarks>
     public const float Cos45Deg = 0.707106769f;
 
     [Pure]

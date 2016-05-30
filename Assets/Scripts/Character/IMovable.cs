@@ -16,7 +16,7 @@ namespace PachowStudios.BadTummyBunny
 
     void Move(Vector3 moveVelocity);
     bool Jump(float jumpHeight);
-    void ApplyKnockback(Vector2 knockback, Vector2 direction);
+    void ApplyKnockback(Vector2 knockback, Vector2 source);
     void Disable();
   }
 }

@@ -48,7 +48,7 @@ namespace PachowStudios.BadTummyBunny
       return true;
     }
 
-    public virtual void ApplyKnockback(Vector2 knockback, Vector2 direction)
+    public virtual void ApplyKnockback(Vector2 knockback, Vector2 source)
     {
       if (knockback.IsZero())
         return;
@@ -60,7 +60,8 @@ namespace PachowStudios.BadTummyBunny
       if (IsGrounded)
         newVelocity.y = Mathf.Abs(knockback.y * -Gravity).SquareRoot();
 
-      knockback.Scale(direction);
+      // If the source is to the right of this, knockback to the left
+      knockback.Scale(View.Position.RelationTo(source));
 
       if (!knockback.IsZero())
         Move(newVelocity + knockback.ToVector3());

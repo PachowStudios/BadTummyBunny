@@ -95,7 +95,7 @@ namespace PachowStudios.BadTummyBunny
         UpdateInvincibilityFlash();
     }
 
-    public override void TakeDamage(int damage, Vector2 knockback, Vector2 knockbackDirection)
+    public override void TakeDamage(int damage, Vector2 knockback, Vector2 knockbackSource)
     {
       damage.Should().BeGreaterThan(0, "because the player cannot take negative damage");
 
@@ -105,7 +105,7 @@ namespace PachowStudios.BadTummyBunny
       Health -= damage;
 
       if (!IsDead)
-        Wait.ForSeconds(0.1f, () => Movement.ApplyKnockback(knockback, knockbackDirection));
+        Wait.ForSeconds(0.1f, () => Movement.ApplyKnockback(knockback, knockbackSource));
     }
 
     public override void Kill()
@@ -122,7 +122,7 @@ namespace PachowStudios.BadTummyBunny
     }
 
     private void TakeDamage(IEnemy enemy)
-      => TakeDamage(enemy.ContactDamage, enemy.ContactKnockback, enemy.Movement.MovementDirection);
+      => TakeDamage(enemy.ContactDamage, enemy.ContactKnockback, enemy.View.CenterPoint);
 
     private void UpdateInvincibilityFlash()
     {

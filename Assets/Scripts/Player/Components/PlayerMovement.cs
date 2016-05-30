@@ -124,10 +124,10 @@ namespace PachowStudios.BadTummyBunny
       return true;
     }
 
-    public override void ApplyKnockback(Vector2 knockback, Vector2 direction)
+    public override void ApplyKnockback(Vector2 knockback, Vector2 source)
     {
       if (!IsFarting)
-        base.ApplyKnockback(knockback, direction);
+        base.ApplyKnockback(knockback, source);
     }
 
     public override void Disable()

@@ -60,7 +60,8 @@ namespace PachowStudios.BadTummyBunny
     [Inject(BindingIds.CameraMain)] private Camera Camera { get; set; }
     [Inject] private IEventAggregator EventAggregator { get; set; }
 
-    private IMovable PlayerMovement { get; set; }
+    private PlayerView PlayerView { get; set; }
+    private IMovable PlayerMovement => PlayerView.Model.Movement;
 
     protected BaseFart(FartSettings config, FartView view)
     {
@@ -82,10 +83,7 @@ namespace PachowStudios.BadTummyBunny
     }
 
     public void Attach(PlayerView playerView)
-    {
-      PlayerMovement = playerView.Model.Movement;
-      View.Attach(playerView);
-    }
+      => View.Attach(PlayerView = playerView);
 
     public void Detach()
     {
@@ -174,7 +172,7 @@ namespace PachowStudios.BadTummyBunny
       enemy.Health.TakeDamage(
         Config.Damage,
         Config.Knockback,
-        PlayerMovement.MovementDirection.Scale(x: -1f));
+        PlayerView.CenterPoint);
 
       if (enemy.Health.IsDead)
         EventAggregator.Publish(new PlayerKilledEnemyMessage(enemy));

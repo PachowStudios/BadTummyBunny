@@ -43,7 +43,7 @@ namespace PachowStudios.BadTummyBunny
     private void PostInject()
       => LocalEventAggregator.Subscribe(this);
 
-    public override void TakeDamage(int damage, Vector2 knockback, Vector2 knockbackDirection)
+    public override void TakeDamage(int damage, Vector2 knockback, Vector2 knockbackSource)
     {
       damage.Should().BeGreaterThan(0, "because an enemy cannot take negative damage");
 
@@ -56,7 +56,7 @@ namespace PachowStudios.BadTummyBunny
       if (IsDead)
         return;
 
-      Movement.ApplyKnockback(knockback, knockbackDirection);
+      Movement.ApplyKnockback(knockback, knockbackSource);
       View.SpriteRenderer.Flash(Config.FlashColor, Config.FlashLength);
     }
 

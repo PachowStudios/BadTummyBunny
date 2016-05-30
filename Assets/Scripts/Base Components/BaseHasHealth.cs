@@ -10,7 +10,7 @@ namespace PachowStudios.BadTummyBunny
 
     public virtual bool IsDead { get; protected set; }
 
-    public abstract void TakeDamage(int damage, Vector2 knockback, Vector2 knockbackDirection);
+    public abstract void TakeDamage(int damage, Vector2 knockback, Vector2 knockbackSource);
     public abstract void Kill();
 
     public virtual void TakeDamage(int damage)

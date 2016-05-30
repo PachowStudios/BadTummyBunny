@@ -78,6 +78,19 @@ namespace UnityEngine
       => Vector3.Distance(a, b);
 
     [Pure]
+    public static Vector2 RelationTo(this Vector2 a, Vector2 b)
+      => new Vector2(
+        a.x >= b.x ? 1 : -1,
+        a.y >= b.y ? 1 : -1);
+
+    [Pure]
+    public static Vector3 RelationTo(this Vector3 a, Vector3 b)
+      => new Vector3(
+        a.x >= b.x ? 1 : -1,
+        a.y >= b.y ? 1 : -1,
+        a.z >= b.z ? 1 : -1);
+
+    [Pure]
     public static Vector2 LerpTo(this Vector2 a, Vector2 b, float t)
       => Vector2.Lerp(a, b, t);
 
@@ -87,7 +100,7 @@ namespace UnityEngine
 
     [Pure]
     public static float AngleTo(this Vector2 from, Vector2 to)
-      => Vector2.Angle(@from, to);
+      => Vector2.Angle(from, to);
 
     [Pure]
     public static float AngleTo(this Vector3 from, Vector3 to)
@@ -110,6 +123,15 @@ namespace UnityEngine
     public static float RandomRange(this Vector2 parent)
       => Random.Range(parent.x, parent.y);
 
+    /// <summary>
+    /// Converts a movement vector to a rotation that faces the movement direction.
+    /// </summary>
+    /// <remarks>
+    /// The rotation is relative to <see cref="Vector3.forward"/>.
+    /// </remarks>
+    /// <example>
+    /// A movement vector of 1,-1,0 results in a 45deg rotation.
+    /// </example>
     [Pure]
     public static Quaternion DirectionToRotation2D(this Vector3 vector)
     {

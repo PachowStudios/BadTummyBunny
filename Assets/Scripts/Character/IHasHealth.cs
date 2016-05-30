@@ -10,7 +10,7 @@ namespace PachowStudios.BadTummyBunny
 
     void Heal(int amountToHeal);
     void TakeDamage(int damage);
-    void TakeDamage(int damage, Vector2 knockback, Vector2 knockbackDirection);
+    void TakeDamage(int damage, Vector2 knockback, Vector2 knockbackSource);
     void Kill();
   }
 }
