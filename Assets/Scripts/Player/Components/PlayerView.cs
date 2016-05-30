@@ -51,7 +51,7 @@ namespace PachowStudios.BadTummyBunny
       switch (other.tag)
       {
         case Tags.Enemy:
-          EventAggregator.Publish(new PlayerEnemyCollidedMessage(other.GetViewModel<IEnemy>()));
+          EventAggregator.Publish(new PlayerEnemyCollidedMessage(other.GetModel<IEnemy>()));
           break;
         case Tags.Coin:
           EventAggregator.Publish(new PlayerCoinCollectedMessage(other.GetComponent<Coin>()));

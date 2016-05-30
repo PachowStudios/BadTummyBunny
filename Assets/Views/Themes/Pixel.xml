@@ -1,0 +1,41 @@
+<Theme xmlns="MarkLight"
+       Name="Pixel"
+       UnitSize="0.0625,1,1">
+  <!-- DEFAULT -->
+  <UserInterface RenderMode="WorldSpace"
+                 SortingLayerName="UI"
+                 ReferencePixelsPerUnit="1"
+                 Alignment="Center"
+                 Width="16" Height="9" />
+  
+  <Label Font="Assets/Sprites/UI/Fonts/Pixel.fontsettings"
+         FontColor="White"
+         FontSize="1" LineSpacing="2"
+         TextAlignment="Center"
+         Scale="0.5"
+         OffsetFromParent="0,0,0,19ux" />
+
+  <Button BackgroundImage="Assets/Sprites/UI/Menu/Menu Frame.png:Normal"
+          Pressed-BackgroundImage="Assets/Sprites/UI/Menu/Menu Frame.png:Pressed"
+          BackgroundImageType="Sliced"
+          Font="Assets/Sprites/UI/Fonts/Pixel.fontsettings"
+          FontSize="1" FontColor="White"
+          TextAlignment="Bottom" />
+
+  <!-- GENERIC -->
+  <Frame Style="BluePopup"
+         BackgroundImage="Assets/Sprites/UI/Menu/Menu Frame.png:Normal"
+         BackgroundImageType="Sliced"
+         ContentMargin="5ux,5ux,5ux,7ux" ResizeToContent="False" />
+  
+  <Button Style="PixelButton"
+          BackgroundImage="Assets/Sprites/UI/Menu/Menu Frame.png:Normal"
+          Pressed-BackgroundImage="Assets/Sprites/UI/Menu/Menu Frame.png:Pressed"
+          BackgroundImageType="Sliced"
+          Font="Assets/Sprites/UI/Fonts/Pixel.fontsettings"
+          FontSize="1" FontColor="White"
+          Width="4" Height="1.5"
+          TextOffset="0,0,0,2ux"
+          TextAlignment="Center"
+          Pressed-TextOffset="0,0,0,0" />
+</Theme>

@@ -1,0 +1,9 @@
+﻿<StarImage xmlns="MarkLight"
+           Width="11ux" Height="10ux">
+  <ViewSwitcher Id="StarSelector"
+                StartView="EmptyStar"
+                SwitchToDefault="True">
+    <Image Id="EmptyStar" Sprite="Assets/Sprites/UI/Menu/Star Container.png:Empty" />
+    <Image Id="FilledStar" Sprite="Assets/Sprites/UI/Menu/Star Container.png:Filled" />
+  </ViewSwitcher>
+</StarImage>

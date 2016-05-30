@@ -1,0 +1,11 @@
+﻿<HealthMeterHeart xmlns="MarkLight">
+  <ViewSwitcher Id="HeartSelector"
+                StartView="100"
+                SwitchToDefault="True">
+    <Image Id="0" Sprite="Assets/Sprites/UI/HUD/Heart Container.png:0" />
+    <Image Id="25" Sprite="Assets/Sprites/UI/HUD/Heart Container.png:25" />
+    <Image Id="50" Sprite="Assets/Sprites/UI/HUD/Heart Container.png:50" />
+    <Image Id="75" Sprite="Assets/Sprites/UI/HUD/Heart Container.png:75" />
+    <Image Id="100" Sprite="Assets/Sprites/UI/HUD/Heart Container.png:100" />
+  </ViewSwitcher>
+</HealthMeterHeart>

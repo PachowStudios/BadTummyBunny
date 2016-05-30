@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 
 namespace PachowStudios
 {
-  [AttributeUsage(AttributeTargets.Field | AttributeTargets.Method)]
+  [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Method)]
   [MeansImplicitUse]
   public class DataBoundAttribute : Attribute { }
 }

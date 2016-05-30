@@ -5,6 +5,7 @@
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=0BA56CFB_002D04C9_002D9B5B_002DAA3C_002D9D91A31E076D_002Fd_003AAssets_002Fd_003APlugins/@EntryIndexedValue">ExplicitlyExcluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=0BA56CFB_002D04C9_002D9B5B_002DAA3C_002D9D91A31E076D_002Fd_003AAssets_002Fd_003ARotorz/@EntryIndexedValue">ExplicitlyExcluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=0BA56CFB_002D04C9_002D9B5B_002DAA3C_002D9D91A31E076D_002Fd_003AAssets_002Fd_003ASoundManagerPro/@EntryIndexedValue">ExplicitlyExcluded</s:String>
+	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=0BA56CFB_002D04C9_002D9B5B_002DAA3C_002D9D91A31E076D_002Fd_003AAssets_002Fd_003AViews/@EntryIndexedValue">ExplicitlyExcluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=0BA56CFB_002D04C9_002D9B5B_002DAA3C_002D9D91A31E076D_002Fd_003AAssets_002Fd_003AZenject/@EntryIndexedValue">ExplicitlyExcluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=68F54E7F_002DB376_002D0062_002DEACB_002DD8312D6A6650_002Fd_003AAssets_002Fd_003AInControl/@EntryIndexedValue">ExplicitlyExcluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=68F54E7F_002DB376_002D0062_002DEACB_002DD8312D6A6650_002Fd_003AAssets_002Fd_003AMarkUX/@EntryIndexedValue">ExplicitlyExcluded</s:String>
@@ -15,10 +16,12 @@
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=75999829_002DF5EC_002D0939_002D6F8A_002D839B5D75BE98_002Fd_003AAssets_002Fd_003AMarkUX/@EntryIndexedValue">ExplicitlyExcluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=75999829_002DF5EC_002D0939_002D6F8A_002D839B5D75BE98_002Fd_003AAssets_002Fd_003APlugins/@EntryIndexedValue">ExplicitlyExcluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=75999829_002DF5EC_002D0939_002D6F8A_002D839B5D75BE98_002Fd_003AAssets_002Fd_003ARotorz/@EntryIndexedValue">ExplicitlyExcluded</s:String>
+	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=75999829_002DF5EC_002D0939_002D6F8A_002D839B5D75BE98_002Fd_003AAssets_002Fd_003AViews/@EntryIndexedValue">ExplicitlyExcluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=9546DA11_002D2B8F_002D54CC_002D79F6_002D26466B12B993_002Fd_003AAssets_002Fd_003ARotorz/@EntryIndexedValue">ExplicitlyExcluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=981D6E12_002D86BF_002D45E1_002D05A2_002D08BCF460AE60_002Fd_003AAssets_002Fd_003AMarkUX/@EntryIndexedValue">ExplicitlyExcluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=981D6E12_002D86BF_002D45E1_002D05A2_002D08BCF460AE60_002Fd_003AAssets_002Fd_003APlugins/@EntryIndexedValue">ExplicitlyExcluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=981D6E12_002D86BF_002D45E1_002D05A2_002D08BCF460AE60_002Fd_003AAssets_002Fd_003ARotorz/@EntryIndexedValue">ExplicitlyExcluded</s:String>
+	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=981D6E12_002D86BF_002D45E1_002D05A2_002D08BCF460AE60_002Fd_003AAssets_002Fd_003AViews/@EntryIndexedValue">ExplicitlyExcluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=C196397D_002DC9F4_002D16E1_002D2D2C_002D056B1C61BD43_002Fd_003AAssets_002Fd_003ARotorz/@EntryIndexedValue">ExplicitlyExcluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=CE1B6B6C_002D80F8_002D94E4_002D04F7_002D4E14C9E981AB_002Fd_003AAssets_002Fd_003AInControl/@EntryIndexedValue">ExplicitlyExcluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=9546DA11_002D2B8F_002D54CC_002D79F6_002D26466B12B993_002Fd_003AAssets_002Fd_003AInControl/@EntryIndexedValue">ExplicitlyExcluded</s:String>
@@ -33,6 +36,14 @@
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=RedundantDefaultMemberInitializer/@EntryIndexedValue">DO_NOT_SHOW</s:String>
 	<s:String x:Key="/Default/CodeStyle/Naming/CSharpNaming/Abbreviations/=YX/@EntryIndexedValue">YX</s:String>
 	<s:String x:Key="/Default/CodeStyle/Naming/CSharpNaming/PredefinedNamingRules/=PublicFields/@EntryIndexedValue">&lt;Policy Inspect="True" Prefix="" Suffix="" Style="AaBb" /&gt;</s:String>
+	<s:String x:Key="/Default/CodeStyle/Naming/CSharpNaming/UserRules/=cdfa735e_002D05da_002D4886_002Db1e1_002D4e226fa5b3da/@EntryIndexedValue">&lt;Policy&gt;&lt;Descriptor Staticness="Instance" AccessRightKinds="Public" Description="Instance fields (not private)"&gt;&lt;ElementKinds&gt;&lt;Kind Name="FIELD" /&gt;&lt;/ElementKinds&gt;&lt;/Descriptor&gt;&lt;Policy Inspect="True" Prefix="" Suffix="" Style="AaBb" /&gt;&lt;/Policy&gt;</s:String>
+	
+	<s:Boolean x:Key="/Default/Environment/SearchAndNavigation/FileAndDirsToSkip/=0BA56CFB_002D04C9_002D9B5B_002DAA3C_002D9D91A31E076D_002Fd_003AAssets_002Fd_003AViews/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/Environment/SearchAndNavigation/FileAndDirsToSkip/=75999829_002DF5EC_002D0939_002D6F8A_002D839B5D75BE98_002Fd_003AAssets_002Fd_003AViews/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/Environment/SearchAndNavigation/FileAndDirsToSkip/=981D6E12_002D86BF_002D45E1_002D05A2_002D08BCF460AE60_002Fd_003AAssets_002Fd_003AViews/@EntryIndexedValue">True</s:Boolean>
+	
+	
+	
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=B950DD266945A04FAE493EC2297ABFEC/@KeyIndexDefined">True</s:Boolean>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=B950DD266945A04FAE493EC2297ABFEC/Applicability/=File/@EntryIndexedValue">True</s:Boolean>
 	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=B950DD266945A04FAE493EC2297ABFEC/CustomProperties/=Extension/@EntryIndexedValue">xml</s:String>

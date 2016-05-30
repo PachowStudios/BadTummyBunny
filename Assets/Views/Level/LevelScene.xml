@@ -1,0 +1,14 @@
+﻿<LevelScene xmlns="MarkLight">
+  <UserInterface>
+    <LevelHud Id="LevelHud"
+              Alignment="TopLeft" Offset="10ux,10ux,0,0" />
+
+    <GameOverMenu Id="GameOverMenu" />
+
+    <StarCompletedPopup Id="StarCompletedPopup"
+                        PopupDuration="3"
+                        Alignment="TopRight"
+                        Offset="0,10ux,10ux,0"
+                        Hidden-OffsetFromParent="0,0,0,2.5" />
+  </UserInterface>
+</LevelScene>

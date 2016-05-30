@@ -65,13 +65,13 @@ namespace PachowStudios.BadTummyBunny
 
     public IList<WorldMapLevel> GetPathToLevel(WorldMapLevel startLevel, WorldMapLevel endLevel)
     {
+      if (startLevel == null || endLevel == null)
+        return new List<WorldMapLevel>();
+
       var path = new Stack<WorldMapLevel>();
       var nodes = new List<WorldMapLevel>(Levels);
       var distances = new Dictionary<WorldMapLevel, float>();
       var previousNodes = new Dictionary<WorldMapLevel, WorldMapLevel>();
-
-      if (startLevel == null || endLevel == null)
-        return path.ToList();
 
       foreach (var node in nodes)
         distances[node] = float.MaxValue;

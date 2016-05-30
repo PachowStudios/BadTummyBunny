@@ -1,0 +1,20 @@
+﻿<LevelHud xmlns="MarkLight"
+          Shown-Alpha="1"
+          Hidden-Alpha="0">
+  <Group Orientation="Vertical"
+         Alignment="TopLeft">
+    <HudHealthMeter Alignment="Left" />
+
+    <HudCoinCounter Alignment="Left" />
+  </Group>
+
+  <StateAnimation From="Hidden" To="Shown">
+    <Animate Field="Alpha"
+             Duration="0.2s" EasingFunction="QuadraticEaseIn" />
+  </StateAnimation>
+
+  <StateAnimation From="Shown" To="Hidden">
+    <Animate Field="Alpha"
+             Duration="0.2s" EasingFunction="QuadraticEaseIn" />
+  </StateAnimation>
+</LevelHud>

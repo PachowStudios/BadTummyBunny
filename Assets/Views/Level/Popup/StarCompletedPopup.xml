@@ -1,0 +1,31 @@
+﻿<StarCompletedPopup xmlns="MarkLight"
+                    Width="6" Height="1.5"
+                    Shown-OffsetFromParent="0,0,0,0"
+                    Shown-Alpha="1"
+                    Hidden-Alpha="0">
+  <Frame Style="BluePopup">
+    <StarImage IsCollected="True"
+               Alignment="Left" />
+    <Label Text="Completed!"
+           Alignment="Center" AdjustToText="WidthAndHeight"
+           Offset="7ux,0,0,0" />
+  </Frame>
+  
+  <StateAnimation From="Hidden" To="Shown">
+    <Animate Field="Alpha"
+             Duration="0.2s" StartOffset="0.3s"
+             EasingFunction="QuadraticEaseOut" />
+    
+    <Animate Field="OffsetFromParent"
+             Duration="0.5s" EasingFunction="QuadraticEaseOut" />
+  </StateAnimation>
+
+  <StateAnimation From="Shown" To="Hidden">
+    <Animate Field="Alpha"
+             Duration="0.2s"
+             EasingFunction="QuadraticEaseIn" />
+
+    <Animate Field="OffsetFromParent"
+             Duration="0.5s" EasingFunction="QuadraticEaseIn" />
+  </StateAnimation>
+</StarCompletedPopup>
