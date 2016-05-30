@@ -1,0 +1,8 @@
+﻿<ResourceDictionary xmlns="MarkLight"
+                    Name="Images">
+  <Resource Key="MenuFrame" Value="Assets/Sprites/UI/Menu/Menu Frame.png" />
+  
+  <Resource Key="Coins" Value="Assets/Sprites/Powerups/Coins.png" />
+  <Resource Key="HeartContainer" Value="Assets/Sprites/UI/HUD/Heart Container.png" />
+  <Resource Key="Star" Value="Assets/Sprites/UI/Menu/Star Container.png" />
+</ResourceDictionary>

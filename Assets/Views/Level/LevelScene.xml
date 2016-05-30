@@ -3,7 +3,7 @@
     <LevelHud Id="LevelHud"
               Alignment="TopLeft"
               Offset="10ux,10ux,0,0" />
-
+    
     <GameOverMenu Id="GameOverMenu" />
 
     <StarCompletedPopup Id="StarCompletedPopup"

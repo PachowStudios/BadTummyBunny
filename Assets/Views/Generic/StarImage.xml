@@ -3,7 +3,7 @@
   <ViewSwitcher Id="StarSelector"
                 StartView="EmptyStar"
                 SwitchToDefault="True">
-    <Image Id="EmptyStar" Sprite="Assets/Sprites/UI/Menu/Star Container.png:Empty" />
-    <Image Id="FilledStar" Sprite="Assets/Sprites/UI/Menu/Star Container.png:Filled" />
+    <Image Id="EmptyStar" Sprite="{@Images.Star}:Empty" />
+    <Image Id="FilledStar" Sprite="{@Images.Star}:Filled" />
   </ViewSwitcher>
 </StarImage>

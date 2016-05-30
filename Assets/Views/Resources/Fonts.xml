@@ -1,0 +1,5 @@
+﻿<ResourceDictionary xmlns="MarkLight"
+                    Name="Fonts">
+  <Resource Key="Pixel" Value="Assets/Sprites/UI/Fonts/Pixel.fontsettings" />
+  <Resource Key="Bone" Value="Assets/Sprites/UI/Fonts/Bone.fontsettings" />
+</ResourceDictionary>

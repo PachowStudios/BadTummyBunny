@@ -2,10 +2,10 @@
   <ViewSwitcher Id="HeartSelector"
                 StartView="100"
                 SwitchToDefault="True">
-    <Image Id="0" Sprite="Assets/Sprites/UI/HUD/Heart Container.png:0" />
-    <Image Id="25" Sprite="Assets/Sprites/UI/HUD/Heart Container.png:25" />
-    <Image Id="50" Sprite="Assets/Sprites/UI/HUD/Heart Container.png:50" />
-    <Image Id="75" Sprite="Assets/Sprites/UI/HUD/Heart Container.png:75" />
-    <Image Id="100" Sprite="Assets/Sprites/UI/HUD/Heart Container.png:100" />
+    <Image Id="0" Sprite="{@Images.HeartContainer}:0" />
+    <Image Id="25" Sprite="{@Images.HeartContainer}:25" />
+    <Image Id="50" Sprite="{@Images.HeartContainer}:50" />
+    <Image Id="75" Sprite="{@Images.HeartContainer}:75" />
+    <Image Id="100" Sprite="{@Images.HeartContainer}:100" />
   </ViewSwitcher>
 </HealthMeterHeart>
