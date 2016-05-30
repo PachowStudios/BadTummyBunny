@@ -10,10 +10,6 @@ namespace System
       => string.IsNullOrEmpty(@string);
 
     [NotNull, Pure]
-    public static string Repeat(this char @char, int count)
-      => new string(@char, count);
-
-    [NotNull, Pure]
     public static string Repeat([NotNull] this string @string, int count)
       => new StringBuilder(@string.Length * count).Insert(0, @string, count).ToString();
 

@@ -1,0 +1,10 @@
+﻿<HudCoinCounter xmlns="MarkLight"
+                Width="6" Height="1"
+                Offset="0,0,3ux,0">
+  <Image Sprite="Assets/Sprites/Powerups/Coins.png:Copper Coin"
+         Width="16ux" Height="16ux"
+         Alignment="Left" />
+
+  <Label Text="{=CoinsText}"
+         Alignment="Left" AdjustToText="WidthAndHeight" />
+</HudCoinCounter>

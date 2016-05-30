@@ -1,6 +1,0 @@
-<View xmlns="http://www.markux.com/schema"
-      ViewName="WorldMapScreen">
-  <WorldMapLevelPopup Id="LevelPopup"
-                      Alignment="BottomRight"
-                      Offset="0,0,1,1" Pivot="1,0" />
-</View>

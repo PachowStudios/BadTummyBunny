@@ -1,0 +1,13 @@
+﻿<HudHealthMeter xmlns="MarkLight"
+                Width="10" Height="9ux">
+  <List Items="{=Hearts}"
+        CanSelect="False"
+        Orientation="Horizontal"
+        Spacing="2ux"
+        Alignment="Left">
+    <ListItem IsTemplate="True"
+              Width="10ux" Height="9ux">
+      <HealthMeterHeart Health="{#=Item.Value}" />
+    </ListItem>
+  </List>
+</HudHealthMeter>

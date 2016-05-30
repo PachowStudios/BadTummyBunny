@@ -1,0 +1,23 @@
+﻿<GameOverMenu xmlns="MarkLight"
+              Shown-Alpha="1"
+              Hidden-Alpha="0">
+  <Group Spacing="1">
+    <Button Text="Retry"
+            Click="OnRetryClick"
+            Style="PixelButton" />
+
+    <Button Text="Quit"
+            Click="OnQuitClick"
+            Style="PixelButton" />
+  </Group>
+  
+  <StateAnimation From="Hidden" To="Shown">
+    <Animate Field="Alpha"
+             Duration="0.2s" EasingFunction="QuadraticEaseIn" />
+  </StateAnimation>
+
+  <StateAnimation From="Shown" To="Hidden">
+    <Animate Field="Alpha"
+             Duration="0.2s" EasingFunction="QuadraticEaseIn" />
+  </StateAnimation>
+</GameOverMenu>

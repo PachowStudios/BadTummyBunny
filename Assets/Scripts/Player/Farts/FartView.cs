@@ -41,7 +41,7 @@ namespace PachowStudios.BadTummyBunny
     private void OnTriggerEnter2D(Collider2D other)
     {
       if (CanHitEnemies && other.tag == Tags.Enemy)
-        EventAggregator.Publish(new FartEnemyTriggeredMessage(other.GetViewModel<IEnemy>()));
+        EventAggregator.Publish(new FartEnemyTriggeredMessage(other.GetModel<IEnemy>()));
     }
   }
 }

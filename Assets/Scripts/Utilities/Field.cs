@@ -5,20 +5,20 @@ namespace PachowStudios
   public class Field<T>
     where T : struct
   {
-    [UsedImplicitly] public T Value;
+    public T Value { get; set; }
 
     public Field()
       : this(default(T)) { }
 
     public Field(T value)
     {
-      this.Value = value;
+      Value = value;
     }
 
     public static implicit operator T([NotNull] Field<T> @this)
       => @this.Value;
 
-    public static implicit operator Field<T>(T @value)
-      => new Field<T>(@value);
+    public static implicit operator Field<T>(T value)
+      => new Field<T>(value);
   }
 }

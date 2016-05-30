@@ -18,12 +18,12 @@ namespace PachowStudios.BadTummyBunny
 
     public override void InstallBindings()
     {
-      InstallInspectorSettings();
+      InstallSceneBindings();
       InstallLevelSettings();
       InstallLevelHandlers();
     }
 
-    private void InstallInspectorSettings()
+    private void InstallSceneBindings()
     {
       Container.BindInstance(this.scene);
       Container.BindInstance(this.cameraControllerInstance);

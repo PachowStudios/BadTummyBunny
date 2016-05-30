@@ -8,11 +8,13 @@ namespace PachowStudios.BadTummyBunny
   {
     [SerializeField] private int referenceWidth = 256;
     [SerializeField] private int pixelsPerUnit = 16;
-    [SerializeField] private RectTransform worldSpaceUI = null;
+    [SerializeField] private GameObject uiRoot = null;
 
     private Camera cameraComponent;
+    private RectTransform uiTransformComponent;
 
     private Camera Camera => this.GetComponentIfNull(ref this.cameraComponent);
+    private RectTransform UITransform => this.uiRoot.GetComponentInChildrenIfNull(ref this.uiTransformComponent);
 
     [Conditional("UNITY_EDITOR")]
     private void Update() { }
@@ -25,7 +27,7 @@ namespace PachowStudios.BadTummyBunny
 
       Camera.orthographicSize = orthographicSize / multiplier;
 
-      if (this.worldSpaceUI != null)
+      if (UITransform != null)
         UpdateUISize(multiplier);
     }
 
@@ -33,7 +35,7 @@ namespace PachowStudios.BadTummyBunny
     {
       var uiWidth = (float)Screen.width / this.pixelsPerUnit / multiplier;
 
-      this.worldSpaceUI.sizeDelta = new Vector2(uiWidth, uiWidth / Camera.aspect);
+      UITransform.sizeDelta = new Vector2(uiWidth, uiWidth / Camera.aspect);
     }
 
     private float CalculateOrthographicSize(int width)

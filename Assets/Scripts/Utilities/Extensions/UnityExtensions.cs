@@ -2,63 +2,76 @@
 using JetBrains.Annotations;
 using PachowStudios;
 using PachowStudios.BadTummyBunny;
+using UnityObject = UnityEngine.Object;
 
 namespace UnityEngine
 {
   public static class UnityExtensions
   {
     /// <summary>
-    /// Checks if a IView is null using Unity's custom null check.
-    /// The view must be cast to a MonoBehavior as a hint to the compiler.
+    /// Checks if an object is null using Unity's custom null check.
+    /// The object must be cast to a Unity Object as a hint to the compiler.
     /// </summary>
     [Pure, ContractAnnotation("null => true")]
-    public static bool IsNull([CanBeNull] this IView view)
-      => (MonoBehaviour)view == null;
+    public static bool IsNull([CanBeNull] this object unityObject)
+      => (UnityObject)unityObject == null;
+
+    /// <summary>
+    /// Converts Unity's fake null to a real null.
+    /// </summary>
+    [Pure, ContractAnnotation("null => null")]
+    public static T NullToRealNull<T>([CanBeNull] this T unityObject)
+      where T : UnityObject
+      // The ?? operator doesn't use Unity's overloaded null check
+      // ReSharper disable once MergeConditionalExpression
+      => unityObject == null ? null : unityObject;
 
     [CanBeNull]
     public static T GetComponentIfNull<T>([NotNull] this Component component, [CanBeNull] ref T target)
       where T : Component
       => component.gameObject.GetComponentIfNull(ref target);
 
-    // The ?? operator doesn't use Unity's overloaded null check
     [CanBeNull]
-    public static T GetComponentIfNull<T>([NotNull] this GameObject gameObject, [CanBeNull] ref T target)
+    public static T GetComponentIfNull<T>([CanBeNull] this GameObject gameObject, [CanBeNull] ref T target)
       where T : Component
-      => target != null ? target : (target = gameObject.GetComponent<T>());
+      => target.NullToRealNull()
+         ?? (target = gameObject.NullToRealNull()?.GetComponent<T>());
 
     [CanBeNull]
-    public static T GetComponentInParentIfNull<T>([NotNull] this Component component, [CanBeNull] ref T target)
+    public static T GetComponentInParentIfNull<T>([CanBeNull] this Component component, [CanBeNull] ref T target)
       where T : Component
-      => component.gameObject.GetComponentInParentIfNull(ref target);
+      => component.NullToRealNull()?.gameObject.GetComponentInParentIfNull(ref target);
 
     [CanBeNull]
-    public static T GetComponentInParentIfNull<T>([NotNull] this GameObject gameObject, [CanBeNull] ref T target)
+    public static T GetComponentInParentIfNull<T>([CanBeNull] this GameObject gameObject, [CanBeNull] ref T target)
       where T : Component
-      => target != null ? target : (target = gameObject.GetComponentInParent<T>());
+      => target.NullToRealNull()
+         ?? (target = gameObject.NullToRealNull()?.GetComponentInParent<T>());
 
     [CanBeNull]
-    public static T GetComponentInChildrenIfNull<T>([NotNull] this Component component, [CanBeNull] ref T target)
+    public static T GetComponentInChildrenIfNull<T>([CanBeNull] this Component component, [CanBeNull] ref T target)
       where T : Component
-      => component.gameObject.GetComponentInChildrenIfNull(ref target);
+      => component.NullToRealNull()?.gameObject.GetComponentInChildrenIfNull(ref target);
 
     [CanBeNull]
-    public static T GetComponentInChildrenIfNull<T>([NotNull] this GameObject gameObject, [CanBeNull] ref T target)
+    public static T GetComponentInChildrenIfNull<T>([CanBeNull] this GameObject gameObject, [CanBeNull] ref T target)
       where T : Component
-      => target != null ? target : (target = gameObject.GetComponentInChildren<T>());
+      => target.NullToRealNull()
+         ?? (target = gameObject.NullToRealNull()?.GetComponentInChildren<T>());
 
     [NotNull, Pure]
-    public static TModel GetViewModel<TModel>([NotNull] this Component component)
+    public static TModel GetModel<TModel>([NotNull] this Component component)
       where TModel : class
-      => component.gameObject.GetViewModel<TModel>();
+      => component.gameObject.GetModel<TModel>();
 
     [NotNull, Pure]
-    public static TModel GetViewModel<TModel>([NotNull] this GameObject gameObject)
+    public static TModel GetModel<TModel>([NotNull] this GameObject gameObject)
       where TModel : class
     {
       var view = gameObject.GetComponent<IView<TModel>>();
 
       if (view == null)
-        throw new InvalidOperationException($"GetViewModel failed to get model of type {typeof(TModel)}");
+        throw new InvalidOperationException($"Failed to get model of type {typeof(TModel)}");
 
       return view.Model;
     }
