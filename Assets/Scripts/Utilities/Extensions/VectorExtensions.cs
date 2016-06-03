@@ -80,15 +80,15 @@ namespace UnityEngine
     [Pure]
     public static Vector2 RelationTo(this Vector2 a, Vector2 b)
       => new Vector2(
-        a.x >= b.x ? 1 : -1,
-        a.y >= b.y ? 1 : -1);
+        a.x >= b.x ? 1f : -1f,
+        a.y >= b.y ? 1f : -1f);
 
     [Pure]
     public static Vector3 RelationTo(this Vector3 a, Vector3 b)
       => new Vector3(
-        a.x >= b.x ? 1 : -1,
-        a.y >= b.y ? 1 : -1,
-        a.z >= b.z ? 1 : -1);
+        a.x >= b.x ? 1f : -1f,
+        a.y >= b.y ? 1f : -1f,
+        a.z >= b.z ? 1f : -1f);
 
     [Pure]
     public static Vector2 LerpTo(this Vector2 a, Vector2 b, float t)

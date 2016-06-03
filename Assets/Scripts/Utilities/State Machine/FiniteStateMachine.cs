@@ -37,16 +37,14 @@ namespace PachowStudios
       return this;
     }
 
-    [NotNull]
-    public TState GoTo<TState>()
+    public void GoTo<TState>(bool immediate = false)
       where TState : FiniteState<T>
     {
-      var matchedState = CurrentState as TState;
+      if (CurrentState is TState)
+        return;
 
-      if (matchedState != null)
-        return matchedState;
-
-      CurrentState?.Leave();
+      if (!immediate)
+        CurrentState.Leave();
 
       this.states.Should().ContainKey(typeof(TState), $"because state {typeof(TState)} must exist.");
 
@@ -55,8 +53,6 @@ namespace PachowStudios
       CurrentState.Enter();
       ElapsedTimeInState = 0f;
       StateChanged?.Invoke();
-
-      return (TState)CurrentState;
     }
 
     [Pure]

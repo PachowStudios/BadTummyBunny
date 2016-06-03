@@ -35,9 +35,6 @@ namespace PachowStudios.BadTummyBunny
     public virtual void Move(Vector3 moveVelocity)
       => Velocity = CharacterController.Move(moveVelocity * Time.deltaTime);
 
-    public void Flip()
-      => View.Flip();
-
     public virtual bool Jump(float height)
     {
       if (height <= 0f || !IsGrounded)

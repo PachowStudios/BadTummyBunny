@@ -4,20 +4,16 @@ using Zenject;
 
 namespace PachowStudios.BadTummyBunny
 {
-  public sealed class PlayerHealth : BaseHasHealth, IInitializable, ITickable,
+  public sealed class PlayerHealth : BaseHasHealth, IInitializable,
     IHandles<CharacterKillzoneTriggeredMessage>,
     IHandles<PlayerCarrotCollectedMessage>,
     IHandles<PlayerEnemyCollidedMessage>,
     IHandles<PlayerRespawnPointActivatedMessage>
   {
-    private const float FlashTime = 0.25f;
-
     private int health;
     private int healthContainers;
 
     private float lastHitTime;
-    private float flashTimer;
-    private float smoothFlashTime;
 
     public int HealthContainers
     {
@@ -55,6 +51,7 @@ namespace PachowStudios.BadTummyBunny
 
     public int HealthPerContainer => 4;
     public override int MaxHealth => HealthContainers * HealthPerContainer;
+    public bool IsInvincible => this.lastHitTime + Config.InvincibilityPeriod >= Time.time;
 
     private PlayerHealthSettings Config { get; }
     private PlayerView View { get; }
@@ -66,8 +63,6 @@ namespace PachowStudios.BadTummyBunny
     [Inject] private ExplodeEffect ExplodeEffect { get; set; }
 
     private RespawnPoint RespawnPoint { get; set; }
-
-    private bool IsInvincible => this.lastHitTime + Config.InvincibilityPeriod >= Time.time;
 
     public PlayerHealth(PlayerHealthSettings config, PlayerView view)
     {
@@ -88,12 +83,6 @@ namespace PachowStudios.BadTummyBunny
 
     public void Initialize()
       => RaiseHealthContainersChanged();
-
-    public void Tick()
-    {
-      if (!IsDead)
-        UpdateInvincibilityFlash();
-    }
 
     public override void TakeDamage(int damage, Vector2 knockback, Vector2 knockbackSource)
     {
@@ -123,26 +112,6 @@ namespace PachowStudios.BadTummyBunny
 
     private void TakeDamage(IEnemy enemy)
       => TakeDamage(enemy.ContactDamage, enemy.ContactKnockback, enemy.View.CenterPoint);
-
-    private void UpdateInvincibilityFlash()
-    {
-      if (!IsInvincible)
-      {
-        View.SetRenderersEnabled(true);
-        this.smoothFlashTime = FlashTime;
-
-        return;
-      }
-
-      this.flashTimer += Time.deltaTime;
-      this.smoothFlashTime = this.smoothFlashTime.LerpTo(0.05f, 0.025f);
-
-      if (this.flashTimer > this.smoothFlashTime)
-      {
-        View.AlternateRenderersEnabled();
-        this.flashTimer = 0f;
-      }
-    }
 
     private void HealFromCarrot()
       => Heal(Config.CarrotHealthRecharge);

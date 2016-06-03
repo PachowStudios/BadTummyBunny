@@ -15,6 +15,7 @@ namespace PachowStudios.BadTummyBunny
 
     private float fartPower;
 
+    public float HorizontalMovement { get; private set; }
     public bool IsFartAiming { get; private set; }
     public Vector2 FartDirection { get; private set; }
 
@@ -42,7 +43,6 @@ namespace PachowStudios.BadTummyBunny
     private bool IsInputEnabled { get; set; } = true;
     private bool IsFartingEnabled { get; set; } = true;
 
-    private float HorizontalMovement { get; set; }
     private bool WillJump { get; set; }
     private bool WillFart { get; set; }
     private bool WillSecondaryFart { get; set; }
@@ -53,9 +53,6 @@ namespace PachowStudios.BadTummyBunny
     private float TimeFarting => CurrentFart?.TimeFarting ?? 0f;
 
     private bool IsWalking => !HorizontalMovement.IsZero() && !IsFarting;
-    private bool IsFacingMovementDirection
-      => (HorizontalMovement >= 0f && View.IsFacingRight)
-      || (HorizontalMovement <= 0f && !View.IsFacingRight);
 
     public PlayerMovement(PlayerMovementSettings config, PlayerView view)
       : base(config, view)
@@ -207,9 +204,6 @@ namespace PachowStudios.BadTummyBunny
       if (WillSecondaryFart)
         SecondaryFart();
 
-      if (!IsFacingMovementDirection)
-        View.Flip();
-
       if (WillJump)
         Jump(Config.JumpHeight);
 
@@ -220,9 +214,7 @@ namespace PachowStudios.BadTummyBunny
     private void ApplyMovement()
     {
       if (!IsFarting)
-        Velocity = Velocity.Set(x: Velocity.x.LerpTo(
-          HorizontalMovement * MoveSpeed,
-          MovementDamping * Time.deltaTime));
+        Velocity = Velocity.Transform(x => x.LerpTo(HorizontalMovement * MoveSpeed, MovementDamping * Time.deltaTime));
 
       Move(Velocity.Add(y: Gravity * Time.deltaTime));
 

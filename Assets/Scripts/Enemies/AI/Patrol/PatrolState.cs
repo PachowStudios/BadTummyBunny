@@ -22,7 +22,7 @@
       public override void Tick(float deltaTime)
       {
         if (Context.IsAtWall || Context.IsAtLedge)
-          Context.HorizontalMovement *= -1;
+          Context.Reverse();
       }
     }
   }

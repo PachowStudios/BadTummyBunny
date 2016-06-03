@@ -18,17 +18,31 @@ namespace PachowStudios.BadTummyBunny
 
     public bool IsActivated
     {
-      get { return Model.Movement.IsActivated; }
-      set { Model.Movement.IsActivated = value; }
+      get { return Movement.IsActivated; }
+      set { Movement.IsActivated = value; }
     }
 
     public EnemyType Type => this.type;
     public Transform FrontCheck => this.frontCheck;
     public Transform LedgeCheck => this.ledgeCheck;
 
+    private EnemyMovement Movement => Model.Movement;
+
+    private bool IsFacingMovementDirection
+      => Movement.HorizontalMovement >= 0 && IsFacingRight
+         || Movement.HorizontalMovement <= 0 && !IsFacingRight;
+
     [PostInject]
     private void PostInject()
       => name = Model.Name;
+
+    protected override void LateUpdate()
+    {
+      base.LateUpdate();
+
+      if (!IsFacingMovementDirection)
+        Flip();
+    }
 
     private void OnTriggerEnter2D(Collider2D other)
     {

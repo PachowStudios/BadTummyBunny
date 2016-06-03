@@ -13,12 +13,9 @@ namespace PachowStudios.BadTummyBunny
       set { this.isActivated = value; }
     }
 
-    protected int HorizontalMovement { get; set; }
+    public int HorizontalMovement { get; protected set; }
 
     protected bool IsWalking => HorizontalMovement != 0;
-    protected bool IsFacingMovementDirection
-      => (HorizontalMovement >= 0 && View.IsFacingRight)
-      || (HorizontalMovement <= 0 && !View.IsFacingRight);
 
     private BaseEnemyMovementSettings Config { get; }
     private EnemyView View { get; }
@@ -30,22 +27,22 @@ namespace PachowStudios.BadTummyBunny
       View = view;
     }
 
-    protected abstract void InternalTick();
-
     public void Tick()
     {
       if (IsActivated)
         InternalTick();
     }
 
-    public virtual void LateTick()
-    {
-      if (!IsActivated)
-        return;
+    protected abstract void InternalTick();
 
-      UpdateMovement();
-      ApplyMovement();
+    public void LateTick()
+    {
+      if (IsActivated)
+        InternalLateTick();
     }
+
+    protected virtual void InternalLateTick()
+      => ApplyMovement();
 
     public override bool Jump(float height)
     {
@@ -57,18 +54,10 @@ namespace PachowStudios.BadTummyBunny
       return true;
     }
 
-    protected virtual void UpdateMovement()
-    {
-      if (!IsFacingMovementDirection)
-        View.Flip();
-    }
-
     protected virtual void ApplyMovement()
     {
       Move(Velocity
-        .Set(x: Velocity.x.LerpTo(
-          HorizontalMovement * MoveSpeed,
-          MovementDamping * Time.deltaTime))
+        .Transform(x => x.LerpTo(HorizontalMovement * MoveSpeed, MovementDamping * Time.deltaTime))
         .Add(y: Gravity * Time.deltaTime));
 
       if (IsGrounded)
@@ -77,5 +66,8 @@ namespace PachowStudios.BadTummyBunny
         LastGroundedPosition = View.Position;
       }
     }
+
+    protected void Reverse()
+      => HorizontalMovement *= -1;
   }
 }

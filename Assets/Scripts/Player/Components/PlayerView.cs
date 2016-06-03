@@ -9,6 +9,9 @@ namespace PachowStudios.BadTummyBunny
     [SerializeField] private Transform body = null;
     [SerializeField] private Transform fartPoint = null;
 
+    private float flashTimer;
+    private float smoothFlashTime;
+
     [InjectLocal] private IEventAggregator LocalEventAggregator { get; set; }
 
     [Inject(BindingIds.Global)] private IEventAggregator EventAggregator { get; set; }
@@ -19,6 +22,14 @@ namespace PachowStudios.BadTummyBunny
 
     public Transform Body => this.body;
     public Transform FartPoint => this.fartPoint;
+
+    private PlayerHealth Health => Model.Health;
+    private PlayerMovement Movement => Model.Movement;
+    private IFartInfoProvider FartInfo => Model.FartInfo;
+
+    private bool IsFacingMovementDirection
+      => Movement.HorizontalMovement >= 0f && IsFacingRight
+         || Movement.HorizontalMovement <= 0f && !IsFacingRight;
 
     public override void Flip()
       => Body.FlipViaRotation();
@@ -36,14 +47,24 @@ namespace PachowStudios.BadTummyBunny
 
     [AnimationEvent]
     public void PlayWalkingSound(int rightStep)
-      => Model.Movement.PlayWalkingSound(rightStep == 1);
+      => Movement.PlayWalkingSound(rightStep == 1);
+
+    protected override void Update()
+    {
+      base.Update();
+
+      if (!Health.IsDead)
+        UpdateInvincibilityFlash();
+    }
 
     protected override void LateUpdate()
     {
       base.LateUpdate();
 
-      if (Model.FartInfo.IsFarting)
+      if (FartInfo.IsFarting)
         CorrectRotationAndScale();
+      else if (!IsFacingMovementDirection)
+        Flip();
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -71,9 +92,31 @@ namespace PachowStudios.BadTummyBunny
       }
     }
 
+    private void UpdateInvincibilityFlash()
+    {
+      const float FlashTime = 0.25f;
+
+      if (!Health.IsInvincible)
+      {
+        SetRenderersEnabled(true);
+        this.smoothFlashTime = FlashTime;
+
+        return;
+      }
+
+      this.flashTimer += Time.deltaTime;
+      this.smoothFlashTime = this.smoothFlashTime.LerpTo(0.05f, 0.025f);
+
+      if (this.flashTimer > this.smoothFlashTime)
+      {
+        AlternateRenderersEnabled();
+        this.flashTimer = 0f;
+      }
+    }
+
     private void CorrectRotationAndScale()
     {
-      var rotation = Model.Movement.Velocity.DirectionToRotation2D();
+      var rotation = Movement.Velocity.DirectionToRotation2D();
 
       Body.localRotation = rotation;
       Body.localScale = Body.localScale

@@ -45,8 +45,7 @@ namespace PachowStudios.BadTummyBunny.Enemies.AI
       AnimationController.Tick();
     }
 
-    public void Handle(CharacterTookDamageMessage message) { }
-    // BUG: Causes enemy to freeze up.
-    //=> StateMachine.GoTo<FollowState>();
+    public void Handle(CharacterTookDamageMessage message)
+      => StateMachine.GoTo<FollowState>(true);
   }
 }

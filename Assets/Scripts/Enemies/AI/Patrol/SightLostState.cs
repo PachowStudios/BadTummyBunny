@@ -29,7 +29,7 @@ namespace PachowStudios.BadTummyBunny.Enemies.AI
         if (this.waitTimer > 0f)
           return;
 
-        Context.Flip();
+        Context.View.Flip();
         StateMachine.GoTo<PatrolState>();
       }
 
@@ -43,7 +43,7 @@ namespace PachowStudios.BadTummyBunny.Enemies.AI
             || Context.IsAtWall)
           return;
 
-        Context.Flip();
+        Context.View.Flip();
         this.flipped = true;
       }
 

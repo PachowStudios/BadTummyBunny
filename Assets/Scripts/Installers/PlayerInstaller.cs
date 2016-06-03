@@ -13,7 +13,7 @@ namespace PachowStudios.BadTummyBunny
     {
       Container
         .BindPublicFacade<Player>(InstallFacade)
-        .WithExternal<IEventAggregator, PlayerView>();
+        .InjectFromSubContainer<IEventAggregator, PlayerView>();
     }
 
     private void InstallFacade(DiContainer subContainer)

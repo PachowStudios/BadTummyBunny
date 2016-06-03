@@ -18,14 +18,15 @@ namespace PachowStudios.BadTummyBunny.Enemies.AI
 
       public override void Enter()
       {
-        Context.FacePlayer();
+        Context.FollowPlayer();
         Context.MoveSpeedOverride = this.followSpeed;
         this.cooldownTimer = StateMachine.CameFrom<AttackState>() ? Context.Config.CooldownTime : 0f;
       }
 
       public override void Reason()
       {
-        if (!Context.CanFollowPlayer)
+        if (StateMachine.ElapsedTimeInState > 1f
+            && !Context.CanFollowPlayer)
           StateMachine.GoTo<SightLostState>();
         else if (Context.IsPlayerInRange(max: Context.Config.AttackRange)
                  && this.cooldownTimer <= 0f)

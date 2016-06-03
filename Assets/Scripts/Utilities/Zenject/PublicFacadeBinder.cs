@@ -19,7 +19,7 @@ namespace Zenject
       CreateSubContainer();
     }
 
-    public PublicFacadeBinder<TFacade> WithExternal<TContract, TTarget>()
+    public PublicFacadeBinder<TFacade> InjectFromSubContainer<TContract, TTarget>()
     {
       Container
         .Bind<TContract>()
